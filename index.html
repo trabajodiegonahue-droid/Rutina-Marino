@@ -512,15 +512,37 @@ function hellDay(dow,ctx){
 const TEMP_MES=[18,18,16,14,12,10,9,9,10,11,13,15]; // estimación °C del lago Llanquihue por mes
 const waterTemp=ctx=>ctx.temp!==""&&ctx.temp!=null&&!isNaN(+ctx.temp)?+ctx.temp:TEMP_MES[ctx.month==null?9:ctx.month];
 function lakeCap(t,neo){const r=[[10,8,0],[12,12,5],[14,20,8],[16,30,15],[18,40,25],[99,50,35]].find(x=>t<x[0]);return neo?r[1]:r[2]}
+// minutos en el lago: el tope es el menor entre el del agua (temperatura y neopreno) y la adaptación gradual
+// (10 min la semana 1, +5 cada 2 semanas, hasta 50): el cuerpo se acostumbra al frío de a poco
+const lakeProg=w=>Math.min(50,10+5*Math.floor(Math.max(0,w-1)/2));
+const lakeCapFor=(w,ctx)=>{const t=waterTemp(ctx),c=lakeCap(t,ctx.neo);return c?Math.min(c,lakeProg(w)):0};
+const LAKE_RULES="Avisa a alguien dónde entras y a qué hora sales · gorra de color · solo donde haces pie, paralelo a la orilla · sin viento ni oleaje · entra caminando y espera a que se calme la respiración · cuando suene el temporizador, sales.";
 function lakeify(t,w,ctx){
-  const st=stN(w),spm=[0,180,150,135,120][st],br25=[0,22,20,18,18][st],temp=waterTemp(ctx),cap=lakeCap(temp,ctx.neo);
-  let est=0;
-  const bl=t.blocks.map(b=>{if(!b.m)return b;let m;est+=b.m/100*spm/60+(b.s>1?(b.s-1)*(b.r||30)/60:0);
-    if((m=b.n.match(/^(.*?)(\d+) × ([\d.]+) m$/))){const br=Math.round(num(m[3])/25*br25);return Object.assign({},b,{n:`${m[1]}${m[2]} × ${br} brazadas`,note:`≈ ${m[3]} m cada uno (cada mano = 1 brazada). Descanso de pie.`})}
-    const mins=Math.max(2,Math.round(b.m/100*spm/60));return Object.assign({},b,{n:b.n.replace(/^[\d.]+ m$/,"Nado continuo"),p:`~${mins} min`,tm:mins*60,note:`≈ ${nf(b.m)} m. ${b.p}`})});
-  const prot=B("Antes de entrar",cap?`máximo ${cap} min`:"hoy no se entra",{tm:cap?cap*60:0,note:cap?`Agua ${temp} °C${ctx.temp?"":" (estimada)"}, ${ctx.neo?"con":"sin"} neopreno. Avisa a alguien dónde entras y a qué hora sales · gorra de color · solo donde haces pie, paralelo a la orilla · sin viento ni oleaje · entra caminando y espera a que se calme la respiración · cuando suene el temporizador, sales.`+(est>cap?` El plan son ~${Math.round(est)} min: haz los bloques en orden y lo que no alcances queda.`:""):"Con esta agua y sin neopreno, no entras. Haz 20 min de técnica en seco frente al espejo y el core de la semana."});
-  return Object.assign({},t,{t:t.t+" · lago",blocks:[prot,...(cap?bl:[]),B("Al salir","sécate y abrígate",{note:"Bebida caliente. Sal ya si: temblor que no para, torpeza en las manos, confusión o labios morados."})],safe:"Vas solo: nunca te alejes de donde haces pie. Nunca apnea en el lago.",m:cap?t.m:0});
+  const st=stN(w),spm=[0,180,150,135,120][st],br25=[0,22,20,18,18][st],temp=waterTemp(ctx),cap=lakeCapFor(w,ctx),tc=lakeCap(temp,ctx.neo);
+  const est=b=>b.m?b.m/100*spm/60+(b.s>1?(b.s-1)*(b.r||30)/60:0):0;
+  if(!cap)return Object.assign({},t,{t:t.t.replace(/ · lago$/,"")+" · en seco",blocks:[
+      B("Hoy no entras al lago","agua muy fría",{note:`Agua ${temp} °C${ctx.temp?"":" (estimada)"}, ${ctx.neo?"con":"sin"} neopreno: solo y con esta agua no se entra. Si tienes piscina, haz ahí la sesión.`}),
+      B("Técnica en seco","20 min",{tm:1200,note:"Frente a un espejo o acostado boca abajo en una banca: 3 × 1 min de brazada de crol lenta (codo alto, mano entra lejos), 3 × 30 s de patada corta desde la cadera, 3 × 1 min girando la cabeza para respirar al lado sin levantarla. Termina con 3 × 45 s de plancha."})],safe:"",m:0,lake:true});
+  // se arma la sesión para que quepa en el tope: los bloques en orden hasta llenar el tiempo; lo que no cabe no aplica hoy
+  let used=0,meters=0,cut=false;const bl=[];
+  t.blocks.forEach(b=>{
+    if(!b.m){if(b.n==="La orden")bl.push(B("La orden","nada sin parar hasta que suene",{note:"Paralelo a la orilla, donde haces pie. No pienses en el total: hasta que suene el tope."}));else if(!cut)bl.push(b);return}
+    if(cut)return;const left=cap-1-used,e=est(b);let m;
+    if(e<=left){used+=e;meters+=b.m;
+      // patada con aletas: los brazos no se mueven, se cuenta por tiempo
+      if(/aletas|patada|buceo/.test(b.n+" "+b.p)&&(m=b.n.match(/^(\d+) × ([\d.]+) m$/))){const each=Math.max(1,Math.round(num(m[2])/100*spm*1.15/60));bl.push(Object.assign({},b,{n:`${m[1]} × ~${each} min`,p:b.p,tm:each*60,note:`≈ ${m[2]} m cada uno. ${b.note||""} Descanso de pie.`.trim()}));return}
+      if((m=b.n.match(/^(.*?)(\d+) × ([\d.]+) m$/))){const br=Math.round(num(m[3])/25*br25);bl.push(Object.assign({},b,{n:`${m[1]}${m[2]} × ${br} brazadas`,note:`≈ ${m[3]} m cada uno (cada mano = 1 brazada). Descanso de pie.`}));return}
+      const mins=Math.max(2,Math.round(e));bl.push(Object.assign({},b,{n:b.n.replace(/^[\d.]+ m$/,"Nado continuo"),p:`~${mins} min`,tm:mins*60,note:`≈ ${nf(b.m)} m. ${b.p}`}));return}
+    // no cabe entero: lo que queda del tope, nadando seguido
+    cut=true;if(left>=2){const mins=Math.floor(left),mm=Math.round(mins*60/spm*100/50)*50;used+=mins;meters+=mm;
+      bl.push(B("Nado continuo",`~${mins} min`,{m:mm,tm:mins*60,note:`≈ ${nf(mm)} m, lo que alcances del plan de hoy, sin parar. Cuando suene el tope, sales.`}))}});
+  const total=t.blocks.reduce((a,b)=>a+est(b),0);
+  const prot=B("Antes de entrar",`máximo ${cap} min`,{tm:cap*60,note:`Agua ${temp} °C${ctx.temp?"":" (estimada)"}, ${ctx.neo?"con":"sin"} neopreno${cap<tc?`; tu adaptación al frío esta semana: ${cap} min`:""}. ${LAKE_RULES}`+(cut?` El plan completo son ~${Math.round(total)} min: hoy haces lo que cabe en ${cap} min y el resto no aplica.`:"")});
+  return Object.assign({},t,{t:t.t+" · lago",blocks:[prot,...bl,B("Al salir","sécate y abrígate",{note:"Bebida caliente. Sal ya si: temblor que no para, torpeza en las manos, confusión o labios morados."})],safe:"Vas solo: nunca te alejes de donde haces pie. Nunca apnea en el lago.",m:meters,lake:true});
 }
+// nados a tope fuera de la sesión de agua (mini-prueba): en el lago llevan las mismas reglas y el mismo tope
+function lakeSprint(t,w,ctx){const cap=lakeCapFor(w,ctx);
+  return Object.assign({},t,{blocks:t.blocks.map(b=>/^Nado [\d.–]+ m$/.test(b.n)?(cap?Object.assign({},b,{note:`En el lago: máximo ${cap} min en el agua (inicia el temporizador al entrar). ${LAKE_RULES} ${b.note||""}`.trim()}):Object.assign({},b,{p:"en piscina o pendiente",opt:1,note:"Con el agua así de fría no se nada a tope solo en el lago. Hazlo en piscina con salvavidas o queda pendiente."})):b),safe:[t.safe,"En el lago: solo donde haces pie, nunca apnea."].filter(Boolean).join(" ")})}
 
 /* ---- tolerancia al dolor: aguantar ardor, quemazón y ganas de parar, sin lesionarse ---- */
 function tolT(w){
@@ -720,7 +742,7 @@ function dayPlan(w,dow,ctx){
     if(dow===6){title="Descanso total";kind="descanso";tasks=rest("Descanso total","Es una orden.")}
   }
   if(kind==="prueba"&&!(tasks&&tasks.length))tasks=[T("prueba","Protocolo de la prueba","Siempre en el mismo orden. Máximo 3 min entre ejercicios. Anota cada número abajo.","07:00",testBlocks(),{kind:"fuerza",safe:"Apnea solo con salvavidas o compañero. Sin hiperventilar."})];
-  tasks=tasks.filter(Boolean).map(t=>lake&&t.kind==="agua"&&t.blocks.some(b=>b.m)?lakeify(t,w,ctx):t);
+  tasks=tasks.filter(Boolean).map(t=>lake&&t.kind==="agua"&&t.blocks.some(b=>b.m)?lakeify(t,w,ctx):lake&&t.blocks.some(b=>/^Nado [\d.–]+ m$/.test(b.n))?lakeSprint(t,w,ctx):t);
   if(lake)tasks=tasks.map(t=>t.blocks.some(b=>/^1\. Apnea/.test(b.n))?Object.assign({},t,{blocks:t.blocks.map(b=>/^1\. Apnea/.test(b.n)?Object.assign({},b,{note:"Solo en piscina con salvavidas avisado. Si no hay, queda pendiente."}):/^2\. 500/.test(b.n)?Object.assign({},b,{note:"Mídelo en piscina: en el lago la distancia no es exacta."}):b)}):t);
   if(!["descanso","admin","prueba"].includes(kind)&&w!==HELL&&!TESTS.includes(w))tasks.push(tolT(w));
   if(w===0&&dow===2)tasks.push(tolT(0));
@@ -835,8 +857,12 @@ const Store={mode:"local",cfg:defCfg(),days:{},pend:{},ver:{},recent:{},remote:{
   sync(k){if(this.pend[k]&&!this.timers[k]&&!this.flying[k]&&!this.wait.includes(k)&&!this.paused)this.want(k)},
   ready(k){return this.mode==="db"&&(k==="plan"?this.got.plan:this.got.days)},
   day(k){return this.days[k]||(this.days[k]={})},
-  setDay(k,patch){PLANC={};CTX=null;const d=this.day(k),old={};Object.keys(patch).forEach(f=>{old[f]=d[f]});Object.assign(d,patch);this.addPend(k,patch,old);this.saveLocal();this.queue(k)},
-  setCfg(patch){PLANC={};CTX=null;Object.assign(this.cfg,patch);this.addPend("plan",patch);this.saveLocal();this.queue("plan")},
+  setDay(k,patch){PLANC={};CTX=null;
+    // el día de hoy guarda con qué ajustes se entrenó (lago o piscina, neopreno, agua): cambiar Ajustes después no lo reescribe
+    if(k===iso(today())){const c=this.cfg,cx={place:c.place,neo:!!c.neo,temp:tempFor(c,today()),partner:!!c.partner};if(canon(cx)!==canon((this.days[k]||{}).ctx))patch=Object.assign({},patch,{ctx:cx})}
+    const d=this.day(k),old={};Object.keys(patch).forEach(f=>{old[f]=d[f]});Object.assign(d,patch);this.addPend(k,patch,old);this.saveLocal();this.queue(k)},
+  setCfg(patch){PLANC={};CTX=null;Object.assign(this.cfg,patch);this.addPend("plan",patch);this.saveLocal();this.queue("plan");
+    if(CTXF.some(f=>f in patch)&&this.days[iso(today())])this.setDay(iso(today()),{})},
   // junta los toques seguidos en una sola escritura (antes de la primera foto de la nube no se escribe: se mezcla al llegar)
   queue(k){
     if(!this.ready(k)){paintSave();return}clearTimeout(this.timers[k]);
@@ -910,7 +936,11 @@ function lastTest(date){const ws=date?weekStartOf(date):null,lim=ws?iso(ws):"999
   CTX=CTX||{};if(CTX[lim])return CTX[lim];
   const c={};let bk="";Object.keys(Store.days).sort().forEach(k=>{if(k>=lim)return;const t=Store.days[k].test||Store.days[k].sim;if(t)["barras","run","swim","apnea"].forEach(x=>{if(t[x]){c[x]=t[x];if(x==="barras")bk=k}})});
   const mb=Store.cfg.maxB;if(mb&&mb.v&&mb.k<end&&(!bk||mb.k>=bk))c.barras=mb.v;return CTX[lim]=c}
-function ctxFor(date){const c=Store.cfg;return Object.assign({},lastTest(date),{month:date.getMonth(),place:c.place,partner:c.partner,neo:c.neo,temp:c.temp})}
+const CTXF=["place","neo","temp","partner"];
+const tempFor=(c,date)=>c.temp!==""&&c.temp!=null&&c.tempK&&Math.abs(diffDays(date,parse(c.tempK)))<=10?c.temp:"";
+function ctxFor(date){const c=Store.cfg,dd=Store.days[iso(date)],fz=dd&&dd.ctx&&diffDays(date,today())<0?dd.ctx:null;
+  const base={month:date.getMonth(),place:c.place,partner:c.partner,neo:c.neo,temp:tempFor(c,date)};
+  return Object.assign({},lastTest(date),base,fz?{place:fz.place,partner:fz.partner,neo:fz.neo,temp:fz.temp}:{})}
 let PLANC={};
 function planFor(date){const ck=iso(date);if(ck in PLANC)return PLANC[ck];return PLANC[ck]=planFor0(date)}
 function planFor0(date){const L=locate(date);if(L.w===undefined)return null;const dd=Store.days[iso(date)]||{};return applyShift(applyMode(dayPlan(L.w,L.dow,ctxFor(date)),dd.mode),dd.turno||Store.cfg.turno,bodyWeight())}
@@ -946,6 +976,7 @@ function orders(plan,k,isToday,dd){
   else if(plan.kind==="descanso")out.push(["say",pick(["Hoy descansas. Es una orden, no un premio.","Descanso. El progreso ocurre cuando descansas.","Día libre. Cúmplelo igual de serio."],k)]);
   else if(plan.kind==="prueba")out.push(["say","Simulacro. La prueba entera, cansado, sin regalos."]);
   else if(plan.kind==="admin")out.push(["say",`${N}. Antes de mojarte, se prepara el terreno.`]);
+  else if(plan.kind==="agua"&&plan.tasks.some(t=>/ · en seco$/.test(t.t)))out.push(["say","Hoy el agua está demasiado fría para entrar solo. Técnica en seco y lo demás igual."]);
   else if(plan.kind==="agua")out.push(["say",plan.lake?pick(["Al lago. Vas solo: nadas donde haces pie y sales cuando suena.","Lago. El frío no perdona al que se confía.","Al agua. Resistencia sí, heroísmo no."],k):pick([`Al agua a las ${plan.shift?plan.shift.A:"8:00"}. Es tu punto débil: ahí vas a vivir.`,"Piscina. No le regales metros al agua.","Al agua. Cada largo de hoy es uno que en el curso no te hunde."],k)]);
   else out.push(["say",pick([`De pie, ${N}. Esto es lo que haces hoy.`,`Arriba, ${N}. Nadie lo va a hacer por ti.`,`${N}. Querías saber si puedes. Hoy se sigue respondiendo.`],k)]);
   if(dd.mode==="dolor"){out.splice(out.findIndex(x=>x[0]==="say"),1,["say",`${N}, hoy se recupera. El que se lesiona no llega al curso.`])}
@@ -1035,7 +1066,10 @@ function cmdFor(st,plan){
   const restTxt=b.r&&k&&k<b.s?` Después descansa ${fmtT(b.r)}.`:"";
   if(b.c)return b.c;
   let m;
-  if(n==="Antes de entrar")return b.tm?`Antes de entrar al lago: ${b.note.split(". ").slice(1).join(". ")} Inicia el temporizador de ${p.replace("máximo ","")} al entrar.`:b.note;
+  if(n==="Antes de entrar")return `Antes de entrar al lago: ${LAKE_RULES} Inicia el temporizador de ${p.replace("máximo ","")} al entrar: ningún otro lo borra.${/no aplica/.test(b.note)?" Hoy no cabe todo el plan: haces lo que alcances y el resto no aplica.":""}`;
+  if(n==="Hoy no entras al lago")return b.note;
+  if(n==="Técnica en seco")return `Técnica en seco 20 minutos (inicia el temporizador): ${b.note}`;
+  if(n==="La orden"&&plan.lake)return "Hoy nadas sin parar hasta que suene el tope, paralelo a la orilla y donde haces pie.";
   if(n==="Al salir"&&t.kind==="agua")return `Sal del agua, sécate de inmediato, ponte ropa abrigada y toma algo caliente. ${b.note.replace("Bebida caliente. ","")}`;
   if(n==="Calentamiento"&&/trote/.test(p))return `Trota suave 10 minutos (unos ${km(10,w)} km). Después haz 4 aceleraciones de 80 m: arrancas suave, terminas rápido y vuelves caminando.`;
   if(n==="Calentamiento")return "Calienta 8 minutos: 10 círculos de hombros hacia adelante y 10 hacia atrás, 10 círculos de cadera, 20 jumping jacks, 2 × 10 sentadillas sin peso, 2 × 5 flexiones suaves y cuélgate 3 veces 10 segundos de la barra.";
@@ -1081,7 +1115,7 @@ function cmdFor(st,plan){
   if(TESTC[n])return TESTC[n]+(t.kind!=="admin"&&n!=="7. 2.400 m"?" Máximo 3 minutos y pasas al siguiente.":"");
   if(/ en total$/.test(p))return `Haz ${p.replace(" en total","")} ${low(n)} en total, repartidas en las series que necesites. No pienses en el total: serie por serie.`;
   if(/1 min a tope/.test(p))return `${n.replace(" 1 min","")}: el máximo que puedas en 1 minuto. Inicia el temporizador y pasa directo al siguiente.`;
-  if(/^Nado [\d.–]+ m/.test(n))return `Nada ${n.replace("Nado ","")} lo más rápido que puedas. Al salir, cámbiate rápido y pasa al siguiente sin descansar.`;
+  if(/^Nado [\d.–]+ m/.test(n))return b.opt?b.note:`Nada ${n.replace("Nado ","")} lo más rápido que puedas. Al salir, cámbiate rápido y pasa al siguiente sin descansar.${/^En el lago/.test(b.note||"")?" "+b.note.split(". Sales y")[0].replace(/\. ?$/,"")+".":""}`;
   if(n==="Carrera"&&/m$/.test(p))return `Corre ${p} lo más rápido que puedas, sin pausa desde el último ejercicio (${num(p.replace(" m",""))/400} vueltas de pista).`;
   if(n==="Barras"&&/^\d+$/.test(p))return `Haz ${p} barras seguidas: es el ${b.note.replace(/\.$/,"")}.`;
   if(/a tope$/.test(n)&&(m=n.match(/^([\d.]+) m/)))return `Corre ${m[1]} m (${num(m[1])/400} vueltas de pista) a tope. Anota el tiempo en Notas.`;
@@ -1222,7 +1256,7 @@ function viewHoy(){
   h+=plan.tasks.map((t,ti)=>sesHTML(Object.assign({},t,{t:(ti+1)+". "+t.t}),dd,S.open[k+t.id]!=null?S.open[k+t.id]:defOpen(t))).join("");
   if(plan.test)h+=testForm(plan,k,dd,L);
   h+=resultsHTML(plan,k,dd);
-  {const tm=addDays(d,1),tp=planFor(tm);if(tp)h+=`<div class="card"><span class="lbl">Mañana · ${dayName(tm)} · ${esc(tp.title)}</span><span>${esc(tp.tasks.filter(t=>t.id!=="noche"&&t.id!=="ducha").map(t=>(t.h?t.h+" ":"")+t.t).join(" · "))}</span>${tp.tasks.some(t=>t.kind==="agua")?`<span class="foot">Deja listo el bolso: traje de baño, gafas, gorra de color${Store.cfg.neo?", neopreno":""}, toalla y ropa abrigada.</span>`:""}${tp.tasks.some(t=>t.id==="ruck")?`<span class="foot">Deja lista la mochila con el peso.</span>`:""}</div>`}
+  {const tm=addDays(d,1),tp=planFor(tm);if(tp)h+=`<div class="card"><span class="lbl">Mañana · ${dayName(tm)} · ${esc(tp.title)}</span><span>${esc(tp.tasks.filter(t=>t.id!=="noche"&&t.id!=="ducha").map(t=>(t.h?t.h+" ":"")+t.t).join(" · "))}</span>${tp.tasks.some(t=>t.kind==="agua"&&t.m||t.blocks.some(b=>/^Nado [\d.–]+ m$/.test(b.n)&&!b.opt))?`<span class="foot">Deja listo el bolso: traje de baño, gafas, gorra de color${tp.tasks.some(t=>t.blocks.some(b=>/aletas/.test(b.n+" "+b.p)))?", aletas":""}${Store.cfg.neo?", neopreno":""}, toalla y ropa abrigada.</span>`:""}${tp.tasks.some(t=>t.id==="ruck")?`<span class="foot">Deja lista la mochila con el peso.</span>`:""}</div>`}
   if(plan.dow===6){const ws=addDays(d,-6);let ua=0,ub=0,dn=0,sm=[0,0];for(let i=0;i<7;i++){const dx=addDays(ws,i),px=planFor(dx);if(!px)continue;const x=Store.days[iso(dx)];const u=units(x,px);ua+=u.a;ub+=u.b;if(okSt(dayStatus(iso(dx),px)))dn++;px.tasks.forEach(t=>{if(t.m){sm[1]+=t.m;if(taskDone(x,t))sm[0]+=t.m}})}
     const pc=ub?Math.round(ua/ub*100):0,nw=locate(addDays(d,1)).w;
     h+=`<div class="card"><span class="lbl">Revisión de la semana ${plan.w}</span><div class="kpis"><div class="kpi"><span class="lbl">Series</span><b>${pc}%</b></div><div class="kpi"><span class="lbl">Días</span><b>${dn}/7</b></div><div class="kpi"><span class="lbl">Nado (m)</span><b>${nf(sm[0])}</b></div></div>
@@ -1294,7 +1328,7 @@ function viewPlan(){
    <div class="row"><div class="field" style="max-width:140px"><label class="lbl" for="c-peso">Peso en ayunas (kg)</label><input id="c-peso" inputmode="decimal" data-c="peso" value="${esc(c.peso||"")}" placeholder="70"></div><div class="field" style="max-width:140px"><label class="lbl" for="c-alt">Estatura (cm)</label><input id="c-alt" inputmode="numeric" data-c="alt" value="${esc(c.alt||"")}" placeholder="175"></div><p class="foot" style="flex:1;min-width:150px">Con tu peso calculo la proteína, las porciones y el agua de cada día. Pésate en ayunas el primer día de cada semana.</p></div>
    <div class="row"><div class="field" style="max-width:170px"><label class="lbl" for="c-maxb">Máximo de barras hoy</label><input id="c-maxb" inputmode="numeric" data-c="maxb" value="${esc((c.maxB&&c.maxB.v)||"")}" placeholder="${esc(lastTest().barras||6)}"></div><p class="foot" style="flex:1;min-width:160px">Mídete cada 3–4 semanas: las series de barras se ajustan solas.</p></div>
    <div class="field"><label class="lbl" for="c-why">Tu por qué</label><textarea id="c-why" data-c="why" placeholder="Por qué quieres ser buzo táctico. El comandante te lo recuerda en los días duros.">${esc(c.why||"")}</textarea></div>
-   <div class="field" style="max-width:170px"><label class="lbl" for="c-temp">Agua del lago (°C)</label><input id="c-temp" inputmode="decimal" data-c="temp" value="${esc(c.temp)}" placeholder="${TEMP_MES[td.getMonth()]} estimado"></div>
+   <div class="field" style="max-width:170px"><label class="lbl" for="c-temp">Agua del lago (°C)</label><input id="c-temp" inputmode="decimal" data-c="temp" value="${esc(tempFor(c,td))}" placeholder="${TEMP_MES[td.getMonth()]} estimado"><span class="foot">${tempFor(c,td)?`Medida el ${fmtS(parse(c.tempK))}: vale 10 días.`:c.temp?`La de ${fmtS(parse(c.tempK||c.start))} venció: mide de nuevo.`:"Vale 10 días; después se usa la estimada."}</span></div>
    ${L.after?(S.confirm==="s4"?`<div class="row"><button class="btn main sm" data-s4>Confirmar</button><button class="btn sm" data-cancel>Cancelar</button></div>`:`<button class="btn sm" data-ask="s4">Repetir etapa 4</button>`):""}
    <div class="row"><div class="field"><span class="lbl">Letra grande</span><div class="segs">${sg("bigText",false,"No")}${sg("bigText",true,"Sí")}</div></div></div>
    <p class="foot">Guardado ${Store.mode==="db"?"en tu cuenta: privado y sincronizado entre tus dispositivos":"solo en este dispositivo"}.</p></div>`;
@@ -1686,7 +1720,7 @@ document.addEventListener("input",e=>{
   else if(D.c==="alt")Store.setCfg({alt:el.value.trim()});
   else if(D.c==="why")Store.setCfg({why:el.value});
   else if(D.c==="maxb"){const v=parseInt(el.value,10);Store.setCfg({maxB:v>0?{v,k:iso(new Date())}:null})}
-  else if(D.c==="temp")Store.setCfg({temp:el.value.trim().replace(",",".")});
+  else if(D.c==="temp")Store.setCfg({temp:el.value.trim().replace(",","."),tempK:iso(today())});
 });
 // la fecha de inicio se aplica al terminar de escribirla (en el computador, cada número dispara un cambio)
 function applyStart(el){if(isISO(el.value)&&el.value!==Store.cfg.start){Store.setCfg({start:el.value,startMoved:true});CTX=null;if(pressing)pendingRender=true;else render()}}

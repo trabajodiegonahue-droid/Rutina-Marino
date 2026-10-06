@@ -524,6 +524,30 @@ const reload = async p => { await p.reload(); await p.waitForTimeout(200); };
     await ctx.close(); }
 }
 
+// 24. Lago y ajustes: cambiar de lugar no reescribe lo hecho; la temperatura medida vence
+{ console.log('24. Lago y ajustes');
+  const ctx = await browser.newContext({ viewport: { width: 390, height: 1200 } }); const errs = [];
+  const open = async (time) => { const p = await ctx.newPage(); p.on('pageerror', e => errs.push(e.message)); await p.clock.install({ time: new Date(time) }); await p.goto(URL); await p.waitForTimeout(250); return p; };
+  let p = await open('2026-10-13T09:00:00');
+  ok((await text(p)).includes('máximo 5 min'), 'en octubre sin neopreno el lago es de 5 min');
+  await p.locator('[data-st="done"]').scrollIntoViewIfNeeded(); await p.click('[data-st="done"]'); await p.close();
+  p = await open('2026-10-14T09:00:00');
+  await p.click('[data-tab="plan"]'); await p.click('[data-cset="place|piscina"]'); await p.click('[data-tab="hoy"]');
+  await p.waitForTimeout(400); await p.click('[data-go="-1"]');
+  ok((await text(p)).includes('CUMPLIDO') && (await text(p)).includes('· lago'), 'pasarse a piscina no cambia el día que ya hiciste en el lago');
+  await p.click('[data-tab="plan"]'); await p.click('[data-cset="place|lago"]'); await p.close();
+  // temperatura anotada en marzo: en julio ya no vale y se usa la estimada (no se entra)
+  p = await open('2027-03-02T09:00:00');
+  await p.click('[data-tab="plan"]'); await p.fill('#c-temp', '16'); await p.close();
+  p = await open('2027-03-09T09:00:00');
+  ok((await p.evaluate(() => JSON.parse(localStorage.getItem('bitacora-buzo-v1')).cfg.tempK)) === '2027-03-02', 'la temperatura queda con su fecha');
+  await p.close();
+  p = await open('2027-07-13T09:00:00');
+  ok((await text(p)).includes('Hoy no entras al lago'), 'en julio la temperatura de marzo ya no vale: no se entra');
+  await p.close();
+  ok(errs.length === 0, 'sin errores: ' + errs.join(' | '));
+  await ctx.close(); }
+
 await browser.close();
 console.log(`\n${passes} correctas, ${fails} fallidas`);
 process.exit(fails ? 1 : 0);
