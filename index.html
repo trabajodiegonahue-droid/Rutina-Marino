@@ -26,7 +26,7 @@ html,body{background:var(--bg);color:var(--ink)}
 body{font-family:var(--f-body);font-size:16px;line-height:1.45;padding:0 16px calc(150px + env(safe-area-inset-bottom,0px))}
 .wrap{max-width:640px;margin:0 auto;padding-block:14px 24px;display:flex;flex-direction:column;gap:14px}
 h1,h2,h3{margin:0;text-wrap:balance}
-button{font:inherit;color:inherit;cursor:pointer}
+button{font:inherit;color:inherit;cursor:pointer;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
 button:focus-visible,input:focus-visible,textarea:focus-visible,summary:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 .lbl{font-family:var(--f-label);text-transform:uppercase;letter-spacing:.08em;font-size:13px;color:var(--muted);font-weight:600}
 .mono{font-family:var(--f-mono);font-variant-numeric:tabular-nums}
@@ -659,11 +659,13 @@ const LS="bitacora-buzo-v1";
 const defCfg=()=>({name:"Diego",start:"2026-10-06",sched:Array.from({length:53},(_,i)=>i),repeats:[],place:"lago",partner:false,neo:false,temp:"",turno:"13"});
 const fixCfg=c=>{if(c.start==="2026-10-05"&&!c.startMoved){c.start="2026-10-06";c.startMoved=true}return c};
 const clone=o=>JSON.parse(JSON.stringify(o||{}));
-const Store={mode:"local",cfg:defCfg(),days:{},timers:{},chains:{},
+const Store={mode:"local",cfg:defCfg(),days:{},timers:{},chains:{},pend:{},edit:{},
   loadLocal(){try{const r=JSON.parse(localStorage.getItem(LS)||"null");if(r){this.cfg=fixCfg(Object.assign(defCfg(),r.cfg||{}));this.days=r.days||{}}}catch(e){}},
   saveLocal(){try{localStorage.setItem(LS,JSON.stringify({cfg:this.cfg,days:this.days}))}catch(e){}},
+  // un documento que acabas de tocar manda sobre lo que llega de la nube: mientras se guarda y 5 s después
+  busy(k){return !!this.timers[k]||(this.pend[k]||0)>0||Date.now()-(this.edit[k]||0)<5000},
   async init(cb){
-    this.loadLocal();cb();
+    this.cb=cb;this.loadLocal();cb();
     try{
       if(!window.claude||!window.claude.use)return;
       const [db,user]=await Promise.all([window.claude.use("db"),window.claude.use("user")]);
@@ -672,27 +674,31 @@ const Store={mode:"local",cfg:defCfg(),days:{},timers:{},chains:{},
       const localCfg=clone(this.cfg),localDays=clone(this.days);let gotCfg=false,gotDays=false;
       this.mode="db";
       this.planRef.onSnapshot(s=>{
-        if(s.exists){if(!this.timers.plan){const raw=clone(s.data());this.cfg=fixCfg(Object.assign(defCfg(),raw));if(raw.start!==this.cfg.start)this.queue("plan")}}
+        const before=JSON.stringify(this.cfg);
+        if(s.exists){if(!this.busy("plan")){const raw=clone(s.data());this.cfg=fixCfg(Object.assign(defCfg(),raw));if(raw.start!==this.cfg.start)this.queue("plan")}}
         else if(!gotCfg){this.cfg=localCfg;this.queue("plan")}
-        gotCfg=true;this.saveLocal();cb();
+        gotCfg=true;if(JSON.stringify(this.cfg)!==before){this.saveLocal();cb()}
       },()=>{});
       this.daysCol.limit(1000).onSnapshot(q=>{
-        const d={};q.docs.forEach(x=>{d[x.id]=clone(x.data())});
+        const before=JSON.stringify(this.days),d={};q.docs.forEach(x=>{d[x.id]=clone(x.data())});
         if(!gotDays&&q.empty&&Object.keys(localDays).length){this.days=localDays;Object.keys(localDays).forEach(k=>this.queue(k))}
-        else{Object.keys(this.timers).forEach(k=>{if(k!=="plan"&&this.days[k])d[k]=this.days[k]});this.days=d}
-        gotDays=true;this.saveLocal();cb();
+        else{Object.keys(this.days).forEach(k=>{if(this.busy(k))d[k]=this.days[k]});this.days=d}
+        gotDays=true;if(JSON.stringify(this.days)!==before){this.saveLocal();cb()}
       },()=>{});
     }catch(e){this.mode="local"}
   },
   day(k){return this.days[k]||(this.days[k]={})},
-  setDay(k,patch){Object.assign(this.day(k),patch);this.saveLocal();this.queue(k)},
-  setCfg(patch){Object.assign(this.cfg,patch);this.saveLocal();this.queue("plan")},
+  setDay(k,patch){Object.assign(this.day(k),patch);this.edit[k]=Date.now();this.saveLocal();this.queue(k)},
+  setCfg(patch){Object.assign(this.cfg,patch);this.edit.plan=Date.now();this.saveLocal();this.queue("plan")},
   queue(k){
     if(this.mode!=="db")return;clearTimeout(this.timers[k]);
-    this.timers[k]=setTimeout(()=>{
+    const id=setTimeout(()=>{
+      if(this.timers[k]===id)delete this.timers[k];
       const body=clone(k==="plan"?this.cfg:this.days[k]),ref=k==="plan"?this.planRef:this.daysCol.doc(k);
-      this.chains[k]=(this.chains[k]||Promise.resolve()).then(()=>ref.set(body)).catch(()=>toast("No se pudo guardar en la nube; quedó guardado en este teléfono.")).finally(()=>{delete this.timers[k]});
-    },500);
+      this.pend[k]=(this.pend[k]||0)+1;
+      this.chains[k]=(this.chains[k]||Promise.resolve()).then(()=>ref.set(body)).catch(()=>toast("No se pudo guardar en la nube; quedó guardado en este teléfono.")).finally(()=>{this.pend[k]--;this.edit[k]=Date.now()});
+    },400);
+    this.timers[k]=id;
   }
 };
 
@@ -1100,8 +1106,10 @@ function render(){
 }
 function setTab(t){S.tab=t;S.confirm=null;try{sessionStorage.setItem("bit-tab",t)}catch(e){}render();window.scrollTo(0,0)}
 
+let lastTap={sig:"",t:0};
 document.addEventListener("click",e=>{
   const b=e.target.closest("button");if(!b)return;const D=b.dataset;
+  const sig=JSON.stringify(D),now=Date.now();if(sig===lastTap.sig&&now-lastTap.t<350&&(D.set||D.task||D.rdone))return;lastTap={sig,t:now};
   if(D.tab){if(D.tab==="hoy"&&S.tab==="hoy"){S.date=new Date();S.follow=true}if(D.tab==="plan")S.selWeek=null;setTab(D.tab);return}
   if(D.go!==undefined){S.run=null;S.date=D.go==="0"?new Date():addDays(S.date,+D.go);S.follow=diffDays(S.date,new Date())===0;S.confirm=null;render();return}
   if(D.goto){S.date=parse(D.goto);S.follow=diffDays(S.date,new Date())===0;setTab("hoy");return}
@@ -1175,7 +1183,11 @@ function tick(){if(!TM)return;const left=Math.max(0,(TM.end-Date.now())/1000);
   TB.innerHTML=`<div class="tin"><div class="tl"><span class="lbl">${left>0?"":"¡Tiempo! "}${esc(TM.label)}</span><b class="mono">${fmtT(Math.ceil(left))}</b></div><div class="bar"><i style="width:${(1-left/TM.total)*100}%"></i></div><button class="nb" data-tstop>${left>0?"Parar":"Cerrar"}</button></div>`;
   if(left<=0){clearInterval(TM.iv);beep(3);const t=TM;setTimeout(()=>{if(TM===t)stopTimer()},6000)}}
 
-Store.init(render);
+let pressing=false,pendingRender=false;
+document.addEventListener("pointerdown",()=>{pressing=true},true);
+const release=()=>{pressing=false;if(pendingRender){pendingRender=false;setTimeout(render,0)}};
+document.addEventListener("pointerup",release,true);document.addEventListener("pointercancel",release,true);
+Store.init(()=>{if(pressing){pendingRender=true;return}render()});
 })();
 </script>
 

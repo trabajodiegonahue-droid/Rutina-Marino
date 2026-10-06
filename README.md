@@ -12,6 +12,6 @@ Uso: abre `index.html` en el navegador. Los datos se guardan en ese navegador (l
 
 ## Pruebas
 
-`npm install` y después `npm test`. Las pruebas abren `index.html` en Chromium y revisan: guardado del progreso, día cumplido y racha, turnos, ajustes, fecha de inicio, temporizador, modo paso a paso, cambio de día a medianoche, prueba de evaluación con repetición de semanas y navegación. Si Chromium está en otra ruta, usa `CHROMIUM_PATH=/ruta/al/chrome npm test`.
+`npm install` y después `npm test`. Las pruebas abren `index.html` en Chromium y revisan: guardado del progreso, día cumplido y racha, turnos, ajustes, fecha de inicio, temporizador, modo paso a paso, cambio de día a medianoche, prueba de evaluación con repetición de semanas, navegación, guardado en la nube con retraso (con `tests/fake-cloud.js`) y doble toque. Si Chromium está en otra ruta, usa `CHROMIUM_PATH=/ruta/al/chrome npm test`.
 
 Si cambias `src/bitacora.html`, regenera `index.html` (es el mismo contenido con `<!doctype html>`, `<head>` y `<body>` alrededor).

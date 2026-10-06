@@ -3,18 +3,20 @@
 import { chromium } from 'playwright';
 import { fileURLToPath } from 'node:url';
 import path from 'node:path';
+import fs from 'node:fs';
 const here = path.dirname(fileURLToPath(import.meta.url));
 const URL = 'file://' + path.join(here, '..', 'index.html');
 const exe = process.env.CHROMIUM_PATH;
 const browser = await chromium.launch(exe ? { executablePath: exe } : {});
 let fails = 0, passes = 0;
 const ok = (cond, msg) => { if (cond) { passes++; } else { fails++; console.log('  ✗ ' + msg); } };
-async function page(time) {
+const FAKE_CLOUD = fs.readFileSync(path.join(here, 'fake-cloud.js'), 'utf8');
+async function page(time, cloud) {
   const ctx = await browser.newContext({ viewport: { width: 390, height: 1200 } });
   const p = await ctx.newPage();
   const errs = [];
   p.on('pageerror', e => errs.push(e.message));
-  await p.clock.install({ time: new Date(time) });
+  if (cloud) await p.addInitScript(FAKE_CLOUD); else await p.clock.install({ time: new Date(time) });
   await p.goto(URL); await p.waitForTimeout(200);
   return { p, ctx, errs };
 }
@@ -168,6 +170,30 @@ const reload = async p => { await p.reload(); await p.waitForTimeout(200); };
   await p.click('[data-tab="plan"]'); await p.click('[data-wk="5"]'); await p.locator('[data-goto]').first().click();
   ok((await text(p)).includes('SEM 5 · DÍA 1'), 'abrir un día desde el plan');
   ok(errs.length === 0, 'sin errores: ' + errs.join(' | '));
+  await ctx.close(); }
+
+// 11. Guardado en la nube con retraso: lo que marcas no se desmarca solo
+{ console.log('11. Nube con retraso');
+  const { p, ctx, errs } = await page(null, true);
+  await p.waitForTimeout(600);
+  const dots = p.locator('.dot', { hasText: /^[1-9]$/ });
+  const state = async () => { const a = []; for (let i = 0; i < 4; i++) a.push(await dots.nth(i).evaluate(e => e.classList.contains('on') ? 1 : 0)); return a.join(''); };
+  for (let i = 0; i < 3; i++) { await dots.nth(i).click(); await p.waitForTimeout(120); }
+  const seen = new Set(); for (let t = 0; t < 40; t++) { seen.add(await state()); await p.waitForTimeout(100); }
+  ok(seen.size === 1 && [...seen][0] === '1110', 'las series marcadas no parpadean ni se desmarcan (' + [...seen].join(', ') + ')');
+  await p.click('[data-mode="cansado"]'); await p.waitForTimeout(3000);
+  ok(await p.locator('[data-mode="cansado"]').evaluate(e => e.classList.contains('on')), '“Cansado” se mantiene con la nube');
+  await p.click('[data-tab="plan"]'); await p.click('[data-cset="turno|16"]'); await p.waitForTimeout(3000);
+  ok(await p.locator('[data-cset="turno|16"]').evaluate(e => e.classList.contains('on')), 'el ajuste se mantiene con la nube');
+  ok(errs.length === 0, 'sin errores: ' + errs.join(' | '));
+  await ctx.close(); }
+
+// 12. Doble toque accidental sobre la misma serie no la desmarca
+{ console.log('12. Doble toque');
+  const { p, ctx } = await page('2026-10-13T09:00:00');
+  const d = p.locator('.dot', { hasText: /^1$/ }).first();
+  await d.dblclick();
+  ok(await p.locator('.dot', { hasText: /^1$/ }).first().evaluate(e => e.classList.contains('on')), 'el doble toque deja la serie marcada');
   await ctx.close(); }
 
 await browser.close();
