@@ -68,6 +68,43 @@ button:focus-visible,input:focus-visible,textarea:focus-visible,a:focus-visible{
 .task.on .t{text-decoration:line-through;text-decoration-thickness:2px;text-decoration-color:var(--ok)}
 .task .safe{display:block;color:var(--bad);font-size:13px;font-weight:600;margin-top:4px}
 
+.task{display:block;cursor:default;padding:0}
+.thd{display:grid;grid-template-columns:38px 1fr auto;gap:12px;align-items:start;padding:14px}
+.thd .box{cursor:pointer;background:none;padding:0}
+.tx{min-width:0;display:flex;flex-direction:column}
+.blks{display:flex;flex-direction:column;border-top:1px dashed var(--line);margin:0 14px;padding-block:4px 12px}
+.blk{display:flex;gap:10px;align-items:center;justify-content:space-between;padding-block:9px;border-bottom:1px solid var(--line)}
+.blk:last-child{border-bottom:0}
+.blk .bt{display:flex;flex-direction:column;min-width:0;flex:1}
+.bn{font-weight:700;font-size:16px}
+.bp{font-family:var(--f-mono);font-size:14px;color:var(--ink)}
+.bnote{font-size:13px;color:var(--muted);margin-top:2px}
+.blk.full .bn{color:var(--ok)}
+.tms{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
+.tmr{border:1px solid var(--line);background:var(--bg);border-radius:14px;padding:3px 10px;font-family:var(--f-mono);font-size:12px;cursor:pointer}
+.tmr.rest{color:var(--muted)}
+.dots{display:flex;gap:4px;flex-wrap:wrap;justify-content:flex-end;max-width:52%;align-items:center}
+.dot{width:30px;height:30px;border:2px solid var(--ink);border-radius:50%;background:transparent;font-family:var(--f-mono);font-size:12px;cursor:pointer;padding:0}
+.dot.on{background:var(--ok);border-color:var(--ok);color:var(--paper)}
+.dot.one{width:36px;height:36px;font-size:16px}
+.cnt{min-width:52px;text-align:center}
+.ready.ok{border-left:6px solid var(--ok)}.ready.warn{border-left:6px solid var(--warn)}.ready.bad,.ready.red{border-left:6px solid var(--bad)}
+.rtag{font-family:var(--f-label);font-weight:700;letter-spacing:.06em;padding:3px 10px;border-radius:3px;color:var(--paper);font-size:14px}
+.rtag.ok{background:var(--ok)}.rtag.warn{background:var(--warn)}.rtag.bad,.rtag.red{background:var(--bad)}
+.rtxt{margin:0;font-weight:600}
+.segs{display:flex;gap:4px;flex-wrap:wrap}
+.seg{border:1px solid var(--line);background:var(--bg);border-radius:4px;padding:7px 10px;cursor:pointer;font-size:14px}
+.seg.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.vol{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px}
+.vol>div{display:flex;flex-direction:column}
+.vol b{font-size:20px}.vol small{font-size:13px;color:var(--muted);font-weight:400}
+ul.pre{margin:0 0 12px;padding-left:20px}
+.timerbar{position:fixed;left:0;right:0;bottom:calc(52px + env(safe-area-inset-bottom,0px));z-index:6;padding:0 12px 8px;display:flex;justify-content:center}
+.tin{max-width:680px;width:100%;background:var(--paper);border:2px solid var(--accent);border-radius:8px;padding:10px 12px;display:grid;grid-template-columns:1fr auto;gap:6px 12px;align-items:center;box-shadow:0 6px 20px rgba(0,0,0,.18)}
+.tin .tl{display:flex;justify-content:space-between;align-items:baseline;gap:10px;min-width:0}
+.tin .tl b{font-size:28px}
+.tin .bar{grid-column:1/2}
+.tin .nb{grid-row:1/3;grid-column:2}
 /* registro */
 .card{background:var(--paper);border:1px solid var(--line);padding:14px 16px;display:flex;flex-direction:column;gap:12px}
 .row{display:flex;gap:12px;flex-wrap:wrap;align-items:flex-end}
@@ -138,6 +175,7 @@ nav.tabs button.on{opacity:1;box-shadow:inset 0 3px 0 var(--accent)}
   </div>
   <div class="order"><div class="say">Cargando la orden del día…</div></div>
 </div>
+<div id="timerbar" class="timerbar" hidden role="timer" aria-live="polite"></div>
 <nav class="tabs" aria-label="Secciones"><div class="in" id="tabs"></div></nav>
 
 <script>
@@ -215,97 +253,222 @@ function cold(w){const e=carry(w,/ducha/i,"Ducha fría 30 s");const m=e.match(/(
 function apneaTarget(w){const e=carry(w,/apnea (piscina|\d)/i,"");const m=e.match(/(\d[\d–-]*\s*m)\b/);return m?m[1]:""}
 function lakeMin(w){const e=extraOf(w);const m=/lago/i.test(e)&&e.match(/(\d[\d–-]*\s*min)/);return m?m[1]:""}
 
-const FA="4 series de barras (2 menos que tu máximo) · flexiones 4 × 12–20 · sentadillas 4 × 20 · plancha 3 × 45 s";
-const FB1="Sin descanso entre ejercicios: barras 5 → flexiones 15 → sentadillas 20 → abdominales 20. 90 s entre vueltas.";
-const FB2="Sin pausa: barras 6–8 → flexiones 20 → sentadillas 25 → abdominales 25. 60 s entre vueltas.";
-const MINI="200–300 m nado rápido → barras × 70% del máximo → sentadillas 1 min → flexiones 1 min → abdominales 1 min → 1.200 m corriendo. Sin pausas, solo el tiempo de cambiarte.";
-const SIMU="La prueba de evaluación entera, máximo 3 min entre ejercicios: apnea dinámica → 500 m libre → barras → sentadillas 2 min → flexiones 2 min → abdominales 2 min → 2.400 m. Anota tiempos y qué te costó más: ese ejercicio recibe una sesión extra la semana siguiente.";
-const SEG_APNEA="Con compañero o salvavidas avisado. Nunca hiperventilar antes.";
+const SEG_APNEA="Con compañero o salvavidas avisado. Nunca hiperventilar antes. Respira normal entre repeticiones.";
 const SEG_LAGO="Solo acompañado, con boya de color y gorra llamativa, paralelo a la orilla. Sin compañero: piscina.";
-const ASECO="Acostado, en casa, nunca en el agua ni en la tina. 8 apneas de 1 min; descansos que bajan de 2:00 a 0:15.";
-const CORE="Core 15 min: plancha, plancha lateral, hollow hold, abdominales.";
+const fmtT=s=>{s=Math.round(s);return Math.floor(s/60)+":"+pad(s%60)};
+const num=s=>Number(String(s).replace(/\./g,""));
+const r50=x=>Math.max(0,Math.round(x/50)*50);
 
-function T(id,t,d,h,safe){return {id,t,d:d||"",h:h||"",safe:safe||""}}
-function noche(w){return T("noche","Noche: visualización 5 min + cama 22:30","Imagina la prueba completa, con el cansancio incluido, y te ves terminando. Sin pantalla los últimos 30 min."+(DELOAD.includes(w)?" Semana de descarga: duerme más.":"")+(w===51?" Esta semana: 9 h.":""),"22:00")}
-function ducha(w){return T("ducha","Ducha fría "+cold(w),"Al final de la ducha normal. Respira lento y largo por la nariz mientras dura.","11:15")}
+/* bloque = un ejercicio: n nombre, p prescripción, s series a marcar, r descanso (s), tm temporizador de trabajo (s), m metros, note */
+function B(n,p,o){return Object.assign({n,p,s:1},o||{})}
+function T(id,t,d,h,blocks,o){return Object.assign({id,t,d:d||"",h:h||"",blocks:blocks||[],safe:""},o||{})}
 
-function dayPlan(w,dow){
-  const deload=DELOAD.includes(w), st=stageOf(w);
-  let tasks=[], title="", kind="tierra";
+const CAL=B("Calentamiento","8 min: círculos de hombros y caderas, 20 jumping jacks, 2 × 10 sentadillas sin carga, 2 × 5 flexiones suaves, 3 colgadas de 10 s en la barra");
+const ELONG=B("Elongación","5 min: cuádriceps, isquios, gemelos, pecho y dorsales, 30 s cada uno");
+
+/* ---- metas de ritmo según la próxima prueba ---- */
+function runGoal(w){return w<=13?630:w<=26?600:w<=39?570:540} // 2.400 m
+function swimGoal(w){return w<=39?660:570} // 500 m
+function runPace(w,d,fast){const p4=runGoal(w)/6-(fast?3:0);const k=d/400;return p4*k+(k>1?(k-1)*4:0)-(d<400?2:0)}
+function runRest(d){return d<=200?60:d<=400?90:d<=800?120:d<=1200?150:180}
+
+/* ---- carrera ---- */
+function runBlocks(spec,w){
+  spec=spec.replace(/^Intervalos:?\s*/i,"").trim();
+  let m;
+  if((m=spec.match(/(\d+)\s*×\s*([\d.]+)\s*m(.*)/))){
+    const n=+m[1],d=num(m[2]),fast=/rápido/i.test(m[3]),pace=runPace(w,d,fast);
+    return {blocks:[B("Calentamiento","10 min de trote suave + 4 aceleraciones de 80 m"),
+      B(`${n} × ${m[2]} m`,`Cada uno en ${fmtT(pace)}${fast?" (rápido)":""} · ritmo ${fmtT(runGoal(w)/6-(fast?3:0))} por cada 400 m`,{s:n,r:runRest(d),note:`Recuperación: ${fmtT(runRest(d))} trotando muy suave o caminando. Meta de la próxima prueba: 2.400 m en ${fmtT(runGoal(w))}.`}),
+      B("Vuelta a la calma","5–10 min de trote suave"),ELONG],min:20+n*(pace+runRest(d))/60};
+  }
+  if((m=spec.match(/([\d.]+)\s*m\s*cronometrado/))) return {blocks:[B("Calentamiento","10 min de trote suave + 4 aceleraciones"),B(m[1]+" m cronometrado","A tope, como en la prueba. Anota el tiempo en notas.",{note:"Meta de la próxima prueba: "+fmtT(runGoal(w))}),B("Vuelta a la calma","10 min suave"),ELONG],min:35};
+  if((m=spec.match(/(\d+)(?:–(\d+))?\s*min/))){
+    const a=+m[1];const easy=/suave/i.test(spec)||a<=35;
+    return {blocks:[B("Trote "+(m[2]?m[1]+"–"+m[2]:a)+" min",easy?"Ritmo conversación: puedes hablar en frases completas.":"Ritmo constante y cómodo, sin parar. Si puedes decir 3–4 palabras seguidas, vas bien.",{tm:a*60}),ELONG],min:a+5};
+  }
+  return {blocks:[B(spec,"")],min:30};
+}
+
+/* ---- natación ---- */
+const DRILLS=["patada con tabla","patada lateral (de costado, un brazo adelante)","nado a un brazo","“pillar” (una mano espera a la otra adelante)","respiración cada 3 brazadas"];
+function swimRest(d){return d<=25?20:d<=100?30:d<=300?45:60}
+function parseSwim(spec){
+  const m=spec.match(/([\d.]+)\s*m/);const total=m?num(m[1]):1000;
+  const body=spec.includes(":")?spec.slice(spec.indexOf(":")+1):"";
+  const sets=[];let desc="";
+  body.split(/,|\+|;/).map(x=>x.trim()).filter(Boolean).forEach(p=>{
+    let q;
+    if((q=p.match(/^([\d.]+)\s*m(.*)×\s*(\d+)/)))sets.push({n:+q[3],d:num(q[1]),lab:p});
+    else if((q=p.match(/(\d+)\s*×\s*([\d.]+)\s*m/)))sets.push({n:+q[1],d:num(q[2]),lab:p});
+    else if((q=p.match(/([\d.]+)\s*m/))&&!/tramos/.test(p))sets.push({n:1,d:num(q[1]),lab:p});
+    else desc+=(desc?", ":"")+p;
+  });
+  return {total,sets,desc};
+}
+function swimBlocks(spec,w,opt){
+  opt=opt||{};const P=parseSwim(spec),st=w<=13?1:w<=26?2:3;
+  const main=P.sets.reduce((a,s)=>a+s.n*s.d,0);let R=Math.max(0,P.total-main);
+  const warm=Math.min(st===1?150:300,r50(R*0.35)),cool=R-warm>=150?100:R-warm>=50?50:0,tech=R-warm-cool;
+  const bl=[];
+  if(warm)bl.push(B("Entrada en calor",`${warm} m suave, el estilo que te acomode`,{m:warm}));
+  if(tech>0){
+    if(/series/.test(P.desc)){const n=Math.max(1,Math.round(tech/50));bl.push(B(`${n} × 50 m rápido`,"Fuerte, 85–90%. Series cortas para ganar velocidad.",{s:n,r:30,m:n*50}))}
+    else{const L=st===1?25:50,cap=st===1?tech:Math.min(tech,400),n=Math.max(1,Math.round(cap/L)),aer=Math.floor((tech-n*L)/100);
+      if(aer>0)bl.push(B(`${aer} × 100 m aeróbico`,"Crol a ritmo cómodo y constante",{s:aer,r:20,m:aer*100,note:"Descanso 20 s en la pared."}));
+      bl.push(B(`Técnica: ${n} × ${L} m`,"Rota los drills: "+DRILLS.join(" · "),{s:n,r:20,m:n*L,note:st===1?"Foco: cuerpo horizontal, respiración lateral, patada desde la cadera, brazada larga.":"Técnica: no dejes que el cansancio te rompa la brazada."}))}
+  }
+  const p100=swimGoal(w)/5;
+  P.sets.forEach(s=>{
+    const lab=s.n>1?`${s.n} × ${s.d.toLocaleString("es-CL")} m`:`${s.d.toLocaleString("es-CL")} m`;
+    let p=/crol/.test(s.lab)||st>1?"Crol":"Cualquier estilo, intentando crol";
+    if(/rápido/.test(s.lab))p="Crol rápido, 85–90%";
+    if(/ritmo/.test(s.lab))p=s.d===100?`Crol a ritmo meta: ${fmtT(p100)} cada 100 m`:`Crol a ritmo meta: ${fmtT(p100*s.d/100)} cada ${s.d} m (${fmtT(p100)} por 100 m)`;
+    if(/continuo/.test(s.lab))p="Continuo, sin parar ni tocar el fondo";
+    if(/cronometrado|prueba|ensayo/.test(s.lab))p="Cronometrado, como en la prueba. Anota el tiempo.";
+    if(/aletas/.test(s.lab))p="Continuo con aletas";
+    if(/2\.º más rápido/.test(s.lab))p="El segundo más rápido que el primero";
+    bl.push(B(lab,p,{s:s.n,r:s.n>1?swimRest(s.d):0,m:s.n*s.d,note:s.n>1?`Descanso ${swimRest(s.d)} s en la pared entre cada uno.`:""}));
+  });
+  if(cool)bl.push(B("Vuelta a la calma",`${cool} m muy suave`,{m:cool}));
+  if(opt.cont)bl.splice(0,0,B("Hoy, la orden","Nada los tramos largos sin parar. Piensa “hasta el otro borde”."));
+  return {blocks:bl,m:P.total};
+}
+function finsBlocks(){return {blocks:[B("Entrada en calor","200 m suave sin aletas",{m:200}),B("4 × 200 m patada con aletas","Boca abajo, brazos adelante, patada desde la cadera",{s:4,r:30,m:800}),B("4 × 50 m nado con aletas, posición de buceo","Brazos pegados al cuerpo, solo patada",{s:4,r:30,m:200}),B("Vuelta a la calma","100 m suave",{m:100})],m:1300}}
+function longSwim(w){const d=w<=39?1500:2000;return {blocks:[B("Entrada en calor","200 m suave",{m:200}),B(d.toLocaleString("es-CL")+" m continuo","Crol sin parar. Cada 500 m, revisa que la brazada siga larga.",{m:d}),B("Vuelta a la calma","100 m suave",{m:100})],m:d+300}}
+
+/* ---- fuerza ---- */
+function maxBarras(ctx){return Math.max(ctx.barras||6,2)}
+function fuerzaA(w,ctx){
+  const mx=maxBarras(ctx),b=Math.max(mx-2,1),fl=w<=13?"12–15":w<=26?"15–18":"18–20";
+  return [CAL,
+    B("Barras",`4 × ${b} reps (tu máximo ${mx} − 2)`,{s:4,r:120,note:"Agarre prono, brazos extendidos abajo, mentón sobre la barra. Si no llegas: completa con negativas (bajar lento en 5 s)."}),
+    B("Flexiones",`4 × ${fl} reps`,{s:4,r:90,note:"Cuerpo recto, pecho a un puño del suelo."}),
+    B("Sentadillas","4 × 20 reps",{s:4,r:60,note:"Muslos paralelos al suelo, talones apoyados."}),
+    B("Plancha","3 × 45 s",{s:3,r:45,tm:45,note:"Glúteos apretados, sin hundir la cadera."})];
+}
+function bVals(w){
+  const s2=w>=14,v=s2?{barras:6,flex:20,sent:25,abd:25}:{barras:5,flex:15,sent:20,abd:20};
+  for(let i=s2?14:1;i<=Math.min(w,26);i++){const c=S12[i]&&S12[i][3];if(!c)continue;let m;
+    if((m=c.match(/barras (\d+)/)))v.barras=+m[1];if((m=c.match(/flexiones (\d+)/)))v.flex=+m[1];
+    if((m=c.match(/sentadillas (\d+)/)))v.sent=+m[1];if((m=c.match(/abdominales (\d+)/)))v.abd=+m[1];}
+  return v;
+}
+function fuerzaB(w,vueltas,rest,vals){
+  const v=vals||bVals(w);
+  return [CAL,B(`Circuito × ${vueltas} vueltas`,`Barras ${v.barras} → flexiones ${v.flex} → sentadillas ${v.sent} → abdominales ${v.abd}`,{s:vueltas,r:rest,note:`Sin descanso entre ejercicios. ${rest} s entre vueltas. Es el formato de la prueba: encadenar cansado.`})];
+}
+const CORE=()=>[B("Plancha","3 × 45 s",{s:3,r:30,tm:45}),B("Plancha lateral","2 × 30 s por lado",{s:4,r:20,tm:30}),B("Hollow hold","3 × 20 s: espalda baja pegada al suelo, piernas y hombros elevados",{s:3,r:30,tm:20}),B("Abdominales","3 × 20 reps",{s:3,r:30})];
+function cuerda(n){return B("Cuerda",(n?n:"3–5")+" subidas",{s:n||4,r:120,note:"Técnica de pinza con los pies: aprende primero en lo bajo. Sin cuerda: barras con toalla colgada, 2 × tu máximo."})}
+function apneaBlocks(meta){
+  if(!meta)return [B("Flotación boca abajo","6 × 10–15 s, exhalando lento por la nariz",{s:6,r:60}),B("Deslizamiento bajo el agua","4 × desde la pared, hasta donde llegues cómodo",{s:4,r:90})];
+  const lo=parseInt(meta,10),prep=Math.max(5,Math.round(lo*0.6/5)*5);
+  return [B("Preparación","2 min de respiración de caja (4-4-4-4) en la orilla. Nunca respiración rápida.",{tm:120}),
+    B(`4 × ${prep} m`,"Apnea dinámica suave, sin aletas",{s:4,r:120}),
+    B(`2 × ${meta}`,"Distancia meta de la semana. El compañero te sigue por el borde.",{s:2,r:180})];
+}
+const ASECO=()=>[B("Tabla de apnea en seco","8 apneas de 1:00, acostado en casa",{s:8,tm:60,note:"Descansos entre apneas: 2:00 · 1:45 · 1:30 · 1:15 · 1:00 · 0:45 · 0:30 · 0:15. Entrenas tolerar las ganas de respirar. Nunca en el agua ni en la tina."})];
+function lagoBlocks(min){return [B("Entrada","Caminando hasta la cintura. Espera 1–2 min a que la respiración se calme."),B("Nado "+min,"Paralelo a la orilla, cerca de ella",{note:"Sal ya si: temblor que no para, torpeza en las manos, confusión o labios morados."}),B("Salida","Sécate, ropa abrigada, bebida caliente. No te metas a una ducha muy caliente de inmediato.")]}
+function testBlocks(ctx){return [
+  B("1. Apnea dinámica","Metros con una respiración, sin aletas. Sin hiperventilar."),
+  B("2. Natación 500 m libre","Tiempo total"),
+  B("3. Barras","Máximo seguidas. Agarre prono, brazos extendidos, mentón sobre la barra."),
+  B("4. Sentadillas","Máximo en 2 min, muslos paralelos",{tm:120}),
+  B("5. Flexiones","Máximo en 2 min, pecho a un puño del suelo",{tm:120}),
+  B("6. Abdominales","Máximo en 2 min",{tm:120}),
+  B("7. Carrera 2.400 m","Tiempo. Idealmente en pista: 6 vueltas.")]}
+function miniBlocks(spec,ctx){
+  const sw=/300 m/.test(spec)?"300 m":/200 m/.test(spec)?"200 m":"200–300 m",run=/1\.600/.test(spec)?"1.600 m":"1.200 m",b=Math.max(1,Math.round(maxBarras(ctx)*0.7));
+  return [B("Nado "+sw+" rápido","Sales del agua y te cambias rápido"),B("Barras × "+b,`70% de tu máximo (${maxBarras(ctx)})`+(/pausa/.test(spec)?" · con pausa de 1 s arriba":"")+(/mochila/.test(spec)?" · con mochila de 5 kg":"")),B("Sentadillas 1 min","Máximo",{tm:60}),B("Flexiones 1 min","Máximo",{tm:60}),B("Abdominales 1 min","Máximo",{tm:60}),B("Carrera "+run,"Sin pausa desde el último ejercicio")];
+}
+function noche(w){return T("noche","Noche: visualización + cama 22:30","Sin pantalla los últimos 30 min.","22:00",[B("Visualización 5 min","Imagina la prueba completa, con el cansancio incluido, y te ves terminando.",{tm:300}),B("A la cama 22:30",DELOAD.includes(w)?"Semana de descarga: duerme más.":w===51?"Esta semana: 9 h.":"8–9 horas.")],{kind:"rutina"})}
+function ducha(w){return T("ducha","Ducha fría "+cold(w),"Al final de la ducha normal.","11:15",[B("Agua fría "+cold(w),"Respira lento y largo por la nariz mientras dura.",{tm:toSec(cold(w).replace(/ s$/,"").replace(/ min$/,":00").replace(/^(\d+)$/,"0:$1"))||30})],{kind:"rutina"})}
+
+function dayPlan(w,dow,ctx){
+  ctx=ctx||{};
+  const deload=DELOAD.includes(w),st=stageOf(w);
+  let tasks=[],title="",kind="tierra";
+  const swimT=(id,t,d,h,o)=>T(id,t+(o.m?` · ${o.m.toLocaleString("es-CL")} m`:""),d,h,o.blocks,{kind:"agua",m:o.m});
+  const runT=(id,t,d,h,o)=>T(id,t,d,h,o.blocks,{kind:"carrera",min:o.min});
   if(w===0){
     const W0=[
-      ["Planificación","admin",[T("med","Pedir hora para el chequeo médico","Examen general, electrocardiograma, oídos y senos paranasales, espirometría y control dental. Si tienes una lesión antigua, cuéntaselo al médico.","09:00"),T("porque","Escribe tu “por qué” en una hoja","Por qué quieres ser buzo táctico. La vas a leer cuando no tengas ganas de entrenar."),T("frases","Escribe 2–3 frases de diálogo interno","Para cambiar “no puedo más” por “esto es lo que vine a entrenar”.")]],
-      ["Reconocimiento","admin",[T("clases","Inscribirte en clases de crol","Piscina San Ignacio o DMOOV (Puerto Varas). Pide foco en: cuerpo horizontal, respiración lateral, patada desde la cadera y brazada larga.","09:00"),T("comp","Buscar compañero de agua","Pregunta por grupos master o de aguas abiertas, en Puerto Varas Diving y en clubes de triatlón."),T("run","Carrera suave 30 min","Solo para soltar las piernas.","07:00")]],
-      ["Inteligencia","admin",[T("naval","Consultar a la Quinta Zona Naval (Puerto Montt)","Requisitos y fechas de postulación de la Escuela de Grumetes y la Escuela Naval, y el formato actual de la prueba del curso."),T("mov","Movilidad 20 min","Caderas, hombros, tobillos.","07:00")]],
-      ["Descanso","descanso",[T("rest","Descanso","Duerme 8–9 horas. Mañana sigues.")]],
-      ["Activación","tierra",[T("run","Trote suave 20 min + movilidad","Prepara el cuerpo para la prueba de mañana.","07:00"),T("prep","Prepara todo para la prueba","Cronómetro, toalla, ropa de recambio, alguien que te siga por el borde.")]],
+      ["Arranque","admin",[T("med","Pedir hora para el chequeo médico","Sin chequeo no hay plan.","09:00",[B("Qué pedir","Examen general, electrocardiograma, oídos y senos paranasales, espirometría y control dental."),B("Avisa","Si tienes una lesión antigua, cuéntaselo al médico.")],{kind:"admin"}),
+        swimT("swim","Reconocimiento de piscina","Con salvavidas a la vista.","07:00",{blocks:[B("Nado libre 20–30 min","Salvavidas suave, a tu ritmo. Prueba poner la cara en el agua y exhalar."),B("Exhalar bajo el agua","10 × 5 s haciendo burbujas por la nariz",{s:10,r:15})],m:0}),
+        T("porque","Escribe tu “por qué”","En una hoja. Lo vas a leer cuando no tengas ganas.","20:00",[B("Por qué quieres ser buzo táctico","Una hoja, a mano."),B("2–3 frases de diálogo interno","Para cambiar “no puedo más” por “esto es lo que vine a entrenar”.")],{kind:"admin"})]],
+      ["Reconocimiento","admin",[runT("run","Carrera suave 30 min","Solo para soltar las piernas.","07:00",runBlocks("30 min suave",1)),
+        T("clases","Inscribirte en clases de crol","Piscina San Ignacio o DMOOV (Puerto Varas).","10:00",[B("Pide foco en","Cuerpo horizontal, respiración lateral, patada desde la cadera y brazada larga."),B("Pregunta","Horarios de nado libre y si hay grupos master o de aguas abiertas.")],{kind:"admin"}),
+        T("comp","Buscar compañero de agua","Sin compañero no hay lago ni apnea en el agua.","11:00",[B("Dónde","Piscinas, Puerto Varas Diving, clubes de triatlón de la zona.")],{kind:"admin"})]],
+      ["Fuerza de prueba","tierra",[T("fa","Fuerza A de ensayo","Aprende los ejercicios antes de la prueba. Sin llegar al fallo.","07:00",[CAL,B("Barras","3 × 3 reps",{s:3,r:120}),B("Flexiones","3 × 10 reps",{s:3,r:90}),B("Sentadillas","3 × 15 reps",{s:3,r:60}),B("Plancha","2 × 30 s",{s:2,r:45,tm:30})],{kind:"fuerza"}),
+        T("naval","Consultar a la Quinta Zona Naval","Puerto Montt o sitio oficial de la Armada.","10:00",[B("Preguntar","Requisitos y fechas de postulación de la Escuela de Grumetes y la Escuela Naval, y el formato actual de la prueba del curso.")],{kind:"admin"})]],
+      ["Descanso","descanso",[T("rest","Descanso","El cuerpo se adapta mientras descansa.","",[B("Movilidad opcional","10 min suaves"),B("Duerme 8–9 h","")],{kind:"descanso"})]],
+      ["Activación","tierra",[runT("run","Trote suave 20 min","Prepara el cuerpo para la prueba de mañana.","07:00",runBlocks("20 min suave",1)),
+        T("prep","Preparar la prueba","Que mañana no falte nada.","20:00",[B("Lista","Cronómetro, toalla, ropa de recambio, compañero que te siga por el borde, pista de 400 m."),B("Leer","El protocolo de 7 pruebas en la pestaña Pruebas.")],{kind:"admin"})]],
       ["Prueba inicial","prueba",null],
-      ["Descanso total","descanso",[T("rest","Descanso total","Recuperación y sueño.")]]
+      ["Descanso total","descanso",[T("rest","Descanso total","Recuperación y sueño.","",[B("Duerme 8–9 h","")],{kind:"descanso"})]]
     ];
-    const d=W0[dow]; title=d[0]; kind=d[1]; tasks=d[2];
+    [title,kind,tasks]=W0[dow];
   } else if(TESTS.includes(w)){
     const TW=[
-      ["Nado suave","agua",[T("swim","Nado suave 30 min","Solo técnica, nada de cansarte.","07:00")]],
-      ["Trote suave","tierra",[T("run","Trote suave 25 min","Ritmo de conversación.","07:00")]],
-      ["Movilidad","tierra",[T("mov","Movilidad 20 min + core suave","Sin carga. Llega fresco a la prueba.","07:00")]],
-      ["Descanso","descanso",[T("rest","Descanso","Duerme 8–9 horas.")]],
-      ["Activación","tierra",[T("run","Activación 15 min","Trote suave y 3 aceleraciones cortas.","07:00"),T("prep","Prepara la prueba","Cronómetro, compañero o salvavidas avisado, pista de 400 m.")]],
+      ["Nado suave","agua",[swimT("swim","Nado suave","Solo técnica.","07:00",swimBlocks("800 m: técnica",w))]],
+      ["Trote suave","tierra",[runT("run","Trote suave 25 min","Ritmo conversación.","07:00",runBlocks("25 min suave",w))]],
+      ["Movilidad","tierra",[T("mov","Movilidad + core suave","Sin carga. Llega fresco a la prueba.","07:00",[B("Movilidad 15 min","Caderas, hombros, tobillos"),...CORE().slice(0,2)],{kind:"fuerza"})]],
+      ["Descanso","descanso",[T("rest","Descanso","Duerme 8–9 horas.","",[B("Duerme 8–9 h","")],{kind:"descanso"})]],
+      ["Activación","tierra",[runT("run","Activación 15 min","Trote suave y 3 aceleraciones cortas.","07:00",{blocks:[B("Trote 12 min","Suave"),B("3 aceleraciones de 60 m","",{s:3,r:60})],min:15}),T("prep","Preparar la prueba","","20:00",[B("Lista","Cronómetro, compañero o salvavidas avisado, pista de 400 m.")],{kind:"admin"})]],
       [w===52?"Prueba final":"Prueba de evaluación","prueba",null],
-      ["Descanso total","descanso",[T("rest","Descanso total","Recuperación y sueño.")]]
+      ["Descanso total","descanso",[T("rest","Descanso total","Recuperación y sueño.","",[B("Duerme 8–9 h","")],{kind:"descanso"})]]
     ];
-    const d=TW[dow]; title=d[0]; kind=d[1]; tasks=d[2];
+    [title,kind,tasks]=TW[dow];
   } else if(w<=26){
-    const r=S12[w], s2=w>=14, FB=s2?FB2:FB1;
-    const swimNote=(w<=6?"Primeras semanas: con instructor.\n":"")+"Drills: patada con tabla, patada lateral, nado a un brazo, “pillar”, respiración cada 3 brazadas.";
-    const apT=apneaTarget(w);
+    const r=S12[w],s2=w>=14,apT=apneaTarget(w);
+    const vu=+(r[3].match(/(\d+) vueltas/)||[0,3])[1];
     if(dow===0){title=s2?"Natación series + fuerza A":"Natación técnica + fuerza A";kind="agua";
-      tasks=[T("swim",(s2?"Natación series":"Natación técnica 45 min")+" — "+r[0],s2?"Las series enseñan a mantener el ritmo.":swimNote,"07:00"),T("fa","Fuerza A",FA,"10:00")];}
+      tasks=[swimT("swim",s2?"Natación series":"Natación técnica",w<=6?"Primeras 6 semanas: con instructor.":"Las series enseñan a mantener el ritmo.","07:00",swimBlocks(r[0],w)),
+        T("fa","Fuerza A","Después del agua: no estropea el nado.","10:00",fuerzaA(w,ctx),{kind:"fuerza"})];}
     if(dow===1){title=s2?"Carrera continua":"Carrera suave";
-      tasks=[T("run",(s2?"Carrera continua ":"Carrera suave ")+r[1],s2?"El curso tiene trotes largos; esto los prepara.":"Base aeróbica: corazón y pulmones eficientes, poco riesgo de lesión.","07:00")];
-      if(w>=2) tasks.push(T("aseco","Apnea en seco",ASECO,"18:00","Nunca en el agua."));}
+      tasks=[runT("run",(s2?"Carrera continua ":"Carrera suave ")+r[1],s2?"El curso tiene trotes largos; esto los prepara.":"Base aeróbica con poco riesgo de lesión.","07:00",runBlocks(r[1],w))];
+      if(w>=2)tasks.push(T("aseco","Apnea en seco","Acostado, en casa.","18:00",ASECO(),{kind:"apnea",safe:"Nunca en el agua."}));}
     if(dow===2){kind="agua";
-      if(s2){title="Aletas + apnea + core";tasks=[T("swim","Natación con aletas 1.000–1.500 m","Las aletas fortalecen piernas y tobillos para el buceo.","07:00"),T("apnea","Apnea supervisada"+(apT?" — meta "+apT:""),"Distancia bajo el agua con una respiración, sin aletas.","07:45",SEG_APNEA),T("core","Core 15 min",CORE,"10:00")];}
-      else{title="Natación técnica + core";tasks=[T("swim","Natación técnica 45 min — "+r[0],"Repetir los mismos ejercicios fija el movimiento.","07:00"),T("core","Core 15 min",CORE,"10:00")];}}
+      if(s2){title="Aletas + apnea + core";tasks=[swimT("swim","Natación con aletas","Las aletas fortalecen piernas y tobillos para el buceo.","07:00",finsBlocks()),
+        T("apnea","Apnea supervisada"+(apT?" · meta "+apT:""),"Distancia bajo el agua, una respiración, sin aletas.","07:50",apneaBlocks(apT),{kind:"apnea",safe:SEG_APNEA}),
+        T("core","Core 15 min","","10:00",CORE(),{kind:"fuerza"})];}
+      else{title="Natación técnica + core";tasks=[swimT("swim","Natación técnica","Repetir los mismos ejercicios fija el movimiento.","07:00",swimBlocks(r[0],w)),T("core","Core 15 min","","10:00",CORE(),{kind:"fuerza"})];}}
     if(dow===3){title=s2?"Descanso o movilidad":"Descanso";kind="descanso";
-      tasks=[T("rest",s2?"Descanso o movilidad 20 min":"Descanso","El cuerpo se adapta mientras descansa.")];
-      if(w>=2) tasks.push(T("aseco","Apnea en seco",ASECO,"18:00","Nunca en el agua."));}
+      tasks=[T("rest",s2?"Descanso o movilidad 20 min":"Descanso","El cuerpo se adapta mientras descansa.","",[B(s2?"Movilidad 20 min":"Descanso","Caderas, hombros, tobillos, espalda")],{kind:"descanso"})];
+      if(w>=2)tasks.push(T("aseco","Apnea en seco","Acostado, en casa.","18:00",ASECO(),{kind:"apnea",safe:"Nunca en el agua."}));}
     if(dow===4){title=s2?"Fuerza B + intervalos + cuerda":"Fuerza B + intervalos";
-      tasks=[T("fb",r[3].replace(/\s*[,+]\s*cuerda\s*\d*/i,"").replace("Fuerza B","Fuerza B (continuo):"),FB,"07:00")];
-      tasks.push(r[2]?T("int","Carrera: "+r[2],"Calienta 10 min antes, suelta 5 min después.","10:00"):T("int","Sin intervalos esta semana","Semana de descarga: 15 min de trote suave como mucho.","10:00"));
-      if(s2){const c=(r[3].match(/cuerda\s*(\d+)?/i));tasks.push(T("cuerda","Cuerda"+(c&&c[1]?": "+c[1]+" subidas":": 3–5 subidas"),"Si no sabes la técnica de pies (pinza con los pies), aprende primero. Sin cuerda: barras con toalla colgada, 2 × máximo.","10:45"));}}
+      tasks=[T("fb",`Fuerza B continua · ${vu} vueltas`,"Acostumbrarse a encadenar ejercicios como en la prueba.","07:00",fuerzaB(w,vu,s2?60:90),{kind:"fuerza"})];
+      if(r[2])tasks.push(runT("int","Carrera: "+r[2].replace(/^Intervalos\s*/,"intervalos "),"","10:00",runBlocks(r[2],w)));
+      else tasks.push(runT("int","Trote suave 15 min","Semana de descarga: sin intervalos.","10:00",runBlocks("15 min suave",w)));
+      if(s2){const c=r[3].match(/cuerda\s*(\d+)?/i);tasks.push(T("cuerda","Cuerda","Fuerza de agarre: en el curso es diario.","10:45",[cuerda(c&&c[1]?+c[1]:0)],{kind:"fuerza"}))}}
     if(dow===5){kind="agua";
       if(s2){const lk=lakeMin(w);title="Nado largo continuo";
-        tasks=[T("swim","Nado largo continuo — "+r[0],"Resistencia y mente en el agua. Piensa “hasta el otro borde”.","07:00")];
-        if(lk) tasks.push(T("lago","Lago Llanquihue "+lk,"Entra caminando hasta la cintura, espera a que la respiración se calme y recién entonces nada.","08:30",SEG_LAGO));}
+        tasks=[swimT("swim","Nado largo continuo","Resistencia y mente en el agua.","07:00",swimBlocks(r[0],w,{cont:1}))];
+        if(lk)tasks.push(T("lago","Lago Llanquihue "+lk,"Aguas abiertas, siempre acompañado.","09:00",lagoBlocks(lk),{kind:"agua",safe:SEG_LAGO}));}
       else{title="Distancia continua + apnea";
-        tasks=[T("swim","Natación distancia continua — "+r[0],"Sumar metros y comodidad bajo el agua.","07:00"),T("apnea","Apnea supervisada"+(apT?" — meta "+apT:" — comodidad bajo el agua, sin distancia"),"Una sola respiración, sin aletas. El compañero te sigue por el borde.","07:45",SEG_APNEA)];}}
-    if(dow===6){title="Descanso total";kind="descanso";tasks=[T("rest","Descanso total","Recuperación y sueño. Es una orden.")];}
+        tasks=[swimT("swim","Natación distancia continua","Sumar metros y comodidad bajo el agua.","07:00",swimBlocks(r[0],w,{cont:1})),
+          T("apnea","Apnea supervisada"+(apT?" · meta "+apT:""),apT?"":"Aún sin distancia: comodidad bajo el agua.","07:50",apneaBlocks(apT),{kind:"apnea",safe:SEG_APNEA})];}}
+    if(dow===6){title="Descanso total";kind="descanso";tasks=[T("rest","Descanso total","Recuperación y sueño. Es una orden.","",[B("Duerme 8–9 h","")],{kind:"descanso"})]}
   } else {
-    const r=S34[w], s4=w>=40, ex=r[3]||"", apT=apneaTarget(w), lk=lakeMin(w);
-    if(dow===0){title="Natación velocidad + fuerza A";kind="agua";tasks=[T("swim","Natación velocidad — "+r[0],"La velocidad del 500 m se construye con tramos cortos y rápidos.","07:00"),T("fa","Fuerza A",FA,"10:00")];}
-    if(dow===1){title=deload?"Carrera suave":"Intervalos de carrera";tasks=[T("run",(deload?"Carrera ":"Intervalos: ")+r[1],deload?"Descarga: suelto y fácil.":"A ritmo de prueba. Calienta 10 min, suelta 5 min. Objetivo: bajar el tiempo de 2.400 m.","07:00"),T("aseco","Apnea en seco",ASECO,"18:00","Nunca en el agua.")];}
-    if(dow===2){title="Aletas + apnea + core";kind="agua";tasks=[T("swim","Natación con aletas 1.000–1.500 m","Comodidad bajo el agua.","07:00"),T("apnea","Apnea supervisada"+(apT?" — meta "+apT:""),"Una sola respiración, sin aletas.","07:45",SEG_APNEA),T("core","Core 15 min",CORE,"10:00")];}
-    if(dow===3){title="Recuperación activa";tasks=[T("run","Carrera suave 30 min o movilidad","Recuperación activa.","07:00"),T("aseco","Apnea en seco",ASECO,"18:00","Nunca en el agua.")];}
-    if(dow===4){const f=r[2];title=f;kind=/simulacro/i.test(f)?"prueba":"tierra";
-      tasks=[T("fri",f,/simulacro/i.test(f)?SIMU:/mini/i.test(f)?MINI:/movilidad/i.test(f)?"Solo movilidad 20–30 min. Descarga fuerte antes de la prueba final.":FB2+" Suave: 3 vueltas, sin apurar.","07:00",/simulacro|mini/i.test(f)?"El nado y la apnea, siempre con compañero o salvavidas.":"")];
-      const c=f.match(/cuerda\s*(\d+)/i);if(c)tasks.push(T("cuerda","Cuerda: "+c[1]+" subidas","Técnica de pinza con los pies. Sin cuerda: barras con toalla, 2 × máximo.","10:30"));}
+    const r=S34[w],ex=r[3]||"",apT=apneaTarget(w),lk=lakeMin(w),f=r[2];
+    if(dow===0){title="Natación velocidad + fuerza A";kind="agua";tasks=[swimT("swim","Natación velocidad","La velocidad del 500 m se construye con tramos cortos y rápidos.","07:00",swimBlocks(r[0],w)),T("fa","Fuerza A","","10:00",fuerzaA(w,ctx),{kind:"fuerza"})]}
+    if(dow===1){title=deload?"Carrera suave":"Intervalos de carrera";tasks=[runT("run",(deload?"Carrera ":"Intervalos: ")+r[1],deload?"Descarga: suelto y fácil.":"Objetivo: bajar el tiempo de 2.400 m.","07:00",runBlocks(r[1],w)),T("aseco","Apnea en seco","Acostado, en casa.","18:00",ASECO(),{kind:"apnea",safe:"Nunca en el agua."})]}
+    if(dow===2){title="Aletas + apnea + core";kind="agua";tasks=[swimT("swim","Natación con aletas","Comodidad bajo el agua.","07:00",finsBlocks()),T("apnea","Apnea supervisada"+(apT?" · meta "+apT:""),"","07:50",apneaBlocks(apT),{kind:"apnea",safe:SEG_APNEA}),T("core","Core 15 min","","10:00",CORE(),{kind:"fuerza"})]}
+    if(dow===3){title="Recuperación activa";tasks=[runT("run","Carrera suave 30 min o movilidad","Recuperación activa.","07:00",runBlocks("30 min suave",w)),T("aseco","Apnea en seco","Acostado, en casa.","18:00",ASECO(),{kind:"apnea",safe:"Nunca en el agua."})]}
+    if(dow===4){title=f;
+      if(/simulacro/i.test(f)){kind="prueba";tasks=[T("fri","Simulacro completo","La prueba entera, máximo 3 min entre ejercicios. Lo que más te cueste recibe una sesión extra la semana siguiente.","07:00",testBlocks(ctx),{kind:"fuerza",safe:"Apnea y nado con compañero o salvavidas."})]}
+      else if(/mini/i.test(f)){tasks=[T("fri",f,"Sin pausas, solo el tiempo de cambiarte. El cuerpo aprende a hacer flexiones con los brazos cansados por el nado.","07:00",miniBlocks(f,ctx),{kind:"fuerza",safe:"Nado con compañero o salvavidas."})]}
+      else if(/movilidad/i.test(f)){tasks=[T("fri","Solo movilidad","Descarga fuerte antes de la prueba final.","07:00",[B("Movilidad 25 min","Caderas, hombros, tobillos, espalda")],{kind:"fuerza"})]}
+      else tasks=[T("fri","Fuerza B suave · 3 vueltas","Descarga: sin apurar.","07:00",fuerzaB(w,3,90,{barras:6,flex:20,sent:25,abd:25}),{kind:"fuerza"})];
+      const c=f.match(/cuerda\s*(\d+)/i);if(c)tasks.push(T("cuerda","Cuerda","","10:30",[cuerda(+c[1])],{kind:"fuerza"}));}
     if(dow===5){title=deload?"Nado y trote suaves":"Nado largo + trote largo";kind="agua";
-      tasks=[T("swim",deload?"Nado suave 30 min":"Nado largo continuo","Volumen y mente.","07:00")];
-      if(lk) tasks.push(T("lago","Lago Llanquihue "+lk,"El lago se enfría: acorta y sal antes de temblar fuerte. Considera neopreno para sesiones largas.","07:00",SEG_LAGO+" Señales para salir ya: temblor que no para, torpeza en las manos, confusión o labios morados."));
-      tasks.push(T("run",deload?"Trote suave 40 min":"Trote largo 60–75 min","Ritmo cómodo y constante.","09:30"));
-      if(/incomodidad/i.test(ex)) tasks.push(T("inc","Sesión de incomodidad","Algo largo y monótono: trote de 90 min con mochila o 2.000 m de nado sin parar. El objetivo es seguir cuando el cuerpo pide parar, no la velocidad.","10:30"));}
-    if(dow===6){title="Descanso total";kind="descanso";tasks=[T("rest","Descanso total","Recuperación y sueño. Es una orden.")];}
+      tasks=[deload?swimT("swim","Nado suave","","07:00",swimBlocks("1.000 m: técnica",w)):swimT("swim","Nado largo continuo","Volumen y mente.","07:00",longSwim(w))];
+      if(lk)tasks.push(T("lago","Lago Llanquihue "+lk,"El lago se enfría: acorta y sal antes de temblar fuerte. Considera neopreno.","07:00",lagoBlocks(lk),{kind:"agua",safe:SEG_LAGO}));
+      tasks.push(runT("run",deload?"Trote suave 40 min":"Trote largo 60–75 min","","09:30",runBlocks(deload?"40 min suave":"60–75 min",w)));
+      if(/incomodidad/i.test(ex))tasks.push(T("inc","Sesión de incomodidad","El objetivo es seguir cuando el cuerpo pide parar, no la velocidad.","10:30",[B("Elige una","Trote de 90 min con mochila, o 2.000 m de nado sin parar.")],{kind:"fuerza"}));}
+    if(dow===6){title="Descanso total";kind="descanso";tasks=[T("rest","Descanso total","Recuperación y sueño. Es una orden.","",[B("Duerme 8–9 h","")],{kind:"descanso"})]}
   }
-  if(kind==="prueba"&&!(tasks&&tasks.length)){
-    tasks=[T("p1","1. Apnea dinámica","Metros bajo el agua con una sola respiración, sin aletas. El compañero te sigue por el borde.","07:00",SEG_APNEA),
-      T("p2","2. Natación 500 m libre","Tiempo total."+(w===0?" En la semana 0 vale cualquier estilo.":"")),
-      T("p3","3. Barras","Máximo seguidas, agarre prono, brazos extendidos abajo, mentón sobre la barra arriba."),
-      T("p4","4. Sentadillas 2 min","Máximo en 2 min, muslos paralelos al suelo."),
-      T("p5","5. Flexiones 2 min","Máximo en 2 min, cuerpo recto, pecho a un puño del suelo."),
-      T("p6","6. Abdominales 2 min","Máximo en 2 min."),
-      T("p7","7. Carrera 2.400 m","Tiempo, idealmente en pista (6 vueltas). Máximo 3 min entre ejercicios.")];
-  }
-  if(w>=1&&kind!=="descanso"&&kind!=="admin") tasks.push(ducha(w));
+  if(kind==="prueba"&&!(tasks&&tasks.length))tasks=[T("prueba","Protocolo de la prueba","Mismo orden siempre. Máximo 3 min entre ejercicios. Anota cada número abajo.","07:00",testBlocks(ctx),{kind:"fuerza",safe:"Apnea con compañero o salvavidas. Sin hiperventilar."})];
+  if(w>=1&&kind!=="descanso")tasks.push(ducha(w));
   tasks.push(noche(w));
   return {w,dow,title,kind,deload,stage:st,tasks,test:kind==="prueba"&&TESTS.includes(w)&&dow===5};
 }
@@ -396,13 +559,24 @@ function locate(date){
   if(idx>=sched.length)return {after:true,n,idx,dow};
   return {n,idx,dow,w:sched[idx]};
 }
+const setKey=(t,i)=>t.id+"."+i;
+function blockDone(dd,t,i){return Math.min((dd.sets||{})[setKey(t,i)]||0,t.blocks[i].s)}
+function taskDone(dd,t){if(!dd)return false;if((dd.checks||{})[t.id])return true;return t.blocks.length>0&&t.blocks.every((b,i)=>blockDone(dd,t,i)>=b.s)}
+function units(dd,plan){let a=0,b=0;plan.tasks.forEach(t=>{const all=taskDone(dd,t);t.blocks.forEach((x,i)=>{b+=x.s;a+=all?x.s:(dd?blockDone(dd,t,i):0)})});return {a,b}}
 function dayStatus(k,plan){
   const d=Store.days[k];if(!d)return "";
   if(d.status)return d.status;
-  if(!plan)return "";const c=d.checks||{};const done=plan.tasks.filter(t=>c[t.id]).length;
-  if(done===plan.tasks.length)return "done";return done?"part":"";
+  if(!plan)return "";const done=plan.tasks.filter(t=>taskDone(d,t)).length;
+  if(done===plan.tasks.length)return "done";const u=units(d,plan);return u.a?"part":"";
 }
-function planFor(date){const L=locate(date);if(L.w===undefined)return null;return dayPlan(L.w,L.dow)}
+let CTX=null;
+function ctxNow(){
+  if(CTX)return CTX;const c={};
+  Object.keys(Store.days).sort().forEach(k=>{const t=Store.days[k].test;if(!t)return;["barras","run","swim","apnea"].forEach(x=>{if(t[x])c[x]=t[x]})});
+  if(c.barras)c.barras=Number(c.barras)||undefined;
+  return CTX=c;
+}
+function planFor(date){const L=locate(date);if(L.w===undefined)return null;return dayPlan(L.w,L.dow,ctxNow())}
 function streak(){
   const today=new Date();let n=0;let d=today;
   const st0=dayStatus(iso(d),planFor(d));
@@ -468,31 +642,75 @@ function dayNav(d){
   const isT=diffDays(d,new Date())===0;
   return `<div class="daynav"><button class="nb" data-go="-1" aria-label="Día anterior">◀</button><div class="d">${dayName(d)}<span>${fmt(d)}</span></div><button class="nb ${isT?"today":""}" data-go="0">Hoy</button><button class="nb" data-go="1" aria-label="Día siguiente">▶</button></div>`;
 }
+function blockHTML(t,b,i,dd,all){
+  const n=all?b.s:blockDone(dd,t,i);
+  let ctl="";
+  if(b.s>1&&b.s<=12)ctl=`<div class="dots" role="group" aria-label="Series de ${esc(b.n)}">${Array.from({length:b.s},(_,j)=>`<button class="dot ${j<n?"on":""}" data-set="${t.id}|${i}|${j+1}" aria-label="Serie ${j+1}">${j+1}</button>`).join("")}</div>`;
+  else if(b.s>12)ctl=`<div class="dots"><button class="dot" data-set="${t.id}|${i}|${Math.max(0,n-1)}" aria-label="Restar">−</button><span class="mono cnt">${n}/${b.s}</span><button class="dot" data-set="${t.id}|${i}|${Math.min(b.s,n+1)}" aria-label="Sumar">+</button></div>`;
+  else ctl=`<div class="dots"><button class="dot one ${n?"on":""}" data-set="${t.id}|${i}|${n?0:1}" aria-label="Hecho">✓</button></div>`;
+  const tm=[];
+  if(b.tm)tm.push(`<button class="tmr" data-timer="${b.tm}" data-tl="${esc(b.n)}">▶ ${fmtT(b.tm)}</button>`);
+  if(b.r)tm.push(`<button class="tmr rest" data-timer="${b.r}" data-tl="Descanso · ${esc(b.n)}">⏱ descanso ${fmtT(b.r)}</button>`);
+  return `<div class="blk ${n>=b.s?"full":""}"><div class="bt"><span class="bn">${esc(b.n)}</span>${b.p?`<span class="bp">${esc(b.p)}</span>`:""}${b.note?`<span class="bnote">${esc(b.note)}</span>`:""}${tm.length?`<span class="tms">${tm.join("")}</span>`:""}</div>${ctl}</div>`;
+}
+function taskHTML(t,dd){
+  const all=taskDone(dd,t);const meta=[];
+  if(t.min)meta.push("≈ "+Math.round(t.min)+" min");
+  return `<div class="task ${all?"on":""}"><div class="thd"><button class="box" data-task="${t.id}" aria-pressed="${all}" aria-label="Marcar ${esc(t.t)} completo"></button><div class="tx"><span class="t">${esc(t.t)}</span>${t.d||meta.length?`<span class="dd">${esc([t.d,meta.join(" · ")].filter(Boolean).join(" · "))}</span>`:""}${t.safe?`<span class="safe">${esc(t.safe)}</span>`:""}</div><span class="h">${esc(t.h)}</span></div>
+   ${t.blocks.length?`<div class="blks">${t.blocks.map((b,i)=>blockHTML(t,b,i,dd,all)).join("")}</div>`:""}</div>`;
+}
+function readiness(k,dd){
+  const prev=[];for(let i=1;i<=7;i++){const v=Number((Store.days[iso(addDays(parse(k),-i))]||{}).pulse);if(v)prev.push(v)}
+  const base=prev.length>=3?Math.round(prev.reduce((a,b)=>a+b,0)/prev.length):null;
+  const filled=dd.pulse||dd.sleep||dd.pain||dd.mood;
+  if(!filled)return {lvl:"",txt:"Completa el chequeo antes de entrenar: pulso en reposo al despertar (60 s, acostado), horas de sueño, dolor y energía."};
+  if(dd.pain==="agudo")return {lvl:"red",tag:"PARAR",txt:"Dolor agudo: hoy no entrenas lo que duele. Para y consulta. Marca “Dolor / lesión”."};
+  const why=[];
+  if(dd.sleep&&Number(dd.sleep)<6)why.push("dormiste menos de 6 h");
+  if(base&&Number(dd.pulse)>base+7)why.push(`pulso ${dd.pulse} (tu normal: ${base})`);
+  if(dd.mood&&dd.mood<=3)why.push("energía muy baja");
+  if(dd.pain==="molestia")why.push("molestia");
+  if(!why.length)return {lvl:"ok",tag:"AL 100%",txt:"Todo en orden. Ejecuta la orden completa."+(base?"":" (Tu pulso normal se calcula tras 3 días de registro.)")};
+  if(why.length===1)return {lvl:"warn",tag:"AL 80%",txt:"Ojo: "+why[0]+". Haz la sesión, pero suave: una serie menos y sin ir a tope."};
+  return {lvl:"bad",tag:"DÍA SUAVE",txt:"Señales de sobrecarga: "+why.join(", ")+". Hoy solo técnica suave o movilidad 30 min. Si sigue así 2–3 días, días suaves antes de seguir."};
+}
+function readyHTML(k,dd){
+  const R=readiness(k,dd);
+  const pb=(v,l)=>`<button class="seg ${dd.pain===v?"on":""}" data-pain="${v}">${l}</button>`;
+  return `<div class="card ready ${R.lvl}"><div class="row" style="justify-content:space-between;align-items:center"><span class="lbl">Chequeo de la mañana · ¿estás al 100%?</span>${R.tag?`<span class="rtag ${R.lvl}">${R.tag}</span>`:""}</div>
+   <div class="row"><div class="field" style="width:120px"><label class="lbl" for="f-pulse">Pulso reposo</label><input id="f-pulse" inputmode="numeric" data-f="pulse" value="${esc(dd.pulse)}" placeholder="62"></div>
+   <div class="field" style="width:110px"><label class="lbl" for="f-sleep">Sueño (h)</label><input id="f-sleep" inputmode="decimal" data-f="sleep" value="${esc(dd.sleep)}" placeholder="8"></div>
+   <div class="field"><span class="lbl">Dolor</span><div class="segs">${pb("no","Nada")}${pb("molestia","Molestia")}${pb("agudo","Dolor agudo")}</div></div></div>
+   <div class="field"><span class="lbl">Energía (1–10)</span><div class="mood">${Array.from({length:10},(_,i)=>`<button data-mood="${i+1}" class="${dd.mood==i+1?"on":""}" aria-label="Energía ${i+1}">${i+1}</button>`).join("")}</div></div>
+   <p class="rtxt">${esc(R.txt)}</p></div>`;
+}
 function viewHoy(){
   const d=S.date,k=iso(d),L=locate(d),isToday=diffDays(d,new Date())===0;
   let h=header(L)+dayNav(d);
   if(L.before){
-    h+=`<div class="order"><div class="say">Todavía no empieza.</div><p>La semana 0 arranca el ${fmt(parse(Store.cfg.start))}. Hasta entonces: duerme bien y consigue la hora del chequeo médico.</p></div>`;
+    const st=parse(Store.cfg.start),p1=dayPlan(0,0,ctxNow());
+    h+=`<div class="order"><div class="hdr"><span>DE:</span><b>COMANDANTE</b><span>PARA:</span><b>RECLUTA ${esc(String(Store.cfg.name).toUpperCase())}</b><span>ASUNTO:</span><b>INICIO DE OPERACIÓN</b></div><p class="say">Empiezas el ${dayName(st).toLowerCase()} ${fmt(st)}.</p><p>Esta noche: prepara bolso de piscina, ropa de correr y a la cama a las 22:30. Esto es lo que te espera en el día 1:</p><ul class="pre">${p1.tasks.map(t=>`<li>${esc(t.t)}</li>`).join("")}</ul><button class="btn main" data-open="${iso(st)}">Ver la orden del día 1</button></div>`;
     return h;
   }
   if(L.after){
     const dow=L.dow;const M=["Natación 45 min + fuerza A","Carrera 40 min","Natación con aletas + apnea supervisada","Descanso","Fuerza B continuo","Natación larga","Descanso"];
-    h+=`<div class="order"><div class="hdr"><span>DE:</span><b>COMANDANTE</b><span>PARA:</span><b>${esc(Store.cfg.name)}</b><span>ASUNTO:</span><b>MANTENCIÓN</b></div><div class="say">Terminaste las 52 semanas.</div><p>Si todavía no entras a la Armada, repite la etapa 4 subiendo las metas (Ajustes → Repetir etapa 4). Ya dentro: 3 sesiones de nado y 2 de fuerza continua por semana, y la etapa 4 completa unos 3 meses antes de postular al curso.</p><p><b>Hoy:</b> ${M[dow]}.</p></div>`;
+    h+=`<div class="order"><div class="hdr"><span>DE:</span><b>COMANDANTE</b><span>PARA:</span><b>${esc(Store.cfg.name)}</b><span>ASUNTO:</span><b>MANTENCIÓN</b></div><div class="say">Terminaste las 52 semanas.</div><p>Si todavía no entras a la Armada, repite la etapa 4 subiendo las metas (Plan → Ajustes). Ya dentro: 3 sesiones de nado y 2 de fuerza continua por semana, y la etapa 4 completa unos 3 meses antes de postular al curso.</p><p><b>Hoy:</b> ${M[dow]}.</p></div>`;
     return h;
   }
-  const plan=dayPlan(L.w,L.dow),dd=Store.days[k]||{},c=dd.checks||{},status=dayStatus(k,plan);
+  const plan=dayPlan(L.w,L.dow,ctxNow()),dd=Store.days[k]||{},status=dayStatus(k,plan),u=units(dd,plan);
   const os=orders(plan,k,isToday,L);
-  h+=`<div class="order"><div class="hdr"><span>DE:</span><b>COMANDANTE</b><span>PARA:</span><b>RECLUTA ${esc(String(Store.cfg.name).toUpperCase())}</b><span>ASUNTO:</span><b>${esc(plan.title.toUpperCase())}</b><span>REF:</span><b>SEM ${plan.w} · DÍA ${L.n+1}</b></div>`;
+  h+=`<div class="order"><div class="hdr"><span>DE:</span><b>COMANDANTE</b><span>PARA:</span><b>RECLUTA ${esc(String(Store.cfg.name).toUpperCase())}</b><span>ASUNTO:</span><b>${esc(plan.title.toUpperCase())}</b><span>REF:</span><b>SEM ${plan.w} · DÍA ${plan.dow+1}/7 · DÍA ${L.n+1} DEL PLAN</b></div>`;
   os.forEach(([t,x])=>{h+=t==="alert"?`<p class="alert">${esc(x)}</p>`:t==="say"?`<p class="say">${esc(x)}</p>`:`<p>${esc(x)}</p>`});
   const rp=reply(status,plan,k);if(rp)h+=`<p class="say" style="color:var(${status==="done"?"--ok":status==="fail"?"--bad":status==="injury"?"--warn":"--muted"})">${esc(rp)}</p>`;
   h+=`</div>`;
-  h+=`<div class="tasks">`+plan.tasks.map(t=>`<button class="task ${c[t.id]?"on":""}" data-task="${t.id}" aria-pressed="${!!c[t.id]}"><span class="box"></span><span><span class="t">${esc(t.t)}</span>${t.d?`<span class="dd">${esc(t.d)}</span>`:""}${t.safe?`<span class="safe">${esc(t.safe)}</span>`:""}</span><span class="h">${esc(t.h)}</span></button>`).join("")+`</div>`;
+  h+=readyHTML(k,dd);
+  const sm=plan.tasks.reduce((a,t)=>a+(t.m||0),0);
+  h+=`<div class="sec"><div class="row" style="justify-content:space-between"><span class="lbl">Orden del día · ${u.a}/${u.b} series${sm?" · "+sm.toLocaleString("es-CL")+" m de nado":""}</span><span class="mono">${u.b?Math.round(u.a/u.b*100):0}%</span></div><div class="bar"><i style="width:${u.b?u.a/u.b*100:0}%"></i></div></div>`;
+  h+=`<div class="tasks">`+plan.tasks.map(t=>taskHTML(t,dd)).join("")+`</div>`;
   if(plan.test) h+=testForm(plan,k,dd,L);
   h+=`<div class="card"><div class="lbl">Reporte del día</div>
-   <div class="row"><div class="field" style="width:110px"><label class="lbl" for="f-sleep">Sueño (h)</label><input id="f-sleep" inputmode="decimal" data-f="sleep" value="${esc(dd.sleep)}" placeholder="8"></div>
-   ${plan.dow===0||plan.test?`<div class="field" style="width:110px"><label class="lbl" for="f-peso">Peso (kg)</label><input id="f-peso" inputmode="decimal" data-f="peso" value="${esc(dd.peso)}" placeholder="70"></div>`:""}
-   <div class="field"><span class="lbl">Ánimo (1–10)</span><div class="mood">${Array.from({length:10},(_,i)=>`<button data-mood="${i+1}" class="${dd.mood==i+1?"on":""}" aria-label="Ánimo ${i+1}">${i+1}</button>`).join("")}</div></div></div>
-   <div class="field"><label class="lbl" for="f-note">Notas (qué costó, tiempos, sensaciones)</label><textarea id="f-note" data-f="note" placeholder="Ej: 6 × 50 m sin parar, el 4.º me costó la respiración">${esc(dd.note)}</textarea></div>
+   ${plan.dow===0||plan.test?`<div class="field" style="width:120px"><label class="lbl" for="f-peso">Peso (kg)</label><input id="f-peso" inputmode="decimal" data-f="peso" value="${esc(dd.peso)}" placeholder="70"></div>`:""}
+   <div class="field"><label class="lbl" for="f-note">Notas (tiempos, qué costó, sensaciones)</label><textarea id="f-note" data-f="note" placeholder="Ej: 6 × 50 m sin parar, el 4.º me costó la respiración">${esc(dd.note)}</textarea></div>
    <div class="actions"><button class="btn main" data-st="done">Misión cumplida</button><button class="btn" data-st="injury">Dolor / lesión</button><button class="btn" data-st="fail">No cumplí</button></div>
    ${dd.status?`<button class="btn sm" data-st="">Quitar reporte (${esc({done:"cumplida",fail:"no cumplí",injury:"lesión"}[dd.status])})</button>`:""}
   </div>`;
@@ -528,6 +746,11 @@ function viewSemana(){
   for(let i=0;i<7;i++){const d=addDays(mon,i),p=planFor(d),k=iso(d),cur=diffDays(d,new Date())===0;
     h+=`<button class="li ${cur?"cur":""}" data-open="${k}"><span class="a">${dayName(d).slice(0,3)} · D${i+1}<span>${fmtS(d)}</span></span><span class="b">${p?esc(p.title):"—"}</span>${p?stChip(dayStatus(k,p)):""}</button>`}
   h+=`</div>`;
+  {const V={agua:[0,0],carrera:[0,0],fuerza:[0,0]};let sm=[0,0],ua=0,ub=0;
+   for(let i=0;i<7;i++){const d=addDays(mon,i),p=planFor(d);if(!p)continue;const dd=Store.days[iso(d)];const u=units(dd,p);ua+=u.a;ub+=u.b;
+     p.tasks.forEach(t=>{const ok=taskDone(dd,t);if(V[t.kind]){V[t.kind][1]++;if(ok)V[t.kind][0]++}if(t.m){sm[1]+=t.m;if(ok)sm[0]+=t.m}})}
+   if(ub)h+=`<div class="card"><div class="row" style="justify-content:space-between"><span class="lbl">Cumplimiento de la semana</span><span class="mono">${Math.round(ua/ub*100)}%</span></div><div class="bar"><i style="width:${ua/ub*100}%"></i></div>
+   <div class="vol"><div><span class="lbl">Natación</span><b class="mono">${sm[0].toLocaleString("es-CL")}<small> / ${sm[1].toLocaleString("es-CL")} m</small></b></div><div><span class="lbl">Sesiones de agua</span><b class="mono">${V.agua[0]}<small> / ${V.agua[1]}</small></b></div><div><span class="lbl">Carrera</span><b class="mono">${V.carrera[0]}<small> / ${V.carrera[1]}</small></b></div><div><span class="lbl">Fuerza</span><b class="mono">${V.fuerza[0]}<small> / ${V.fuerza[1]}</small></b></div></div></div>`;}
   if(L.w!=null){const r=S12[L.w],r3=S34[L.w];const ex=extraOf(L.w);
     h+=`<div class="card"><div class="lbl">Esta semana en el plan</div><div class="prose">${r?`<p><b>Natación:</b> ${esc(r[0])}<br><b>Carrera:</b> ${esc(r[1])}${r[2]?"; "+esc(r[2]):""}<br><b>Fuerza:</b> ${esc(r[3])}${ex?`<br><b>Extra:</b> ${esc(ex)}`:""}</p>`:r3?`<p><b>Natación:</b> ${esc(r3[0])}<br><b>Carrera:</b> ${esc(r3[1])}<br><b>Fuerza / continuo:</b> ${esc(r3[2])}${ex?`<br><b>Extra:</b> ${esc(ex)}`:""}</p>`:`<p>${L.w===0?"Chequeo médico, inscripciones y prueba inicial.":"Semana de prueba de evaluación."}</p>`}</div></div>`}
   return h;
@@ -574,7 +797,34 @@ function viewPruebas(){
   return h;
 }
 function viewReglas(){
-  return header(locate(new Date()))+`<div class="sec prose"><h2>Reglas</h2>
+  return header(locate(new Date()))+`<div class="sec prose"><h2>Guía</h2>
+  <h3>Cómo usar la orden del día</h3><ul>
+  <li><b>Mañana:</b> haz el chequeo (pulso acostado al despertar, 60 s; sueño; dolor; energía). Te dice si vas al 100%, al 80% o suave.</li>
+  <li><b>Cada círculo es una serie.</b> Tócalo al terminarla: arranca solo el descanso que toca. Los botones ▶ son temporizadores de trabajo (plancha, 2 min de prueba, ducha fría).</li>
+  <li><b>El cuadrado</b> de cada sesión la marca entera. Cuando todo está marcado, el día queda cumplido.</li>
+  <li><b>Los ritmos</b> de carrera y natación salen de la meta de tu próxima prueba. Las barras salen de tu último máximo registrado en una prueba.</li></ul>
+  <h3>Técnica de cada ejercicio</h3><ul>
+  <li><b>Barras:</b> agarre prono (palmas hacia adelante), un poco más ancho que los hombros. Desde brazos totalmente extendidos hasta el mentón sobre la barra. Sin balanceo. Si no llegas a las reps: negativas, subes con salto y bajas lento en 5 s.</li>
+  <li><b>Flexiones:</b> manos bajo los hombros, cuerpo recto de talones a cabeza, codos a 45°. Bajas hasta que el pecho queda a un puño del suelo.</li>
+  <li><b>Sentadillas:</b> pies al ancho de hombros, bajas hasta que los muslos quedan paralelos al suelo, talones apoyados, rodillas en la línea de los pies.</li>
+  <li><b>Abdominales:</b> rodillas flexionadas, pies en el suelo, manos cruzadas al pecho. Subes hasta tocar los muslos con los codos.</li>
+  <li><b>Plancha:</b> antebrazos en el suelo, cuerpo recto, glúteos y abdomen apretados. <b>Plancha lateral:</b> de costado sobre un antebrazo, cadera arriba.</li>
+  <li><b>Hollow hold:</b> boca arriba, espalda baja pegada al suelo, brazos sobre la cabeza, piernas y hombros despegados del suelo.</li>
+  <li><b>Cuerda:</b> agarras alto, subes las rodillas, pisas la cuerda entre los empeines (pinza) y te paras sobre ella; repites. Baja siempre controlado, mano bajo mano.</li>
+  <li><b>Circuito (Fuerza B):</b> los 4 ejercicios seguidos sin descanso; el descanso va solo entre vueltas. Cada vuelta es un círculo.</li></ul>
+  <h3>Natación</h3><ul>
+  <li><b>Patada con tabla:</b> brazos estirados sobre la tabla, patada corta y rápida desde la cadera, rodillas casi rectas.</li>
+  <li><b>Patada lateral:</b> de costado, un brazo estirado adelante, la oreja sobre ese brazo; giras la cabeza para respirar.</li>
+  <li><b>Nado a un brazo:</b> un brazo quieto adelante, el otro hace la brazada completa. Cambia cada 25 m.</li>
+  <li><b>“Pillar”:</b> una mano espera adelante hasta que la otra llega a tocarla. Alarga la brazada.</li>
+  <li><b>Respiración cada 3 brazadas:</b> respiras a un lado y al otro alternadamente. Exhala bajo el agua todo el tiempo.</li>
+  <li><b>Descanso en la pared:</b> el tiempo indicado, respirando lento. El reloj de la piscina sirve.</li>
+  <li><b>Apnea dinámica:</b> te impulsas de la pared bajo el agua, brazada de pecho larga y patada de rana, sin aletas. Sales al menor aviso del cuerpo. Nunca solo, nunca después de respirar rápido.</li></ul>
+  <h3>Carrera</h3><ul>
+  <li><b>Ritmo conversación:</b> puedes hablar en frases completas.</li>
+  <li><b>Intervalos:</b> cada repetición al tiempo indicado, ni más rápido ni más lento. La recuperación es trote muy suave o caminata.</li>
+  <li><b>Pista:</b> 1 vuelta = 400 m. 2.400 m = 6 vueltas.</li></ul>
+  <h2 style="margin-top:8px">Reglas</h2>
   <h3>Seguridad obligatoria</h3><ul>
   <li>Nunca entrenar apnea solo: siempre en piscina, con compañero o salvavidas que sepa actuar ante un desmayo bajo el agua.</li>
   <li>Nunca hiperventilar antes de una apnea: apaga la alarma natural del cuerpo y provoca desmayos sin aviso.</li>
@@ -601,11 +851,11 @@ function viewReglas(){
   <h3>Recursos</h3><ul><li>Piscina San Ignacio / DMOOV (Puerto Varas): clases de crol, nado y apnea supervisada.</li><li>Puerto Varas Diving: curso Open Water y salidas de nado en el lago.</li><li>Quinta Zona Naval (Puerto Montt): requisitos y fechas de postulación.</li></ul>
   <p class="foot">Las metas son propuestas, no mínimas oficiales. Confirma el formato oficial de la prueba en la Quinta Zona Naval. Esta bitácora no reemplaza al médico ni al nutricionista.</p></div>`;
 }
-const TABS=[["hoy","Hoy"],["semana","Semana"],["plan","Plan"],["pruebas","Pruebas"],["reglas","Reglas"]];
+const TABS=[["hoy","Hoy"],["semana","Semana"],["plan","Plan"],["pruebas","Pruebas"],["reglas","Guía"]];
 function render(){
   const ae=document.activeElement;
   if(ae&&app.contains(ae)&&(ae.tagName==="INPUT"||ae.tagName==="TEXTAREA")&&ae.type!=="checkbox"){S.pending=true;return}
-  S.pending=false;
+  S.pending=false;CTX=null;
   const v={hoy:viewHoy,semana:viewSemana,plan:viewPlan,pruebas:viewPruebas,reglas:viewReglas}[S.tab]||viewHoy;
   app.innerHTML=v()+(S.msg?`<p class="alert" role="status">${esc(S.msg)}</p>`:"");
   document.getElementById("tabs").innerHTML=TABS.map(([k,l])=>`<button data-tab="${k}" class="${S.tab===k?"on":""}">${l}</button>`).join("");
@@ -619,12 +869,20 @@ document.addEventListener("click",e=>{
   if(D.open){S.date=parse(D.open);S.tab="hoy";render();window.scrollTo(0,0);return}
   if(D.wkidx!==undefined){S.date=addDays(parse(Store.cfg.start),+D.wkidx*7);S.tab="semana";render();window.scrollTo(0,0);return}
   const k=iso(S.date);
-  if(D.task){const dd=Store.day(k);const c=Object.assign({},dd.checks||{});c[D.task]=!c[D.task];const patch={checks:c};
-    const p=planFor(S.date);if(p&&p.tasks.every(t=>c[t.id])&&!dd.status)patch.status="done";
-    if(p&&!p.tasks.every(t=>c[t.id])&&dd.status==="done")patch.status="";
-    Store.setDay(k,patch);render();return}
+  if(D.timer){startTimer(+D.timer,D.tl||"");return}
+  if(D.task||D.set){const p=planFor(S.date);if(!p)return;const dd=Store.day(k);const c=Object.assign({},dd.checks||{}),sets=Object.assign({},dd.sets||{});
+    if(D.task){const t=p.tasks.find(x=>x.id===D.task);const now=!taskDone(dd,t);c[t.id]=now;t.blocks.forEach((b,i)=>{sets[setKey(t,i)]=now?b.s:0})}
+    else{const [tid,bi,v]=D.set.split("|");const t=p.tasks.find(x=>x.id===tid);if(!t)return;const key=setKey(t,+bi),cur=blockDone(dd,t,+bi);
+      if(taskDone(dd,t)&&c[tid]){t.blocks.forEach((b,i)=>{if(sets[setKey(t,i)]==null)sets[setKey(t,i)]=b.s})}
+      c[tid]=false;sets[key]=(+v===cur&&t.blocks[+bi].s<=12&&t.blocks[+bi].s>1)?+v-1:+v;
+      const b=t.blocks[+bi];if(sets[key]>cur&&b.r&&sets[key]<b.s)startTimer(b.r,"Descanso · "+b.n)}
+    const patch={checks:c,sets};const tmp={checks:c,sets};const allDone=p.tasks.every(t=>taskDone(tmp,t));
+    if(allDone&&!dd.status)patch.status="done";if(!allDone&&dd.status==="done")patch.status="";
+    const before=dayStatus(k,p);Store.setDay(k,patch);render();if(allDone&&before!=="done")flash("Misión cumplida, "+(Store.cfg.name||"recluta")+". Anotado.");return}
+  if(D.pain){Store.setDay(k,{pain:Store.day(k).pain===D.pain?"":D.pain});render();return}
+  if(D.tstop!==undefined){stopTimer();return}
   if(D.mood){Store.setDay(k,{mood:+D.mood});render();return}
-  if(D.st!==undefined){const p=planFor(S.date);const patch={status:D.st};if(D.st==="done"&&p){const c={};p.tasks.forEach(t=>c[t.id]=true);patch.checks=c}Store.setDay(k,patch);render();return}
+  if(D.st!==undefined){const p=planFor(S.date);const patch={status:D.st};if(D.st==="done"&&p){const c={};p.tasks.forEach(t=>c[t.id]=true);patch.checks=c}Store.setDay(k,patch);render();window.scrollTo({top:0,behavior:"smooth"});return}
   if(D.ask){S.confirm=D.ask;render();return}
   if(D.cancel!==undefined){S.confirm=null;render();return}
   if(D.rep){const i=+D.rep,sched=Store.cfg.sched.slice(),w=sched[i];sched.splice(i+1,0,w-4,w-3,w-2,w-1,w);Store.setCfg({sched,repeats:(Store.cfg.repeats||[]).concat([i])});S.confirm=null;flash(`Orden recibida: semanas ${w-4}–${w-1} otra vez, y la prueba de nuevo.`);return}
@@ -641,8 +899,19 @@ document.addEventListener("input",e=>{
 document.addEventListener("change",e=>{
   const el=e.target;
   if(el.dataset.c==="start"&&el.value){Store.setCfg({start:el.value,startMoved:true});el.blur();render()}
-  if(el.dataset.t)render();
+  if(el.dataset.t||el.dataset.f)render();
 });
+/* temporizador */
+const TB=document.getElementById("timerbar");let TM=null,AC=null;
+function beep(n){try{AC=AC||new (window.AudioContext||window.webkitAudioContext)();for(let i=0;i<n;i++){const o=AC.createOscillator(),g=AC.createGain();o.frequency.value=880;o.connect(g);g.connect(AC.destination);const t0=AC.currentTime+i*0.35;g.gain.setValueAtTime(0.25,t0);g.gain.exponentialRampToValueAtTime(0.001,t0+0.25);o.start(t0);o.stop(t0+0.26)}}catch(e){}try{navigator.vibrate&&navigator.vibrate([200,100,200])}catch(e){}}
+function startTimer(sec,label){
+  try{AC=AC||new (window.AudioContext||window.webkitAudioContext)();AC.resume&&AC.resume()}catch(e){}
+  stopTimer(true);TM={end:Date.now()+sec*1000,total:sec,label};TB.hidden=false;tick();TM.iv=setInterval(tick,250);
+}
+function stopTimer(silent){if(TM){clearInterval(TM.iv);TM=null}if(!silent)TB.hidden=true}
+function tick(){if(!TM)return;const left=Math.max(0,(TM.end-Date.now())/1000);
+  TB.innerHTML=`<div class="tin"><div class="tl"><span class="lbl">${esc(TM.label)}</span><b class="mono">${fmtT(Math.ceil(left))}</b></div><div class="bar"><i style="width:${(1-left/TM.total)*100}%"></i></div><button class="nb" data-tstop>${left>0?"Cancelar":"Cerrar"}</button></div>`;
+  if(left<=0){clearInterval(TM.iv);beep(3);TB.querySelector(".lbl").textContent="¡Tiempo! "+TM.label;TM.iv=null;setTimeout(()=>{if(TM&&!TM.iv){TM=null;TB.hidden=true}},6000)}}
 Store.init(render);
 })();
 </script>
