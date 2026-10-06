@@ -47,7 +47,7 @@ const reload = async p => { await p.reload(); await p.waitForTimeout(200); };
   ok((await text(p)).includes('Racha 1'), 'la racha sube a 1');
   await reload(p);
   ok((await text(p)).includes('Racha 1'), 'la racha se mantiene al recargar');
-  await p.click('[data-clear]');
+  await p.click('[data-ask="clear"]'); await p.waitForTimeout(500); await p.click('[data-clear]');
   ok((await text(p)).includes('Racha 0'), 'desmarcar el día baja la racha');
   await ctx.close(); }
 
@@ -121,13 +121,15 @@ const reload = async p => { await p.reload(); await p.waitForTimeout(200); };
 // 7. Modo paso a paso
 { console.log('7. Paso a paso');
   const { p, ctx } = await page('2026-10-13T09:00:00');
-  await p.click('[data-rstart]');
+  // pausa humana entre toques: la app ignora un segundo toque en menos de 0,35 s (dedo que rebota)
+  const tap = async sel => { await p.waitForTimeout(400); await p.click(sel); };
+  await tap('[data-rstart]');
   const lbl = () => p.$eval('.rhead .lbl', e => e.textContent);
   ok((await lbl()).startsWith('Paso 1 de'), 'empieza en el paso 1');
-  await p.click('[data-rdone]'); ok((await lbl()).startsWith('Paso 2'), 'Hecho avanza');
-  await p.click('[data-rgo]:has-text("Saltar")'); ok((await lbl()).startsWith('Paso 3'), 'Saltar avanza');
-  await p.click('[data-rgo]:has-text("Atrás")'); ok((await lbl()).startsWith('Paso 2'), 'Atrás retrocede');
-  await p.click('[data-rexit]');
+  await tap('[data-rdone]'); ok((await lbl()).startsWith('Paso 2'), 'Hecho avanza');
+  await tap('[data-rgo]:has-text("Saltar")'); ok((await lbl()).startsWith('Paso 3'), 'Saltar avanza');
+  await tap('[data-rgo]:has-text("Atrás")'); ok((await lbl()).startsWith('Paso 2'), 'Atrás retrocede');
+  await tap('[data-rexit]');
   ok((await p.$eval('[data-rstart]', e => e.textContent)).includes('Continuar · paso 2'), 'Continuar retoma donde quedó');
   await reload(p);
   ok((await p.$eval('[data-rstart]', e => e.textContent)).includes('Continuar · paso 2'), 'el avance se guarda al recargar');
@@ -194,6 +196,14 @@ const reload = async p => { await p.reload(); await p.waitForTimeout(200); };
   const d = p.locator('.dot', { hasText: /^1$/ }).first();
   await d.dblclick();
   ok(await p.locator('.dot', { hasText: /^1$/ }).first().evaluate(e => e.classList.contains('on')), 'el doble toque deja la serie marcada');
+  // doble toque en «Cumplí todo»: el segundo toque no desmarca el día
+  await p.locator('[data-st="done"]').scrollIntoViewIfNeeded(); await p.waitForTimeout(400);
+  const box = await p.locator('[data-st="done"]').boundingBox();
+  await p.mouse.click(box.x + box.width / 2, box.y + box.height / 2); await p.waitForTimeout(120); await p.mouse.click(box.x + box.width / 2, box.y + box.height / 2);
+  await p.waitForTimeout(300);
+  ok((await text(p)).includes('CUMPLIDO'), 'un doble toque en «Cumplí todo» deja el día cumplido');
+  if (await p.locator('[data-ask="clear"]').count()) { await p.click('[data-ask="clear"]'); await p.waitForTimeout(400); }
+  ok((await text(p)).includes('CUMPLIDO') && await p.locator('[data-clear]').count() === 1, 'desmarcar el día pide confirmación');
   await ctx.close(); }
 
 // 13. Registro de adidas Running: ritmo, cumplimiento y guardado
