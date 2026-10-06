@@ -1,0 +1,1373 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Bitacora Buzo Tactico//ES
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+X-WR-CALNAME:Bitácora Buzo Táctico
+X-WR-TIMEZONE:America/Santiago
+BEGIN:VEVENT
+UID:bitacora-2026-10-07@rutina-marino
+DTSTAMP:20261006T124203Z
+DTSTART:20261007T110000Z
+DTEND:20261007T150000Z
+SUMMARY:⚓ Sem 0 · Día 2 · Reconocimiento
+DESCRIPTION:«De pie\, Diego. Esto es lo que haces hoy.»\n\n8:00 Trote su
+ ave 30 min: Trote 30 min\n10:15 Conseguir equipo: Gafas y gorra de color 
+ · Neopreno 3–5 mm si puedes · Barra para dominadas en casa o en una p
+ laza\n22:45 Estudio: La prueba de ingreso al curso\n\nDespiertas 7:30 · 
+ entrenas desde 8:00 · sales al trabajo 12:30 · cama 23:30\n\nÓrdenes p
+ aso a paso: https://claude.ai/artifact/Y7MgtsGPPBnXAaGzJpKC7H
+TRANSP:OPAQUE
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:⚓ Sem 0 · Día 2 · Reconocimiento
+TRIGGER:-PT15M
+END:VALARM
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:⚓ Sem 0 · Día 2 · Reconocimiento
+TRIGGER:PT0M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:bitacora-2026-10-08@rutina-marino
+DTSTAMP:20261006T124203Z
+DTSTART:20261008T110000Z
+DTEND:20261008T150000Z
+SUMMARY:⚓ Sem 0 · Día 3 · Ensayo de técnica
+DESCRIPTION:«Arriba\, Diego. Nadie lo va a hacer por ti.»\n\n8:00 Fuerza
+  de ensayo: Barras 3 × 3 · Flexiones 3 × 10 · Sentadillas 3 × 15 · 
+ Abdominales 3 × 15 · Plancha 2 × 30 s\n10:15 Consultar a la Armada: Pr
+ eguntar requisitos y fechas\n11:30 Tolerancia al dolor: Sentadilla isomé
+ trica en la pared 0:45 · Colgado de la barra 0:20 · Plancha 1:00\n22:45
+  Estudio: Combate Naval de Iquique\n\nDespiertas 7:30 · entrenas desde 8
+ :00 · sales al trabajo 12:30 · cama 23:30\n\nÓrdenes paso a paso: http
+ s://claude.ai/artifact/Y7MgtsGPPBnXAaGzJpKC7H
+TRANSP:OPAQUE
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:⚓ Sem 0 · Día 3 · Ensayo de técnica
+TRIGGER:-PT15M
+END:VALARM
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:⚓ Sem 0 · Día 3 · Ensayo de técnica
+TRIGGER:PT0M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:bitacora-2026-10-09@rutina-marino
+DTSTAMP:20261006T124203Z
+DTSTART:20261009T130000Z
+DTEND:20261009T133000Z
+SUMMARY:⚓ Sem 0 · Día 4 · Descanso
+DESCRIPTION:«Día libre. Cúmplelo igual de serio.»\n\nDescanso: Movilid
+ ad 15 min suaves · Dormir 8–9 h\n22:45 Estudio: Presión bajo el agua\
+ n\nDespiertas 7:30 · entrenas desde 8:00 · sales al trabajo 12:30 · ca
+ ma 23:30\n\nÓrdenes paso a paso: https://claude.ai/artifact/Y7MgtsGPPBnX
+ AaGzJpKC7H
+TRANSP:OPAQUE
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:⚓ Sem 0 · Día 4 · Descanso
+TRIGGER:PT0M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:bitacora-2026-10-10@rutina-marino
+DTSTAMP:20261006T124203Z
+DTSTART:20261010T110000Z
+DTEND:20261010T150000Z
+SUMMARY:⚓ Sem 0 · Día 5 · Activación
+DESCRIPTION:«De pie\, Diego. Esto es lo que haces hoy.»\n\n8:00 Trote su
+ ave 20 min: Trote 20 min\n11:40 Preparar la prueba: Lista cronómetro\, t
+ oalla\, ropa de recambio · Lugar piscina con salvavidas para la apnea y 
+ el 500 m; pista para el 2.400 m\n22:45 Estudio: Ley de Boyle\n\nDespierta
+ s 7:30 · entrenas desde 8:00 · sales al trabajo 12:30 · cama 23:30\n\n
+ Órdenes paso a paso: https://claude.ai/artifact/Y7MgtsGPPBnXAaGzJpKC7H
+TRANSP:OPAQUE
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:⚓ Sem 0 · Día 5 · Activación
+TRIGGER:-PT15M
+END:VALARM
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:⚓ Sem 0 · Día 5 · Activación
+TRIGGER:PT0M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:bitacora-2026-10-11@rutina-marino
+DTSTAMP:20261006T124203Z
+DTSTART:20261011T110000Z
+DTEND:20261011T150000Z
+SUMMARY:⚓ Sem 0 · Día 6 · PRUEBA · Prueba inicial
+DESCRIPTION:«Diego. Hoy se mide el punto de partida. Que sea verdad\, no 
+ bonito.»\n\n8:00 Protocolo de la prueba: 1. Apnea dinámica metros\, una
+  respiración · 2. 500 m libre tiempo · 3. Barras máximo seguidas · 4
+ . Sentadillas máximo en 2 min · 5. Flexiones máximo en 2 min · 6. Abd
+ ominales máximo en 2 min · 7. 2.400 m tiempo\n\nDespiertas 7:30 · entr
+ enas desde 8:00 · sales al trabajo 12:30 · cama 23:30\n\nÓrdenes paso 
+ a paso: https://claude.ai/artifact/Y7MgtsGPPBnXAaGzJpKC7H
+TRANSP:OPAQUE
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:⚓ Sem 0 · Día 6 · PRUEBA · Prueba inicial
+TRIGGER:-PT15M
+END:VALARM
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:⚓ Sem 0 · Día 6 · PRUEBA · Prueba inicial
+TRIGGER:PT0M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:bitacora-2026-10-12@rutina-marino
+DTSTAMP:20261006T124203Z
+DTSTART:20261012T130000Z
+DTEND:20261012T133000Z
+SUMMARY:⚓ Sem 0 · Día 7 · Descanso total
+DESCRIPTION:«Día libre. Cúmplelo igual de serio.»\n\nDescanso total: M
+ ovilidad 15 min suaves · Dormir 8–9 h\n22:45 Estudio: Barotrauma\n\nDe
+ spiertas 7:30 · entrenas desde 8:00 · sales al trabajo 12:30 · cama 23
+ :30\n\nÓrdenes paso a paso: https://claude.ai/artifact/Y7MgtsGPPBnXAaGzJ
+ pKC7H
+TRANSP:OPAQUE
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:⚓ Sem 0 · Día 7 · Descanso total
+TRIGGER:PT0M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:bitacora-2026-10-13@rutina-marino
+DTSTAMP:20261006T124203Z
+DTSTART:20261013T110000Z
+DTEND:20261013T150000Z
+SUMMARY:⚓ Sem 1 · Día 1 · Agua + tirón
+DESCRIPTION:«Al lago. Vas solo: nadas donde haces pie y sales cuando suen
+ a.»\n\n8:00 Natación técnica · lago: Entrada en calor ~5 min · Técn
+ ica 14 × 22 brazadas drills · Vuelta a la calma ~3 min\n10:15 Fuerza de
+  tren superior: Barras 4 × 4 · Remo invertido 3 × 10 · Flexiones 4 ×
+  12 · Fondos en silla 3 × 10 · Plancha 3 × 45 s\n11:30 Tolerancia al 
+ dolor: Sentadilla isométrica en la pared 0:49 · Colgado de la barra 0:2
+ 2 · Plancha 1:04\n11:45 Ducha fría 30 s: Agua fría 30 s\n22:45 Estudio
+ : Apagón en apnea\n\nDespiertas 7:30 · entrenas desde 8:00 · sales al 
+ trabajo 12:30 · cama 23:30\n\nÓrdenes paso a paso: https://claude.ai/ar
+ tifact/Y7MgtsGPPBnXAaGzJpKC7H
+TRANSP:OPAQUE
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:⚓ Sem 1 · Día 1 · Agua + tirón
+TRIGGER:-PT15M
+END:VALARM
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:⚓ Sem 1 · Día 1 · Agua + tirón
+TRIGGER:PT0M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:bitacora-2026-10-14@rutina-marino
+DTSTAMP:20261006T124203Z
+DTSTART:20261014T110000Z
+DTEND:20261014T150000Z
+SUMMARY:⚓ Sem 1 · Día 2 · Carrera + core
+DESCRIPTION:«Arriba\, Diego. Nadie lo va a hacer por ti.»\n\n8:00 Carrer
+ a suave 30 min: Trote 30 min\n9:15 Core: Plancha 3 × 45 s · Plancha lat
+ eral 2 × 30 s por lado · Hollow hold 3 × 20 s · Abdominales 3 × 20\n
+ 11:30 Tolerancia al dolor: Sentadilla isométrica en la pared 0:49 · Col
+ gado de la barra 0:22 · Plancha 1:04\n11:45 Ducha fría 30 s: Agua fría
+  30 s\n22:45 Estudio: Shock de frío: regla 1-10-1\n\nDespiertas 7:30 · 
+ entrenas desde 8:00 · sales al trabajo 12:30 · cama 23:30\n\nÓrdenes p
+ aso a paso: https://claude.ai/artifact/Y7MgtsGPPBnXAaGzJpKC7H
+TRANSP:OPAQUE
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:⚓ Sem 1 · Día 2 · Carrera + core
+TRIGGER:-PT15M
+END:VALARM
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:⚓ Sem 1 · Día 2 · Carrera + core
+TRIGGER:PT0M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:bitacora-2026-10-15@rutina-marino
+DTSTAMP:20261006T124203Z
+DTSTART:20261015T110000Z
+DTEND:20261015T150000Z
+SUMMARY:⚓ Sem 1 · Día 3 · Agua + piernas
+DESCRIPTION:«Al agua. Resistencia sí\, heroísmo no.»\n\n8:00 Natación
+  técnica · lago: Entrada en calor ~5 min · Técnica 14 × 22 brazadas 
+ drills · Vuelta a la calma ~3 min\n10:15 Piernas: Sentadillas 4 × 20 ·
+  Zancadas 3 × 10 por pierna · Puente de glúteo 3 × 15 · Gemelos 3 ×
+  20\n11:30 Tolerancia al dolor: Sentadilla isométrica en la pared 0:49 
+ · Colgado de la barra 0:22 · Plancha 1:04\n11:45 Ducha fría 30 s: Agua
+  fría 30 s\n22:45 Estudio: Hipotermia\n\nDespiertas 7:30 · entrenas des
+ de 8:00 · sales al trabajo 12:30 · cama 23:30\n\nÓrdenes paso a paso: 
+ https://claude.ai/artifact/Y7MgtsGPPBnXAaGzJpKC7H
+TRANSP:OPAQUE
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:⚓ Sem 1 · Día 3 · Agua + piernas
+TRIGGER:-PT15M
+END:VALARM
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:⚓ Sem 1 · Día 3 · Agua + piernas
+TRIGGER:PT0M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:bitacora-2026-10-16@rutina-marino
+DTSTAMP:20261006T124203Z
+DTSTART:20261016T130000Z
+DTEND:20261016T133000Z
+SUMMARY:⚓ Sem 1 · Día 4 · Descanso activo
+DESCRIPTION:«Hoy descansas. Es una orden\, no un premio.»\n\nDescanso ac
+ tivo: Movilidad 15 min suaves · Dormir 8–9 h\n22:45 Estudio: RCP: rean
+ imación\n\nDespiertas 7:30 · entrenas desde 8:00 · sales al trabajo 12
+ :30 · cama 23:30\n\nÓrdenes paso a paso: https://claude.ai/artifact/Y7M
+ gtsGPPBnXAaGzJpKC7H
+TRANSP:OPAQUE
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:⚓ Sem 1 · Día 4 · Descanso activo
+TRIGGER:PT0M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:bitacora-2026-10-17@rutina-marino
+DTSTAMP:20261006T124203Z
+DTSTART:20261017T110000Z
+DTEND:20261017T150000Z
+SUMMARY:⚓ Sem 1 · Día 5 · Circuito + intervalos
+DESCRIPTION:«Arriba\, Diego. Nadie lo va a hacer por ti.»\n\n8:00 Circui
+ to de prueba: Circuito 3 vueltas\n10:15 Intervalos 4 × 400 m: 4 × 400 m
+  1:45 cada uno · Vuelta a la calma 5–10 min trote suave\n11:30 Toleran
+ cia al dolor: Sentadilla isométrica en la pared 0:49 · Colgado de la ba
+ rra 0:22 · Plancha 1:04\n11:45 Ducha fría 30 s: Agua fría 30 s\n22:45 
+ Estudio: Posición lateral de seguridad\n\nDespiertas 7:30 · entrenas de
+ sde 8:00 · sales al trabajo 12:30 · cama 23:30\n\nÓrdenes paso a paso:
+  https://claude.ai/artifact/Y7MgtsGPPBnXAaGzJpKC7H
+TRANSP:OPAQUE
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:⚓ Sem 1 · Día 5 · Circuito + intervalos
+TRIGGER:-PT15M
+END:VALARM
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:⚓ Sem 1 · Día 5 · Circuito + intervalos
+TRIGGER:PT0M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:bitacora-2026-10-18@rutina-marino
+DTSTAMP:20261006T124203Z
+DTSTART:20261018T110000Z
+DTEND:20261018T150000Z
+SUMMARY:⚓ Sem 1 · Día 6 · Agua larga
+DESCRIPTION:«Al agua. Resistencia sí\, heroísmo no.»\n\n8:00 Distancia
+  continua · lago: Entrada en calor ~5 min · Técnica 14 × 22 brazadas 
+ drills · Vuelta a la calma ~3 min\n11:30 Tolerancia al dolor: Sentadilla
+  isométrica en la pared 0:49 · Colgado de la barra 0:22 · Plancha 1:04
+ \n11:45 Ducha fría 30 s: Agua fría 30 s\n22:45 Estudio: Rescate: lanzar
+ \, no ir\n\nDespiertas 7:30 · entrenas desde 8:00 · sales al trabajo 12
+ :30 · cama 23:30\n\nÓrdenes paso a paso: https://claude.ai/artifact/Y7M
+ gtsGPPBnXAaGzJpKC7H
+TRANSP:OPAQUE
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:⚓ Sem 1 · Día 6 · Agua larga
+TRIGGER:-PT15M
+END:VALARM
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:⚓ Sem 1 · Día 6 · Agua larga
+TRIGGER:PT0M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:bitacora-2026-10-19@rutina-marino
+DTSTAMP:20261006T124203Z
+DTSTART:20261019T130000Z
+DTEND:20261019T133000Z
+SUMMARY:⚓ Sem 1 · Día 7 · Descanso total
+DESCRIPTION:«Hoy descansas. Es una orden\, no un premio.»\n\nDescanso to
+ tal: Movilidad 15 min suaves · Dormir 8–9 h\n22:45 Estudio: Corrientes
+  de retorno\n\nDespiertas 7:30 · entrenas desde 8:00 · sales al trabajo
+  12:30 · cama 23:30\n\nÓrdenes paso a paso: https://claude.ai/artifact/
+ Y7MgtsGPPBnXAaGzJpKC7H
+TRANSP:OPAQUE
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:⚓ Sem 1 · Día 7 · Descanso total
+TRIGGER:PT0M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:bitacora-2026-10-20@rutina-marino
+DTSTAMP:20261006T124203Z
+DTSTART:20261020T110000Z
+DTEND:20261020T150000Z
+SUMMARY:⚓ Sem 2 · Día 1 · Agua + tirón
+DESCRIPTION:«Lago. El frío no perdona al que se confía.»\n\n8:00 Natac
+ ión técnica · lago: Entrada en calor ~5 min · Técnica 12 × 22 braza
+ das drills · 6 × 22 brazadas crol · Vuelta a la calma ~3 min\n10:15 Fu
+ erza de tren superior: Barras 4 × 4 · Remo invertido 3 × 10 · Flexion
+ es 4 × 12 · Fondos en silla 3 × 10 · Plancha 3 × 45 s\n11:30 Toleran
+ cia al dolor: Sentadilla isométrica en la pared 0:53 · Colgado de la ba
+ rra 0:24 · Plancha 1:08\n11:45 Ducha fría 30 s: Agua fría 30 s\n22:45 
+ Estudio: Nudo as de guía\n\nDespiertas 7:30 · entrenas desde 8:00 · sa
+ les al trabajo 12:30 · cama 23:30\n\nÓrdenes paso a paso: https://claud
+ e.ai/artifact/Y7MgtsGPPBnXAaGzJpKC7H
+TRANSP:OPAQUE
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:⚓ Sem 2 · Día 1 · Agua + tirón
+TRIGGER:-PT15M
+END:VALARM
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:⚓ Sem 2 · Día 1 · Agua + tirón
+TRIGGER:PT0M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:bitacora-2026-10-21@rutina-marino
+DTSTAMP:20261006T124203Z
+DTSTART:20261021T110000Z
+DTEND:20261021T150000Z
+SUMMARY:⚓ Sem 2 · Día 2 · Carrera + core
+DESCRIPTION:«Diego. Querías saber si puedes. Hoy se sigue respondiendo.
+ »\n\n8:00 Carrera suave 30 min: Trote 30 min\n9:15 Core: Plancha 3 × 45
+  s · Plancha lateral 2 × 30 s por lado · Hollow hold 3 × 20 s · Abdo
+ minales 3 × 20\n11:30 Tolerancia al dolor: Sentadilla isométrica en la 
+ pared 0:53 · Colgado de la barra 0:24 · Plancha 1:08\n11:45 Ducha fría
+  30 s: Agua fría 30 s\n22:45 Estudio: Nudo ballestrinque\n\nDespiertas 7
+ :30 · entrenas desde 8:00 · sales al trabajo 12:30 · cama 23:30\n\nÓr
+ denes paso a paso: https://claude.ai/artifact/Y7MgtsGPPBnXAaGzJpKC7H
+TRANSP:OPAQUE
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:⚓ Sem 2 · Día 2 · Carrera + core
+TRIGGER:-PT15M
+END:VALARM
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:⚓ Sem 2 · Día 2 · Carrera + core
+TRIGGER:PT0M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:bitacora-2026-10-22@rutina-marino
+DTSTAMP:20261006T124203Z
+DTSTART:20261022T110000Z
+DTEND:20261022T150000Z
+SUMMARY:⚓ Sem 2 · Día 3 · Agua + piernas
+DESCRIPTION:«Al lago. Vas solo: nadas donde haces pie y sales cuando suen
+ a.»\n\n8:00 Natación técnica · lago: Entrada en calor ~5 min · Técn
+ ica 12 × 22 brazadas drills · 6 × 22 brazadas crol · Vuelta a la calm
+ a ~3 min\n10:15 Piernas: Sentadillas 4 × 20 · Zancadas 3 × 10 por pier
+ na · Puente de glúteo 3 × 15 · Gemelos 3 × 20\n11:30 Tolerancia al d
+ olor: Sentadilla isométrica en la pared 0:53 · Colgado de la barra 0:24
+  · Plancha 1:08\n11:45 Ducha fría 30 s: Agua fría 30 s\n22:45 Estudio:
+  Nudo llano\n\nDespiertas 7:30 · entrenas desde 8:00 · sales al trabajo
+  12:30 · cama 23:30\n\nÓrdenes paso a paso: https://claude.ai/artifact/
+ Y7MgtsGPPBnXAaGzJpKC7H
+TRANSP:OPAQUE
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:⚓ Sem 2 · Día 3 · Agua + piernas
+TRIGGER:-PT15M
+END:VALARM
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:⚓ Sem 2 · Día 3 · Agua + piernas
+TRIGGER:PT0M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:bitacora-2026-10-23@rutina-marino
+DTSTAMP:20261006T124203Z
+DTSTART:20261023T130000Z
+DTEND:20261023T133000Z
+SUMMARY:⚓ Sem 2 · Día 4 · Descanso activo
+DESCRIPTION:«Descanso. El progreso ocurre cuando descansas.»\n\nDescanso
+  activo: Movilidad 15 min suaves · Dormir 8–9 h\n11:50 Apnea en seco: 
+ Apnea en seco 8 × 1:00\n22:45 Estudio: Nudo ocho\n\nDespiertas 7:30 · e
+ ntrenas desde 8:00 · sales al trabajo 12:30 · cama 23:30\n\nÓrdenes pa
+ so a paso: https://claude.ai/artifact/Y7MgtsGPPBnXAaGzJpKC7H
+TRANSP:OPAQUE
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:⚓ Sem 2 · Día 4 · Descanso activo
+TRIGGER:PT0M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:bitacora-2026-10-24@rutina-marino
+DTSTAMP:20261006T124203Z
+DTSTART:20261024T110000Z
+DTEND:20261024T150000Z
+SUMMARY:⚓ Sem 2 · Día 5 · Circuito + intervalos
+DESCRIPTION:«Diego. Querías saber si puedes. Hoy se sigue respondiendo.
+ »\n\n8:00 Circuito de prueba: Circuito 3 vueltas\n10:15 Intervalos 5 × 
+ 400 m: 5 × 400 m 1:45 cada uno · Vuelta a la calma 5–10 min trote sua
+ ve\n11:30 Tolerancia al dolor: Sentadilla isométrica en la pared 0:53 ·
+  Colgado de la barra 0:24 · Plancha 1:08\n11:45 Ducha fría 30 s: Agua f
+ ría 30 s\n11:50 Apnea en seco: Apnea en seco 8 × 1:00\n22:45 Estudio: L
+ a brújula\n\nDespiertas 7:30 · entrenas desde 8:00 · sales al trabajo 
+ 12:30 · cama 23:30\n\nÓrdenes paso a paso: https://claude.ai/artifact/Y
+ 7MgtsGPPBnXAaGzJpKC7H
+TRANSP:OPAQUE
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:⚓ Sem 2 · Día 5 · Circuito + intervalos
+TRIGGER:-PT15M
+END:VALARM
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:⚓ Sem 2 · Día 5 · Circuito + intervalos
+TRIGGER:PT0M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:bitacora-2026-10-25@rutina-marino
+DTSTAMP:20261006T124203Z
+DTSTART:20261025T110000Z
+DTEND:20261025T150000Z
+SUMMARY:⚓ Sem 2 · Día 6 · Agua larga
+DESCRIPTION:«Al lago. Vas solo: nadas donde haces pie y sales cuando suen
+ a.»\n\n8:00 Distancia continua · lago: Entrada en calor ~5 min · Técn
+ ica 12 × 22 brazadas drills · 6 × 22 brazadas crol · Vuelta a la calm
+ a ~3 min\n10:15 Prueba de incomodidad · 20 min: Trote 10 min · Flexione
+ s 30 en total · Sentadillas 40 en total · Abdominales 30 en total · Du
+ cha fría 3 min\n11:30 Tolerancia al dolor: Sentadilla isométrica en la 
+ pared 0:53 · Colgado de la barra 0:24 · Plancha 1:08\n11:45 Ducha fría
+  30 s: Agua fría 30 s\n11:50 Apnea en seco: Apnea en seco 8 × 1:00\n22:
+ 45 Estudio: Cartas y millas náuticas\n\nDespiertas 7:30 · entrenas desd
+ e 8:00 · sales al trabajo 12:30 · cama 23:30\n\nÓrdenes paso a paso: h
+ ttps://claude.ai/artifact/Y7MgtsGPPBnXAaGzJpKC7H
+TRANSP:OPAQUE
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:⚓ Sem 2 · Día 6 · Agua larga
+TRIGGER:-PT15M
+END:VALARM
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:⚓ Sem 2 · Día 6 · Agua larga
+TRIGGER:PT0M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:bitacora-2026-10-26@rutina-marino
+DTSTAMP:20261006T124203Z
+DTSTART:20261026T130000Z
+DTEND:20261026T133000Z
+SUMMARY:⚓ Sem 2 · Día 7 · Descanso total
+DESCRIPTION:«Descanso. El progreso ocurre cuando descansas.»\n\nDescanso
+  total: Movilidad 15 min suaves · Dormir 8–9 h\n22:45 Estudio: Mareas\
+ n\nDespiertas 7:30 · entrenas desde 8:00 · sales al trabajo 12:30 · ca
+ ma 23:30\n\nÓrdenes paso a paso: https://claude.ai/artifact/Y7MgtsGPPBnX
+ AaGzJpKC7H
+TRANSP:OPAQUE
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:⚓ Sem 2 · Día 7 · Descanso total
+TRIGGER:PT0M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:bitacora-2026-10-27@rutina-marino
+DTSTAMP:20261006T124203Z
+DTSTART:20261027T110000Z
+DTEND:20261027T150000Z
+SUMMARY:⚓ Sem 3 · Día 1 · Agua + tirón
+DESCRIPTION:«Al agua. Resistencia sí\, heroísmo no.»\n\n8:00 Natación
+  técnica · lago: Entrada en calor ~5 min · Técnica 10 × 22 brazadas 
+ drills · 8 × 22 brazadas crol · 2 × 44 brazadas intentando crol · Vu
+ elta a la calma ~3 min\n10:15 Fuerza de tren superior: Barras 4 × 4 · R
+ emo invertido 3 × 10 · Flexiones 4 × 12 · Fondos en silla 3 × 10 · 
+ Plancha 3 × 45 s\n11:30 Tolerancia al dolor: Sentadilla isométrica en l
+ a pared 0:57 · Colgado de la barra 0:26 · Plancha 1:12\n11:45 Ducha fr
+ ía 1 min: Agua fría 1 min\n22:45 Estudio: Viento y mar: Beaufort\n\nDes
+ piertas 7:30 · entrenas desde 8:00 · sales al trabajo 12:30 · cama 23:
+ 30\n\nÓrdenes paso a paso: https://claude.ai/artifact/Y7MgtsGPPBnXAaGzJp
+ KC7H
+TRANSP:OPAQUE
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:⚓ Sem 3 · Día 1 · Agua + tirón
+TRIGGER:-PT15M
+END:VALARM
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:⚓ Sem 3 · Día 1 · Agua + tirón
+TRIGGER:PT0M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:bitacora-2026-10-28@rutina-marino
+DTSTAMP:20261006T124203Z
+DTSTART:20261028T110000Z
+DTEND:20261028T150000Z
+SUMMARY:⚓ Sem 3 · Día 2 · Carrera + core
+DESCRIPTION:«De pie\, Diego. Esto es lo que haces hoy.»\n\n8:00 Carrera 
+ suave 35 min: Trote 35 min\n9:15 Core: Plancha 3 × 45 s · Plancha later
+ al 2 × 30 s por lado · Hollow hold 3 × 20 s · Abdominales 3 × 20\n11
+ :30 Tolerancia al dolor: Sentadilla isométrica en la pared 0:57 · Colga
+ do de la barra 0:26 · Plancha 1:12\n11:45 Ducha fría 1 min: Agua fría 
+ 1 min\n22:45 Estudio: Alfabeto fonético\n\nDespiertas 7:30 · entrenas d
+ esde 8:00 · sales al trabajo 12:30 · cama 23:30\n\nÓrdenes paso a paso
+ : https://claude.ai/artifact/Y7MgtsGPPBnXAaGzJpKC7H
+TRANSP:OPAQUE
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:⚓ Sem 3 · Día 2 · Carrera + core
+TRIGGER:-PT15M
+END:VALARM
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:⚓ Sem 3 · Día 2 · Carrera + core
+TRIGGER:PT0M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:bitacora-2026-10-29@rutina-marino
+DTSTAMP:20261006T124203Z
+DTSTART:20261029T110000Z
+DTEND:20261029T150000Z
+SUMMARY:⚓ Sem 3 · Día 3 · Agua + piernas
+DESCRIPTION:«Lago. El frío no perdona al que se confía.»\n\n8:00 Natac
+ ión técnica · lago: Entrada en calor ~5 min · Técnica 10 × 22 braza
+ das drills · 8 × 22 brazadas crol · 2 × 44 brazadas intentando crol 
+ · Vuelta a la calma ~3 min\n10:15 Piernas: Sentadillas 4 × 20 · Zancad
+ as 3 × 10 por pierna · Puente de glúteo 3 × 15 · Gemelos 3 × 20\n11
+ :30 Tolerancia al dolor: Sentadilla isométrica en la pared 0:57 · Colga
+ do de la barra 0:26 · Plancha 1:12\n11:45 Ducha fría 1 min: Agua fría 
+ 1 min\n22:45 Estudio: Hora militar y comunicación\n\nDespiertas 7:30 · 
+ entrenas desde 8:00 · sales al trabajo 12:30 · cama 23:30\n\nÓrdenes p
+ aso a paso: https://claude.ai/artifact/Y7MgtsGPPBnXAaGzJpKC7H
+TRANSP:OPAQUE
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:⚓ Sem 3 · Día 3 · Agua + piernas
+TRIGGER:-PT15M
+END:VALARM
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:⚓ Sem 3 · Día 3 · Agua + piernas
+TRIGGER:PT0M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:bitacora-2026-10-30@rutina-marino
+DTSTAMP:20261006T124203Z
+DTSTART:20261030T130000Z
+DTEND:20261030T133000Z
+SUMMARY:⚓ Sem 3 · Día 4 · Descanso activo
+DESCRIPTION:«Día libre. Cúmplelo igual de serio.»\n\nDescanso activo: 
+ Movilidad 15 min suaves · Dormir 8–9 h\n11:50 Apnea en seco: Apnea en 
+ seco 8 × 1:00\n22:45 Estudio: Equipo básico de buceo\n\nDespiertas 7:30
+  · entrenas desde 8:00 · sales al trabajo 12:30 · cama 23:30\n\nÓrden
+ es paso a paso: https://claude.ai/artifact/Y7MgtsGPPBnXAaGzJpKC7H
+TRANSP:OPAQUE
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:⚓ Sem 3 · Día 4 · Descanso activo
+TRIGGER:PT0M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:bitacora-2026-10-31@rutina-marino
+DTSTAMP:20261006T124203Z
+DTSTART:20261031T110000Z
+DTEND:20261031T150000Z
+SUMMARY:⚓ Sem 3 · Día 5 · Circuito + intervalos
+DESCRIPTION:«De pie\, Diego. Esto es lo que haces hoy.»\n\n8:00 Circuito
+  de prueba: Circuito 4 vueltas\n10:15 Intervalos 6 × 400 m: 6 × 400 m 1
+ :45 cada uno · Vuelta a la calma 5–10 min trote suave\n11:30 Toleranci
+ a al dolor: Sentadilla isométrica en la pared 0:57 · Colgado de la barr
+ a 0:26 · Plancha 1:12\n11:45 Ducha fría 1 min: Agua fría 1 min\n11:50 
+ Apnea en seco: Apnea en seco 8 × 1:00\n22:45 Estudio: Nitrógeno y desco
+ mpresión\n\nDespiertas 7:30 · entrenas desde 8:00 · sales al trabajo 1
+ 2:30 · cama 23:30\n\nÓrdenes paso a paso: https://claude.ai/artifact/Y7
+ MgtsGPPBnXAaGzJpKC7H
+TRANSP:OPAQUE
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:⚓ Sem 3 · Día 5 · Circuito + intervalos
+TRIGGER:-PT15M
+END:VALARM
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:⚓ Sem 3 · Día 5 · Circuito + intervalos
+TRIGGER:PT0M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:bitacora-2026-11-01@rutina-marino
+DTSTAMP:20261006T124203Z
+DTSTART:20261101T110000Z
+DTEND:20261101T150000Z
+SUMMARY:⚓ Sem 3 · Día 6 · Agua larga
+DESCRIPTION:«Lago. El frío no perdona al que se confía.»\n\n8:00 Dista
+ ncia continua · lago: Entrada en calor ~5 min · Técnica 10 × 22 braza
+ das drills · 8 × 22 brazadas crol · 2 × 44 brazadas intentando crol 
+ · Vuelta a la calma ~3 min\n11:30 Tolerancia al dolor: Sentadilla isomé
+ trica en la pared 0:57 · Colgado de la barra 0:26 · Plancha 1:12\n11:45
+  Ducha fría 1 min: Agua fría 1 min\n11:50 Apnea en seco: Apnea en seco 
+ 8 × 1:00\n22:45 Estudio: Lesiones del corredor\n\nDespiertas 7:30 · ent
+ renas desde 8:00 · sales al trabajo 12:30 · cama 23:30\n\nÓrdenes paso
+  a paso: https://claude.ai/artifact/Y7MgtsGPPBnXAaGzJpKC7H
+TRANSP:OPAQUE
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:⚓ Sem 3 · Día 6 · Agua larga
+TRIGGER:-PT15M
+END:VALARM
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:⚓ Sem 3 · Día 6 · Agua larga
+TRIGGER:PT0M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:bitacora-2026-11-02@rutina-marino
+DTSTAMP:20261006T124203Z
+DTSTART:20261102T130000Z
+DTEND:20261102T133000Z
+SUMMARY:⚓ Sem 3 · Día 7 · Descanso total
+DESCRIPTION:«Día libre. Cúmplelo igual de serio.»\n\nDescanso total: M
+ ovilidad 15 min suaves · Dormir 8–9 h\n22:45 Estudio: Hombro del nadad
+ or\n\nDespiertas 7:30 · entrenas desde 8:00 · sales al trabajo 12:30 ·
+  cama 23:30\n\nÓrdenes paso a paso: https://claude.ai/artifact/Y7MgtsGPP
+ BnXAaGzJpKC7H
+TRANSP:OPAQUE
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:⚓ Sem 3 · Día 7 · Descanso total
+TRIGGER:PT0M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:bitacora-2026-11-03@rutina-marino
+DTSTAMP:20261006T124203Z
+DTSTART:20261103T110000Z
+DTEND:20261103T150000Z
+SUMMARY:⚓ Sem 4 · Día 1 · Agua + tirón
+DESCRIPTION:«Al lago. Vas solo: nadas donde haces pie y sales cuando suen
+ a.»\n\n8:00 Natación técnica · lago: Nado continuo ~18 min\n10:15 Fue
+ rza de tren superior: Barras 3 × 4 · Remo invertido 3 × 10 · Flexione
+ s 3 × 13 · Fondos en silla 3 × 10 · Plancha 3 × 45 s\n11:30 Toleranc
+ ia al dolor: Sentadilla isométrica en la pared 1:01 · Colgado de la bar
+ ra 0:28 · Plancha 1:16\n11:45 Ducha fría 1 min: Agua fría 1 min\n22:45
+  Estudio: Comer para entrenar\n\nDespiertas 7:30 · entrenas desde 8:00 
+ · sales al trabajo 12:30 · cama 23:30\n\nÓrdenes paso a paso: https://
+ claude.ai/artifact/Y7MgtsGPPBnXAaGzJpKC7H
+TRANSP:OPAQUE
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:⚓ Sem 4 · Día 1 · Agua + tirón
+TRIGGER:-PT15M
+END:VALARM
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:⚓ Sem 4 · Día 1 · Agua + tirón
+TRIGGER:PT0M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:bitacora-2026-11-04@rutina-marino
+DTSTAMP:20261006T124203Z
+DTSTART:20261104T110000Z
+DTEND:20261104T150000Z
+SUMMARY:⚓ Sem 4 · Día 2 · Carrera + core
+DESCRIPTION:«Arriba\, Diego. Nadie lo va a hacer por ti.»\n\n8:00 Carrer
+ a suave 30 min: Trote 30 min\n9:15 Core: Plancha 3 × 45 s · Plancha lat
+ eral 2 × 30 s por lado · Hollow hold 3 × 20 s · Abdominales 3 × 20\n
+ 11:30 Tolerancia al dolor: Sentadilla isométrica en la pared 1:01 · Col
+ gado de la barra 0:28 · Plancha 1:16\n11:45 Ducha fría 1 min: Agua frí
+ a 1 min\n22:45 Estudio: Dormir es entrenar\n\nDespiertas 7:30 · entrenas
+  desde 8:00 · sales al trabajo 12:30 · cama 23:30\n\nÓrdenes paso a pa
+ so: https://claude.ai/artifact/Y7MgtsGPPBnXAaGzJpKC7H
+TRANSP:OPAQUE
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:⚓ Sem 4 · Día 2 · Carrera + core
+TRIGGER:-PT15M
+END:VALARM
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:⚓ Sem 4 · Día 2 · Carrera + core
+TRIGGER:PT0M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:bitacora-2026-11-05@rutina-marino
+DTSTAMP:20261006T124203Z
+DTSTART:20261105T110000Z
+DTEND:20261105T150000Z
+SUMMARY:⚓ Sem 4 · Día 3 · Agua + piernas
+DESCRIPTION:«Al agua. Resistencia sí\, heroísmo no.»\n\n8:00 Natación
+  técnica · lago: Nado continuo ~18 min\n10:15 Piernas: Sentadillas 3 ×
+  20 · Zancadas 3 × 10 por pierna · Puente de glúteo 3 × 15 · Gemelo
+ s 3 × 20\n11:30 Tolerancia al dolor: Sentadilla isométrica en la pared 
+ 1:01 · Colgado de la barra 0:28 · Plancha 1:16\n11:45 Ducha fría 1 min
+ : Agua fría 1 min\n22:45 Estudio: Entrevista: tu por qué\n\nDespiertas 
+ 7:30 · entrenas desde 8:00 · sales al trabajo 12:30 · cama 23:30\n\nÓ
+ rdenes paso a paso: https://claude.ai/artifact/Y7MgtsGPPBnXAaGzJpKC7H
+TRANSP:OPAQUE
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:⚓ Sem 4 · Día 3 · Agua + piernas
+TRIGGER:-PT15M
+END:VALARM
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:⚓ Sem 4 · Día 3 · Agua + piernas
+TRIGGER:PT0M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:bitacora-2026-11-06@rutina-marino
+DTSTAMP:20261006T124203Z
+DTSTART:20261106T130000Z
+DTEND:20261106T133000Z
+SUMMARY:⚓ Sem 4 · Día 4 · Descanso activo
+DESCRIPTION:«Hoy descansas. Es una orden\, no un premio.»\n\nDescanso ac
+ tivo: Movilidad 15 min suaves · Dormir 8–9 h\n11:50 Apnea en seco: Apn
+ ea en seco 8 × 1:00\n22:45 Estudio: Entrevista: fortalezas y debilidades
+ \n\nDespiertas 7:30 · entrenas desde 8:00 · sales al trabajo 12:30 · c
+ ama 23:30\n\nÓrdenes paso a paso: https://claude.ai/artifact/Y7MgtsGPPBn
+ XAaGzJpKC7H
+TRANSP:OPAQUE
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:⚓ Sem 4 · Día 4 · Descanso activo
+TRIGGER:PT0M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:bitacora-2026-11-07@rutina-marino
+DTSTAMP:20261006T124203Z
+DTSTART:20261107T110000Z
+DTEND:20261107T150000Z
+SUMMARY:⚓ Sem 4 · Día 5 · Circuito + intervalos
+DESCRIPTION:«Arriba\, Diego. Nadie lo va a hacer por ti.»\n\n8:00 Circui
+ to de prueba: Circuito 3 vueltas\n10:15 Trote suave 15 min: Trote 15 min\
+ n11:30 Tolerancia al dolor: Sentadilla isométrica en la pared 1:01 · Co
+ lgado de la barra 0:28 · Plancha 1:16\n11:45 Ducha fría 1 min: Agua fr
+ ía 1 min\n11:50 Apnea en seco: Apnea en seco 8 × 1:00\n22:45 Estudio: T
+ rabajo en equipo\n\nDespiertas 7:30 · entrenas desde 8:00 · sales al tr
+ abajo 12:30 · cama 23:30\n\nÓrdenes paso a paso: https://claude.ai/arti
+ fact/Y7MgtsGPPBnXAaGzJpKC7H
+TRANSP:OPAQUE
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:⚓ Sem 4 · Día 5 · Circuito + intervalos
+TRIGGER:-PT15M
+END:VALARM
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:⚓ Sem 4 · Día 5 · Circuito + intervalos
+TRIGGER:PT0M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:bitacora-2026-11-08@rutina-marino
+DTSTAMP:20261006T124203Z
+DTSTART:20261108T110000Z
+DTEND:20261108T150000Z
+SUMMARY:⚓ Sem 4 · Día 6 · Agua larga
+DESCRIPTION:«Al agua. Resistencia sí\, heroísmo no.»\n\n8:00 Distancia
+  continua · lago: Nado continuo ~18 min\n11:30 Tolerancia al dolor: Sent
+ adilla isométrica en la pared 1:01 · Colgado de la barra 0:28 · Planch
+ a 1:16\n11:45 Ducha fría 1 min: Agua fría 1 min\n11:50 Apnea en seco: A
+ pnea en seco 8 × 1:00\n22:45 Estudio: Disciplina\n\nDespiertas 7:30 · e
+ ntrenas desde 8:00 · sales al trabajo 12:30 · cama 23:30\n\nÓrdenes pa
+ so a paso: https://claude.ai/artifact/Y7MgtsGPPBnXAaGzJpKC7H
+TRANSP:OPAQUE
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:⚓ Sem 4 · Día 6 · Agua larga
+TRIGGER:-PT15M
+END:VALARM
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:⚓ Sem 4 · Día 6 · Agua larga
+TRIGGER:PT0M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:bitacora-2026-11-09@rutina-marino
+DTSTAMP:20261006T124203Z
+DTSTART:20261109T130000Z
+DTEND:20261109T133000Z
+SUMMARY:⚓ Sem 4 · Día 7 · Descanso total
+DESCRIPTION:«Hoy descansas. Es una orden\, no un premio.»\n\nDescanso to
+ tal: Movilidad 15 min suaves · Dormir 8–9 h\n22:45 Estudio: Preparaci
+ ón académica\n\nDespiertas 7:30 · entrenas desde 8:00 · sales al trab
+ ajo 12:30 · cama 23:30\n\nÓrdenes paso a paso: https://claude.ai/artifa
+ ct/Y7MgtsGPPBnXAaGzJpKC7H
+TRANSP:OPAQUE
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:⚓ Sem 4 · Día 7 · Descanso total
+TRIGGER:PT0M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:bitacora-2026-11-10@rutina-marino
+DTSTAMP:20261006T124203Z
+DTSTART:20261110T110000Z
+DTEND:20261110T150000Z
+SUMMARY:⚓ Sem 5 · Día 1 · Agua + tirón
+DESCRIPTION:«Lago. El frío no perdona al que se confía.»\n\n8:00 Natac
+ ión técnica · lago: Entrada en calor ~5 min · Técnica 14 × 22 braza
+ das drills · 6 × 44 brazadas crol · Vuelta a la calma ~3 min\n10:15 Fu
+ erza de tren superior: Barras 4 × 4 · Remo invertido 3 × 10 · Flexion
+ es 4 × 13 · Fondos en silla 3 × 10 · Plancha 3 × 45 s\n11:30 Toleran
+ cia al dolor: Sentadilla isométrica en la pared 1:05 · Colgado de la ba
+ rra 0:30 · Plancha 1:20\n11:45 Ducha fría 1 min: Agua fría 1 min\n22:4
+ 5 Estudio: Comprensión lectora\n\nDespiertas 7:30 · entrenas desde 8:00
+  · sales al trabajo 12:30 · cama 23:30\n\nÓrdenes paso a paso: https:/
+ /claude.ai/artifact/Y7MgtsGPPBnXAaGzJpKC7H
+TRANSP:OPAQUE
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:⚓ Sem 5 · Día 1 · Agua + tirón
+TRIGGER:-PT15M
+END:VALARM
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:⚓ Sem 5 · Día 1 · Agua + tirón
+TRIGGER:PT0M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:bitacora-2026-11-11@rutina-marino
+DTSTAMP:20261006T124203Z
+DTSTART:20261111T110000Z
+DTEND:20261111T150000Z
+SUMMARY:⚓ Sem 5 · Día 2 · Carrera + core
+DESCRIPTION:«Diego. Querías saber si puedes. Hoy se sigue respondiendo.
+ »\n\n8:00 Carrera suave 35 min: Trote 35 min\n9:15 Core: Plancha 3 × 45
+  s · Plancha lateral 2 × 30 s por lado · Hollow hold 3 × 20 s · Abdo
+ minales 3 × 20\n11:30 Tolerancia al dolor: Sentadilla isométrica en la 
+ pared 1:05 · Colgado de la barra 0:30 · Plancha 1:20\n11:45 Ducha fría
+  1 min: Agua fría 1 min\n22:45 Repaso: La Armada y tu camino\n\nDespiert
+ as 7:30 · entrenas desde 8:00 · sales al trabajo 12:30 · cama 23:30\n\
+ nÓrdenes paso a paso: https://claude.ai/artifact/Y7MgtsGPPBnXAaGzJpKC7H
+TRANSP:OPAQUE
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:⚓ Sem 5 · Día 2 · Carrera + core
+TRIGGER:-PT15M
+END:VALARM
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:⚓ Sem 5 · Día 2 · Carrera + core
+TRIGGER:PT0M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:bitacora-2026-11-12@rutina-marino
+DTSTAMP:20261006T124203Z
+DTSTART:20261112T110000Z
+DTEND:20261112T150000Z
+SUMMARY:⚓ Sem 5 · Día 3 · Agua + piernas
+DESCRIPTION:«Al lago. Vas solo: nadas donde haces pie y sales cuando suen
+ a.»\n\n8:00 Natación técnica · lago: Entrada en calor ~5 min · Técn
+ ica 14 × 22 brazadas drills · 6 × 44 brazadas crol · Vuelta a la calm
+ a ~3 min\n10:15 Piernas: Sentadillas 4 × 20 · Zancadas 3 × 10 por pier
+ na · Puente de glúteo 3 × 15 · Gemelos 3 × 20\n11:30 Tolerancia al d
+ olor: Sentadilla isométrica en la pared 1:05 · Colgado de la barra 0:30
+  · Plancha 1:20\n11:45 Ducha fría 1 min: Agua fría 1 min\n22:45 Repaso
+ : La prueba de ingreso al curso\n\nDespiertas 7:30 · entrenas desde 8:00
+  · sales al trabajo 12:30 · cama 23:30\n\nÓrdenes paso a paso: https:/
+ /claude.ai/artifact/Y7MgtsGPPBnXAaGzJpKC7H
+TRANSP:OPAQUE
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:⚓ Sem 5 · Día 3 · Agua + piernas
+TRIGGER:-PT15M
+END:VALARM
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:⚓ Sem 5 · Día 3 · Agua + piernas
+TRIGGER:PT0M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:bitacora-2026-11-13@rutina-marino
+DTSTAMP:20261006T124203Z
+DTSTART:20261113T130000Z
+DTEND:20261113T133000Z
+SUMMARY:⚓ Sem 5 · Día 4 · Descanso activo
+DESCRIPTION:«Descanso. El progreso ocurre cuando descansas.»\n\nDescanso
+  activo: Movilidad 15 min suaves · Dormir 8–9 h\n11:50 Apnea en seco: 
+ Apnea en seco 8 × 1:00\n22:45 Repaso: Combate Naval de Iquique\n\nDespie
+ rtas 7:30 · entrenas desde 8:00 · sales al trabajo 12:30 · cama 23:30\
+ n\nÓrdenes paso a paso: https://claude.ai/artifact/Y7MgtsGPPBnXAaGzJpKC7
+ H
+TRANSP:OPAQUE
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:⚓ Sem 5 · Día 4 · Descanso activo
+TRIGGER:PT0M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:bitacora-2026-11-14@rutina-marino
+DTSTAMP:20261006T124203Z
+DTSTART:20261114T110000Z
+DTEND:20261114T150000Z
+SUMMARY:⚓ Sem 5 · Día 5 · Circuito + intervalos
+DESCRIPTION:«Diego. Querías saber si puedes. Hoy se sigue respondiendo.
+ »\n\n8:00 Circuito de prueba: Circuito 4 vueltas\n10:15 Intervalos 4 × 
+ 800 m: 4 × 800 m 3:34 cada uno · Vuelta a la calma 5–10 min trote sua
+ ve\n11:30 Tolerancia al dolor: Sentadilla isométrica en la pared 1:05 ·
+  Colgado de la barra 0:30 · Plancha 1:20\n11:45 Ducha fría 1 min: Agua 
+ fría 1 min\n11:50 Apnea en seco: Apnea en seco 8 × 1:00\n22:45 Repaso: 
+ Presión bajo el agua\n\nDespiertas 7:30 · entrenas desde 8:00 · sales 
+ al trabajo 12:30 · cama 23:30\n\nÓrdenes paso a paso: https://claude.ai
+ /artifact/Y7MgtsGPPBnXAaGzJpKC7H
+TRANSP:OPAQUE
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:⚓ Sem 5 · Día 5 · Circuito + intervalos
+TRIGGER:-PT15M
+END:VALARM
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:⚓ Sem 5 · Día 5 · Circuito + intervalos
+TRIGGER:PT0M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:bitacora-2026-11-15@rutina-marino
+DTSTAMP:20261006T124203Z
+DTSTART:20261115T110000Z
+DTEND:20261115T150000Z
+SUMMARY:⚓ Sem 5 · Día 6 · Agua larga
+DESCRIPTION:«Al lago. Vas solo: nadas donde haces pie y sales cuando suen
+ a.»\n\n8:00 Distancia continua · lago: Entrada en calor ~5 min · Técn
+ ica 14 × 22 brazadas drills · 6 × 44 brazadas crol · Vuelta a la calm
+ a ~3 min\n11:30 Tolerancia al dolor: Sentadilla isométrica en la pared 1
+ :05 · Colgado de la barra 0:30 · Plancha 1:20\n11:45 Ducha fría 1 min:
+  Agua fría 1 min\n11:50 Apnea en seco: Apnea en seco 8 × 1:00\n22:45 Re
+ paso: Ley de Boyle\n\nDespiertas 7:30 · entrenas desde 8:00 · sales al 
+ trabajo 12:30 · cama 23:30\n\nÓrdenes paso a paso: https://claude.ai/ar
+ tifact/Y7MgtsGPPBnXAaGzJpKC7H
+TRANSP:OPAQUE
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:⚓ Sem 5 · Día 6 · Agua larga
+TRIGGER:-PT15M
+END:VALARM
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:⚓ Sem 5 · Día 6 · Agua larga
+TRIGGER:PT0M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:bitacora-2026-11-16@rutina-marino
+DTSTAMP:20261006T124203Z
+DTSTART:20261116T130000Z
+DTEND:20261116T133000Z
+SUMMARY:⚓ Sem 5 · Día 7 · Descanso total
+DESCRIPTION:«Descanso. El progreso ocurre cuando descansas.»\n\nDescanso
+  total: Movilidad 15 min suaves · Dormir 8–9 h\n22:45 Repaso: Compensa
+ r los oídos\n\nDespiertas 7:30 · entrenas desde 8:00 · sales al trabaj
+ o 12:30 · cama 23:30\n\nÓrdenes paso a paso: https://claude.ai/artifact
+ /Y7MgtsGPPBnXAaGzJpKC7H
+TRANSP:OPAQUE
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:⚓ Sem 5 · Día 7 · Descanso total
+TRIGGER:PT0M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:bitacora-2026-11-17@rutina-marino
+DTSTAMP:20261006T124203Z
+DTSTART:20261117T110000Z
+DTEND:20261117T150000Z
+SUMMARY:⚓ Sem 6 · Día 1 · Agua + tirón
+DESCRIPTION:«Al agua. Resistencia sí\, heroísmo no.»\n\n8:00 Natación
+  técnica · lago: Entrada en calor ~5 min · Técnica 10 × 22 brazadas 
+ drills · 4 × 66 brazadas intentando crol · 4 × 44 brazadas intentando
+  crol · Vuelta a la calma ~3 min\n10:15 Fuerza de tren superior: Barras 
+ 4 × 4 · Remo invertido 3 × 10 · Flexiones 4 × 13 · Fondos en silla 
+ 3 × 10 · Plancha 3 × 45 s\n11:30 Tolerancia al dolor: Sentadilla isom
+ étrica en la pared 1:09 · Colgado de la barra 0:32 · Plancha 1:24\n11:
+ 45 Ducha fría 30 s: Agua fría 30 s\n22:45 Repaso: Barotrauma\n\nDespier
+ tas 7:30 · entrenas desde 8:00 · sales al trabajo 12:30 · cama 23:30\n
+ \nÓrdenes paso a paso: https://claude.ai/artifact/Y7MgtsGPPBnXAaGzJpKC7H
+TRANSP:OPAQUE
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:⚓ Sem 6 · Día 1 · Agua + tirón
+TRIGGER:-PT15M
+END:VALARM
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:⚓ Sem 6 · Día 1 · Agua + tirón
+TRIGGER:PT0M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:bitacora-2026-11-18@rutina-marino
+DTSTAMP:20261006T124203Z
+DTSTART:20261118T110000Z
+DTEND:20261118T150000Z
+SUMMARY:⚓ Sem 6 · Día 2 · Carrera + core
+DESCRIPTION:«De pie\, Diego. Esto es lo que haces hoy.»\n\n8:00 Carrera 
+ suave 40 min: Trote 40 min\n9:15 Core: Plancha 3 × 45 s · Plancha later
+ al 2 × 30 s por lado · Hollow hold 3 × 20 s · Abdominales 3 × 20\n11
+ :30 Tolerancia al dolor: Sentadilla isométrica en la pared 1:09 · Colga
+ do de la barra 0:32 · Plancha 1:24\n11:45 Ducha fría 30 s: Agua fría 3
+ 0 s\n22:45 Repaso: Apagón en apnea\n\nDespiertas 7:30 · entrenas desde 
+ 8:00 · sales al trabajo 12:30 · cama 23:30\n\nÓrdenes paso a paso: htt
+ ps://claude.ai/artifact/Y7MgtsGPPBnXAaGzJpKC7H
+TRANSP:OPAQUE
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:⚓ Sem 6 · Día 2 · Carrera + core
+TRIGGER:-PT15M
+END:VALARM
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:⚓ Sem 6 · Día 2 · Carrera + core
+TRIGGER:PT0M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:bitacora-2026-11-19@rutina-marino
+DTSTAMP:20261006T124203Z
+DTSTART:20261119T110000Z
+DTEND:20261119T150000Z
+SUMMARY:⚓ Sem 6 · Día 3 · Agua + piernas
+DESCRIPTION:«Lago. El frío no perdona al que se confía.»\n\n8:00 Natac
+ ión técnica · lago: Entrada en calor ~5 min · Técnica 10 × 22 braza
+ das drills · 4 × 66 brazadas intentando crol · 4 × 44 brazadas intent
+ ando crol · Vuelta a la calma ~3 min\n10:15 Piernas: Sentadillas 4 × 20
+  · Zancadas 3 × 10 por pierna · Puente de glúteo 3 × 15 · Gemelos 3
+  × 20\n11:30 Tolerancia al dolor: Sentadilla isométrica en la pared 1:0
+ 9 · Colgado de la barra 0:32 · Plancha 1:24\n11:45 Ducha fría 30 s: Ag
+ ua fría 30 s\n22:45 Repaso: Shock de frío: regla 1-10-1\n\nDespiertas 7
+ :30 · entrenas desde 8:00 · sales al trabajo 12:30 · cama 23:30\n\nÓr
+ denes paso a paso: https://claude.ai/artifact/Y7MgtsGPPBnXAaGzJpKC7H
+TRANSP:OPAQUE
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:⚓ Sem 6 · Día 3 · Agua + piernas
+TRIGGER:-PT15M
+END:VALARM
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:⚓ Sem 6 · Día 3 · Agua + piernas
+TRIGGER:PT0M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:bitacora-2026-11-20@rutina-marino
+DTSTAMP:20261006T124203Z
+DTSTART:20261120T130000Z
+DTEND:20261120T133000Z
+SUMMARY:⚓ Sem 6 · Día 4 · Descanso activo
+DESCRIPTION:«Día libre. Cúmplelo igual de serio.»\n\nDescanso activo: 
+ Movilidad 15 min suaves · Dormir 8–9 h\n11:50 Apnea en seco: Apnea en 
+ seco 8 × 1:00\n22:45 Repaso: Hipotermia\n\nDespiertas 7:30 · entrenas d
+ esde 8:00 · sales al trabajo 12:30 · cama 23:30\n\nÓrdenes paso a paso
+ : https://claude.ai/artifact/Y7MgtsGPPBnXAaGzJpKC7H
+TRANSP:OPAQUE
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:⚓ Sem 6 · Día 4 · Descanso activo
+TRIGGER:PT0M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:bitacora-2026-11-21@rutina-marino
+DTSTAMP:20261006T124203Z
+DTSTART:20261121T110000Z
+DTEND:20261121T150000Z
+SUMMARY:⚓ Sem 6 · Día 5 · Circuito + intervalos
+DESCRIPTION:«De pie\, Diego. Esto es lo que haces hoy.»\n\n8:00 Circuito
+  de prueba: Circuito 4 vueltas\n10:15 Intervalos 6 × 400 m rápido: 6 ×
+  400 m 1:42 cada uno · Vuelta a la calma 5–10 min trote suave\n11:30 T
+ olerancia al dolor: Sentadilla isométrica en la pared 1:09 · Colgado de
+  la barra 0:32 · Plancha 1:24\n11:45 Ducha fría 30 s: Agua fría 30 s\n
+ 11:50 Apnea en seco: Apnea en seco 8 × 1:00\n22:45 Repaso: RCP: reanimac
+ ión\n\nDespiertas 7:30 · entrenas desde 8:00 · sales al trabajo 12:30 
+ · cama 23:30\n\nÓrdenes paso a paso: https://claude.ai/artifact/Y7MgtsG
+ PPBnXAaGzJpKC7H
+TRANSP:OPAQUE
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:⚓ Sem 6 · Día 5 · Circuito + intervalos
+TRIGGER:-PT15M
+END:VALARM
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:⚓ Sem 6 · Día 5 · Circuito + intervalos
+TRIGGER:PT0M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:bitacora-2026-11-22@rutina-marino
+DTSTAMP:20261006T124203Z
+DTSTART:20261122T110000Z
+DTEND:20261122T150000Z
+SUMMARY:⚓ Sem 6 · Día 6 · Agua larga
+DESCRIPTION:«Lago. El frío no perdona al que se confía.»\n\n8:00 Dista
+ ncia continua · lago: Entrada en calor ~5 min · Técnica 10 × 22 braza
+ das drills · 4 × 66 brazadas intentando crol · 4 × 44 brazadas intent
+ ando crol · Vuelta a la calma ~3 min\n10:15 Prueba de incomodidad · 40 
+ min: Trote 20 min · Flexiones 60 en total · Sentadillas 60 en total · 
+ Abdominales 40 en total · Ducha fría 3 min\n11:30 Tolerancia al dolor: 
+ Sentadilla isométrica en la pared 1:09 · Colgado de la barra 0:32 · Pl
+ ancha 1:24\n11:45 Ducha fría 30 s: Agua fría 30 s\n11:50 Apnea en seco:
+  Apnea en seco 8 × 1:00\n22:45 Repaso: Posición lateral de seguridad\n\
+ nDespiertas 7:30 · entrenas desde 8:00 · sales al trabajo 12:30 · cama
+  23:30\n\nÓrdenes paso a paso: https://claude.ai/artifact/Y7MgtsGPPBnXAa
+ GzJpKC7H
+TRANSP:OPAQUE
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:⚓ Sem 6 · Día 6 · Agua larga
+TRIGGER:-PT15M
+END:VALARM
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:⚓ Sem 6 · Día 6 · Agua larga
+TRIGGER:PT0M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:bitacora-2026-11-23@rutina-marino
+DTSTAMP:20261006T124203Z
+DTSTART:20261123T130000Z
+DTEND:20261123T133000Z
+SUMMARY:⚓ Sem 6 · Día 7 · Descanso total
+DESCRIPTION:«Día libre. Cúmplelo igual de serio.»\n\nDescanso total: M
+ ovilidad 15 min suaves · Dormir 8–9 h\n22:45 Repaso: Rescate: lanzar\,
+  no ir\n\nDespiertas 7:30 · entrenas desde 8:00 · sales al trabajo 12:3
+ 0 · cama 23:30\n\nÓrdenes paso a paso: https://claude.ai/artifact/Y7Mgt
+ sGPPBnXAaGzJpKC7H
+TRANSP:OPAQUE
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:⚓ Sem 6 · Día 7 · Descanso total
+TRIGGER:PT0M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:bitacora-2026-11-24@rutina-marino
+DTSTAMP:20261006T124203Z
+DTSTART:20261124T110000Z
+DTEND:20261124T150000Z
+SUMMARY:⚓ Sem 7 · Día 1 · Agua + tirón
+DESCRIPTION:«Al lago. Vas solo: nadas donde haces pie y sales cuando suen
+ a.»\n\n8:00 Natación técnica · lago: Entrada en calor ~5 min · Técn
+ ica 22 × 22 brazadas drills · 3 × 88 brazadas crol · Vuelta a la calm
+ a ~3 min\n10:15 Fuerza de tren superior: Barras 4 × 4 · Remo invertido 
+ 3 × 10 · Flexiones 4 × 13 · Fondos en silla 3 × 10 · Plancha 3 × 4
+ 5 s\n11:30 Tolerancia al dolor: Sentadilla isométrica en la pared 1:13 
+ · Colgado de la barra 0:34 · Plancha 1:28\n11:45 Ducha fría 30 s: Agua
+  fría 30 s\n22:45 Repaso: Corrientes de retorno\n\nDespiertas 7:30 · en
+ trenas desde 8:00 · sales al trabajo 12:30 · cama 23:30\n\nÓrdenes pas
+ o a paso: https://claude.ai/artifact/Y7MgtsGPPBnXAaGzJpKC7H
+TRANSP:OPAQUE
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:⚓ Sem 7 · Día 1 · Agua + tirón
+TRIGGER:-PT15M
+END:VALARM
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:⚓ Sem 7 · Día 1 · Agua + tirón
+TRIGGER:PT0M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:bitacora-2026-11-25@rutina-marino
+DTSTAMP:20261006T124203Z
+DTSTART:20261125T110000Z
+DTEND:20261125T150000Z
+SUMMARY:⚓ Sem 7 · Día 2 · Carrera + core
+DESCRIPTION:«Arriba\, Diego. Nadie lo va a hacer por ti.»\n\n8:00 Carrer
+ a suave 40 min: Trote 40 min\n9:15 Core: Plancha 3 × 45 s · Plancha lat
+ eral 2 × 30 s por lado · Hollow hold 3 × 20 s · Abdominales 3 × 20\n
+ 11:30 Tolerancia al dolor: Sentadilla isométrica en la pared 1:13 · Col
+ gado de la barra 0:34 · Plancha 1:28\n11:45 Ducha fría 30 s: Agua fría
+  30 s\n22:45 Repaso: Nudo as de guía\n\nDespiertas 7:30 · entrenas desd
+ e 8:00 · sales al trabajo 12:30 · cama 23:30\n\nÓrdenes paso a paso: h
+ ttps://claude.ai/artifact/Y7MgtsGPPBnXAaGzJpKC7H
+TRANSP:OPAQUE
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:⚓ Sem 7 · Día 2 · Carrera + core
+TRIGGER:-PT15M
+END:VALARM
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:⚓ Sem 7 · Día 2 · Carrera + core
+TRIGGER:PT0M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:bitacora-2026-11-26@rutina-marino
+DTSTAMP:20261006T124203Z
+DTSTART:20261126T110000Z
+DTEND:20261126T150000Z
+SUMMARY:⚓ Sem 7 · Día 3 · Agua + piernas
+DESCRIPTION:«Al agua. Resistencia sí\, heroísmo no.»\n\n8:00 Natación
+  técnica · lago: Entrada en calor ~5 min · Técnica 22 × 22 brazadas 
+ drills · 3 × 88 brazadas crol · Vuelta a la calma ~3 min\n10:15 Pierna
+ s: Sentadillas 4 × 20 · Zancadas 3 × 10 por pierna · Puente de glúte
+ o 3 × 15 · Gemelos 3 × 20\n11:30 Tolerancia al dolor: Sentadilla isom
+ étrica en la pared 1:13 · Colgado de la barra 0:34 · Plancha 1:28\n11:
+ 45 Ducha fría 30 s: Agua fría 30 s\n22:45 Repaso: Nudo ballestrinque\n\
+ nDespiertas 7:30 · entrenas desde 8:00 · sales al trabajo 12:30 · cama
+  23:30\n\nÓrdenes paso a paso: https://claude.ai/artifact/Y7MgtsGPPBnXAa
+ GzJpKC7H
+TRANSP:OPAQUE
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:⚓ Sem 7 · Día 3 · Agua + piernas
+TRIGGER:-PT15M
+END:VALARM
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:⚓ Sem 7 · Día 3 · Agua + piernas
+TRIGGER:PT0M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:bitacora-2026-11-27@rutina-marino
+DTSTAMP:20261006T124203Z
+DTSTART:20261127T130000Z
+DTEND:20261127T133000Z
+SUMMARY:⚓ Sem 7 · Día 4 · Descanso activo
+DESCRIPTION:«Hoy descansas. Es una orden\, no un premio.»\n\nDescanso ac
+ tivo: Movilidad 15 min suaves · Dormir 8–9 h\n11:50 Apnea en seco: Apn
+ ea en seco 8 × 1:00\n22:45 Repaso: Nudo llano\n\nDespiertas 7:30 · entr
+ enas desde 8:00 · sales al trabajo 12:30 · cama 23:30\n\nÓrdenes paso 
+ a paso: https://claude.ai/artifact/Y7MgtsGPPBnXAaGzJpKC7H
+TRANSP:OPAQUE
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:⚓ Sem 7 · Día 4 · Descanso activo
+TRIGGER:PT0M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:bitacora-2026-11-28@rutina-marino
+DTSTAMP:20261006T124203Z
+DTSTART:20261128T110000Z
+DTEND:20261128T150000Z
+SUMMARY:⚓ Sem 7 · Día 5 · Circuito + intervalos
+DESCRIPTION:«Arriba\, Diego. Nadie lo va a hacer por ti.»\n\n8:00 Circui
+ to de prueba: Circuito 5 vueltas\n10:15 Intervalos 5 × 800 m: 5 × 800 m
+  3:34 cada uno · Vuelta a la calma 5–10 min trote suave\n11:30 Toleran
+ cia al dolor: Sentadilla isométrica en la pared 1:13 · Colgado de la ba
+ rra 0:34 · Plancha 1:28\n11:45 Ducha fría 30 s: Agua fría 30 s\n11:50 
+ Apnea en seco: Apnea en seco 8 × 1:00\n22:45 Repaso: Nudo ocho\n\nDespie
+ rtas 7:30 · entrenas desde 8:00 · sales al trabajo 12:30 · cama 23:30\
+ n\nÓrdenes paso a paso: https://claude.ai/artifact/Y7MgtsGPPBnXAaGzJpKC7
+ H
+TRANSP:OPAQUE
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:⚓ Sem 7 · Día 5 · Circuito + intervalos
+TRIGGER:-PT15M
+END:VALARM
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:⚓ Sem 7 · Día 5 · Circuito + intervalos
+TRIGGER:PT0M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:bitacora-2026-11-29@rutina-marino
+DTSTAMP:20261006T124203Z
+DTSTART:20261129T110000Z
+DTEND:20261129T150000Z
+SUMMARY:⚓ Sem 7 · Día 6 · Agua larga
+DESCRIPTION:«Al agua. Resistencia sí\, heroísmo no.»\n\n8:00 Distancia
+  continua · lago: Entrada en calor ~5 min · Técnica 22 × 22 brazadas 
+ drills · 3 × 88 brazadas crol · Vuelta a la calma ~3 min\n11:30 Tolera
+ ncia al dolor: Sentadilla isométrica en la pared 1:13 · Colgado de la b
+ arra 0:34 · Plancha 1:28\n11:45 Ducha fría 30 s: Agua fría 30 s\n11:50
+  Apnea en seco: Apnea en seco 8 × 1:00\n22:45 Repaso: La brújula\n\nDes
+ piertas 7:30 · entrenas desde 8:00 · sales al trabajo 12:30 · cama 23:
+ 30\n\nÓrdenes paso a paso: https://claude.ai/artifact/Y7MgtsGPPBnXAaGzJp
+ KC7H
+TRANSP:OPAQUE
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:⚓ Sem 7 · Día 6 · Agua larga
+TRIGGER:-PT15M
+END:VALARM
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:⚓ Sem 7 · Día 6 · Agua larga
+TRIGGER:PT0M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:bitacora-2026-11-30@rutina-marino
+DTSTAMP:20261006T124203Z
+DTSTART:20261130T130000Z
+DTEND:20261130T133000Z
+SUMMARY:⚓ Sem 7 · Día 7 · Descanso total
+DESCRIPTION:«Hoy descansas. Es una orden\, no un premio.»\n\nDescanso to
+ tal: Movilidad 15 min suaves · Dormir 8–9 h\n22:45 Repaso: Cartas y mi
+ llas náuticas\n\nDespiertas 7:30 · entrenas desde 8:00 · sales al trab
+ ajo 12:30 · cama 23:30\n\nÓrdenes paso a paso: https://claude.ai/artifa
+ ct/Y7MgtsGPPBnXAaGzJpKC7H
+TRANSP:OPAQUE
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:⚓ Sem 7 · Día 7 · Descanso total
+TRIGGER:PT0M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:bitacora-2026-12-01@rutina-marino
+DTSTAMP:20261006T124203Z
+DTSTART:20261201T110000Z
+DTEND:20261201T150000Z
+SUMMARY:⚓ Sem 8 · Día 1 · Agua + tirón
+DESCRIPTION:«Al agua. Resistencia sí\, heroísmo no.»\n\n8:00 Natación
+  técnica · lago: Nado continuo ~21 min\n10:15 Fuerza de tren superior: 
+ Barras 3 × 4 · Remo invertido 3 × 10 · Flexiones 3 × 14 · Fondos en
+  silla 3 × 10 · Plancha 3 × 45 s\n11:30 Tolerancia al dolor: Sentadill
+ a isométrica en la pared 1:17 · Colgado de la barra 0:36 · Plancha 1:3
+ 2\n11:45 Ducha fría 30 s: Agua fría 30 s\n22:45 Repaso: Mareas\n\nDespi
+ ertas 7:30 · entrenas desde 8:00 · sales al trabajo 12:30 · cama 23:30
+ \n\nÓrdenes paso a paso: https://claude.ai/artifact/Y7MgtsGPPBnXAaGzJpKC
+ 7H
+TRANSP:OPAQUE
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:⚓ Sem 8 · Día 1 · Agua + tirón
+TRIGGER:-PT15M
+END:VALARM
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:⚓ Sem 8 · Día 1 · Agua + tirón
+TRIGGER:PT0M
+END:VALARM
+END:VEVENT
+END:VCALENDAR

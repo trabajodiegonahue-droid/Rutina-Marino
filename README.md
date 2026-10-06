@@ -19,3 +19,7 @@ Si cambias `src/bitacora.html`, regenera `index.html` (es el mismo contenido con
 ## Orden del día por consola
 
 `node tools/orden-del-dia.mjs [AAAA-MM-DD] [--turno 13|16|libre] [--inicio AAAA-MM-DD] [--lugar lago|piscina]` imprime la orden de ese día (o de hoy, hora de Chile) con la misma lógica de la app. Lo usa el aviso diario de Claude.
+
+## Calendario
+
+`node tools/calendario.mjs [AAAA-MM-DD desde] [días] [--turno 13|16|libre] > archivo.ics` genera un calendario con la orden de cada día (aviso 15 min antes y a la hora). `calendario/bitacora-8-semanas.ics` trae del 7 oct al 1 dic 2026 con el turno de 13:00. Para importarlo en Google Calendar: en el computador, Configuración → Importar y exportar → Importar; conviene crear antes un calendario aparte ("Bitácora") para poder borrarlo entero si cambias el plan.
