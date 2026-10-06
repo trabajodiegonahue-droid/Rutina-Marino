@@ -41,9 +41,9 @@ const reload = async p => { await p.reload(); await p.waitForTimeout(200); };
 
 // 2. Cumplir el día y la racha
 { console.log('2. Día cumplido y racha');
-  const { p, ctx } = await page('2026-10-13T09:00:00');
+  const { p, ctx } = await page('2026-10-14T09:00:00');
   await p.click('[data-st="done"]');
-  ok((await text(p)).includes('Misión cumplida'), 'muestra misión cumplida');
+  ok((await text(p)).includes('CUMPLIDO'), 'muestra el día cumplido');
   ok((await text(p)).includes('Racha 1'), 'la racha sube a 1');
   await reload(p);
   ok((await text(p)).includes('Racha 1'), 'la racha se mantiene al recargar');
@@ -228,10 +228,11 @@ const reload = async p => { await p.reload(); await p.waitForTimeout(200); };
   // borrar todo y restaurar
   await p.evaluate(() => localStorage.clear()); await reload(p); await p.click('[data-tab="plan"]');
   await p.setInputFiles('#restore-file', file);
+  await p.waitForSelector('[data-restore-ok]', { timeout: 5000 }).catch(() => {});
   ok((await text(p)).includes('Restaurar esta copia'), 'pide confirmar antes de restaurar');
   await p.click('[data-restore-ok]'); await p.click('[data-tab="hoy"]');
   ok(await p.locator('.dot', { hasText: /^1$/ }).first().evaluate(e => e.classList.contains('on')), 'la copia restaurada devuelve lo marcado');
-  fs.writeFileSync(file + '.bad', '{"hola":1}'); await p.click('[data-tab="plan"]'); await p.setInputFiles('#restore-file', file + '.bad');
+  fs.writeFileSync(file + '.bad', '{"hola":1}'); await p.click('[data-tab="plan"]'); await p.setInputFiles('#restore-file', file + '.bad'); await p.waitForTimeout(300);
   ok((await text(p)).includes('no es una copia válida'), 'rechaza un archivo que no es copia');
   ok(errs.length === 0, 'sin errores: ' + errs.join(' | '));
   await ctx.close(); }
@@ -323,7 +324,7 @@ const reload = async p => { await p.reload(); await p.waitForTimeout(200); };
   const bk = path.join(here, '..', 'node_modules', '.bk60.json');
   fs.writeFileSync(bk, JSON.stringify({ app: 'bitacora-buzo-tactico', version: 1, exportedAt: '2026-12-04T15:00:00.000Z', cfg: { start: '2026-10-06', turno: '13' }, days }));
   await p.evaluate(() => { __cloud.maxConcurrent = 3; __cloud.peak = 0; __cloud.rejected = 0; });
-  await p.click('[data-tab="plan"]'); await p.setInputFiles('#restore-file', bk); await p.click('[data-restore-ok]');
+  await p.click('[data-tab="plan"]'); await p.setInputFiles('#restore-file', bk); await p.waitForSelector('[data-restore-ok]', { timeout: 5000 }); await p.click('[data-restore-ok]');
   let n = 0; for (let t = 0; t < 40 && n < 60; t++) { await p.waitForTimeout(500); n = await p.evaluate(() => Object.keys(__cloud.server()).filter(k => k.includes('/days/2026-1') && __cloud.server()[k].note && __cloud.server()[k].note.startsWith('día ')).length); }
   ok(n === 60, 'los 60 días restaurados llegan a la nube (' + n + ')');
   ok(await p.evaluate(() => __cloud.peak <= 3 && __cloud.rejected === 0), 'sube de a 3 como máximo, sin rechazos');
@@ -404,7 +405,7 @@ const reload = async p => { await p.reload(); await p.waitForTimeout(200); };
   const ctx = await browser.newContext({ viewport: { width: 390, height: 844 }, deviceScaleFactor: 2, isMobile: true, hasTouch: true, locale: 'es-CL' });
   const errs = [];
   const open = async (time) => { const p = await ctx.newPage(); p.on('pageerror', e => errs.push(e.message)); await p.clock.install({ time: new Date(time) }); await p.goto(URL); await p.waitForTimeout(250); return p; };
-  const dots = p => p.$$eval('.dot', a => a.map(e => e.classList.contains('on') ? 1 : 0).join(''));
+  const dots = p => p.evaluate(() => { const d = (JSON.parse(localStorage.getItem('bitacora-buzo-v1')).days || {})['2026-10-06'] || {}; return JSON.stringify(Object.entries(d.sets || {}).filter(([, v]) => v).sort()); });
   const tapDots = async (p, n) => { const ds = p.locator('.dot:not(.on)'); for (let i = 0; i < n; i++) { await ds.first().tap(); await p.waitForTimeout(60); } };
   const note = async (p, v) => { await p.locator('summary', { hasText: 'Notas' }).tap(); if (v != null) await p.fill('#f-note', v); return p.inputValue('#f-note'); };
   // martes 6, 7:30: abre por primera vez, marca dos series del trote y el aprendizaje

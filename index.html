@@ -99,8 +99,8 @@ label.btn{display:inline-block;cursor:pointer}
 .chart g{cursor:default}
 .hmwrap{display:flex;flex-direction:column;gap:10px;overflow-x:auto}
 .hmg{display:flex;flex-direction:column;gap:4px}
-.hm{display:grid;grid-template-rows:repeat(7,14px);gap:3px}
-.hc{width:100%;height:14px;border-radius:3px;border:0;padding:0;background:var(--chip)}
+.hm{display:grid;grid-template-rows:repeat(7,22px);gap:3px}
+.hc{width:100%;min-width:18px;height:22px;border-radius:3px;border:0;padding:0;background:var(--chip)}
 .hc.done{background:var(--ok)}.hc.part{background:color-mix(in srgb,var(--ok) 40%,var(--chip))}
 .hc.injury{background:repeating-linear-gradient(45deg,var(--warn) 0 3px,color-mix(in srgb,var(--warn) 55%,var(--chip)) 3px 6px)}
 .hc.fail{background:var(--bad)}.hc.missed{background:transparent;box-shadow:inset 0 0 0 1.5px var(--bad)}
@@ -114,7 +114,7 @@ label.btn{display:inline-block;cursor:pointer}
 body.guided{padding-bottom:calc(420px + env(safe-area-inset-bottom,0px))}
 .guided .tin{grid-template-columns:1fr;padding:16px}
 .guided .tin .tl{flex-direction:column;align-items:center;gap:0}
-.guided .tin .tl b{font-size:clamp(64px,24vw,120px);line-height:1}
+.guided .tin .tl b{font-size:clamp(52px,17vw,96px);line-height:1}
 .guided .tin .bar{height:14px}
 .guided .tin .nb{grid-row:auto;grid-column:auto;height:52px;font-size:18px}
 .bigtext .wrap,.bigtext .timerbar,.bigtext nav.tabs{zoom:1.15}
@@ -241,6 +241,7 @@ nav.tabs svg{width:22px;height:22px}
 <div class="wrap" id="app"><div class="order"><p class="say">Cargando la orden del día…</p></div></div>
 <div id="timerbar" class="timerbar" hidden role="timer" aria-live="polite"></div>
 <div id="toast" class="toast" hidden role="status"></div>
+<input type="file" id="restore-file" accept=".json,.txt,application/json,text/plain" hidden>
 <nav class="tabs" aria-label="Secciones"><div class="in" id="tabs"></div></nav>
 
 <script>
@@ -660,7 +661,7 @@ function dayPlan(w,dow,ctx){
        T("med","Pedir hora al médico","Sin chequeo no hay plan.","09:00",[B("Pedir","examen general",{note:"Electrocardiograma, oídos y senos paranasales, espirometría y control dental. Cuenta cualquier lesión antigua."})],{kind:"admin"}),
        T("porque","Escribir tu “por qué”","Escríbelo también en Plan → Ajustes: el comandante te lo recuerda en los días duros.","20:00",[B("Una hoja","por qué quieres ser buzo táctico"),B("2–3 frases","para cuando cueste",{note:"Cambia “no puedo más” por “esto es lo que vine a entrenar”."})],{kind:"admin"})]],
      ["Reconocimiento","tierra",[runT("run","Trote suave 30 min","Soltar las piernas.","07:00",runBlocks("30 min suave",1)),
-       T("equipo","Conseguir equipo","Para el agua.","10:00",[B("Gafas y gorra de color",""),B("Neopreno 3–5 mm","si puedes",{note:"Bajo 14 °C es lo que te deja nadar más de unos minutos."}),B("Barra para dominadas","en casa o en una plaza")],{kind:"admin"})]],
+       T("equipo","Conseguir equipo","Para el agua.","10:00",[B("Gafas y gorra de color",""),B("Neopreno 3–5 mm","si puedes",{opt:1,note:"Bajo 14 °C es lo que te deja nadar más de unos minutos."}),B("Barra para dominadas","en casa o en una plaza")],{kind:"admin"})]],
      ["Ensayo de técnica","tierra",[T("fa","Fuerza de ensayo","Aprende los ejercicios. Sin llegar al fallo.","07:00",[CAL,B("Barras","3 × 3",{s:3,r:120}),B("Flexiones","3 × 10",{s:3,r:90}),B("Sentadillas","3 × 15",{s:3,r:60}),B("Abdominales","3 × 15",{s:3,r:60}),B("Plancha","2 × 30 s",{s:2,r:45,tm:30})],{kind:"fuerza"}),
        T("naval","Consultar a la Armada","Quinta Zona Naval (Puerto Montt) o sitio de admisión.","10:00",[B("Preguntar","requisitos y fechas",{note:"Escuela de Grumetes o Escuela Naval, y el formato actual de la prueba de buzo táctico."})],{kind:"admin"})]],
      ["Descanso","descanso",rest("Descanso","El cuerpo se adapta mientras descansa.")],
@@ -769,7 +770,7 @@ const isObj=x=>!!x&&typeof x==="object"&&!Array.isArray(x);
 // errores de la nube que no se arreglan reintentando
 const HARD_ERR=["invalid_argument","quota_exceeded","revoked","not_granted","capability_disabled","capability_removed","transform_error"];
 // JSON con las claves ordenadas: para comparar sin que importe el orden
-const DEEP=["sets","checks","runlog","test","mini","sim"],dc=v=>v===undefined?undefined:JSON.parse(JSON.stringify(v));
+const DEEP=["sets","checks","runlog","test","mini","sim","tprev"],dc=v=>v===undefined?undefined:JSON.parse(JSON.stringify(v));
 const canon=o=>JSON.stringify(o,(k,v)=>v&&typeof v==="object"&&!Array.isArray(v)?Object.keys(v).sort().reduce((a,x)=>(a[x]=v[x],a),{}):v);
 // Cómo se guarda: cada cambio queda como “pendiente” (solo los campos que tocaste) en este teléfono hasta que la
 // nube lo confirma. Lo que llega de la nube se mezcla con lo pendiente: nunca se pisa un cambio tuyo ni se borra
@@ -808,7 +809,7 @@ const Store={mode:"local",cfg:defCfg(),days:{},pend:{},ver:{},recent:{},remote:{
   listen(){
     const cb=this.cb,again=e=>{if(e&&HARD_ERR.includes(e.code)){this.hardErr=e.code;paintSave();return}
       clearTimeout(this.relisten);this.relisten=setTimeout(()=>{try{this.unP&&this.unP();this.unD&&this.unD()}catch(x){}this.listen()},10000)};
-    this.unP=this.planRef.onSnapshot(s=>{
+    this.unP=this.planRef.onSnapshot(s=>{PLANC={};CTX=null;
       const before=canon(this.cfg),raw=s.exists?clone(s.data()):null;this.remote.plan=raw;
       if(!this.got.plan&&!raw&&!this.pend.plan)this.addPend("plan",Object.assign({__all:1},this.cfg));
       this.cfg=fixCfg(Object.assign(defCfg(),this.merged("plan",raw)||{}));
@@ -816,7 +817,7 @@ const Store={mode:"local",cfg:defCfg(),days:{},pend:{},ver:{},recent:{},remote:{
       if(raw&&!this.pend.plan){const fx={};["start","sched","repeats","turno"].forEach(f=>{if(canon(raw[f])!==canon(this.cfg[f]))fx[f]=this.cfg[f]});if(Object.keys(fx).length)this.addPend("plan",fx)}
       this.got.plan=true;this.sync("plan");paintSave();if(canon(this.cfg)!==before){this.saveLocal();cb()}
     },again);
-    this.unD=this.daysCol.limit(1000).onSnapshot(q=>{
+    this.unD=this.daysCol.limit(1000).onSnapshot(q=>{PLANC={};CTX=null;
       const before=canon(this.days),cloud={};q.docs.forEach(x=>{cloud[x.id]=clone(x.data())});
       // primera vez con la nube vacía: todo lo del teléfono queda pendiente de subir
       if(!this.got.days&&q.empty)Object.keys(this.days).forEach(k=>{if(!this.pend[k])this.addPend(k,Object.assign({__all:1},this.days[k]))});
@@ -832,8 +833,8 @@ const Store={mode:"local",cfg:defCfg(),days:{},pend:{},ver:{},recent:{},remote:{
   sync(k){if(this.pend[k]&&!this.timers[k]&&!this.flying[k]&&!this.wait.includes(k)&&!this.paused)this.want(k)},
   ready(k){return this.mode==="db"&&(k==="plan"?this.got.plan:this.got.days)},
   day(k){return this.days[k]||(this.days[k]={})},
-  setDay(k,patch){const d=this.day(k),old={};Object.keys(patch).forEach(f=>{old[f]=d[f]});Object.assign(d,patch);this.addPend(k,patch,old);this.saveLocal();this.queue(k)},
-  setCfg(patch){Object.assign(this.cfg,patch);this.addPend("plan",patch);this.saveLocal();this.queue("plan")},
+  setDay(k,patch){PLANC={};CTX=null;const d=this.day(k),old={};Object.keys(patch).forEach(f=>{old[f]=d[f]});Object.assign(d,patch);this.addPend(k,patch,old);this.saveLocal();this.queue(k)},
+  setCfg(patch){PLANC={};CTX=null;Object.assign(this.cfg,patch);this.addPend("plan",patch);this.saveLocal();this.queue("plan")},
   // junta los toques seguidos en una sola escritura (antes de la primera foto de la nube no se escribe: se mezcla al llegar)
   queue(k){
     if(!this.ready(k)){paintSave();return}clearTimeout(this.timers[k]);
@@ -908,12 +909,23 @@ function lastTest(date){const ws=date?weekStartOf(date):null,lim=ws?iso(ws):"999
   const c={};let bk="";Object.keys(Store.days).sort().forEach(k=>{if(k>=lim)return;const t=Store.days[k].test||Store.days[k].sim;if(t)["barras","run","swim","apnea"].forEach(x=>{if(t[x]){c[x]=t[x];if(x==="barras")bk=k}})});
   const mb=Store.cfg.maxB;if(mb&&mb.v&&mb.k<end&&(!bk||mb.k>=bk))c.barras=mb.v;return CTX[lim]=c}
 function ctxFor(date){const c=Store.cfg;return Object.assign({},lastTest(date),{month:date.getMonth(),place:c.place,partner:c.partner,neo:c.neo,temp:c.temp})}
-function planFor(date){const L=locate(date);if(L.w===undefined)return null;const dd=Store.days[iso(date)]||{};return applyShift(applyMode(dayPlan(L.w,L.dow,ctxFor(date)),dd.mode),dd.turno||Store.cfg.turno,bodyWeight())}
+let PLANC={};
+function planFor(date){const ck=iso(date);if(ck in PLANC)return PLANC[ck];return PLANC[ck]=planFor0(date)}
+function planFor0(date){const L=locate(date);if(L.w===undefined)return null;const dd=Store.days[iso(date)]||{};return applyShift(applyMode(dayPlan(L.w,L.dow,ctxFor(date)),dd.mode),dd.turno||Store.cfg.turno,bodyWeight())}
 const setKey=(t,i)=>t.id+"."+i;
 const blockDone=(dd,t,i)=>Math.min(((dd&&dd.sets)||{})[setKey(t,i)]||0,t.blocks[i].s);
-const taskDone=(dd,t)=>!!dd&&(((dd.checks||{})[t.id])||(t.blocks.length>0&&t.blocks.every((b,i)=>blockDone(dd,t,i)>=b.s)));
-function units(dd,plan){let a=0,b=0;plan.tasks.forEach(t=>{const all=taskDone(dd,t);t.blocks.forEach((x,i)=>{b+=x.s;a+=all?x.s:blockDone(dd,t,i)})});return {a,b}}
-function dayStatus(k,plan){const d=Store.days[k];if(!d||!plan)return "";if(d.status)return d.status;if(d.mode==="dolor"&&plan.tasks.every(t=>taskDone(d,t)))return "injury";if(plan.tasks.every(t=>taskDone(d,t)))return "done";return units(d,plan).a?"part":""}
+const taskDone=(dd,t)=>!!dd&&(((dd.checks||{})[t.id])||(t.blocks.length>0&&t.blocks.every((b,i)=>b.opt||blockDone(dd,t,i)>=b.s)));
+// para cerrar el día cuentan las sesiones, no las rutinas (despertar, comidas, noche)
+const counts=t=>t.kind!=="rutina"&&!["despertar","desayuno","almuerzo","noche"].includes(t.id);
+function units(dd,plan){let a=0,b=0;plan.tasks.filter(counts).forEach(t=>{const all=taskDone(dd,t);t.blocks.forEach((x,i)=>{if(x.opt)return;b+=x.s;a+=all?x.s:blockDone(dd,t,i)})});return {a,b}}
+function dayStatus(k,plan){if(!plan)return "";const d=Store.days[k],core=plan.tasks.filter(counts);
+  if(d&&d.status)return d.status;
+  // un descanso que ya pasó cuenta como cumplido, salvo que marques “no pude”
+  if(plan.kind==="descanso"&&diffDays(parse(k),today())<0)return "done";
+  if(!d)return "";
+  if(d.mode==="dolor"&&core.every(t=>taskDone(d,t)))return "injury";if(core.every(t=>taskDone(d,t)))return "done";return units(d,plan).a?"part":""}
+// lo que falta para cerrar el día
+function missingTasks(dd,plan){return plan.tasks.filter(t=>counts(t)&&!taskDone(dd,t)).map(t=>{const left=t.blocks.filter((b,i)=>!b.opt&&blockDone(dd,t,i)<b.s).map(b=>b.n);return left.length<t.blocks.length&&left.length<=2?`${left.join(" y ")} (${t.t})`:t.t})}
 const okSt=s=>s==="done"||s==="injury";
 // “hoy” para la bitácora: si ayer saliste del trabajo después de medianoche (turno 16), hasta las 4:00 sigue siendo ayer
 function today(){const n=new Date();if(n.getHours()<4){const y=addDays(n,-1),ys=SHIFT[(Store.days[iso(y)]||{}).turno||Store.cfg.turno];if(ys&&ys.back&&toMin(ys.back)<300)return y}return n}
@@ -925,7 +937,8 @@ function compliance(){const td=today();let tot=0,ok=0;for(let d=parse(Store.cfg.
 function orders(plan,k,isToday,dd){
   const N=Store.cfg.name||"recluta",out=[];
   if(isToday){const fr=fatigueRun(today());if(fr>=3)out.push(["alert",`Llevas ${fr} días seguidos cansado o con dolor. Hoy versión suave o descanso: solo técnica o movilidad. Si es dolor y no mejora, al médico.`])}
-  if(isToday){const yd=addDays(today(),-1),yp=planFor(yd);if(yp&&!okSt(dayStatus(iso(yd),yp)))out.push(["alert",dayStatus(iso(yd),yp)==="fail"?"Ayer fallaste. Un día no te saca del curso; dos seguidos empiezan a hacerlo.":"Ayer quedó sin cerrar. Ciérralo o asume que no se hizo."])}
+  if(isToday){const yd=addDays(today(),-1),yp=planFor(yd);if(yp&&!okSt(dayStatus(iso(yd),yp))){const ys=dayStatus(iso(yd),yp),yx=Store.days[iso(yd)]||{};if(ys==="fail")out.push(["alert","Ayer fallaste. Un día no te saca del curso; dos seguidos empiezan a hacerlo."]);
+      else if(!yx.status){const ms=missingTasks(yx,yp);out.push(["alert",units(yx,yp).a?`Ayer quedó a medias${ms.length?" (faltó: "+ms.slice(0,3).join(", ")+")":""}. Si lo hiciste, márcalo con ◀; si no, ciérralo ahí con «Cerrar el día así».`:"Ayer no registraste nada. Si entrenaste, márcalo con ◀; si no, toca «No pude ese día» ahí."])}}}
   if(plan.w===HELL&&plan.kind!=="descanso")out.push(["say",pick([`${N}. Semana del infierno. Aquí se ve para qué fueron 47 semanas.`,`Infierno, día ${plan.dow+1}. No pienses en el viernes: piensa en la próxima serie.`],k)]);
   else if(plan.test)out.push(["say",plan.w===0?`${N}. Hoy se mide el punto de partida. Que sea verdad, no bonito.`:plan.w===52?`Prueba final, ${N}. 52 semanas para esto.`:`Día de prueba, ${N}. Aquí se ve quién entrenó.`]);
   else if(plan.kind==="descanso")out.push(["say",pick(["Hoy descansas. Es una orden, no un premio.","Descanso. El progreso ocurre cuando descansas.","Día libre. Cúmplelo igual de serio."],k)]);
@@ -1218,7 +1231,9 @@ function viewHoy(){
   h+=`<details class="card" data-keep="notes:${k}" ${S.keep["notes:"+k]?"open":""}><summary>Notas${plan.dow===0||plan.test?" y peso":""}</summary>
    ${plan.dow===0||plan.test?`<div class="field" style="max-width:140px"><label class="lbl" for="f-peso">Peso (kg)</label><input id="f-peso" inputmode="decimal" data-f="peso" value="${esc(dd.peso)}" placeholder="70"></div>`:""}
    <div class="field"><label class="lbl" for="f-note">Tiempos, qué costó, sensaciones</label><textarea id="f-note" data-f="note">${esc(dd.note)}</textarea></div></details>`;
-  h+=`<div class="row">${status==="done"||status==="injury"?"":`<button class="btn main" data-st="done" style="flex:2">Cumplí todo</button>`}${dd.status==="fail"?`<button class="btn sm" data-st="">Quitar “no cumplí”</button>`:status==="done"||status==="injury"?`<button class="btn sm" data-st="" data-clear="1">Desmarcar el día</button>`:`<button class="btn" data-st="fail" style="flex:1">Hoy no pude</button>`}</div>`;
+  {const past=diffDays(d,today())<0,ms=status==="done"||status==="injury"||dd.status?[]:missingTasks(dd,plan);
+   if(ms.length&&u.a)h+=`<p class="foot">Te falta: ${esc(ms.slice(0,4).join(" · "))}${ms.length>4?" y "+(ms.length-4)+" más":""}.</p>`;
+   h+=`<div class="row">${status==="done"||status==="injury"||dd.status?"":`<button class="btn main" data-st="done" style="flex:2">Cumplí todo</button>`}${dd.status==="fail"?`<button class="btn sm" data-st="">Quitar “no cumplí”</button>`:dd.status==="part"?`<button class="btn sm" data-st="">Reabrir el día</button>`:status==="done"||status==="injury"?`<button class="btn sm" data-st="" data-clear="1">Desmarcar el día</button>`:`${past&&u.a?`<button class="btn" data-st="part" style="flex:1">Cerrar el día así</button>`:""}<button class="btn" data-st="fail" style="flex:1">${past?"No pude ese día":"Hoy no pude"}</button>`}</div>`}
   return h;
 }
 function testForm(plan,k,dd,L){
@@ -1358,8 +1373,8 @@ function constancyHTML(){
   const sched=Store.cfg.sched,st=parse(Store.cfg.start),td=today(),cnt={done:0,part:0,injury:0,fail:0,missed:0};
   const groups=[];sched.forEach((w,i)=>{const sg=stageOf(w);if(!groups.length||groups[groups.length-1].s!==sg)groups.push({s:sg,idx:[]});groups[groups.length-1].idx.push(i)});
   const lab={done:"Cumplido",part:"A medias",injury:"Recuperación",fail:"No cumplido",missed:"Sin registrar",future:"Por venir",today:"Hoy"};
-  let h="";groups.forEach(gp=>{h+=`<div class="hmg"><span class="lbl">${gp.s.n}</span><div class="hm" style="grid-template-columns:repeat(${gp.idx.length},minmax(0,22px))">`;
-    gp.idx.forEach(i=>{for(let j=0;j<7;j++){const d=addDays(st,i*7+j),k=iso(d),dd0=diffDays(d,td);let c=dayStatus(k,planFor(d));
+  let h="";groups.forEach(gp=>{h+=`<div class="hmg"><span class="lbl">${gp.s.n}</span><div class="hm" style="grid-template-columns:repeat(${gp.idx.length},minmax(18px,26px))">`;
+    gp.idx.forEach(i=>{for(let j=0;j<7;j++){const d=addDays(st,i*7+j),k=iso(d),dd0=diffDays(d,td);let c=!Store.days[k]&&dd0>=0?"":dayStatus(k,planFor(d));
       if(!c)c=dd0>0?"future":dd0===0?"today":"missed";else if(c==="part"&&dd0===0)c="today";if(cnt[c]!=null)cnt[c]++;
       h+=`<button class="hc ${c}" style="grid-column:${gp.idx.indexOf(i)+1};grid-row:${j+1}" data-goto="${k}" title="${dayName(d)} ${fmtS(d)} · semana ${sched[i]} · ${lab[c]}" aria-label="${dayName(d)} ${fmtS(d)}: ${lab[c]}"></button>`}});
     h+=`</div></div>`});
@@ -1426,7 +1441,7 @@ function backupHTML(){
   const lb=Store.cfg.lastBackup,nd=Object.keys(Store.days).length,R=S.restore;
   let h=`<div class="card" id="respaldo"><span class="lbl">Respaldo</span><p style="margin:0">Tus datos ya se guardan solos${Store.mode==="db"?" en tu cuenta y en este teléfono":" en este teléfono"}. La copia es un archivo tuyo con todo tu historial (${nd} ${nd===1?"día":"días"} registrados), por si cambias de teléfono o algo se borra.</p>
    <p class="foot">Última copia: ${lb?fmt(parse(lb)):"nunca"}.</p>
-   <div class="row"><button class="btn main" data-backup style="flex:1">Descargar copia</button><label class="btn" for="restore-file" style="flex:1;text-align:center">Restaurar copia</label><input type="file" id="restore-file" accept=".json,.txt,application/json,text/plain" hidden></div>
+   <div class="row"><button class="btn main" data-backup style="flex:1">Descargar copia</button><label class="btn" for="restore-file" style="flex:1;text-align:center">Restaurar copia</label></div>
    <button class="btn sm" data-paste-open style="align-self:flex-start">Pegar una copia guardada como texto</button>`;
   if(S.copyBackup)h+=`<div class="verdict"><b>Aquí no se pueden descargar archivos</b><span>Copia este texto y guárdalo en una nota o mándatelo por correo. Para recuperarlo: “Pegar una copia guardada como texto”.</span><div class="field"><textarea id="backup-text" readonly rows="4">${esc(backupData())}</textarea></div><div class="row"><button class="btn main sm" data-copy-backup>Copiar</button><button class="btn sm" data-cancel>Cerrar</button></div></div>`;
   if(S.paste)h+=`<div class="verdict"><b>Pegar copia</b><span>Pega aquí el texto completo de una copia que guardaste.</span><div class="field"><textarea id="restore-text" rows="4">${esc(S.pasteText||"")}</textarea></div><div class="row"><button class="btn main sm" data-paste-check>Revisar copia</button><button class="btn sm" data-cancel>Cancelar</button></div></div>`;
@@ -1572,7 +1587,7 @@ function viewGuia(){return `<div class="sec prose"><h2>Guía</h2>
 const TABS=[["hoy","Hoy"],["plan","Plan"],["progreso","Progreso"],["guia","Guía"]];
 const ICON={hoy:'<circle cx="12" cy="5" r="2"/><path d="M12 7v13M8 10h8M5 15c1 3 4 5 7 5s6-2 7-5"/>',plan:'<path d="M3 6l6-2 6 2 6-2v14l-6 2-6-2-6 2z"/><path d="M9 4v14M15 6v14"/>',progreso:'<path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/>',guia:'<path d="M4 4h7a3 3 0 013 3v13a2 2 0 00-2-2H4zM20 4h-5a3 3 0 00-3 3"/><path d="M20 4v14h-6"/>'};
 function render(){
-  CTX=null;if(S.follow&&diffDays(S.date,today())!==0){S.date=today();S.run=null}
+  CTX=null;PLANC={};if(S.follow&&diffDays(S.date,today())!==0){S.date=today();S.run=null}
   // conservar el foco y el cursor si una actualización llega mientras escribes
   const ae=document.activeElement,fid=ae&&app.contains(ae)&&ae.id?ae.id:null,sel=fid&&ae.selectionStart!=null?[ae.selectionStart,ae.selectionEnd]:null;
   const hqTop=()=>{const L=locate(today());return hqHTML(L.after?52:L.w,streak())};
@@ -1581,7 +1596,7 @@ function render(){
   app.innerHTML=body;
   paintSave();
   document.documentElement.classList.toggle("bigtext",!!Store.cfg.bigText);
-  document.body.classList.toggle("guided",v===viewRun);
+  document.body.classList.toggle("guided",v===viewRun);if(v===viewRun)setTimeout(keepDoneVisible,0);
   document.getElementById("tabs").innerHTML=TABS.map(([k,l])=>`<button data-tab="${k}" class="${S.tab===k?"on":""}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICON[k]}</svg>${l}</button>`).join("");
   if(fid){const el=document.getElementById(fid);if(el){el.focus({preventScroll:true});if(sel&&el.setSelectionRange)try{el.setSelectionRange(sel[0],sel[1])}catch(e){}}}
 }
@@ -1626,27 +1641,32 @@ document.addEventListener("click",e=>{
     const key=setKey(st.t,st.bi),cur=Math.min(sets[key]||0,st.b.s),want=st.set||st.b.s;
     if(want>cur)sets[key]=want;
     Store.setDay(k,{checks:c,sets});
-    if(st.set&&st.b.r&&st.set<st.b.s&&want>cur)startTimer(st.b.r,"Descanso · "+st.b.n);
+    if(st.set&&st.set<st.b.s&&want>cur){if(st.b.n==="Apnea en seco")startTimer(toSec(RESTS_ASECO[st.set-1]||"1:00"),"Respira normal · apnea "+(st.set+1));else if(st.b.r)startTimer(st.b.r,"Descanso · "+st.b.n)}
     const ndd=Store.days[k];let ni=ss.findIndex((x,j)=>j>i&&!stepDone(ndd,x));if(ni<0)ni=firstPending(p,ndd);S.run.i=ni;
     render();window.scrollTo(0,0);if(dayStatus(k,p)==="done"&&before!=="done")toast("Misión cumplida, "+(Store.cfg.name||"recluta")+".");return}
   if(D.turno){Store.setDay(k,{turno:D.turno});render();return}
   if(D.mode){const dd=Store.day(k);Store.setDay(k,{mode:dd.mode===D.mode?"":D.mode});render();return}
   if(D.task||D.set){
     const p=planFor(S.date);if(!p)return;const dd=Store.day(k),before=dayStatus(k,p);
-    const c=Object.assign({},dd.checks||{}),sets=Object.assign({},dd.sets||{});
-    if(D.task){const t=p.tasks.find(x=>x.id===D.task);if(!t)return;const now=!taskDone(dd,t);c[t.id]=now;t.blocks.forEach((bb,i)=>{sets[setKey(t,i)]=now?bb.s:0});if(now)S.open[k+t.id]=false}
+    const c=Object.assign({},dd.checks||{}),sets=Object.assign({},dd.sets||{}),patchX={};
+    if(D.task){const t=p.tasks.find(x=>x.id===D.task);if(!t)return;const now=!taskDone(dd,t),tp=Object.assign({},dd.tprev);
+      // marcar la sesión entera guarda lo que tenías; desmarcarla lo devuelve (un toque por error no borra series hechas)
+      if(now){tp[t.id]={};t.blocks.forEach((bb,i)=>{tp[t.id][setKey(t,i)]=sets[setKey(t,i)]||0;sets[setKey(t,i)]=bb.s})}
+      else{const pv=tp[t.id]||{};t.blocks.forEach((bb,i)=>{sets[setKey(t,i)]=pv[setKey(t,i)]||0});tp[t.id]=null}
+      c[t.id]=now;patchX.tprev=tp;if(now)S.open[k+t.id]=false}
     else{const [tid,bi,v]=D.set.split("|"),t=p.tasks.find(x=>x.id===tid);if(!t)return;const i=+bi,bb=t.blocks[i];
       if(c[tid])t.blocks.forEach((x,j)=>{if(sets[setKey(t,j)]==null)sets[setKey(t,j)]=x.s});
-      c[tid]=false;const cur=Math.min(sets[setKey(t,i)]||0,bb.s);let nv=+v;if(bb.s>1&&bb.s<=12&&nv===cur)nv=cur-1;sets[setKey(t,i)]=nv;
-      if(nv>cur&&bb.r&&nv<bb.s)startTimer(bb.r,"Descanso · "+bb.n)}
-    const patch={checks:c,sets};if(dd.status==="fail")patch.status="";
+      c[tid]=false;const cur=Math.min(sets[setKey(t,i)]||0,bb.s);let nv=+v;if(bb.s>1&&bb.s<=12&&nv===cur)nv=cur-1;sets[setKey(t,i)]=nv;S.open[k+tid]=true;
+      if(nv>cur&&nv<bb.s){if(bb.n==="Apnea en seco")startTimer(toSec(RESTS_ASECO[nv-1]||"1:00"),"Respira normal · apnea "+(nv+1));else if(bb.r)startTimer(bb.r,"Descanso · "+bb.n)}}
+    const patch=Object.assign({checks:c,sets},patchX);if(dd.status==="fail")patch.status="";
     Store.setDay(k,patch);
     const after=dayStatus(k,p);render();
     if(after==="done"&&before!=="done")toast("Misión cumplida, "+(Store.cfg.name||"recluta")+".");
     return}
   if(D.st!==undefined){const p=planFor(S.date);
-    if(D.st==="done"&&p){const c={},sets={};p.tasks.forEach(t=>{c[t.id]=true;t.blocks.forEach((x,i)=>sets[setKey(t,i)]=x.s)});Store.setDay(k,{checks:c,sets,status:""});toast("Misión cumplida.")}
-    else if(D.clear){const dd=Store.day(k),z=(o,v)=>Object.keys(o||{}).reduce((a,x)=>(a[x]=v,a),{});Store.setDay(k,{checks:z(dd.checks,false),sets:z(dd.sets,0),status:""})}
+    if(D.st==="done"&&p){const dd0=Store.day(k),c={},sets={};p.tasks.forEach(t=>{c[t.id]=true;t.blocks.forEach((x,i)=>sets[setKey(t,i)]=x.s)});Store.setDay(k,{checks:c,sets,status:"",undo:{checks:Object.assign({},dd0.checks),sets:Object.assign({},dd0.sets)}});toast("Misión cumplida.")}
+    // desmarcar vuelve a lo que tenías antes de “Cumplí todo” (no a cero)
+    else if(D.clear){const dd=Store.day(k),u0=dd.undo||{checks:{},sets:{}},back=(cur,old,v)=>Object.keys(Object.assign({},cur,old)).reduce((a,x)=>(a[x]=old&&old[x]!=null?old[x]:v,a),{});Store.setDay(k,{checks:back(dd.checks,u0.checks,false),sets:back(dd.sets,u0.sets,0),status:"",undo:null})}
     else Store.setDay(k,{status:D.st});
     render();return}
 });
@@ -1683,7 +1703,9 @@ function saveTimers(){try{const o={};if(TM)o.TM={end:TM.end,total:TM.total,label
 function startTimer(sec,label){try{AC=AC||new (window.AudioContext||window.webkitAudioContext)();AC.resume&&AC.resume()}catch(e){}
   const t={end:Date.now()+sec*1000,total:sec,label};if(/^Antes de entrar/.test(label))TS=t;else TM=t;
   saveTimers();runTimers();wake(true)}
-function runTimers(){TB.hidden=false;if(!TICK)TICK=setInterval(tick,250);tick()}
+function runTimers(){TB.hidden=false;if(!TICK)TICK=setInterval(tick,250);tick();keepDoneVisible()}
+function keepDoneVisible(){if(!document.body.classList.contains("guided")||TB.hidden)return;const b=document.querySelector("[data-rdone]");if(!b)return;
+  const top=TB.getBoundingClientRect().top,r=b.getBoundingClientRect();if(r.bottom>top-8)window.scrollBy(0,r.bottom-top+16)}
 let WL=null;async function wake(on){try{if(on&&!WL&&navigator.wakeLock){WL=await navigator.wakeLock.request("screen");WL.addEventListener&&WL.addEventListener("release",()=>{WL=null})}if(!on&&WL){await WL.release();WL=null}}catch(e){WL=null}}
 // al volver a la app (por ejemplo desde adidas Running) se vuelve a pedir que la pantalla no se apague
 document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="visible"&&(TM||TS)){WL=null;wake(true);tick()}});
