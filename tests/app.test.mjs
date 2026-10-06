@@ -60,7 +60,8 @@ const reload = async p => { await p.reload(); await p.waitForTimeout(200); };
   await reload(p);
   ok((await text(p)).includes('Despiertas 9:15'), 'el turno del día queda guardado');
   await p.click('[data-go="1"]');
-  ok((await text(p)).includes('Despiertas 7:30'), 'el día siguiente vuelve al turno habitual');
+  ok((await text(p)).includes('Despiertas 9:15') && (await text(p)).includes('Ayer te acostaste a la 1:15'), 'después del turno 16, el día siguiente despierta 8 h después de acostarse');
+  ok(await p.locator('[data-turno="13"]').evaluate(e => e.classList.contains('on')), 'el día siguiente vuelve al turno habitual');
   await ctx.close(); }
 
 // 4. Ajustes: cambian el plan
@@ -322,7 +323,8 @@ const reload = async p => { await p.reload(); await p.waitForTimeout(200); };
   await p.evaluate(() => { __cloud.offline = true; });
   await p.click('[data-mode="cansado"]'); await p.waitForTimeout(1000);
   ok((await cloudDay()).mode !== 'cansado', 'sin señal no llegó a la nube');
-  await p.reload(); await p.waitForTimeout(2000);
+  // en este Chromium de prueba, leer el almacenamiento antes de recargar evita que se pierda la última escritura
+  await p.evaluate(() => localStorage.getItem('bitacora-buzo-v1')); await p.reload(); await p.waitForTimeout(2000);
   ok(await p.locator('[data-mode="cansado"]').evaluate(e => e.classList.contains('on')), 'después de recargar sigue “Cansado”');
   ok((await cloudDay()).mode === 'cansado', 'el cambio pendiente sube al abrir la app');
   // la plataforma corta las suscripciones: la app vuelve a escuchar y ve lo del otro dispositivo
