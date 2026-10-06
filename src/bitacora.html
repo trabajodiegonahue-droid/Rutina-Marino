@@ -1262,7 +1262,7 @@ function viewHoy(){
   h+=`<div class="order"><div class="msg-h"><span>De: Comandante · Para: ${esc(Store.cfg.name||"Recluta")}</span><span>DTG ${dtg(d)}</span></div>${orders(plan,k,isToday,dd).map(([t,x])=>t==="alert"?`<p class="alert">${esc(x)}</p>`:t==="say"?`<p class="say">${esc(x)}</p>`:t==="why"?`<p class="why-q">Tu por qué: “${esc(x)}”</p>`:`<p>${esc(x)}</p>`).join("")}</div>`;
   {const cur=dd.turno||Store.cfg.turno||"13",sh=plan.shift;
    h+=`<div class="sec"><div class="row" style="justify-content:space-between;align-items:center"><span class="lbl">Hoy trabajo</span><div class="segs">${Object.keys(SHIFT).map(t=>`<button class="seg ${cur===t?"on":""}" data-turno="${t}">${t==="libre"?"Libre":"Entro "+t+":00"}</button>`).join("")}</div></div>
-   <p class="foot">Despiertas ${sh.wake} · entrenas desde ${sh.A}${sh.leave?` · sales al trabajo ${sh.leave}`:""} · cama ${sh.bed}</p></div>`}
+   <p class="foot">Despiertas ${sh.wake}${sh.late?` (ayer te acostaste a la ${sh.late}: 8 h de sueño)`:""} · entrenas desde ${sh.A}${sh.leave?` · sales al trabajo ${sh.leave}`:""} · cama ${sh.bed}</p></div>`}
   if(plan.kind!=="descanso"){
     const M=[["ok","Al 100%"],["cansado","Cansado"],["dolor","Con dolor"]];
     const txt={ok:"Ejecuta la orden completa.",cansado:"Versión suave: menos series, sin sesión larga. Si dura 3 días, toma 2 días suaves.",dolor:"Hoy solo recuperación. Cansancio general es normal; dolor agudo, localizado o que empeora, no."}[dd.mode]||"Antes de empezar: ¿cómo amaneciste?";
