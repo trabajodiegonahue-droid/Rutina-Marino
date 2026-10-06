@@ -336,17 +336,20 @@ const iso=d=>d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate());
 const parse=s=>{const [y,m,d]=s.split("-").map(Number);return new Date(y,m-1,d)};
 const addDays=(d,n)=>{const x=new Date(d);x.setDate(x.getDate()+n);return x};
 const diffDays=(a,b)=>Math.round((parse(iso(a))-parse(iso(b)))/864e5);
-const mondayOf=d=>addDays(d,-((d.getDay()+6)%7));
+const dayName=d=>DIAS[(d.getDay()+6)%7];
+const weekStartOf=d=>{const st=parse(Store.cfg.start),n=diffDays(d,st);return addDays(st,Math.floor(n/7)*7)};
 const MES=["ene","feb","mar","abr","may","jun","jul","ago","sep","oct","nov","dic"];
 const fmt=d=>d.getDate()+" "+MES[d.getMonth()]+" "+d.getFullYear();
 const fmtS=d=>d.getDate()+" "+MES[d.getMonth()];
 
 /* ============ ALMACENAMIENTO ============ */
 const LS="bitacora-buzo-v1";
-const defCfg=()=>({name:"Diego",start:iso(mondayOf(new Date())),sched:Array.from({length:53},(_,i)=>i),repeats:[]});
+const defCfg=()=>({name:"Diego",start:"2026-10-06",sched:Array.from({length:53},(_,i)=>i),repeats:[]});
+// La semana 0 se movió al martes 6 oct 2026 (antes quedaba en el lunes 5).
+const fixCfg=c=>{if(c.start==="2026-10-05"&&!c.startMoved){c.start="2026-10-06";c.startMoved=true}return c};
 const clone=o=>JSON.parse(JSON.stringify(o||{}));
 const Store={mode:"local",cfg:defCfg(),days:{},timers:{},chains:{},
-  loadLocal(){try{const r=JSON.parse(localStorage.getItem(LS)||"null");if(r){this.cfg=Object.assign(defCfg(),r.cfg||{});this.days=r.days||{}}}catch(e){}},
+  loadLocal(){try{const r=JSON.parse(localStorage.getItem(LS)||"null");if(r){this.cfg=fixCfg(Object.assign(defCfg(),r.cfg||{}));this.days=r.days||{}}}catch(e){}},
   saveLocal(){try{localStorage.setItem(LS,JSON.stringify({cfg:this.cfg,days:this.days}))}catch(e){}},
   async init(cb){
     this.cb=cb;this.loadLocal();cb();
@@ -358,7 +361,7 @@ const Store={mode:"local",cfg:defCfg(),days:{},timers:{},chains:{},
       const localCfg=clone(this.cfg),localDays=clone(this.days);let gotCfg=false,gotDays=false;
       this.mode="db";
       this.planRef.onSnapshot(s=>{
-        if(s.exists){this.cfg=Object.assign(defCfg(),clone(s.data()))}
+        if(s.exists){const raw=clone(s.data());this.cfg=fixCfg(Object.assign(defCfg(),raw));if(raw.start!==this.cfg.start)this.queue("plan")}
         else if(!gotCfg){this.cfg=localCfg;this.queue("plan")}
         gotCfg=true;this.saveLocal();cb();
       },()=>{});
@@ -416,7 +419,7 @@ function hash(s){let h=0;for(const c of s)h=(h*31+c.charCodeAt(0))|0;return Math
 const pick=(arr,k)=>arr[hash(k)%arr.length];
 function orders(plan,k,isToday,L){
   const N=Store.cfg.name||"recluta";const out=[];
-  const OPEN=[`Recluta ${N}. Semana ${plan.w}, ${DIAS[plan.dow].toLowerCase()}. Esto es lo que haces hoy.`,`Arriba, ${N}. 06:30. Nadie va a hacer esto por ti.`,`Atención, ${N}. Orden del día. Sin discusión.`,`${N}. Querías saber si puedes. Hoy se sigue respondiendo.`,`De pie, ${N}. Agua, algo liviano y a cumplir.`];
+  const OPEN=[`Recluta ${N}. Semana ${plan.w}, día ${plan.dow+1}. Esto es lo que haces hoy.`,`Arriba, ${N}. 06:30. Nadie va a hacer esto por ti.`,`Atención, ${N}. Orden del día. Sin discusión.`,`${N}. Querías saber si puedes. Hoy se sigue respondiendo.`,`De pie, ${N}. Agua, algo liviano y a cumplir.`];
   out.push(["say",pick(OPEN,k)]);
   const sw=plan.tasks.find(t=>t.id==="swim"),rn=plan.tasks.find(t=>t.id==="run");
   if(plan.kind==="prueba"&&plan.test){out.push(["p",plan.w===0?"Hoy se mide el punto de partida. No importa lo bajo que salga: importa que sea verdad. Máximo 3 minutos entre ejercicios. Anota todo abajo.":plan.w===52?"Prueba final. 52 semanas para llegar aquí. Ejecuta igual que siempre y compara con la semana 0.":"Día de prueba. Aquí se ve quién entrenó y quién solo marcó casillas. Máximo 3 minutos entre ejercicios. Anota cada número."])}
@@ -427,7 +430,7 @@ function orders(plan,k,isToday,L){
   else if(rn){out.push(["p",pick(["Calle. Tu punto fuerte no se regala: se mantiene.","A correr. Ritmo exacto, ni más ni menos. Disciplina también es no pasarse.","Afuera. Correr es tu terreno. Demuéstralo con constancia, no con ego."],k)])}
   else out.push(["p","Fuerza y formato continuo. Encadena sin pausas, como en la prueba."]);
   if(plan.deload&&plan.kind!=="descanso")out.push(["p","Semana de descarga: la carga baja a propósito. No te la saltes por orgullo."]);
-  if(plan.dow===0&&plan.w>0)out.push(["p","Lunes: anota tu peso abajo."]);
+  if(plan.dow===0&&plan.w>0)out.push(["p","Primer día de la semana: anota tu peso abajo."]);
   if(isToday){
     const yd=addDays(new Date(),-1),yp=planFor(yd),ys=yp?dayStatus(iso(yd),yp):"done";
     if(yp&&ys!=="done"&&ys!=="injury")out.unshift(["alert",ys==="fail"?"Ayer fallaste. Un día perdido no te saca del curso; dos seguidos empiezan a hacerlo. Hoy cumples.":"Ayer no reportaste. En el curso nadie te pregunta dos veces. Cierra el día de ayer y cumple el de hoy."]);
@@ -461,7 +464,7 @@ function header(L){
 }
 function dayNav(d){
   const isT=diffDays(d,new Date())===0;
-  return `<div class="daynav"><button class="nb" data-go="-1" aria-label="Día anterior">◀</button><div class="d">${DIAS[(d.getDay()+6)%7]}<span>${fmt(d)}</span></div><button class="nb ${isT?"today":""}" data-go="0">Hoy</button><button class="nb" data-go="1" aria-label="Día siguiente">▶</button></div>`;
+  return `<div class="daynav"><button class="nb" data-go="-1" aria-label="Día anterior">◀</button><div class="d">${dayName(d)}<span>${fmt(d)}</span></div><button class="nb ${isT?"today":""}" data-go="0">Hoy</button><button class="nb" data-go="1" aria-label="Día siguiente">▶</button></div>`;
 }
 function viewHoy(){
   const d=S.date,k=iso(d),L=locate(d),isToday=diffDays(d,new Date())===0;
@@ -517,11 +520,11 @@ function testForm(plan,k,dd,L){
 function stChip(s){const m={done:"Cumplido",fail:"Fallado",injury:"Lesión",part:"A medias"};return s?`<span class="status ${s}">${m[s]}</span>`:`<span class="status">Pendiente</span>`}
 function viewSemana(){
   const L=locate(S.date);let h=header(L);
-  const mon=mondayOf(S.date);
+  const mon=weekStartOf(S.date);
   h+=`<div class="daynav"><button class="nb" data-wk="-7" aria-label="Semana anterior">◀</button><div class="d">Semana ${L.w!=null?L.w:"—"}<span>${fmtS(mon)} – ${fmt(addDays(mon,6))}</span></div><button class="nb" data-wk="0">Hoy</button><button class="nb" data-wk="7" aria-label="Semana siguiente">▶</button></div>`;
   h+=`<div class="list">`;
   for(let i=0;i<7;i++){const d=addDays(mon,i),p=planFor(d),k=iso(d),cur=diffDays(d,new Date())===0;
-    h+=`<button class="li ${cur?"cur":""}" data-open="${k}"><span class="a">${DIAS[i].slice(0,3)}<span>${fmtS(d)}</span></span><span class="b">${p?esc(p.title):"—"}</span>${p?stChip(dayStatus(k,p)):""}</button>`}
+    h+=`<button class="li ${cur?"cur":""}" data-open="${k}"><span class="a">${dayName(d).slice(0,3)} · D${i+1}<span>${fmtS(d)}</span></span><span class="b">${p?esc(p.title):"—"}</span>${p?stChip(dayStatus(k,p)):""}</button>`}
   h+=`</div>`;
   if(L.w!=null){const r=S12[L.w],r3=S34[L.w];const ex=extraOf(L.w);
     h+=`<div class="card"><div class="lbl">Esta semana en el plan</div><div class="prose">${r?`<p><b>Natación:</b> ${esc(r[0])}<br><b>Carrera:</b> ${esc(r[1])}${r[2]?"; "+esc(r[2]):""}<br><b>Fuerza:</b> ${esc(r[3])}${ex?`<br><b>Extra:</b> ${esc(ex)}`:""}</p>`:r3?`<p><b>Natación:</b> ${esc(r3[0])}<br><b>Carrera:</b> ${esc(r3[1])}<br><b>Fuerza / continuo:</b> ${esc(r3[2])}${ex?`<br><b>Extra:</b> ${esc(ex)}`:""}</p>`:`<p>${L.w===0?"Chequeo médico, inscripciones y prueba inicial.":"Semana de prueba de evaluación."}</p>`}</div></div>`}
@@ -542,7 +545,7 @@ function viewPlan(){
   h+=`<p class="foot">Recuadros con borde grueso: semanas de prueba. Barra verde: semana con 6 o más días cumplidos. Toca una semana para verla.</p>`;
   h+=`<div class="card"><div class="lbl">Ajustes</div>
    <div class="row"><div class="field" style="flex:1;min-width:140px"><label class="lbl" for="c-name">Tu nombre</label><input id="c-name" data-c="name" value="${esc(Store.cfg.name)}"></div>
-   <div class="field" style="flex:1;min-width:160px"><label class="lbl" for="c-start">Inicio (lunes de la semana 0)</label><input id="c-start" type="date" data-c="start" value="${esc(Store.cfg.start)}"></div></div>
+   <div class="field" style="flex:1;min-width:160px"><label class="lbl" for="c-start">Inicio (día 1 de la semana 0)</label><input id="c-start" type="date" data-c="start" value="${esc(Store.cfg.start)}"></div></div>
    ${L.after?(S.confirm==="s4"?`<div class="row"><button class="btn main sm" data-s4>Confirmar: repetir etapa 4</button><button class="btn sm" data-cancel>Cancelar</button></div>`:`<button class="btn sm" data-ask="s4">Repetir etapa 4 (semanas 40–52)</button>`):""}
    <p class="foot" style="margin:0">Guardado: ${Store.mode==="db"?"en tu cuenta (privado, sincroniza entre dispositivos)":"solo en este dispositivo"}.</p></div>`;
   return h;
@@ -556,7 +559,7 @@ function viewPruebas(){
     h+=`<div class="tbl"><table><thead><tr><th>Prueba</th>${res.map(r=>`<th>Sem ${r.w}<br><span class="mono" style="text-transform:none">${fmtS(parse(r.k))}</span></th>`).join("")}</tr></thead><tbody>`;
     rowsDef.forEach(([lab,key,u])=>{h+=`<tr><td>${lab}</td>${res.map(r=>{const ev=evalTest(r.w,r.t);const row=ev&&ev.rows.find(x=>x[0]===lab);const cls=row?(row[3]?"pass":"miss"):"";return `<td class="mono ${cls}">${esc(r.t[key]||"—")}${r.t[key]?u:""}</td>`}).join("")}</tr>`});
     h+=`</tbody></table></div>`;
-  } else h+=`<div class="card"><p style="margin:0">Aún no hay resultados. La prueba inicial es el sábado de la semana 0: los números que anotes ese día aparecen aquí.</p></div>`;
+  } else h+=`<div class="card"><p style="margin:0">Aún no hay resultados. La prueba inicial es el día 6 de la semana 0: los números que anotes ese día aparecen aquí.</p></div>`;
   h+=`<div class="sec"><h3>Metas por etapa</h3><div class="tbl"><table><thead><tr><th>Prueba</th><th>Mes 3</th><th>Mes 6</th><th>Mes 9</th><th>Mes 12</th></tr></thead><tbody>
   <tr><td>Apnea dinámica</td><td>15 m</td><td>25 m</td><td>35 m</td><td>50 m</td></tr>
   <tr><td>500 m libre</td><td>sin parar, cualquier estilo</td><td>crol sin parar</td><td>&lt; 11:00</td><td>&lt; 9:30</td></tr>
@@ -635,7 +638,7 @@ document.addEventListener("input",e=>{
 });
 document.addEventListener("change",e=>{
   const el=e.target;
-  if(el.dataset.c==="start"&&el.value){const m=iso(mondayOf(parse(el.value)));Store.setCfg({start:m});el.blur();if(m!==el.value)flash("El inicio se ajustó al lunes "+fmt(parse(m))+".");else render()}
+  if(el.dataset.c==="start"&&el.value){Store.setCfg({start:el.value,startMoved:true});el.blur();render()}
   if(el.dataset.t)render();
 });
 Store.init(render);
