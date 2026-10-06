@@ -44,6 +44,7 @@ button:focus-visible,input:focus-visible,textarea:focus-visible,summary:focus-vi
 .order{background:var(--paper);border:1px solid var(--line);border-top:4px solid var(--accent);padding:12px 14px;display:flex;flex-direction:column;gap:6px}
 .order .say{font-family:var(--f-label);font-weight:700;font-size:20px;text-transform:uppercase;letter-spacing:.02em;line-height:1.15;margin:0}
 .order p{margin:0}
+.why-q{font-style:italic;border-left:3px solid var(--accent);padding-left:10px}
 .alert{border:1px solid var(--bad);color:var(--bad);padding:8px 12px;font-weight:600;font-size:15px;margin:0}
 
 /* cómo amaneciste */
@@ -450,7 +451,7 @@ function dayPlan(w,dow,ctx){
   else if(w===0){
     const W0=[
      ["Arranque","admin",[T("med","Pedir hora al médico","Sin chequeo no hay plan.","09:00",[B("Pedir","examen general",{note:"Electrocardiograma, oídos y senos paranasales, espirometría y control dental. Cuenta cualquier lesión antigua."})],{kind:"admin"}),
-       T("porque","Escribir tu “por qué”","Lo vas a leer cuando no tengas ganas.","20:00",[B("Una hoja","por qué quieres ser buzo táctico"),B("2–3 frases","para cuando cueste",{note:"Cambia “no puedo más” por “esto es lo que vine a entrenar”."})],{kind:"admin"})]],
+       T("porque","Escribir tu “por qué”","Escríbelo también en Plan → Ajustes: el comandante te lo recuerda en los días duros.","20:00",[B("Una hoja","por qué quieres ser buzo táctico"),B("2–3 frases","para cuando cueste",{note:"Cambia “no puedo más” por “esto es lo que vine a entrenar”."})],{kind:"admin"})]],
      ["Reconocimiento","tierra",[runT("run","Trote suave 30 min","Soltar las piernas.","07:00",runBlocks("30 min suave",1)),
        T("equipo","Conseguir equipo","Para el agua.","10:00",[B("Gafas y gorra de color",""),B("Neopreno 3–5 mm","si puedes",{note:"Bajo 14 °C es lo que te deja nadar más de unos minutos."}),B("Barra para dominadas","en casa o en una plaza")],{kind:"admin"})]],
      ["Ensayo de técnica","tierra",[T("fa","Fuerza de ensayo","Aprende los ejercicios. Sin llegar al fallo.","07:00",[CAL,B("Barras","3 × 3",{s:3,r:120}),B("Flexiones","3 × 10",{s:3,r:90}),B("Sentadillas","3 × 15",{s:3,r:60}),B("Abdominales","3 × 15",{s:3,r:60}),B("Plancha","2 × 30 s",{s:2,r:45,tm:30})],{kind:"fuerza"}),
@@ -518,7 +519,7 @@ function dayPlan(w,dow,ctx){
 // Cansado: menos series y menos tiempo. Con dolor: solo movilidad.
 function applyMode(plan,mode){
   if(mode==="dolor")return Object.assign({},plan,{tasks:[T("rest","Recuperación","Dolor agudo: hoy no se entrena lo que duele. Si no mejora en 2–3 días, al médico.","",[B("Movilidad suave","15 min",{note:"Solo lo que no duele."}),B("Hielo o frío local","10–15 min si hay inflamación"),B("Dormir","9 h")],{kind:"descanso"}),plan.tasks.find(t=>t.id==="noche")].filter(Boolean)});
-  if(mode==="cansado")return Object.assign({},plan,{tasks:plan.tasks.filter(t=>t.id!=="inc"&&t.id!=="tol").map(t=>Object.assign({},t,{blocks:t.blocks.map(b=>b.s>2?Object.assign({},b,{s:b.s-Math.ceil(b.s*0.3),p:b.p+" (versión suave)"}):b)}))});
+  if(mode==="cansado")return Object.assign({},plan,{tasks:plan.tasks.filter(t=>t.id!=="inc"&&t.id!=="tol").map(t=>Object.assign({},t,{blocks:t.blocks.map(b=>{if(b.s<=2)return b;const ns=b.s-Math.max(1,Math.round(b.s*0.3)),re=new RegExp("(^|\\D)"+b.s+" ×");return Object.assign({},b,{s:ns,n:b.n.replace(re,"$1"+ns+" ×"),p:b.p.replace(re,"$1"+ns+" ×")+" (suave)"})})}))});
   return plan;
 }
 
@@ -584,7 +585,8 @@ function locate(date){
 }
 const weekStartOf=d=>{const st=parse(Store.cfg.start);return addDays(st,Math.floor(diffDays(d,st)/7)*7)};
 let CTX=null;
-function lastTest(){if(CTX)return CTX;const c={};Object.keys(Store.days).sort().forEach(k=>{const t=Store.days[k].test;if(t)["barras","run","swim","apnea"].forEach(x=>{if(t[x])c[x]=t[x]})});return CTX=c}
+function lastTest(){if(CTX)return CTX;const c={};let bk="";Object.keys(Store.days).sort().forEach(k=>{const t=Store.days[k].test;if(t)["barras","run","swim","apnea"].forEach(x=>{if(t[x]){c[x]=t[x];if(x==="barras")bk=k}})});
+  const mb=Store.cfg.maxB;if(mb&&mb.v&&(!bk||mb.k>=bk))c.barras=mb.v;return CTX=c}
 function ctxFor(date){const c=Store.cfg;return Object.assign({},lastTest(),{month:date.getMonth(),place:c.place,partner:c.partner,neo:c.neo,temp:c.temp})}
 function planFor(date){const L=locate(date);if(L.w===undefined)return null;const dd=Store.days[iso(date)]||{};return applyShift(applyMode(dayPlan(L.w,L.dow,ctxFor(date)),dd.mode),dd.turno||Store.cfg.turno)}
 const setKey=(t,i)=>t.id+"."+i;
@@ -610,6 +612,8 @@ function orders(plan,k,isToday,dd){
   else out.push(["say",pick([`De pie, ${N}. Esto es lo que haces hoy.`,`Arriba, ${N}. Nadie lo va a hacer por ti.`,`${N}. Querías saber si puedes. Hoy se sigue respondiendo.`],k)]);
   if(plan.deload&&plan.kind!=="descanso")out.push(["p","Semana de descarga: la carga baja a propósito. No te la saltes por orgullo."]);
   if(INC[plan.w]&&plan.dow===5)out.push(["p","Hoy hay sesión larga de incomodidad. Come bien antes y lleva agua."]);
+  const why=(Store.cfg.why||"").trim(),hard=dd.mode==="cansado"||(INC[plan.w]&&plan.dow===5)||(plan.w===HELL&&plan.kind!=="descanso")||plan.test||plan.kind==="prueba";
+  if(why&&hard)out.push(["why",why]);
   if(dd.mode==="cansado")out.push(["p","Vas cansado: hoy hay menos series. Cumple esas completas."]);
   if(dd.mode==="dolor")out.push(["p","Con dolor no se entrena lo que duele. Recupera y reporta."]);
   return out;
@@ -650,7 +654,7 @@ function viewHoy(){
     return h+`<div class="order"><p class="say">Empiezas el ${dayName(st).toLowerCase()} ${fmt(st)}.</p><p>Esta noche: bolso listo y a la cama a las 22:30. El día 1 tienes: ${p1.tasks.map(t=>esc(t.t.toLowerCase())).join(", ")}.</p><button class="btn main" data-goto="${iso(st)}">Ver el día 1</button></div>`}
   if(L.after)return h+`<div class="order"><p class="say">Terminaste las 52 semanas.</p><p>Si aún no entras a la Armada, repite la etapa 4 subiendo las metas (Plan → Ajustes). Ya dentro: 3 sesiones de nado y 2 de fuerza continua por semana, y la etapa 4 completa 3 meses antes de postular al curso.</p></div>`;
   const dd=Store.days[k]||{},plan=planFor(d),status=dayStatus(k,plan),u=units(dd,plan);
-  h+=`<div class="order">${orders(plan,k,isToday,dd).map(([t,x])=>t==="alert"?`<p class="alert">${esc(x)}</p>`:t==="say"?`<p class="say">${esc(x)}</p>`:`<p>${esc(x)}</p>`).join("")}</div>`;
+  h+=`<div class="order">${orders(plan,k,isToday,dd).map(([t,x])=>t==="alert"?`<p class="alert">${esc(x)}</p>`:t==="say"?`<p class="say">${esc(x)}</p>`:t==="why"?`<p class="why-q">Tu por qué: “${esc(x)}”</p>`:`<p>${esc(x)}</p>`).join("")}</div>`;
   {const cur=dd.turno||Store.cfg.turno||"13",sh=plan.shift;
    h+=`<div class="sec"><div class="row" style="justify-content:space-between;align-items:center"><span class="lbl">Hoy trabajo</span><div class="segs">${Object.keys(SHIFT).map(t=>`<button class="seg ${cur===t?"on":""}" data-turno="${t}">${t==="libre"?"Libre":"Entro "+t+":00"}</button>`).join("")}</div></div>
    <p class="foot">Despiertas ${sh.wake} · entrenas desde ${sh.A}${sh.leave?` · sales al trabajo ${sh.leave}`:""} · cama ${sh.bed}</p></div>`}
@@ -664,6 +668,12 @@ function viewHoy(){
   const firstOpen=(plan.tasks.find(t=>!taskDone(dd,t))||{}).id;
   h+=plan.tasks.map(t=>sesHTML(t,dd,S.open[k+t.id]!=null?S.open[k+t.id]:t.id===firstOpen)).join("");
   if(plan.test)h+=testForm(plan,k,dd,L);
+  {const tm=addDays(d,1),tp=planFor(tm);if(tp)h+=`<div class="card"><span class="lbl">Mañana · ${dayName(tm)} · ${esc(tp.title)}</span><span>${esc(tp.tasks.filter(t=>t.id!=="noche"&&t.id!=="ducha").map(t=>(t.h?t.h+" ":"")+t.t).join(" · "))}</span>${tp.tasks.some(t=>t.kind==="agua")?`<span class="foot">Deja listo el bolso: traje de baño, gafas, gorra de color${Store.cfg.neo?", neopreno":""}, toalla y ropa abrigada.</span>`:""}${tp.tasks.some(t=>t.id==="ruck")?`<span class="foot">Deja lista la mochila con el peso.</span>`:""}</div>`}
+  if(plan.dow===6){const ws=addDays(d,-6);let ua=0,ub=0,dn=0,sm=[0,0];for(let i=0;i<7;i++){const dx=addDays(ws,i),px=planFor(dx);if(!px)continue;const x=Store.days[iso(dx)];const u=units(x,px);ua+=u.a;ub+=u.b;if(okSt(dayStatus(iso(dx),px)))dn++;px.tasks.forEach(t=>{if(t.m){sm[1]+=t.m;if(taskDone(x,t))sm[0]+=t.m}})}
+    const pc=ub?Math.round(ua/ub*100):0,nw=locate(addDays(d,1)).w;
+    h+=`<div class="card"><span class="lbl">Revisión de la semana ${plan.w}</span><div class="kpis"><div class="kpi"><span class="lbl">Series</span><b>${pc}%</b></div><div class="kpi"><span class="lbl">Días</span><b>${dn}/7</b></div><div class="kpi"><span class="lbl">Nado (m)</span><b>${nf(sm[0])}</b></div></div>
+    <span>${pc>=90?"Semana de soldado. Así se llega.":pc>=70?"Bien, pero no completa. La próxima, sin huecos.":"Semana floja. Si fue cansancio o dolor, está bien: recupera. Si fueron ganas, la próxima es la que cuenta."}</span>
+    ${nw!=null?`<span class="foot">Próxima: semana ${nw}${TESTS.includes(nw)?" · semana de prueba":nw===HELL?" · SEMANA DEL INFIERNO":DELOAD.includes(nw)?" · descarga":INC[nw]?" · "+INC[nw][0]:""}.</span>`:""}</div>`}
   if(status==="done")h+=`<div class="order"><p class="say" style="color:var(--ok)">${esc(pick(["Misión cumplida. Mañana a la misma hora.","Cumplido. Un día más que el que se rinde no tiene.","Bien. Eso es lo que se espera de ti."],k))}</p></div>`;
   h+=`<details class="card"><summary>Notas${plan.dow===0||plan.test?" y peso":""}</summary>
    ${plan.dow===0||plan.test?`<div class="field" style="max-width:140px"><label class="lbl" for="f-peso">Peso (kg)</label><input id="f-peso" inputmode="decimal" data-f="peso" value="${esc(dd.peso)}" placeholder="70"></div>`:""}
@@ -707,6 +717,8 @@ function viewPlan(){
   h+=`<div class="card"><span class="lbl">Ajustes</span>
    <div class="row"><div class="field" style="flex:1;min-width:140px"><label class="lbl" for="c-name">Tu nombre</label><input id="c-name" data-c="name" value="${esc(c.name)}"></div><div class="field" style="flex:1;min-width:150px"><label class="lbl" for="c-start">Día 1 de la semana 0</label><input id="c-start" type="date" data-c="start" value="${esc(c.start)}"></div></div>
    <div class="row"><div class="field"><span class="lbl">Dónde nadas</span><div class="segs">${sg("place","lago","Lago")}${sg("place","piscina","Piscina")}</div></div><div class="field"><span class="lbl">Neopreno</span><div class="segs">${sg("neo",false,"No")}${sg("neo",true,"Sí")}</div></div><div class="field"><span class="lbl">Turno habitual</span><div class="segs">${sg("turno","13","Entro 13:00")}${sg("turno","16","Entro 16:00")}</div></div><div class="field"><span class="lbl">Compañero de agua</span><div class="segs">${sg("partner",false,"No")}${sg("partner",true,"Sí")}</div></div></div>
+   <div class="row"><div class="field" style="max-width:170px"><label class="lbl" for="c-maxb">Máximo de barras hoy</label><input id="c-maxb" inputmode="numeric" data-c="maxb" value="${esc((c.maxB&&c.maxB.v)||"")}" placeholder="${esc(lastTest().barras||6)}"></div><p class="foot" style="flex:1;min-width:160px">Mídete cada 3–4 semanas: las series de barras se ajustan solas.</p></div>
+   <div class="field"><label class="lbl" for="c-why">Tu por qué</label><textarea id="c-why" data-c="why" placeholder="Por qué quieres ser buzo táctico. El comandante te lo recuerda en los días duros.">${esc(c.why||"")}</textarea></div>
    <div class="field" style="max-width:170px"><label class="lbl" for="c-temp">Agua del lago (°C)</label><input id="c-temp" inputmode="decimal" data-c="temp" value="${esc(c.temp)}" placeholder="${TEMP_MES[today.getMonth()]} estimado"></div>
    ${L.after?(S.confirm==="s4"?`<div class="row"><button class="btn main sm" data-s4>Confirmar</button><button class="btn sm" data-cancel>Cancelar</button></div>`:`<button class="btn sm" data-ask="s4">Repetir etapa 4</button>`):""}
    <p class="foot">Guardado ${Store.mode==="db"?"en tu cuenta: privado y sincronizado entre tus dispositivos":"solo en este dispositivo"}.</p></div>`;
@@ -844,6 +856,8 @@ document.addEventListener("input",e=>{
   else if(D.t){const t=Object.assign({},(Store.days[k]||{}).test||{});t[D.t]=el.value.trim();Store.setDay(k,{test:t})}
   else if(D.tc){const t=Object.assign({},(Store.days[k]||{}).test||{});t[D.tc]=el.checked;Store.setDay(k,{test:t});render()}
   else if(D.c==="name")Store.setCfg({name:el.value.trim()||"Recluta"});
+  else if(D.c==="why")Store.setCfg({why:el.value});
+  else if(D.c==="maxb"){const v=parseInt(el.value,10);Store.setCfg({maxB:v>0?{v,k:iso(new Date())}:null})}
   else if(D.c==="temp")Store.setCfg({temp:el.value.trim().replace(",",".")});
 });
 document.addEventListener("change",e=>{const el=e.target;
@@ -855,8 +869,9 @@ document.addEventListener("change",e=>{const el=e.target;
 const TB=document.getElementById("timerbar");let TM=null,AC=null;
 function beep(n){try{AC=AC||new (window.AudioContext||window.webkitAudioContext)();for(let i=0;i<n;i++){const o=AC.createOscillator(),g=AC.createGain();o.frequency.value=880;o.connect(g);g.connect(AC.destination);const t0=AC.currentTime+i*0.35;g.gain.setValueAtTime(0.25,t0);g.gain.exponentialRampToValueAtTime(0.001,t0+0.25);o.start(t0);o.stop(t0+0.26)}}catch(e){}try{navigator.vibrate&&navigator.vibrate([200,100,200])}catch(e){}}
 function startTimer(sec,label){try{AC=AC||new (window.AudioContext||window.webkitAudioContext)();AC.resume&&AC.resume()}catch(e){}
-  if(TM)clearInterval(TM.iv);TM={end:Date.now()+sec*1000,total:sec,label};TB.hidden=false;tick();TM.iv=setInterval(tick,250)}
-function stopTimer(){if(TM){clearInterval(TM.iv);TM=null}TB.hidden=true}
+  if(TM)clearInterval(TM.iv);TM={end:Date.now()+sec*1000,total:sec,label};TB.hidden=false;tick();TM.iv=setInterval(tick,250);wake(true)}
+let WL=null;async function wake(on){try{if(on&&!WL&&navigator.wakeLock)WL=await navigator.wakeLock.request("screen");if(!on&&WL){await WL.release();WL=null}}catch(e){WL=null}}
+function stopTimer(){if(TM){clearInterval(TM.iv);TM=null}TB.hidden=true;wake(false)}
 function tick(){if(!TM)return;const left=Math.max(0,(TM.end-Date.now())/1000);
   TB.innerHTML=`<div class="tin"><div class="tl"><span class="lbl">${left>0?"":"¡Tiempo! "}${esc(TM.label)}</span><b class="mono">${fmtT(Math.ceil(left))}</b></div><div class="bar"><i style="width:${(1-left/TM.total)*100}%"></i></div><button class="nb" data-tstop>${left>0?"Parar":"Cerrar"}</button></div>`;
   if(left<=0){clearInterval(TM.iv);beep(3);const t=TM;setTimeout(()=>{if(TM===t)stopTimer()},6000)}}
