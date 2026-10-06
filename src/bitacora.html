@@ -382,6 +382,48 @@ function miniBlocks(spec,ctx){
 function noche(w){return T("noche","Noche: visualización + cama 22:30","Sin pantalla los últimos 30 min.","22:00",[B("Visualización 5 min","Imagina la prueba completa, con el cansancio incluido, y te ves terminando.",{tm:300}),B("A la cama 22:30",DELOAD.includes(w)?"Semana de descarga: duerme más.":w===51?"Esta semana: 9 h.":"8–9 horas.")],{kind:"rutina"})}
 function ducha(w){return T("ducha","Ducha fría "+cold(w),"Al final de la ducha normal.","11:15",[B("Agua fría "+cold(w),"Respira lento y largo por la nariz mientras dura.",{tm:toSec(cold(w).replace(/ s$/,"").replace(/ min$/,":00").replace(/^(\d+)$/,"0:$1"))||30})],{kind:"rutina"})}
 
+
+/* ---- adaptación: lago solo, sin compañero, sin instructor ---- */
+const TEMP_MES=[18,18,16,14,12,10,9,9,10,11,13,15]; // estimación °C lago Llanquihue por mes (ene→dic)
+function waterTemp(ctx){return ctx.temp!=null&&ctx.temp!==""&&!isNaN(+ctx.temp)?+ctx.temp:TEMP_MES[ctx.month==null?9:ctx.month]}
+function lakeCap(t,neo){const T=[[10,8,0],[12,12,5],[14,20,8],[16,30,15],[18,40,25],[99,50,35]];const r=T.find(x=>t<x[0]);return neo?r[1]:r[2]}
+const SEG_SOLO="Vas solo: la regla es no alejarte nunca de donde haces pie. Si algo no está bien en la orilla, hoy nadas en piscina.";
+function lakeify(t,w,ctx){
+  const st=w<=13?1:w<=26?2:w<=39?3:4,spm=[0,180,150,135,120][st],br25=[0,22,20,18,18][st];
+  const temp=waterTemp(ctx),cap=lakeCap(temp,ctx.neo);
+  let est=0;
+  const bl=t.blocks.map(b=>{
+    if(!b.m)return b;let m;
+    est+=b.m/100*spm/60+(b.s>1?(b.s-1)*(b.r||30)/60:0);
+    if((m=b.n.match(/^(.*?)(\d+) × ([\d.]+) m(.*)$/))){const D=num(m[3]),br=Math.round(D/25*br25);
+      return Object.assign({},b,{n:`${m[1]}${m[2]} × ${br} brazadas${m[4]}`,p:`≈ ${m[3]} m cada uno. ${b.p}`,note:`Cuenta brazadas (cada mano = 1). Descanso de pie en el fondo${b.r?`, ${b.r} s`:""}.`})}
+    const mins=Math.max(2,Math.round(b.m/100*spm/60));
+    return Object.assign({},b,{n:`${b.n} · ~${mins} min`,p:`≈ ${b.m.toLocaleString("es-CL")} m. ${b.p}`,tm:mins*60,note:""});
+  });
+  const over=est>cap;
+  const prot=B(`Protocolo lago solo · máximo ${cap?cap+" min":"NO ENTRAR"}`,
+    `Agua ${temp} °C${ctx.temp?"":" (estimado del mes; mídela con termómetro)"}${ctx.neo?" · con neopreno":" · sin neopreno"}`,
+    {tm:cap?cap*60:0,note:cap?"1) Avisa a alguien dónde entras y a qué hora sales. 2) Boya de arrastre de color y gorra llamativa. 3) Solo donde haces pie, paralelo a la orilla, lejos de lanchas y muelles. 4) Sin viento ni oleaje. 5) Entra caminando hasta la cintura y espera a que la respiración se calme. 6) Inicia el temporizador al entrar: cuando suene, sales aunque falte."+(over?` Hoy el plan son ~${Math.round(est)} min: haz los bloques en orden y lo que no alcances queda.`:""):"Con esta temperatura y sin neopreno no se entra al lago. Hoy nadas en piscina, o haz 20 min de técnica en seco (brazada frente al espejo) y fuerza de core."});
+  const post=B("Al salir","Sécate, ropa abrigada y bebida caliente. No te metas a una ducha muy caliente de inmediato.",{note:"Sal ya si: temblor que no para, torpeza en las manos, confusión o labios morados."});
+  return Object.assign({},t,{t:t.t.replace(/ · [\d.]+ m$/,"")+" · lago",blocks:[prot,...bl,post],safe:SEG_SOLO,lake:true});
+}
+function adapt(tasks,w,dow,ctx){
+  const lake=ctx.place!=="piscina",solo=!ctx.partner,instr=!!ctx.instr;
+  let out=[];
+  tasks.forEach(t=>{
+    if(t.id==="clases"&&!instr){out.push(T("equipo","Equipo para el lago","Sin esto no se entra al agua.","10:00",[B("Boya de arrastre (tow float)","De color llamativo, se amarra a la cintura. Te hace visible y te puedes afirmar."),B("Gorra de natación de color","Naranja o amarillo"),B("Gafas de natación",""),B("Neopreno 3–5 mm","Con el agua bajo 14 °C es lo que te deja nadar más de unos minutos."),B("Termómetro de agua","Para saber cuántos minutos puedes estar.")],{kind:"admin"}));return}
+    if(t.id==="apnea"&&solo){if(!tasks.some(x=>x.id==="aseco"))out.push(T("aseco","Apnea en seco (sin compañero)","Acostado, en casa.",t.h,ASECO(),{kind:"apnea",safe:"Sin compañero o salvavidas no hay apnea en el agua. Nunca, ni en el lago ni en la piscina."}));return}
+    if(t.id==="lago"&&lake)return;
+    let x=t;
+    if(!instr&&x.id==="swim"&&w>=1&&w<=13){x=Object.assign({},x,{d:x.d.replace("Primeras 6 semanas: con instructor.","Sin instructor: autochequeo cada 4 tramos."),blocks:x.blocks.slice()});
+      x.blocks.splice(1,0,B("Autochequeo","Cada 4 tramos revisa: cadera arriba, no hundida · exhalas todo bajo el agua · patada corta desde la cadera · la mano entra lejos adelante y la brazada es larga"))}
+    if(x.blocks.some(b=>/^1\. Apnea/.test(b.n))&&(solo||lake)){x=Object.assign({},x,{blocks:x.blocks.map(b=>/^1\. Apnea/.test(b.n)&&solo?Object.assign({},b,{p:"Solo en piscina con salvavidas avisado. Si no hay, queda pendiente: nunca solo en el lago."}):/^2\. Natación 500/.test(b.n)&&lake?Object.assign({},b,{note:"Mídela en piscina: en el lago la distancia no es exacta y el tiempo no sirve para comparar."}):b)})}
+    if(lake&&x.kind==="agua"&&x.blocks.some(b=>b.m))x=lakeify(x,w,ctx);
+    if(lake&&w===0&&x.id==="swim"){const cap0=lakeCap(waterTemp(ctx),ctx.neo),nm=Math.max(1,cap0-4);x=Object.assign({},x,{t:"Reconocimiento del lago",d:cap0?`Agua ${waterTemp(ctx)} °C${ctx.neo?" con neopreno":" sin neopreno"}: máximo ${cap0} min en total.`:"Con esta temperatura y sin neopreno, hoy solo eliges el lugar: no entras.",blocks:cap0?[B("Elige el lugar","Playa con fondo suave, donde hagas pie al menos 50 m paralelo a la orilla, sin lanchas."),B("Avisa a alguien","Dónde entras y a qué hora sales."),B("Entra caminando hasta la cintura","3–5 min respirando lento hasta que el jadeo pase.",{tm:240}),B(`Nado salvavidas ${nm} min`,"Paralelo a la orilla, sin alejarte de donde haces pie.",{tm:nm*60}),B("Exhalar bajo el agua","10 × 5 s haciendo burbujas",{s:10,r:15}),B("Al salir","Sécate, ropa abrigada y bebida caliente.")]:[B("Elige el lugar","Playa con fondo suave, donde hagas pie al menos 50 m paralelo a la orilla, sin lanchas."),B("Mide el agua","Si tienes termómetro, anótala en Plan → Ajustes.")],safe:SEG_SOLO})}
+    out.push(x);
+  });
+  return out;
+}
 function dayPlan(w,dow,ctx){
   ctx=ctx||{};
   const deload=DELOAD.includes(w),st=stageOf(w);
@@ -466,9 +508,10 @@ function dayPlan(w,dow,ctx){
     if(dow===6){title="Descanso total";kind="descanso";tasks=[T("rest","Descanso total","Recuperación y sueño. Es una orden.","",[B("Duerme 8–9 h","")],{kind:"descanso"})]}
   }
   if(kind==="prueba"&&!(tasks&&tasks.length))tasks=[T("prueba","Protocolo de la prueba","Mismo orden siempre. Máximo 3 min entre ejercicios. Anota cada número abajo.","07:00",testBlocks(ctx),{kind:"fuerza",safe:"Apnea con compañero o salvavidas. Sin hiperventilar."})];
+  tasks=adapt(tasks,w,dow,ctx);
   if(w>=1&&kind!=="descanso")tasks.push(ducha(w));
   tasks.push(noche(w));
-  return {w,dow,title,kind,deload,stage:st,tasks,test:kind==="prueba"&&TESTS.includes(w)&&dow===5};
+  return {w,dow,title,kind,deload,stage:st,tasks,place:ctx.place||"lago",test:kind==="prueba"&&TESTS.includes(w)&&dow===5};
 }
 
 /* ============ METAS ============ */
@@ -507,7 +550,7 @@ const fmtS=d=>d.getDate()+" "+MES[d.getMonth()];
 
 /* ============ ALMACENAMIENTO ============ */
 const LS="bitacora-buzo-v1";
-const defCfg=()=>({name:"Diego",start:"2026-10-06",sched:Array.from({length:53},(_,i)=>i),repeats:[]});
+const defCfg=()=>({name:"Diego",start:"2026-10-06",sched:Array.from({length:53},(_,i)=>i),repeats:[],place:"lago",partner:false,instr:false,neo:false,temp:""});
 // La semana 0 se movió al martes 6 oct 2026 (antes quedaba en el lunes 5).
 const fixCfg=c=>{if(c.start==="2026-10-05"&&!c.startMoved){c.start="2026-10-06";c.startMoved=true}return c};
 const clone=o=>JSON.parse(JSON.stringify(o||{}));
@@ -574,7 +617,8 @@ function ctxNow(){
   if(c.barras)c.barras=Number(c.barras)||undefined;
   return CTX=c;
 }
-function planFor(date){const L=locate(date);if(L.w===undefined)return null;return dayPlan(L.w,L.dow,ctxNow())}
+function ctxFor(date){const c=Store.cfg;return Object.assign({},ctxNow(),{month:date.getMonth(),place:c.place,partner:c.partner,instr:c.instr,neo:c.neo,temp:c.temp})}
+function planFor(date){const L=locate(date);if(L.w===undefined)return null;return dayPlan(L.w,L.dow,ctxFor(date))}
 function streak(){
   const today=new Date();let n=0;let d=today;
   const st0=dayStatus(iso(d),planFor(d));
@@ -600,7 +644,7 @@ function orders(plan,k,isToday,L){
   else if(plan.kind==="prueba"){out.push(["p","Simulacro completo. Es la prueba de ingreso entera, cansado, sin regalos. Lo que más te cueste hoy recibe una sesión extra la semana que viene."])}
   else if(plan.kind==="descanso"){out.push(["p",pick(["Hoy descansas. Es una orden, no un premio. El cuerpo se adapta mientras descansa.","Descanso. Si te sobran ganas, guárdalas para mañana. 22:30 a la cama.","Día libre. El progreso ocurre cuando descansas, no cuando entrenas. Cumple esta orden también."],k)])}
   else if(plan.kind==="admin"){out.push(["p","Semana 0. Antes de mojarte, se prepara el terreno. Cada tarea de hoy es tan obligatoria como un entrenamiento."])}
-  else if(sw){out.push(["p",pick(["A la piscina a las 07:00. El agua es tu punto débil; por eso es donde más vas a estar.","Piscina. El agua no te va a regalar nada, así que tú tampoco le regales metros.","Al agua. Cada largo que hoy cuesta es uno que en el curso no te va a hundir."],k)])}
+  else if(sw){out.push(["p",plan.place==="piscina"?pick(["A la piscina a las 07:00. El agua es tu punto débil; por eso es donde más vas a estar.","Piscina. El agua no te va a regalar nada, así que tú tampoco le regales metros.","Al agua. Cada largo que hoy cuesta es uno que en el curso no te va a hundir."],k):pick(["Al lago. Vas solo, así que la disciplina hoy es doble: nadas donde haces pie y sales cuando suena el temporizador.","Lago. El agua fría no perdona al que se confía. Avisa a alguien, boya puesta, y a cumplir sin alejarte de la orilla.","Al agua. Resistencia sí, heroísmo no: el que se pasa de minutos en agua fría no llega al curso."],k)])}
   else if(rn){out.push(["p",pick(["Calle. Tu punto fuerte no se regala: se mantiene.","A correr. Ritmo exacto, ni más ni menos. Disciplina también es no pasarse.","Afuera. Correr es tu terreno. Demuéstralo con constancia, no con ego."],k)])}
   else out.push(["p","Fuerza y formato continuo. Encadena sin pausas, como en la prueba."]);
   if(plan.deload&&plan.kind!=="descanso")out.push(["p","Semana de descarga: la carga baja a propósito. No te la saltes por orgullo."]);
@@ -686,7 +730,7 @@ function viewHoy(){
   const d=S.date,k=iso(d),L=locate(d),isToday=diffDays(d,new Date())===0;
   let h=header(L)+dayNav(d);
   if(L.before){
-    const st=parse(Store.cfg.start),p1=dayPlan(0,0,ctxNow());
+    const st=parse(Store.cfg.start),p1=dayPlan(0,0,ctxFor(st));
     h+=`<div class="order"><div class="hdr"><span>DE:</span><b>COMANDANTE</b><span>PARA:</span><b>RECLUTA ${esc(String(Store.cfg.name).toUpperCase())}</b><span>ASUNTO:</span><b>INICIO DE OPERACIÓN</b></div><p class="say">Empiezas el ${dayName(st).toLowerCase()} ${fmt(st)}.</p><p>Esta noche: prepara bolso de piscina, ropa de correr y a la cama a las 22:30. Esto es lo que te espera en el día 1:</p><ul class="pre">${p1.tasks.map(t=>`<li>${esc(t.t)}</li>`).join("")}</ul><button class="btn main" data-open="${iso(st)}">Ver la orden del día 1</button></div>`;
     return h;
   }
@@ -695,7 +739,7 @@ function viewHoy(){
     h+=`<div class="order"><div class="hdr"><span>DE:</span><b>COMANDANTE</b><span>PARA:</span><b>${esc(Store.cfg.name)}</b><span>ASUNTO:</span><b>MANTENCIÓN</b></div><div class="say">Terminaste las 52 semanas.</div><p>Si todavía no entras a la Armada, repite la etapa 4 subiendo las metas (Plan → Ajustes). Ya dentro: 3 sesiones de nado y 2 de fuerza continua por semana, y la etapa 4 completa unos 3 meses antes de postular al curso.</p><p><b>Hoy:</b> ${M[dow]}.</p></div>`;
     return h;
   }
-  const plan=dayPlan(L.w,L.dow,ctxNow()),dd=Store.days[k]||{},status=dayStatus(k,plan),u=units(dd,plan);
+  const plan=dayPlan(L.w,L.dow,ctxFor(d)),dd=Store.days[k]||{},status=dayStatus(k,plan),u=units(dd,plan);
   const os=orders(plan,k,isToday,L);
   h+=`<div class="order"><div class="hdr"><span>DE:</span><b>COMANDANTE</b><span>PARA:</span><b>RECLUTA ${esc(String(Store.cfg.name).toUpperCase())}</b><span>ASUNTO:</span><b>${esc(plan.title.toUpperCase())}</b><span>REF:</span><b>SEM ${plan.w} · DÍA ${plan.dow+1}/7 · DÍA ${L.n+1} DEL PLAN</b></div>`;
   os.forEach(([t,x])=>{h+=t==="alert"?`<p class="alert">${esc(x)}</p>`:t==="say"?`<p class="say">${esc(x)}</p>`:`<p>${esc(x)}</p>`});
@@ -770,6 +814,12 @@ function viewPlan(){
    <div class="row"><div class="field" style="flex:1;min-width:140px"><label class="lbl" for="c-name">Tu nombre</label><input id="c-name" data-c="name" value="${esc(Store.cfg.name)}"></div>
    <div class="field" style="flex:1;min-width:160px"><label class="lbl" for="c-start">Inicio (día 1 de la semana 0)</label><input id="c-start" type="date" data-c="start" value="${esc(Store.cfg.start)}"></div></div>
    ${L.after?(S.confirm==="s4"?`<div class="row"><button class="btn main sm" data-s4>Confirmar: repetir etapa 4</button><button class="btn sm" data-cancel>Cancelar</button></div>`:`<button class="btn sm" data-ask="s4">Repetir etapa 4 (semanas 40–52)</button>`):""}
+   ${(()=>{const c=Store.cfg,sg=(key,v,l)=>`<button class="seg ${String(c[key])===String(v)?"on":""}" data-cset="${key}|${v}">${l}</button>`;
+     return `<div class="row"><div class="field"><span class="lbl">Dónde nadas</span><div class="segs">${sg("place","lago","Lago")}${sg("place","piscina","Piscina")}</div></div>
+     <div class="field"><span class="lbl">Compañero de agua</span><div class="segs">${sg("partner",false,"No")}${sg("partner",true,"Sí")}</div></div>
+     <div class="field"><span class="lbl">Instructor</span><div class="segs">${sg("instr",false,"No")}${sg("instr",true,"Sí")}</div></div>
+     <div class="field"><span class="lbl">Neopreno</span><div class="segs">${sg("neo",false,"No")}${sg("neo",true,"Sí")}</div></div>
+     <div class="field" style="width:150px"><label class="lbl" for="c-temp">Agua del lago (°C)</label><input id="c-temp" inputmode="decimal" data-c="temp" value="${esc(c.temp)}" placeholder="${TEMP_MES[new Date().getMonth()]} (estimado)"></div></div>`})()}
    <p class="foot" style="margin:0">Guardado: ${Store.mode==="db"?"en tu cuenta (privado, sincroniza entre dispositivos)":"solo en este dispositivo"}.</p></div>`;
   return h;
 }
@@ -818,6 +868,14 @@ function viewReglas(){
   <li><b>Respiración cada 3 brazadas:</b> respiras a un lado y al otro alternadamente. Exhala bajo el agua todo el tiempo.</li>
   <li><b>Descanso en la pared:</b> el tiempo indicado, respirando lento. El reloj de la piscina sirve.</li>
   <li><b>Apnea dinámica:</b> te impulsas de la pared bajo el agua, brazada de pecho larga y patada de rana, sin aletas. Sales al menor aviso del cuerpo. Nunca solo, nunca después de respirar rápido.</li></ul>
+  <h3>Nadar en el lago sin compañero</h3><ul>
+  <li><b>Lo más riesgoso de todo el plan.</b> El shock de frío de los primeros 1–2 minutos provoca jadeo y te puede hacer tragar agua. Por eso: entras caminando y esperas a que pase.</li>
+  <li><b>Siempre donde haces pie</b>, paralelo a la orilla. Si te cansas, te paras. Nunca cruzar ni alejarse.</li>
+  <li><b>Boya de arrastre y gorra de color</b> en cada sesión. <b>Avisa a alguien</b> dónde entras y a qué hora sales.</li>
+  <li><b>Minutos según la temperatura:</b> la app calcula el máximo (con neopreno: bajo 10 °C, 8 min; 10–12 °C, 12 min; 12–14 °C, 20 min; 14–16 °C, 30 min). Cuando suena el temporizador, sales.</li>
+  <li><b>Nunca apnea en el lago</b>, ni solo ni acompañado. La apnea en el agua es solo en piscina con salvavidas avisado.</li>
+  <li><b>Distancias:</b> en el lago no hay largos, así que la app convierte metros en brazadas (cada mano = 1) y minutos.</li>
+  <li><b>Pruebas:</b> los 500 m y la apnea se miden en piscina, para que el número sea real.</li></ul>
   <h3>Carrera</h3><ul>
   <li><b>Ritmo conversación:</b> puedes hablar en frases completas.</li>
   <li><b>Intervalos:</b> cada repetición al tiempo indicado, ni más rápido ni más lento. La recuperación es trote muy suave o caminata.</li>
@@ -868,6 +926,7 @@ document.addEventListener("click",e=>{
   if(D.wkidx!==undefined){S.date=addDays(parse(Store.cfg.start),+D.wkidx*7);S.tab="semana";render();window.scrollTo(0,0);return}
   const k=iso(S.date);
   if(D.timer){startTimer(+D.timer,D.tl||"");return}
+  if(D.cset){const [key,v]=D.cset.split("|");Store.setCfg({[key]:v==="true"?true:v==="false"?false:v});render();return}
   if(D.task||D.set){const p=planFor(S.date);if(!p)return;const dd=Store.day(k);const c=Object.assign({},dd.checks||{}),sets=Object.assign({},dd.sets||{});
     if(D.task){const t=p.tasks.find(x=>x.id===D.task);const now=!taskDone(dd,t);c[t.id]=now;t.blocks.forEach((b,i)=>{sets[setKey(t,i)]=now?b.s:0})}
     else{const [tid,bi,v]=D.set.split("|");const t=p.tasks.find(x=>x.id===tid);if(!t)return;const key=setKey(t,+bi),cur=blockDone(dd,t,+bi);
@@ -893,6 +952,7 @@ document.addEventListener("input",e=>{
   else if(D.t){const t=Object.assign({},(Store.days[k]||{}).test||{});t[D.t]=el.value.trim();Store.setDay(k,{test:t});clearTimeout(inT);inT=setTimeout(()=>{if(document.activeElement===el){/* re-render verdict on blur */}},0)}
   else if(D.tc){const t=Object.assign({},(Store.days[k]||{}).test||{});t[D.tc]=el.checked;Store.setDay(k,{test:t});render()}
   else if(D.c==="name"){Store.setCfg({name:el.value.trim()||"Recluta"})}
+  else if(D.c==="temp"){Store.setCfg({temp:el.value.trim().replace(",",".")})}
 });
 document.addEventListener("change",e=>{
   const el=e.target;
