@@ -21,6 +21,7 @@
   --bg:#0A121B; --paper:#111C27; --ink:#E3E9EF; --muted:#8B9AA9; --line:#22323F;
   --accent:#FF7A3D; --accent-ink:#1A0A02; --ok:#4FB37E; --warn:#E3A94B; --bad:#F06B60; --chip:#1A2836; color-scheme:dark}
 *{box-sizing:border-box}
+[hidden]{display:none!important}
 html,body{background:var(--bg);color:var(--ink)}
 body{font-family:var(--f-body);font-size:16px;line-height:1.45;padding:0 16px calc(150px + env(safe-area-inset-bottom,0px))}
 .wrap{max-width:640px;margin:0 auto;padding-block:14px 24px;display:flex;flex-direction:column;gap:14px}
@@ -890,7 +891,12 @@ function viewRun(){
 }
 /* =================== INTERFAZ =================== */
 const app=document.getElementById("app");
-const S={tab:"hoy",date:new Date(),open:{},confirm:null,selWeek:null};
+const S={tab:"hoy",date:new Date(),open:{},confirm:null,selWeek:null,follow:true};
+// si estás mirando el día de hoy y pasa la medianoche, la app salta sola al día nuevo
+function followToday(){if(S.follow&&diffDays(S.date,new Date())!==0){S.date=new Date();S.run=null;render()}}
+document.addEventListener("visibilitychange",()=>{if(!document.hidden)followToday()});
+window.addEventListener("focus",followToday);
+setInterval(followToday,60000);
 try{const t=sessionStorage.getItem("bit-tab");if(t&&["hoy","plan","progreso","guia"].includes(t))S.tab=t}catch(e){}
 let toastT;function toast(m){const el=document.getElementById("toast");el.textContent=m;el.hidden=false;clearTimeout(toastT);toastT=setTimeout(()=>{el.hidden=true},3500)}
 function chip(s){const m={done:"Cumplido",fail:"No cumplido",injury:"Recuperación",part:"A medias"};return `<span class="chip ${s||""}">${s?m[s]:"Pendiente"}</span>`}
@@ -960,6 +966,10 @@ function testForm(plan,k,dd,L){
   const f=(id,lab,ph,mode)=>`<div class="field"><label class="lbl" for="t-${id}">${lab}</label><input id="t-${id}" data-t="${id}" inputmode="${mode||"numeric"}" value="${esc(t[id])}" placeholder="${ph}"></div>`;
   let h=`<div class="card"><span class="lbl">Tus resultados · semana ${w}</span><div class="testform">${f("apnea","Apnea (m)","15")}${f("swim","500 m (mm:ss)","12:40","text")}${f("barras","Barras","8")}${f("sent","Sentadillas","65")}${f("flex","Flexiones","45")}${f("abd","Abdominales","50")}${f("run","2.400 m (mm:ss)","10:45","text")}</div>
    <div class="row"><label class="cb"><input type="checkbox" id="t-sinParar" data-tc="sinParar" ${t.sinParar?"checked":""}> 500 m sin parar</label><label class="cb"><input type="checkbox" id="t-crol" data-tc="crol" ${t.crol?"checked":""}> todo en crol</label></div>`;
+  return h+`<div id="verdict">${verdictHTML(plan,dd,L)}</div></div>`;
+}
+function verdictHTML(plan,dd,L){
+  const t=dd.test||{},w=plan.w;let h="";
   const ev=evalTest(w,t),filled=["apnea","swim","barras","sent","flex","abd","run"].every(x=>t[x]);
   if(w===0)h+=`<p class="foot">Punto de partida: no hay meta. Tus barras de hoy ajustan las series de todo el plan.</p>`;
   else if(ev&&filled){
@@ -970,8 +980,9 @@ function testForm(plan,k,dd,L){
       else if(already)h+=`<span class="foot">Repetición ya programada.</span>`;
       h+=`</div>`}
   }
-  return h+`</div>`;
+  return h;
 }
+function updateVerdict(){const el=document.getElementById("verdict");if(!el)return;const d=S.date,L=locate(d),p=planFor(d);if(p)el.innerHTML=verdictHTML(p,Store.days[iso(d)]||{},L)}
 function viewPlan(){
   const today=new Date(),L=locate(today),sched=Store.cfg.sched,start=parse(Store.cfg.start);
   const sel=S.selWeek!=null?S.selWeek:(L.idx!=null&&!L.after?L.idx:0);
@@ -1091,9 +1102,9 @@ function setTab(t){S.tab=t;S.confirm=null;try{sessionStorage.setItem("bit-tab",t
 
 document.addEventListener("click",e=>{
   const b=e.target.closest("button");if(!b)return;const D=b.dataset;
-  if(D.tab){if(D.tab==="hoy"&&S.tab==="hoy")S.date=new Date();if(D.tab==="plan")S.selWeek=null;setTab(D.tab);return}
-  if(D.go!==undefined){S.run=null;S.date=D.go==="0"?new Date():addDays(S.date,+D.go);S.confirm=null;render();return}
-  if(D.goto){S.date=parse(D.goto);setTab("hoy");return}
+  if(D.tab){if(D.tab==="hoy"&&S.tab==="hoy"){S.date=new Date();S.follow=true}if(D.tab==="plan")S.selWeek=null;setTab(D.tab);return}
+  if(D.go!==undefined){S.run=null;S.date=D.go==="0"?new Date():addDays(S.date,+D.go);S.follow=diffDays(S.date,new Date())===0;S.confirm=null;render();return}
+  if(D.goto){S.date=parse(D.goto);S.follow=diffDays(S.date,new Date())===0;setTab("hoy");return}
   if(D.wk!==undefined){S.selWeek=+D.wk;render();return}
   if(D.timer){startTimer(+D.timer,D.tl||"");return}
   if(D.tstop!==undefined){stopTimer();return}
@@ -1140,8 +1151,8 @@ document.addEventListener("click",e=>{
 document.addEventListener("input",e=>{
   const el=e.target,D=el.dataset,k=iso(S.date);
   if(D.f)Store.setDay(k,{[D.f]:el.value});
-  else if(D.t){const t=Object.assign({},(Store.days[k]||{}).test||{});t[D.t]=el.value.trim();Store.setDay(k,{test:t})}
-  else if(D.tc){const t=Object.assign({},(Store.days[k]||{}).test||{});t[D.tc]=el.checked;Store.setDay(k,{test:t});render()}
+  else if(D.t){const t=Object.assign({},(Store.days[k]||{}).test||{});t[D.t]=el.value.trim();Store.setDay(k,{test:t});updateVerdict()}
+  else if(D.tc){const t=Object.assign({},(Store.days[k]||{}).test||{});t[D.tc]=el.checked;Store.setDay(k,{test:t});updateVerdict()}
   else if(D.c==="name")Store.setCfg({name:el.value.trim()||"Recluta"});
   else if(D.c==="peso"){const v=el.value.trim().replace(",",".");Store.setCfg({peso:v});Store.setDay(iso(new Date()),{peso:v})}
   else if(D.c==="alt")Store.setCfg({alt:el.value.trim()});
@@ -1151,7 +1162,6 @@ document.addEventListener("input",e=>{
 });
 document.addEventListener("change",e=>{const el=e.target;
   if(el.dataset.c==="start"&&el.value){Store.setCfg({start:el.value,startMoved:true});render()}
-  if(el.dataset.t)render();
 });
 
 /* temporizador */
