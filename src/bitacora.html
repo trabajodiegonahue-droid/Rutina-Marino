@@ -45,6 +45,17 @@ button:focus-visible,input:focus-visible,textarea:focus-visible,summary:focus-vi
 .order .say{font-family:var(--f-label);font-weight:700;font-size:20px;text-transform:uppercase;letter-spacing:.02em;line-height:1.15;margin:0}
 .order p{margin:0}
 .why-q{font-style:italic;border-left:3px solid var(--accent);padding-left:10px}
+.start{font-size:18px;padding:16px}
+.run{display:flex;flex-direction:column;gap:12px;min-height:70vh}
+.rhead{display:flex;justify-content:space-between;align-items:center}
+.rbody{display:flex;flex-direction:column;gap:12px;background:var(--paper);border:1px solid var(--line);border-top:4px solid var(--accent);border-radius:8px;padding:16px}
+.rbody p{margin:0}
+.rbig{font-family:var(--f-display);font-size:clamp(30px,9vw,44px);line-height:1.05}
+.rset{font-family:var(--f-label);font-weight:700;font-size:22px;text-transform:uppercase;color:var(--accent)}
+.rwhat{font-size:22px;font-weight:600}
+.rnote{font-size:15px;color:var(--muted)}
+.rdone{font-size:22px;padding:18px}
+.btn[disabled]{opacity:.35}
 .alert{border:1px solid var(--bad);color:var(--bad);padding:8px 12px;font-weight:600;font-size:15px;margin:0}
 
 /* cómo amaneciste */
@@ -619,6 +630,38 @@ function orders(plan,k,isToday,dd){
   return out;
 }
 
+/* =================== MODO PASO A PASO =================== */
+const ORD=["Primero","Segundo","Tercero","Cuarto","Quinto","Sexto","Séptimo","Octavo"];
+function steps(plan){const out=[];plan.tasks.forEach((t,ti)=>t.blocks.forEach((b,bi)=>{if(b.s>1&&b.s<=12)for(let k=1;k<=b.s;k++)out.push({t,ti,bi,b,set:k});else out.push({t,ti,bi,b,set:0})}));return out}
+function stepDone(dd,st){const n=taskDone(dd,st.t)?st.b.s:blockDone(dd,st.t,st.bi);return st.set?n>=st.set:n>=st.b.s}
+function firstPending(plan,dd){const ss=steps(plan);const i=ss.findIndex(x=>!stepDone(dd,x));return i<0?ss.length:i}
+function stepTitle(st){const b=st.b;
+  if(st.set){let w=b.p.replace(/^\d+\s*×\s*/,"")||b.p;if(/^\d+$/.test(w))w+=" repeticiones";if(/^\d+ por lado/.test(w))w=w.replace(/^(\d+)/,"$1 repeticiones");
+    return {big:b.n.replace(/(^|\s)\d+ × /,"$1").trim(),sub:`Serie ${st.set} de ${b.s}`,what:w}}
+  return {big:b.n,sub:"",what:b.p};}
+function viewRun(){
+  const d=S.date,k=iso(d),plan=planFor(d),dd=Store.days[k]||{},ss=steps(plan),N=ss.length;
+  let i=Math.max(0,Math.min(S.run.i,N));
+  if(i>=N)return `<div class="run"><div class="rhead"><span class="lbl">Orden del día</span><button class="nb" data-rexit>Salir</button></div><div class="rbody"><p class="rbig" style="color:var(--ok)">Misión cumplida</p><p class="rwhat">Todo lo de hoy está hecho, ${esc(Store.cfg.name||"recluta")}. Come, recupera y mañana a la misma hora.</p><button class="btn main" data-rexit>Volver a Hoy</button></div></div>`;
+  const st=ss[i],T2=stepTitle(st),nx=ss.slice(i+1).find(x=>!stepDone(dd,x)),firstOfTask=!ss[i-1]||ss[i-1].t.id!==st.t.id;
+  const ord=ORD[st.ti]||((st.ti+1)+"º");
+  const done=stepDone(dd,st);
+  let h=`<div class="run"><div class="rhead"><span class="lbl">Paso ${i+1} de ${N}</span><button class="nb" data-rexit>Salir</button></div><div class="bar"><i style="width:${i/N*100}%"></i></div>
+   <div class="rbody">
+    <span class="lbl">${ord}: ${esc(st.t.t)}${st.t.h?" · "+esc(st.t.h):""}</span>
+    ${firstOfTask&&st.t.why?`<p class="foot">${esc(st.t.why)}</p>`:""}
+    ${firstOfTask&&st.t.safe?`<p class="safe">${esc(st.t.safe)}</p>`:""}
+    <p class="rbig">${esc(T2.big)}</p>
+    ${T2.sub?`<p class="rset">${esc(T2.sub)}</p>`:""}
+    <p class="rwhat mono">${esc(T2.what)}</p>
+    ${st.b.note?`<p class="rnote">${esc(st.b.note)}</p>`:""}
+    ${st.b.tm?`<button class="btn" data-timer="${st.b.tm}" data-tl="${esc(st.b.n)}">▶ Iniciar ${fmtT(st.b.tm)}</button>`:""}
+    <button class="btn main rdone" data-rdone="${i}">${done?"Hecho ✓ · siguiente":"Hecho"}</button>
+    <div class="row"><button class="btn sm" data-rgo="${i-1}" ${i===0?"disabled":""}>◀ Atrás</button><button class="btn sm" data-rgo="${i+1}">Saltar ▶</button></div>
+    ${nx?`<p class="foot">Después: ${esc(nx.b.n)}${nx.set?` · serie ${nx.set} de ${nx.b.s}`:""}${st.set&&st.b.r&&st.set<st.b.s?` · antes descansas ${fmtT(st.b.r)}`:""}</p>`:`<p class="foot">Es lo último del día.</p>`}
+   </div></div>`;
+  return h;
+}
 /* =================== INTERFAZ =================== */
 const app=document.getElementById("app");
 const S={tab:"hoy",date:new Date(),open:{},confirm:null,selWeek:null};
@@ -665,8 +708,10 @@ function viewHoy(){
   }
   const pct=u.b?Math.round(u.a/u.b*100):0;
   h+=`<div class="prog"><div class="row"><span class="lbl">${esc(plan.title)} · ${u.a}/${u.b} series</span><span class="mono">${pct}%</span></div><div class="bar"><i style="width:${pct}%"></i></div></div>`;
+  {const N=steps(plan).length,fp=firstPending(plan,dd);
+   if(fp<N)h+=`<button class="btn main start" data-rstart>${fp===0?"▶ Empezar la orden":"▶ Continuar · paso "+(fp+1)+" de "+N}</button><p class="foot" style="margin-top:-6px">Te digo qué hacer, en orden, un paso a la vez.</p>`}
   const firstOpen=(plan.tasks.find(t=>!taskDone(dd,t))||{}).id;
-  h+=plan.tasks.map(t=>sesHTML(t,dd,S.open[k+t.id]!=null?S.open[k+t.id]:t.id===firstOpen)).join("");
+  h+=plan.tasks.map((t,ti)=>sesHTML(Object.assign({},t,{t:(ti+1)+". "+t.t}),dd,S.open[k+t.id]!=null?S.open[k+t.id]:t.id===firstOpen)).join("");
   if(plan.test)h+=testForm(plan,k,dd,L);
   {const tm=addDays(d,1),tp=planFor(tm);if(tp)h+=`<div class="card"><span class="lbl">Mañana · ${dayName(tm)} · ${esc(tp.title)}</span><span>${esc(tp.tasks.filter(t=>t.id!=="noche"&&t.id!=="ducha").map(t=>(t.h?t.h+" ":"")+t.t).join(" · "))}</span>${tp.tasks.some(t=>t.kind==="agua")?`<span class="foot">Deja listo el bolso: traje de baño, gafas, gorra de color${Store.cfg.neo?", neopreno":""}, toalla y ropa abrigada.</span>`:""}${tp.tasks.some(t=>t.id==="ruck")?`<span class="foot">Deja lista la mochila con el peso.</span>`:""}</div>`}
   if(plan.dow===6){const ws=addDays(d,-6);let ua=0,ub=0,dn=0,sm=[0,0];for(let i=0;i<7;i++){const dx=addDays(ws,i),px=planFor(dx);if(!px)continue;const x=Store.days[iso(dx)];const u=units(x,px);ua+=u.a;ub+=u.b;if(okSt(dayStatus(iso(dx),px)))dn++;px.tasks.forEach(t=>{if(t.m){sm[1]+=t.m;if(taskDone(x,t))sm[0]+=t.m}})}
@@ -807,7 +852,7 @@ function render(){
   CTX=null;
   // conservar el foco y el cursor si una actualización llega mientras escribes
   const ae=document.activeElement,fid=ae&&app.contains(ae)&&ae.id?ae.id:null,sel=fid&&ae.selectionStart!=null?[ae.selectionStart,ae.selectionEnd]:null;
-  const v={hoy:viewHoy,plan:viewPlan,progreso:viewProgreso,guia:viewGuia}[S.tab]||viewHoy;
+  const v=S.tab==="hoy"&&S.run&&S.run.k===iso(S.date)?viewRun:{hoy:viewHoy,plan:viewPlan,progreso:viewProgreso,guia:viewGuia}[S.tab]||viewHoy;
   app.innerHTML=v();
   document.getElementById("tabs").innerHTML=TABS.map(([k,l])=>`<button data-tab="${k}" class="${S.tab===k?"on":""}">${l}</button>`).join("");
   if(fid){const el=document.getElementById(fid);if(el){el.focus({preventScroll:true});if(sel&&el.setSelectionRange)try{el.setSelectionRange(sel[0],sel[1])}catch(e){}}}
@@ -817,7 +862,7 @@ function setTab(t){S.tab=t;S.confirm=null;try{sessionStorage.setItem("bit-tab",t
 document.addEventListener("click",e=>{
   const b=e.target.closest("button");if(!b)return;const D=b.dataset;
   if(D.tab){if(D.tab==="hoy"&&S.tab==="hoy")S.date=new Date();if(D.tab==="plan")S.selWeek=null;setTab(D.tab);return}
-  if(D.go!==undefined){S.date=D.go==="0"?new Date():addDays(S.date,+D.go);S.confirm=null;render();return}
+  if(D.go!==undefined){S.run=null;S.date=D.go==="0"?new Date():addDays(S.date,+D.go);S.confirm=null;render();return}
   if(D.goto){S.date=parse(D.goto);setTab("hoy");return}
   if(D.wk!==undefined){S.selWeek=+D.wk;render();return}
   if(D.timer){startTimer(+D.timer,D.tl||"");return}
@@ -829,6 +874,18 @@ document.addEventListener("click",e=>{
   if(D.s4!==undefined){Store.setCfg({sched:Store.cfg.sched.concat(Array.from({length:13},(_,i)=>40+i))});S.confirm=null;render();toast("Etapa 4 otra vez. Sube las metas.");return}
   const k=iso(S.date);
   if(D.open){const p=planFor(S.date),dd=Store.days[k]||{},firstOpen=p&&(p.tasks.find(t=>!taskDone(dd,t))||{}).id,cur=S.open[k+D.open]!=null?S.open[k+D.open]:D.open===firstOpen;S.open[k+D.open]=!cur;render();return}
+  if(D.rstart!==undefined){const p=planFor(S.date);S.run={k,i:firstPending(p,Store.days[k]||{})};render();window.scrollTo(0,0);return}
+  if(D.rexit!==undefined){S.run=null;render();window.scrollTo(0,0);return}
+  if(D.rgo!==undefined){S.run.i=Math.max(0,+D.rgo);render();window.scrollTo(0,0);return}
+  if(D.rdone!==undefined){const p=planFor(S.date),ss=steps(p),i=+D.rdone,st=ss[i];if(!st)return;const dd=Store.day(k),before=dayStatus(k,p);
+    const c=Object.assign({},dd.checks||{}),sets=Object.assign({},dd.sets||{});
+    if(c[st.t.id])st.t.blocks.forEach((x,j)=>{if(sets[setKey(st.t,j)]==null)sets[setKey(st.t,j)]=x.s});
+    const key=setKey(st.t,st.bi),cur=Math.min(sets[key]||0,st.b.s),want=st.set||st.b.s;
+    if(want>cur)sets[key]=want;
+    Store.setDay(k,{checks:c,sets});
+    if(st.set&&st.b.r&&st.set<st.b.s&&want>cur)startTimer(st.b.r,"Descanso · "+st.b.n);
+    const ndd=Store.days[k];let ni=ss.findIndex((x,j)=>j>i&&!stepDone(ndd,x));if(ni<0)ni=firstPending(p,ndd);S.run.i=ni;
+    render();window.scrollTo(0,0);if(dayStatus(k,p)==="done"&&before!=="done")toast("Misión cumplida, "+(Store.cfg.name||"recluta")+".");return}
   if(D.turno){Store.setDay(k,{turno:D.turno});render();return}
   if(D.mode){const dd=Store.day(k);Store.setDay(k,{mode:dd.mode===D.mode?"":D.mode});render();return}
   if(D.task||D.set){
