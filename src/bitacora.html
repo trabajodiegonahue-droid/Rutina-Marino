@@ -5,22 +5,20 @@
 <style>
 /* Layout: una columna para el celular. Arriba el día, después la orden, cómo amaneciste y las sesiones plegables; navegación fija abajo. */
 :root{
-  --bg:#E6EBEF; --paper:#F7F9FA; --ink:#0F1E2E; --muted:#56687A; --line:#C6D0D9;
-  --accent:#D9531E; --accent-ink:#FFFFFF; --ok:#2C7A4B; --warn:#A86A12; --bad:#B3261E; --chip:#DCE3E9;
+  /* Mundo único: puente de mando de noche. Azul marino profundo, latón de insignia y rojo de señal. */
+  --bg:#06111D; --paper:#0C1D31; --paper2:#10263F; --ink:#E7EEF5; --muted:#8DA3BA; --line:#1D3954;
+  --accent:#D6AA4C; --accent-ink:#1A1204; --ok:#45B377; --warn:#E5A33C; --bad:#E2553E; --chip:#132B47;
+  --grid:rgba(141,163,186,.06);
   --f-display:"Saira Stencil One","Impact","Arial Narrow",sans-serif;
   --f-body:"Barlow",system-ui,-apple-system,"Segoe UI",sans-serif;
   --f-label:"Barlow Condensed","Arial Narrow",system-ui,sans-serif;
   --f-mono:"JetBrains Mono",ui-monospace,"SFMono-Regular",Menlo,monospace;
+  color-scheme:dark;
 }
-@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
-  --bg:#0A121B; --paper:#111C27; --ink:#E3E9EF; --muted:#8B9AA9; --line:#22323F;
-  --accent:#FF7A3D; --accent-ink:#1A0A02; --ok:#4FB37E; --warn:#E3A94B; --bad:#F06B60; --chip:#1A2836; color-scheme:dark}}
-:root[data-theme="dark"]{
-  --bg:#0A121B; --paper:#111C27; --ink:#E3E9EF; --muted:#8B9AA9; --line:#22323F;
-  --accent:#FF7A3D; --accent-ink:#1A0A02; --ok:#4FB37E; --warn:#E3A94B; --bad:#F06B60; --chip:#1A2836; color-scheme:dark}
 *{box-sizing:border-box}
 [hidden]{display:none!important}
 html,body{background:var(--bg);color:var(--ink)}
+body{background-color:var(--bg);background-image:radial-gradient(120% 60% at 50% -10%,rgba(214,170,76,.10),transparent 60%),linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);background-size:auto,36px 36px,36px 36px;background-attachment:fixed}
 body{font-family:var(--f-body);font-size:16px;line-height:1.45;padding:0 16px calc(150px + env(safe-area-inset-bottom,0px))}
 .wrap{max-width:640px;margin:0 auto;padding-block:14px 24px;display:flex;flex-direction:column;gap:14px}
 h1,h2,h3{margin:0;text-wrap:balance}
@@ -31,25 +29,37 @@ button:focus-visible,input:focus-visible,textarea:focus-visible,summary:focus-vi
 .muted{color:var(--muted)}
 .foot{font-size:13px;color:var(--muted);margin:0}
 
+/* cuartel: emblema y rango */
+.hq{display:flex;align-items:center;gap:12px;padding-bottom:10px;border-bottom:1px solid var(--line)}
+.hq svg{flex:none;width:46px;height:46px}
+.hq .t{font-family:var(--f-label);font-weight:700;letter-spacing:.1em;font-size:12px;white-space:nowrap;color:var(--accent);text-transform:uppercase}
+.hq .rk{display:flex;align-items:center;gap:8px;font-family:var(--f-label);font-weight:700;text-transform:uppercase;letter-spacing:.06em;font-size:16px}
+.hq .rk .chev{display:inline-flex;flex-direction:column;gap:2px}
+.hq .rk .chev i{display:block;width:16px;height:5px;background:var(--accent);clip-path:polygon(0 100%,50% 0,100% 100%,82% 100%,50% 36%,18% 100%)}
+.hq .streak{margin-left:auto;text-align:right;font-family:var(--f-label);text-transform:uppercase;letter-spacing:.06em;font-size:12px;color:var(--muted)}
+.hq .streak b{display:block;font-family:var(--f-display);font-size:26px;color:var(--ink);line-height:1;font-weight:400}
 /* cabecera del día */
 .day{display:grid;grid-template-columns:auto 1fr auto auto;gap:8px;align-items:center}
 .day .mid{text-align:center;min-width:0}
-.day .big{font-family:var(--f-display);font-size:clamp(20px,6.4vw,30px);line-height:1;white-space:nowrap}
+.day .big{color:var(--ink);letter-spacing:.02em;font-family:var(--f-display);font-size:clamp(20px,6.4vw,30px);line-height:1;white-space:nowrap}
 .day .sub{font-size:13px;color:var(--muted)}
 .nb{background:var(--paper);border:1px solid var(--line);border-radius:8px;min-width:44px;height:44px;font-family:var(--f-label);font-weight:700;padding:0 10px}
-.nb.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.nb.on{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
 .stage{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;font-family:var(--f-label);font-weight:700;text-transform:uppercase;letter-spacing:.05em;font-size:14px}
 .stage .st{color:var(--accent)}
 
 /* orden */
-.order{background:var(--paper);border:1px solid var(--line);border-top:4px solid var(--accent);padding:12px 14px;display:flex;flex-direction:column;gap:6px}
+.order{background:linear-gradient(180deg,var(--paper2),var(--paper));border:1px solid var(--line);border-left:4px solid var(--accent);padding:12px 14px;display:flex;flex-direction:column;gap:6px;border-radius:4px;position:relative;overflow:hidden}
+.msg-h{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;font-family:var(--f-mono);font-size:11px;letter-spacing:.06em;color:var(--accent);text-transform:uppercase;padding-bottom:6px;border-bottom:1px dashed var(--line)}
+.stamp{position:absolute;right:10px;top:8px;transform:rotate(-8deg);border:3px solid var(--ok);color:var(--ok);font-family:var(--f-display);font-size:22px;padding:2px 10px;border-radius:4px;letter-spacing:.06em;opacity:.9}
+.order.done{padding-top:46px}
 .order .say{font-family:var(--f-label);font-weight:700;font-size:20px;text-transform:uppercase;letter-spacing:.02em;line-height:1.15;margin:0}
 .order p{margin:0}
 .why-q{font-style:italic;border-left:3px solid var(--accent);padding-left:10px}
 .start{font-size:18px;padding:16px}
 .run{display:flex;flex-direction:column;gap:12px;min-height:70vh}
 .rhead{display:flex;justify-content:space-between;align-items:center}
-.rbody{display:flex;flex-direction:column;gap:12px;background:var(--paper);border:1px solid var(--line);border-top:4px solid var(--accent);border-radius:8px;padding:16px}
+.rbody{display:flex;flex-direction:column;gap:12px;background:linear-gradient(180deg,var(--paper2),var(--paper));border:1px solid var(--line);border-left:4px solid var(--accent);border-radius:4px;padding:16px}
 .rbody p{margin:0}
 .rbig{font-family:var(--f-display);font-size:clamp(30px,9vw,44px);line-height:1.05}
 .rname{font-family:var(--f-label);font-weight:700;font-size:18px;text-transform:uppercase;letter-spacing:.03em}
@@ -67,24 +77,26 @@ details.hw p{margin:6px 0 0;font-size:14px}
 .rnote{font-size:15px;color:var(--muted)}
 .rdone{font-size:22px;padding:18px}
 .btn[disabled]{opacity:.35}
-.alert{border:1px solid var(--bad);color:var(--bad);padding:8px 12px;font-weight:600;font-size:15px;margin:0}
+.alert{background:repeating-linear-gradient(-45deg,rgba(226,85,62,.12) 0 10px,transparent 10px 20px);border:1px solid var(--bad);color:var(--bad);padding:8px 12px;font-weight:600;font-size:15px;margin:0}
 
 /* cómo amaneciste */
 .mode{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
 .mode button{border:2px solid var(--line);background:var(--paper);border-radius:8px;padding:10px 4px;font-family:var(--f-label);font-weight:700;text-transform:uppercase;letter-spacing:.04em;font-size:15px}
+.seg.on{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
 .mode button.on.m-ok{background:var(--ok);border-color:var(--ok);color:var(--paper)}
 .mode button.on.m-cansado{background:var(--warn);border-color:var(--warn);color:var(--paper)}
 .mode button.on.m-dolor{background:var(--bad);border-color:var(--bad);color:var(--paper)}
 .modetxt{font-size:15px;margin:0;font-weight:600}
 
 /* progreso */
-.bar{height:10px;background:var(--chip);border-radius:3px;overflow:hidden}
-.bar i{display:block;height:100%;background:var(--accent)}
+.bar{height:10px;background:var(--chip);border-radius:2px;overflow:hidden;background-image:repeating-linear-gradient(90deg,transparent 0 9.5%,rgba(6,17,29,.55) 9.5% 10%)}
+.bar i{display:block;height:100%;background:linear-gradient(90deg,#B98B2E,var(--accent))}
 .prog{display:flex;flex-direction:column;gap:6px}
 .prog .row{display:flex;justify-content:space-between;gap:8px}
 
 /* sesiones */
-.ses{background:var(--paper);border:1px solid var(--line);border-radius:8px;overflow:hidden}
+.ses{background:var(--paper);border:1px solid var(--line);border-radius:6px;overflow:hidden;box-shadow:inset 3px 0 0 var(--line)}
+.ses:not(.done){box-shadow:inset 3px 0 0 var(--accent)}
 .ses.done{border-color:var(--ok)}
 .sh{display:grid;grid-template-columns:44px 1fr 28px;gap:10px;align-items:center;padding:12px}
 .chk{width:36px;height:36px;border:2px solid var(--ink);border-radius:6px;background:none;display:grid;place-items:center;padding:0}
@@ -118,11 +130,12 @@ details.hw p{margin:6px 0 0;font-size:14px}
 .field input,.field textarea{background:var(--bg);border:1px solid var(--line);color:var(--ink);border-radius:6px;padding:9px 10px;font:inherit;font-family:var(--f-mono);font-size:16px;width:100%}
 .field textarea{font-family:var(--f-body);min-height:70px;resize:vertical}
 .btn{border:2px solid var(--ink);background:transparent;padding:12px;border-radius:8px;font-family:var(--f-label);font-weight:700;text-transform:uppercase;letter-spacing:.05em;font-size:15px}
-.btn.main{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.btn.main{background:linear-gradient(180deg,#E3BC63,var(--accent));border-color:var(--accent);color:var(--accent-ink);box-shadow:0 2px 0 #8C6B23}
+.btn{border-color:var(--ink);color:var(--ink)}
 .btn.sm{padding:8px 10px;font-size:13px}
 .segs{display:flex;gap:4px;flex-wrap:wrap}
 .seg{border:1px solid var(--line);background:var(--bg);border-radius:6px;padding:8px 12px;font-size:15px}
-.seg.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.seg.on{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
 details.card summary{font-family:var(--f-label);font-weight:700;text-transform:uppercase;letter-spacing:.06em;font-size:14px;cursor:pointer}
 .testform{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px}
 .cb{display:flex;gap:8px;align-items:center;font-size:15px}
@@ -169,11 +182,12 @@ td.mono{font-family:var(--f-mono)}
 .tin .tl{display:flex;justify-content:space-between;align-items:baseline;gap:10px;min-width:0}
 .tin .tl b{font-size:30px}
 .tin .nb{grid-row:1/3;grid-column:2}
-nav.tabs{position:fixed;left:0;right:0;bottom:0;background:var(--ink);display:flex;justify-content:center;padding:0 8px env(safe-area-inset-bottom,0px);z-index:5}
+nav.tabs{position:fixed;left:0;right:0;bottom:0;background:#030A12;border-top:1px solid var(--line);display:flex;justify-content:center;padding:0 8px env(safe-area-inset-bottom,0px);z-index:5}
 nav.tabs .in{display:grid;grid-template-columns:repeat(4,1fr);max-width:640px;width:100%}
-nav.tabs button{background:none;border:0;color:var(--bg);opacity:.6;padding:16px 4px 18px;font-family:var(--f-label);font-weight:700;text-transform:uppercase;letter-spacing:.06em;font-size:15px}
-nav.tabs button.on{opacity:1;box-shadow:inset 0 3px 0 var(--accent)}
-.toast{position:fixed;left:50%;transform:translateX(-50%);top:calc(12px + env(safe-area-inset-top,0px));background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:8px;font-weight:600;z-index:9;max-width:calc(100% - 32px)}
+nav.tabs button{background:none;border:0;color:var(--ink);opacity:.55;padding:10px 4px 12px;display:flex;flex-direction:column;align-items:center;gap:3px;font-family:var(--f-label);font-weight:700;text-transform:uppercase;letter-spacing:.06em;font-size:15px}
+nav.tabs button.on{opacity:1;color:var(--accent);box-shadow:inset 0 3px 0 var(--accent)}
+nav.tabs svg{width:22px;height:22px}
+.toast{position:fixed;left:50%;transform:translateX(-50%);top:calc(12px + env(safe-area-inset-top,0px));background:var(--accent);color:var(--accent-ink);font-family:var(--f-label);text-transform:uppercase;letter-spacing:.05em;padding:10px 16px;border-radius:8px;font-weight:600;z-index:9;max-width:calc(100% - 32px)}
 @media (prefers-reduced-motion:no-preference){.order{animation:in .3s ease-out both}@keyframes in{from{transform:translateY(4px);opacity:.6}to{transform:none;opacity:1}}}
 </style>
 
@@ -349,9 +363,23 @@ function swimBlocks(spec,w,cont){
   if(cont)bl.unshift(B("La orden","nada lo largo sin parar",{note:"Piensa “hasta el otro borde”."}));
   return {blocks:bl,m:P.total};
 }
-const finsBlocks=()=>({blocks:[B("Entrada en calor","200 m sin aletas",{m:200}),B("4 × 200 m","patada con aletas",{s:4,r:30,m:800,note:"Boca abajo, brazos adelante, patada desde la cadera."}),B("4 × 50 m","aletas, posición de buceo",{s:4,r:30,m:200,note:"Brazos pegados al cuerpo, solo patada."}),B("Vuelta a la calma","100 m suave",{m:100})],m:1300});
+// Aletas: de 1,3 km en series a 3 km continuos, como los nados del curso.
+function finsBlocks(w){const st=stN(w||14);
+  if(st<=2||DELOAD.includes(w))return {blocks:[B("Entrada en calor","200 m sin aletas",{m:200}),B("4 × 200 m","patada con aletas",{s:4,r:30,m:800,note:"Boca abajo, brazos adelante, patada desde la cadera."}),B("4 × 50 m","aletas, posición de buceo",{s:4,r:30,m:200,note:"Brazos pegados al cuerpo, solo patada."}),B("Vuelta a la calma","100 m suave",{m:100})],m:1300};
+  if(st===3)return {blocks:[B("Entrada en calor","200 m sin aletas",{m:200}),B("3 × 500 m","con aletas, ritmo constante",{s:3,r:60,m:1500,note:"Patada larga desde la cadera, tobillos sueltos."}),B("4 × 50 m","aletas, posición de buceo",{s:4,r:30,m:200}),B("Vuelta a la calma","100 m suave",{m:100})],m:2000};
+  if(w<44)return {blocks:[B("Entrada en calor","200 m sin aletas",{m:200}),B("2 × 1.000 m","con aletas, ritmo constante",{s:2,r:90,m:2000,note:"Como los nados largos del curso."}),B("Vuelta a la calma","100 m suave",{m:100})],m:2300};
+  return {blocks:[B("Entrada en calor","200 m sin aletas",{m:200}),B("3.000 m","continuo con aletas",{m:3000,note:"Sin parar. Es la distancia que vas a nadar seguido en el curso."}),B("Vuelta a la calma","100 m suave",{m:100})],m:3300};
+}
 function longSwim(w){const d=w<=39?1500:2000;return {blocks:[B("Entrada en calor","200 m suave",{m:200}),B(nf(d)+" m","crol continuo",{m:d,note:"Cada 500 m revisa que la brazada siga larga."}),B("Vuelta a la calma","100 m suave",{m:100})],m:d+300}}
 // Pataleo vertical (control en el agua): de 4 × 30 s a 10 min con las manos fuera.
+const FLOT=(min,sets)=>B("Flotación de supervivencia",sets?`${sets} × ${min} min`:`${min} min`,{s:sets||1,r:sets?60:0,tm:min*60,c:`En lo hondo, cerca del borde: flota boca abajo y relajado, sube la cabeza solo para respirar cada 5 a 10 segundos y vuelve a relajarte. Aguanta ${min} minutos gastando lo mínimo. Es la base del nado de emergencia del curso.`});
+const OBJ=n=>B("Recuperar objeto del fondo",`${n} veces`,{s:n,r:60,c:"Lanza a lo hondo un objeto que se hunda (una botella llena de agua). Baja, tómalo y súbelo. Compensa los oídos al bajar. Respira normal 1 minuto entre cada bajada; nunca respires rápido antes."});
+function treadBlocks(w){const st=stN(w),t=treadBlock(w);
+  if(st===1)return [t];
+  if(st===2)return [t,FLOT(2,2)];
+  if(st===3)return [t,FLOT(5),OBJ(5)];
+  return [t,FLOT(10),B("Nado con ropa","200 m con polera y short",{m:200,c:"Si la piscina lo permite, nada 200 m con polera y short: así se siente el agua en el curso. Si no lo permiten, nada 200 m a brazada lenta sin parar."}),OBJ(5)];
+}
 function treadBlock(w){const st=stN(w);
   if(st===1)return B("Pataleo vertical",`4 × ${30+Math.min(60,Math.max(0,w-1)*5)} s`,{s:4,r:45,tm:30+Math.min(60,Math.max(0,w-1)*5),note:"En lo hondo, cerca del borde. Patada de “batidora” (eggbeater), manos ayudando."});
   if(st===2)return B("Pataleo vertical",`5 × ${Math.min(3,1+Math.floor((w-14)/5))} min`,{s:5,r:60,tm:Math.min(3,1+Math.floor((w-14)/5))*60,note:"Cerca del borde, en lo hondo."});
@@ -375,6 +403,12 @@ function bVals(w){const s2=w>=14,v=s2?{barras:6,flex:20,sent:25,abd:25}:{barras:
     if((m=c.match(/barras (\d+)/)))v.barras=+m[1];if((m=c.match(/flexiones (\d+)/)))v.flex=+m[1];if((m=c.match(/sentadillas (\d+)/)))v.sent=+m[1];if((m=c.match(/abdominales (\d+)/)))v.abd=+m[1]}
   return v}
 const circuit=(v,vu,rest)=>[CAL,B("Circuito",`${vu} vueltas`,{s:vu,r:rest,note:`Cada vuelta, sin pausa: barras ${v.barras} → flexiones ${v.flex} → sentadillas ${v.sent} → abdominales ${v.abd}. ${rest} s entre vueltas.`})];
+// PT de cubierta: la gimnasia de volumen del curso, para que no te tome por sorpresa.
+function cubiertaT(w){const st=stN(w),dl=DELOAD.includes(w)?2:0,[r,a,b]=st===2?[3,15,0]:st===3?[5,20,0]:[5,25,3],rr=Math.max(2,r-dl);
+  return T("pt","PT de cubierta","La gimnasia diaria del curso: mucho volumen, sin pausa.","09:00",[B("Ronda de cubierta",`${rr} × ${a}`,{s:rr,r:60,c:`Ronda sin parar: ${a} flexiones → ${a} abdominales → ${a} sentadillas${b?` → ${b} barras`:""}. Después descansa 1:00.`})],{kind:"fuerza"})}
+const sprintT=()=>T("sprint","Velocidad: 100 m y salto","Dos pruebas de la admisión a la Armada: 100 m y salto vertical.","08:00",[
+  B("Sprint 100 m","4 al 95%",{s:4,r:120,c:"Corre 100 m casi a tope (95%): brazos fuertes, rodillas arriba, mirada al frente. Vuelve caminando y descansa 2:00."}),
+  B("Salto vertical","3 × 5 saltos",{s:3,r:90,c:"Junto a una pared: bajas rápido a media sentadilla y saltas lo más alto que puedas, tocando la pared con la mano estirada. 5 saltos y descansa 1:30. Marca con tiza tu mejor altura."})],{kind:"carrera"});
 function piernas(w){const st=stN(w),dl=DELOAD.includes(w)?1:0;
   if(st===1)return [B("Sentadillas",`${4-dl} × 20`,{s:4-dl,r:60,note:"Muslos paralelos al suelo, talones apoyados."}),B("Zancadas","3 × 10 por pierna",{s:3,r:60}),B("Puente de glúteo","3 × 15",{s:3,r:45}),B("Gemelos","3 × 20",{s:3,r:30,note:"En un escalón, subiendo en puntas. Cuida los tobillos para la carrera y las aletas."})];
   if(st===2)return [B("Sentadillas",`${5-dl} × 25`,{s:5-dl,r:60}),B("Zancadas","3 × 15 por pierna",{s:3,r:60}),B("Sentadilla con salto","3 × 10",{s:3,r:60}),B("Gemelos","3 × 25",{s:3,r:30})];
@@ -562,7 +596,7 @@ function dayPlan(w,dow,ctx){
   const rest=(t,why,extra)=>[T("rest",t,why,"",[B("Movilidad","15 min suaves",{note:"Caderas, hombros, tobillos, espalda."}),B("Dormir","8–9 h")].concat(extra||[]),{kind:"descanso"})];
   const apneaT=(meta,h)=>partner&&!lake?T("apnea","Apnea supervisada"+(meta?" · meta "+meta:""),"Distancia bajo el agua, una respiración, sin aletas.",h,apneaBlocks(meta),{kind:"agua",safe:SEG_APNEA}):null;
   const asecoT=h=>T("aseco","Apnea en seco","En casa, acostado.",h||"18:00",ASECO(),{kind:"apnea"});
-  const treadT=()=>lake?null:T("control","Control en el agua","Lo que más se pide en el curso: estar cómodo en lo hondo.","08:00",[treadBlock(w)],{kind:"agua",safe:"Solo en piscina con salvavidas a la vista."});
+  const treadT=()=>lake?null:T("control","Control en el agua","Lo que más se pide en el curso: estar cómodo en lo hondo.","08:00",treadBlocks(w),{kind:"agua",safe:"Solo en piscina con salvavidas avisado. Nunca solo."});
   if(w===HELL){const H=hellDay(dow,ctx);title=H.title;kind=H.kind;tasks=H.tasks}
   else if(w===0){
     const W0=[
@@ -595,10 +629,12 @@ function dayPlan(w,dow,ctx){
   } else if(w<=26){
     const r=S12[w],s2=w>=14,apT=apneaTarget(w),vu=+(r[3].match(/(\d+) vueltas/)||[0,3])[1];
     if(dow===0){title="Agua + tirón";kind="agua";tasks=[swimT("swim",s2?"Natación series":"Natación técnica",s2?"Las series enseñan a mantener el ritmo.":"Hoy se aprende, no se sufre.","07:00",swimBlocks(r[0],w)),T("fa","Fuerza de tren superior","Barras y flexiones: dos pruebas del ingreso.","10:00",calA(w,ctx),{kind:"fuerza"})]}
-    if(dow===1){title="Carrera + core";tasks=[runT("run",(s2?"Carrera continua ":"Carrera suave ")+r[1].replace(/\s*suave/,""),s2?"El curso tiene trotes largos.":"Base aeróbica con poco riesgo de lesión.","07:00",runBlocks(r[1],w)),T("core","Core","Abdominales fuertes protegen la espalda y suben tu nota.","08:15",core(w),{kind:"fuerza"})]}
+    if(dow===1){title="Carrera + core";tasks=[runT("run",(s2?"Carrera continua ":"Carrera suave ")+r[1].replace(/\s*suave/,""),s2?"El curso tiene trotes largos.":"Base aeróbica con poco riesgo de lesión.","07:00",runBlocks(r[1],w)),T("core","Core","Abdominales fuertes protegen la espalda y suben tu nota.","08:15",core(w),{kind:"fuerza"}),s2?cubiertaT(w):null]}
     if(dow===2){title="Agua + piernas";kind="agua";
-      tasks=[s2?swimT("swim","Natación con aletas","Piernas y tobillos para el buceo.","07:00",finsBlocks()):swimT("swim","Natación técnica","Repetir fija el movimiento.","07:00",swimBlocks(r[0],w)),treadT(),s2?(apneaT(apT,"07:50")||asecoT()):null,T("legs","Piernas","Sentadillas y carrera dependen de esto.","10:00",piernas(w),{kind:"fuerza"})]}
-    if(dow===3){title="Descanso activo";kind="descanso";tasks=rest("Descanso activo","El cuerpo se adapta mientras descansa.");if(w>=2)tasks.push(asecoT())}
+      tasks=[s2?swimT("swim","Natación con aletas","Piernas y tobillos para el buceo.","07:00",finsBlocks(w)):swimT("swim","Natación técnica","Repetir fija el movimiento.","07:00",swimBlocks(r[0],w)),treadT(),s2?(apneaT(apT,"07:50")||asecoT()):null,T("legs","Piernas","Sentadillas y carrera dependen de esto.","10:00",piernas(w),{kind:"fuerza"})]}
+    if(dow===3){title="Descanso activo";kind="descanso";tasks=rest("Descanso activo","El cuerpo se adapta mientras descansa.");if(w>=2)tasks.push(asecoT());
+      if(w===12)tasks.push(T("curso1","Inscribirte en primeros auxilios","RCP y primeros auxilios: te sirve para el curso y para la vida.","10:00",[B("Buscar","curso con RCP",{c:"Busca un curso de primeros auxilios con RCP (Cruz Roja Chilena, mutuales de seguridad o centros de capacitación) e inscríbete en el próximo que puedas tomar."})],{kind:"admin"}));
+      if(w===20)tasks.push(T("curso2","Inscribirte en buceo Open Water","Aprender el equipo, compensar y bucear seguro antes del curso.","10:00",[B("Buscar","Open Water",{c:"Pregunta en Puerto Varas Diving (u otro centro) por el curso de buceo recreativo Open Water y sus fechas. Pregunta también por salidas de nado acompañado en el lago."})],{kind:"admin"}))}
     if(dow===4){title="Circuito + intervalos";tasks=[T("fb",`Circuito de prueba`,"Encadenar ejercicios cansado, como en la prueba de ingreso.","07:00",circuit(bVals(w),vu,s2?60:90),{kind:"fuerza"}),
       r[2]?runT("int","Intervalos "+r[2].replace(/^Intervalos\s*/,""),"Velocidad para el 2.400 m.","10:00",runBlocks(r[2],w)):runT("int","Trote suave 15 min","Semana de descarga: sin intervalos.","10:00",runBlocks("15 min suave",w))];
       if(s2){const c=r[3].match(/cuerda\s*(\d+)?/i);tasks.push(T("cuerda","Cuerda","Agarre: en el curso es diario.","10:45",[cuerda(c&&c[1]?+c[1]:0)],{kind:"fuerza"}))}
@@ -610,9 +646,9 @@ function dayPlan(w,dow,ctx){
   } else {
     const r=S34[w],apT=apneaTarget(w),f=r[2],rk=ruck(w);
     if(dow===0){title="Velocidad en el agua + tirón";kind="agua";tasks=[swimT("swim","Natación velocidad","El 500 m se baja con tramos cortos y rápidos.","07:00",swimBlocks(r[0],w)),T("fa","Fuerza de tren superior","","10:00",calA(w,ctx),{kind:"fuerza"})]}
-    if(dow===1){title=deload?"Carrera suave + core":"Intervalos + core";tasks=[runT("run",(deload?"Carrera ":"Intervalos ")+r[1],deload?"Descarga.":"Bajar el tiempo de 2.400 m.","07:00",runBlocks(r[1],w)),T("core","Core","","08:15",core(w),{kind:"fuerza"})]}
-    if(dow===2){title="Agua + piernas";kind="agua";tasks=[swimT("swim","Natación con aletas","Comodidad bajo el agua.","07:00",finsBlocks()),treadT(),apneaT(apT,"07:50")||asecoT(),T("legs","Piernas","","10:00",piernas(w),{kind:"fuerza"})]}
-    if(dow===3){title=deload?"Recuperación":"Marcha con mochila";tasks=[deload?runT("run","Trote suave 30 min","Recuperación activa.","07:00",runBlocks("30 min suave",w)):T("ruck",`Marcha con mochila ${rk.kg} kg`,"En el curso se carga peso: espalda, pies y cabeza.","07:00",[B("Marcha rápida",`${rk.mi} min con ${rk.kg} kg`,{tm:rk.mi*60,note:"Mochila ajustada alta, paso rápido sin trotar."+(w>=44?" Si tienes botas, úsalas.":"")}),ELONG],{kind:"carrera",min:rk.mi}),asecoT()]}
+    if(dow===1){const lr=/^Trote/.test(r[1]);title=deload?"Carrera suave + core":lr?"Trote largo + core":"Intervalos + core";tasks=[runT("run",lr?r[1]:(deload?"Carrera ":"Intervalos ")+r[1],deload?"Descarga.":lr?"Fondo para los trotes largos del curso.":"Bajar el tiempo de 2.400 m.","07:00",runBlocks(r[1],w)),T("core","Core","","08:15",core(w),{kind:"fuerza"}),deload||lr?null:sprintT(),cubiertaT(w)]}
+    if(dow===2){title="Agua + piernas";kind="agua";tasks=[swimT("swim","Natación con aletas","Comodidad bajo el agua.","07:00",finsBlocks(w)),treadT(),apneaT(apT,"07:50")||asecoT(),T("legs","Piernas","","10:00",piernas(w),{kind:"fuerza"})]}
+    if(dow===3){title=deload?"Recuperación":"Marcha con mochila";tasks=[deload?runT("run","Trote suave 30 min","Recuperación activa.","07:00",runBlocks("30 min suave",w)):T("ruck",`Marcha con mochila ${rk.kg} kg`,"En el curso se carga peso: espalda, pies y cabeza.","07:00",[B("Marcha rápida",`${rk.mi} min con ${rk.kg} kg`,{tm:rk.mi*60,note:"Mochila ajustada alta, paso rápido sin trotar."+(w>=44?" Si tienes botas, úsalas.":"")}),ELONG],{kind:"carrera",min:rk.mi}),deload?null:cubiertaT(w),asecoT()]}
     if(dow===4){title=/simulacro/i.test(f)?"Simulacro completo":/mini/i.test(f)?"Mini-prueba":f;
       if(/simulacro/i.test(f)){kind="prueba";tasks=[T("fri","Simulacro completo","La prueba entera. Lo que más te cueste recibe una sesión extra la semana siguiente.","07:00",testBlocks(),{kind:"fuerza",safe:"Apnea solo con salvavidas o compañero."})]}
       else if(/mini/i.test(f))tasks=[T("fri","Mini-prueba continua","Sin pausas, solo el tiempo de cambiarte.","07:00",miniBlocks(f,ctx),{kind:"fuerza"})];
@@ -622,7 +658,7 @@ function dayPlan(w,dow,ctx){
     if(dow===5){title=INC[w]?INC[w][0]:deload?"Nado y trote suaves":"Nado largo + trote largo";kind="agua";
       tasks=[deload?swimT("swim","Nado suave","","07:00",swimBlocks("1.000 m: técnica",w)):swimT("swim","Nado largo","Volumen y cabeza.","07:00",longSwim(w))];
       if(INC[w])tasks.push(T("inc",INC[w][0],"Seguir cuando el cuerpo pide parar. Esto prepara la semana del infierno.","09:00",incBlocks(w),{kind:"fuerza",safe:"Hidrátate y come antes. Dolor agudo: paras."}));
-      else tasks.push(runT("run2",deload?"Trote suave 40 min":"Trote largo 60–75 min","","09:30",runBlocks(deload?"40 min suave":"60–75 min",w)))}
+      else{const lg=w>=40?"75–90 min":"60–75 min";tasks.push(runT("run2",deload?"Trote suave 40 min":"Trote largo "+lg,w>=44&&!deload?"Si tienes botas, los últimos 20 minutos con botas: en el curso se corre con botas mojadas.":"El curso tiene trotes largos: que este sea normal para ti.","09:30",runBlocks(deload?"40 min suave":lg,w)))}}
     if(dow===6){title="Descanso total";kind="descanso";tasks=rest("Descanso total","Es una orden.")}
   }
   if(kind==="prueba"&&!(tasks&&tasks.length))tasks=[T("prueba","Protocolo de la prueba","Siempre en el mismo orden. Máximo 3 min entre ejercicios. Anota cada número abajo.","07:00",testBlocks(),{kind:"fuerza",safe:"Apnea solo con salvavidas o compañero. Sin hiperventilar."})];
@@ -787,6 +823,11 @@ const HOW={
  "Respiración de caja":"Inhala por la nariz contando 4, aguanta 4, exhala por la boca contando 4, aguanta 4. Repite. Baja el pulso y aclara la cabeza.",
  "Sentadilla isométrica en la pared":"Espalda pegada a la pared, baja hasta que los muslos queden paralelos al suelo y las rodillas en 90°, sobre los tobillos. Brazos cruzados al pecho. Cuando queme, no te pares: respira lento y cuenta respiraciones.",
  "Colgado de la barra":"Cuélgate con brazos estirados y hombros activos (un poco hacia abajo, lejos de las orejas). Aprieta fuerte la barra. Cuando las manos ardan, cuenta respiraciones lentas.",
+ "Flotación de supervivencia":"Boca abajo, brazos y piernas colgando relajados, como una medusa. Cuando necesites aire, empuja suave el agua hacia abajo con los brazos, saca la cara, respira y vuelve a hundir la cara relajado. Menos movimiento = menos cansancio.",
+ "Recuperar objeto del fondo":"Baja de cabeza o de pie, compensando los oídos cada metro (nariz tapada, sopla suave). Toma el objeto, mira hacia arriba y sube exhalando de a poco. Si te duelen los oídos, no bajes más.",
+ "Ronda de cubierta":"Técnica limpia aunque estés cansado: flexiones con el pecho a un puño del suelo, abdominales hasta tocar los muslos con los codos y sentadillas con los muslos paralelos. Así se cuentan en el curso.",
+ "Sprint 100 m":"Calienta antes (el trote del día). Arranca de pie, primeros 20 m acelerando, después mantén. Brazos de adelante hacia atrás, no cruzados.",
+ "Salto vertical":"Brazos atrás al bajar y lanzados hacia arriba al saltar. Cae suave sobre la punta de los pies con las rodillas dobladas.",
  "Movilidad":"Círculos grandes de cadera, de hombros y de tobillos; gato-vaca (en cuatro apoyos, arquea y redondea la espalda); y 1 minuto sentado en cuclillas profundas con los talones apoyados. Suave, sin dolor."
 };
 const HOW_SWIM="Crol: cuerpo horizontal, mirando al fondo. Exhala todo el aire bajo el agua por la nariz y la boca; para respirar gira la cabeza junto con el cuerpo, sin levantarla. La mano entra lejos adelante, tira hasta el muslo y sale por el aire. Patada corta y rápida desde la cadera, con las piernas casi estiradas.";
@@ -920,12 +961,19 @@ function sesHTML(t,dd,open){
   return `<div class="ses ${all?"done":""}"><div class="sh"><button class="chk" data-task="${t.id}" aria-pressed="${all}" aria-label="Marcar ${esc(t.t)} completa"></button><button class="tog" data-open="${t.id}" aria-expanded="${open}"><span class="t">${esc(t.t)}</span>${meta?`<span class="m">${esc(meta)}</span>`:""}</button><button class="chev" data-open="${t.id}" aria-label="${open?"Cerrar":"Abrir"}">${open?"▴":"▾"}</button></div>
    ${open?`<div class="sb">${t.why?`<p class="why">${esc(t.why)}</p>`:""}${t.safe?`<p class="safe">${esc(t.safe)}</p>`:""}${t.blocks.map((b,i)=>exHTML(t,b,i,dd,all)).join("")}</div>`:""}</div>`;
 }
+const EMBLEM=`<svg viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="24" r="22" fill="none" stroke="#D6AA4C" stroke-width="2"/><circle cx="24" cy="24" r="18.5" fill="none" stroke="#D6AA4C" stroke-width=".8" stroke-dasharray="2 2.4"/><g stroke="#E7EEF5" stroke-width="2.2" fill="none" stroke-linecap="round"><circle cx="24" cy="11.5" r="2.6"/><path d="M24 14v22"/><path d="M18 19h12"/><path d="M13 29c1.5 5 6 8 11 8s9.5-3 11-8"/><path d="M13 29l-1.8 2.6M35 29l1.8 2.6"/></g><g stroke="#D6AA4C" stroke-width="1.8" fill="none" stroke-linecap="round"><path d="M14.5 12v8.5c0 2.4 2 4 4.6 4"/><path d="M33.5 12v8.5c0 2.4-2 4-4.6 4"/><path d="M14.5 12l-1.4 2M14.5 12l1.4 2M33.5 12l-1.4 2M33.5 12l1.4 2"/></g></svg>`;
+const RANKS=[[0,"Recluta",1],[1,"Aspirante",1],[14,"Aspirante de 2.ª",2],[27,"Candidato",3],[40,"Candidato avanzado",3],[48,"Infierno",4],[52,"Listo para el curso",5]];
+function rankOf(w){let r=RANKS[0];RANKS.forEach(x=>{if(w!=null&&w>=x[0])r=x});return r}
+const MES3=["ENE","FEB","MAR","ABR","MAY","JUN","JUL","AGO","SEP","OCT","NOV","DIC"];
+function dtg(d){const n=new Date();return pad(d.getDate())+pad(n.getHours())+pad(n.getMinutes())+" "+MES3[d.getMonth()]+" "+String(d.getFullYear()).slice(2)}
+function hqHTML(w,st){const r=rankOf(w);return `<div class="hq">${EMBLEM}<div><div class="t">Bitácora · Buzo Táctico</div><div class="rk"><span class="chev">${"<i></i>".repeat(r[2])}</span>${r[1]}</div></div><div class="streak">Racha <b>${st}</b></div></div>`}
 function dayHead(d,L){
   const isT=diffDays(d,new Date())===0;
   const big=L.before?"ANTES":L.after?"MANTENCIÓN":`SEM ${L.w} · DÍA ${L.dow+1}`;
   const s=L.w!=null?stageOf(L.w):null;
-  return `<div class="day"><button class="nb" data-go="-1" aria-label="Día anterior">◀</button><div class="mid"><div class="big">${big}</div><div class="sub">${dayName(d)} ${fmt(d)}</div></div><button class="nb ${isT?"on":""}" data-go="0">Hoy</button><button class="nb" data-go="1" aria-label="Día siguiente">▶</button></div>
-  ${s?`<div class="stage"><span class="st">${s.n} · ${s.name}${L.w===HELL?" · SEMANA DEL INFIERNO":""}</span><span>Racha ${streak()}</span></div>`:""}`;
+  const stk=streak();
+  return hqHTML(L.after?52:L.w,stk)+`<div class="day"><button class="nb" data-go="-1" aria-label="Día anterior">◀</button><div class="mid"><div class="big">${big}</div><div class="sub">${dayName(d)} ${fmt(d)}</div></div><button class="nb ${isT?"on":""}" data-go="0">Hoy</button><button class="nb" data-go="1" aria-label="Día siguiente">▶</button></div>
+  ${s?`<div class="stage"><span class="st">${s.n} · ${s.name}${L.w===HELL?" · SEMANA DEL INFIERNO":""}</span><span>${L.w!=null?Math.round(L.w/52*100)+"% del plan":""}</span></div>`:""}`;
 }
 function viewHoy(){
   const d=S.date,k=iso(d),L=locate(d),isToday=diffDays(d,new Date())===0;
@@ -934,7 +982,7 @@ function viewHoy(){
     return h+`<div class="order"><p class="say">Empiezas el ${dayName(st).toLowerCase()} ${fmt(st)}.</p><p>Esta noche: bolso listo y a la cama a las 22:30. El día 1 tienes: ${p1.tasks.map(t=>esc(t.t.toLowerCase())).join(", ")}.</p><button class="btn main" data-goto="${iso(st)}">Ver el día 1</button></div>`}
   if(L.after)return h+`<div class="order"><p class="say">Terminaste las 52 semanas.</p><p>Si aún no entras a la Armada, repite la etapa 4 subiendo las metas (Plan → Ajustes). Ya dentro: 3 sesiones de nado y 2 de fuerza continua por semana, y la etapa 4 completa 3 meses antes de postular al curso.</p></div>`;
   const dd=Store.days[k]||{},plan=planFor(d),status=dayStatus(k,plan),u=units(dd,plan);
-  h+=`<div class="order">${orders(plan,k,isToday,dd).map(([t,x])=>t==="alert"?`<p class="alert">${esc(x)}</p>`:t==="say"?`<p class="say">${esc(x)}</p>`:t==="why"?`<p class="why-q">Tu por qué: “${esc(x)}”</p>`:`<p>${esc(x)}</p>`).join("")}</div>`;
+  h+=`<div class="order"><div class="msg-h"><span>De: Comandante · Para: ${esc(Store.cfg.name||"Recluta")}</span><span>DTG ${dtg(d)}</span></div>${orders(plan,k,isToday,dd).map(([t,x])=>t==="alert"?`<p class="alert">${esc(x)}</p>`:t==="say"?`<p class="say">${esc(x)}</p>`:t==="why"?`<p class="why-q">Tu por qué: “${esc(x)}”</p>`:`<p>${esc(x)}</p>`).join("")}</div>`;
   {const cur=dd.turno||Store.cfg.turno||"13",sh=plan.shift;
    h+=`<div class="sec"><div class="row" style="justify-content:space-between;align-items:center"><span class="lbl">Hoy trabajo</span><div class="segs">${Object.keys(SHIFT).map(t=>`<button class="seg ${cur===t?"on":""}" data-turno="${t}">${t==="libre"?"Libre":"Entro "+t+":00"}</button>`).join("")}</div></div>
    <p class="foot">Despiertas ${sh.wake} · entrenas desde ${sh.A}${sh.leave?` · sales al trabajo ${sh.leave}`:""} · cama ${sh.bed}</p></div>`}
@@ -958,7 +1006,7 @@ function viewHoy(){
     h+=`<div class="card"><span class="lbl">Revisión de la semana ${plan.w}</span><div class="kpis"><div class="kpi"><span class="lbl">Series</span><b>${pc}%</b></div><div class="kpi"><span class="lbl">Días</span><b>${dn}/7</b></div><div class="kpi"><span class="lbl">Nado (m)</span><b>${nf(sm[0])}</b></div></div>
     <span>${pc>=90?"Semana de soldado. Así se llega.":pc>=70?"Bien, pero no completa. La próxima, sin huecos.":"Semana floja. Si fue cansancio o dolor, está bien: recupera. Si fueron ganas, la próxima es la que cuenta."}</span>
     ${nw!=null?`<span class="foot">Próxima: semana ${nw}${TESTS.includes(nw)?" · semana de prueba":nw===HELL?" · SEMANA DEL INFIERNO":DELOAD.includes(nw)?" · descarga":INC[nw]?" · "+INC[nw][0]:""}.</span>`:""}</div>`}
-  if(status==="done")h+=`<div class="order"><p class="say" style="color:var(--ok)">${esc(pick(["Misión cumplida. Mañana a la misma hora.","Cumplido. Un día más que el que se rinde no tiene.","Bien. Eso es lo que se espera de ti."],k))}</p></div>`;
+  if(status==="done")h+=`<div class="order done"><span class="stamp">CUMPLIDO</span><p class="say" style="color:var(--ok)">${esc(pick(["Misión cumplida. Mañana a la misma hora.","Cumplido. Un día más que el que se rinde no tiene.","Bien. Eso es lo que se espera de ti."],k))}</p></div>`;
   h+=`<details class="card"><summary>Notas${plan.dow===0||plan.test?" y peso":""}</summary>
    ${plan.dow===0||plan.test?`<div class="field" style="max-width:140px"><label class="lbl" for="f-peso">Peso (kg)</label><input id="f-peso" inputmode="decimal" data-f="peso" value="${esc(dd.peso)}" placeholder="70"></div>`:""}
    <div class="field"><label class="lbl" for="f-note">Tiempos, qué costó, sensaciones</label><textarea id="f-note" data-f="note">${esc(dd.note)}</textarea></div></details>`;
@@ -1045,6 +1093,19 @@ function viewGuia(){return `<div class="sec prose"><h2>Guía</h2>
  <li>Una de las pruebas más duras es el <b>nado de emergencia</b>: sobrevivir en el agua atado de pies y manos, con capucha. Por eso entrenas pataleo vertical y comodidad en lo hondo. Eso se aprende en el curso con instructores: nunca lo practiques por tu cuenta.</li>
  <li>No hay detalle público de una “semana del infierno” chilena. La referencia más conocida es la Hell Week de los SEAL de EE. UU.: casi 6 días mojado y con frío, más de 20 h diarias de actividad, unas 4 h de sueño en total, botes y troncos. (<a href="https://www.military.com/military-fitness/navy-special-operations/navy-seal---hell-week-revisited" target="_blank" rel="noopener">Military.com</a>)</li>
  <li>Confirma siempre el formato vigente en <a href="https://www.admisionarmada.cl/" target="_blank" rel="noopener">admisionarmada.cl</a> o en la Quinta Zona Naval.</li></ul>
+ <h3>Lo que te van a pedir y cómo lo cubre el plan</h3>
+ <div class="tbl"><table><thead><tr><th>Te van a pedir</th><th>En tu plan</th></tr></thead><tbody>
+ <tr><td>Admisión Armada: 100 m, Cooper 2.414 m, 50 m libre, salto vertical, barras</td><td>Sprints de 100 m y salto vertical (etapas 3–4), intervalos y 2.400 m cronometrado, natación de velocidad, barras toda la semana</td></tr>
+ <tr><td>Prueba continua del curso: apnea, 500 m, barras, sentadillas, flexiones, abdominales, 2.400 m</td><td>Prueba cada 13 semanas, mini-pruebas y simulacros en las etapas 3–4, con metas sobre la mínima</td></tr>
+ <tr><td>Nados largos con aletas en el mar</td><td>Aletas cada semana: de 1,3 km a 3 km continuos</td></tr>
+ <tr><td>Nado de emergencia y comodidad en lo hondo</td><td>Pataleo vertical hasta 10 min, flotación de supervivencia, recuperar objetos, nado con ropa (piscina con salvavidas)</td></tr>
+ <tr><td>Gimnasia diaria de alto volumen</td><td>PT de cubierta: de 3 × 15 a 5 × 25 + barras, 2 veces por semana</td></tr>
+ <tr><td>Trotes largos, con botas y carga</td><td>Trote largo hasta 90 min, botas desde la semana 44, marchas con mochila de 6 a 12 kg</td></tr>
+ <tr><td>Frío y estar mojado</td><td>Ducha fría diaria hasta 3 min, lago según temperatura</td></tr>
+ <tr><td>Aguantar cuando ya no se puede</td><td>Tolerancia al dolor diaria, incomodidad desde la semana 2, mañanas y día del infierno, semana del infierno adaptada</td></tr>
+ <tr><td>Conocimientos: buceo, primeros auxilios, nudos, navegación</td><td>Estudio diario, curso de primeros auxilios (sem 12) y Open Water (sem 20)</td></tr>
+ <tr><td>Falta de sueño</td><td>No se entrena: llegas descansado y con la cabeza entrenada para seguir cansado</td></tr></tbody></table></div>
+ <p class="foot">La idea: que cuando empiece el curso, lo que te pidan ya sea parte de tu semana.</p>
  <h3>Cómo sube el plan</h3><ul>
  <li><b>Cada semana tienes:</b> 3 sesiones de agua, 2 de carrera (una suave, una de intervalos), 2 de fuerza de tren superior y circuito, piernas, core, apnea en seco, ducha fría y visualización.</li>
  <li><b>Cada 4 semanas, una de descarga</b> (menos carga) para que el cuerpo asimile.</li>
@@ -1093,13 +1154,15 @@ function viewGuia(){return `<div class="sec prose"><h2>Guía</h2>
  <li>4 comidas reales, proteína en cada una (unos 1,6 g por kilo al día), carbohidratos en días largos, 2,5–3 L de agua, sin alcohol ni bebidas energéticas.</li></ul></div>`}
 
 const TABS=[["hoy","Hoy"],["plan","Plan"],["progreso","Progreso"],["guia","Guía"]];
+const ICON={hoy:'<circle cx="12" cy="5" r="2"/><path d="M12 7v13M8 10h8M5 15c1 3 4 5 7 5s6-2 7-5"/>',plan:'<path d="M3 6l6-2 6 2 6-2v14l-6 2-6-2-6 2z"/><path d="M9 4v14M15 6v14"/>',progreso:'<path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/>',guia:'<path d="M4 4h7a3 3 0 013 3v13a2 2 0 00-2-2H4zM20 4h-5a3 3 0 00-3 3"/><path d="M20 4v14h-6"/>'};
 function render(){
   CTX=null;
   // conservar el foco y el cursor si una actualización llega mientras escribes
   const ae=document.activeElement,fid=ae&&app.contains(ae)&&ae.id?ae.id:null,sel=fid&&ae.selectionStart!=null?[ae.selectionStart,ae.selectionEnd]:null;
+  const hqTop=()=>{const L=locate(new Date());return hqHTML(L.after?52:L.w,streak())};
   const v=S.tab==="hoy"&&S.run&&S.run.k===iso(S.date)?viewRun:{hoy:viewHoy,plan:viewPlan,progreso:viewProgreso,guia:viewGuia}[S.tab]||viewHoy;
-  app.innerHTML=v();
-  document.getElementById("tabs").innerHTML=TABS.map(([k,l])=>`<button data-tab="${k}" class="${S.tab===k?"on":""}">${l}</button>`).join("");
+  app.innerHTML=(S.tab!=="hoy"?hqTop():"")+v();
+  document.getElementById("tabs").innerHTML=TABS.map(([k,l])=>`<button data-tab="${k}" class="${S.tab===k?"on":""}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICON[k]}</svg>${l}</button>`).join("");
   if(fid){const el=document.getElementById(fid);if(el){el.focus({preventScroll:true});if(sel&&el.setSelectionRange)try{el.setSelectionRange(sel[0],sel[1])}catch(e){}}}
 }
 function setTab(t){S.tab=t;S.confirm=null;try{sessionStorage.setItem("bit-tab",t)}catch(e){}render();window.scrollTo(0,0)}
