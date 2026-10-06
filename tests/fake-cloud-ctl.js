@@ -1,13 +1,15 @@
 // Nube falsa controlable para las pruebas de "sin señal".
 // window.__cloud permite cortar la señal, limitar escrituras simultáneas,
 // matar las suscripciones y escribir como si fuera otro dispositivo.
-// Lo guardado sobrevive a recargar la página (sessionStorage), como una nube real.
+// Lo guardado sobrevive a recargar la página (localStorage del navegador de prueba), como una nube real.
+// Abrir la página con ?cloudoff hace que la nube no cargue; localStorage '__cloudDelay' retrasa la primera foto (ms).
 (() => {
   const KEY = '__fakecloud';
   let server = {};
-  try { server = JSON.parse(sessionStorage.getItem(KEY) || '{}'); } catch (e) {}
-  const persist = () => { try { sessionStorage.setItem(KEY, JSON.stringify(server)); } catch (e) {} };
+  try { server = JSON.parse(localStorage.getItem(KEY) || '{}'); } catch (e) {}
+  const persist = () => { try { localStorage.setItem(KEY, JSON.stringify(server)); } catch (e) {} };
   const subs = [];
+  const D0 = Number(localStorage.getItem('__cloudDelay') || 50);
   const C = window.__cloud = { offline: false, maxConcurrent: Infinity, active: 0, peak: 0, writes: 0, rejected: 0,
     server: () => JSON.parse(JSON.stringify(server)),
     // otro dispositivo escribe directo en la nube
@@ -29,11 +31,11 @@
       C.active++; C.peak = Math.max(C.peak, C.active);
       return new Promise(r => setTimeout(() => { C.active--; C.writes++; server[path] = JSON.parse(JSON.stringify(data)); persist(); emit(); r(); }, 150));
     },
-    onSnapshot: (fn, err) => { const s = { prefix: path, isCol: false, fn, err }; subs.push(s); setTimeout(() => !s.dead && fn(snapshotFor(s)), 50); return () => { s.dead = true; }; },
+    onSnapshot: (fn, err) => { const s = { prefix: path, isCol: false, fn, err }; subs.push(s); setTimeout(() => !s.dead && fn(snapshotFor(s)), D0); return () => { s.dead = true; }; },
     collection: (c) => colRef(path + '/' + c) });
   const colRef = (path) => ({ path, doc: (id) => docRef(path + '/' + id), limit() { return this; },
-    onSnapshot: (fn, err) => { const s = { prefix: path, isCol: true, fn, err }; subs.push(s); setTimeout(() => !s.dead && fn(snapshotFor(s)), 50); return () => { s.dead = true; }; } });
+    onSnapshot: (fn, err) => { const s = { prefix: path, isCol: true, fn, err }; subs.push(s); setTimeout(() => !s.dead && fn(snapshotFor(s)), D0); return () => { s.dead = true; }; } });
   const db = { doc: docRef, collection: colRef };
   const user = { id: async () => 'u1', isOwner: () => true };
-  window.claude = { use: async (name) => name === 'db' ? db : name === 'user' ? user : null };
+  window.claude = { use: async (name) => name === 'db' ? (/[?&]cloudoff/.test(location.search) ? null : db) : name === 'user' ? user : null };
 })();

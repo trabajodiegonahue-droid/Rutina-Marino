@@ -459,6 +459,60 @@ const reload = async p => { await p.reload(); await p.waitForTimeout(200); };
   ok(errs.length === 0, 'sin errores en toda la semana: ' + errs.join(' | '));
   await ctx.close(); }
 
+// 23. Nube, casos difíciles: teléfono nuevo, nube que no carga, otro dispositivo y dos pestañas
+{ console.log('23. Nube: casos difíciles');
+  const FAKE2 = fs.readFileSync(path.join(here, 'fake-cloud-ctl.js'), 'utf8');
+  const today = (() => { const d = new Date(); return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); })();
+  const dayPath = 'data/users/u1/plan/days/' + today, planPath = 'data/users/u1/plan';
+  const mk = async (pre, arg) => { const ctx = await browser.newContext({ viewport: { width: 390, height: 1200 } }); const p = await ctx.newPage(); const errs = []; p.on('pageerror', e => errs.push(e.message));
+    await p.addInitScript(pre, arg); await p.addInitScript(FAKE2); return { ctx, p, errs }; };
+  const cloud = p => p.evaluate(() => __cloud.server());
+  // teléfono nuevo: la nube ya tiene tus datos y tocas algo antes de que carguen (2 s)
+  { const server = { [planPath]: { start: '2026-09-29', turno: '16', why: 'por mi familia', sched: Array.from({ length: 53 }, (_, i) => i), repeats: [] }, [dayPath]: { sets: { 'a.0': 1 }, mode: 'cansado', note: 'nota de ayer en el computador' } };
+    const { ctx, p, errs } = await mk(sv => { if (!localStorage.getItem('__fakecloud')) { localStorage.setItem('__fakecloud', JSON.stringify(sv)); localStorage.setItem('__cloudDelay', '2000'); } }, server);
+    await p.goto(URL); await p.waitForTimeout(300);
+    ok((await p.$eval('#savechip', e => e.textContent)).includes('Conectando'), 'mientras carga la nube dice “Conectando…”');
+    await p.click('[data-tab="plan"]'); await p.click('[data-cset="bigText|true"]'); await p.click('[data-tab="hoy"]');
+    await p.locator('.dot:not(.on)').first().click();
+    await p.waitForTimeout(3500);
+    const c = await cloud(p);
+    ok(c[planPath].start === '2026-09-29' && c[planPath].turno === '16' && c[planPath].why === 'por mi familia' && c[planPath].bigText === true, 'los ajustes de la nube se mantienen y se suma la letra grande');
+    ok(c[dayPath].mode === 'cansado' && c[dayPath].note === 'nota de ayer en el computador' && c[dayPath].sets['a.0'] === 1 && Object.keys(c[dayPath].sets).length >= 2, 'el día mezcla lo de la nube con la serie nueva');
+    ok((await text(p)).includes('Despiertas 9:15'), 'el teléfono nuevo muestra tu turno de la nube');
+    ok(errs.length === 0, 'sin errores: ' + errs.join(' | ')); await ctx.close(); }
+  // la nube no carga al abrir (lago sin señal): lo marcado sube la próxima vez
+  { const { ctx, p, errs } = await mk(() => { if (!localStorage.getItem('__fakecloud')) localStorage.setItem('__fakecloud', JSON.stringify({ 'data/users/u1/plan': { start: '2026-10-06' } })); });
+    await p.goto(URL + '?cloudoff'); await p.waitForTimeout(400);
+    ok((await p.$eval('#savechip', e => e.textContent)).includes('Sin nube'), 'si la nube no carga, el indicador lo dice');
+    await p.click('[data-mode="dolor"]'); await p.locator('summary', { hasText: 'Notas' }).click(); await p.fill('#f-note', 'hombro');
+    await p.waitForTimeout(300); await p.goto(URL); await p.waitForTimeout(1500);
+    const c = await cloud(p);
+    ok(c[dayPath] && c[dayPath].mode === 'dolor' && c[dayPath].note === 'hombro', 'al abrir con nube, lo marcado sin nube se sube');
+    ok(await p.locator('[data-mode="dolor"]').evaluate(e => e.classList.contains('on')), 'y sigue en pantalla');
+    // otro dispositivo marca algo segundos después de tu cambio: lo ves igual
+    await p.click('[data-mode="cansado"]'); await p.waitForTimeout(700);
+    await p.evaluate(([k]) => { const d = __cloud.server()[k]; d.sets = Object.assign({}, d.sets, { 'zz.0': 1 }); d.note = 'desde el computador'; __cloud.remoteSet(k, d); }, [dayPath]);
+    await p.waitForTimeout(1500);
+    await p.locator('summary', { hasText: 'Notas' }).click().catch(() => {});
+    ok(await p.locator('[data-mode="cansado"]').evaluate(e => e.classList.contains('on')) && await p.inputValue('#f-note') === 'desde el computador', 'el cambio del otro dispositivo llega aunque acabas de tocar algo');
+    ok(errs.length === 0, 'sin errores: ' + errs.join(' | ')); await ctx.close(); }
+  // dos pestañas sin nube: una no borra lo de la otra
+  { const ctx = await browser.newContext({ viewport: { width: 390, height: 1200 } });
+    const a = await ctx.newPage(); await a.clock.install({ time: new Date('2026-10-13T09:00:00') }); await a.goto(URL);
+    const b = await ctx.newPage(); await b.clock.install({ time: new Date('2026-10-13T09:00:00') }); await b.goto(URL);
+    await b.locator('.dot').first().click(); await b.click('[data-mode="cansado"]'); await a.waitForTimeout(300);
+    await a.click('[data-go="1"]'); await a.locator('summary', { hasText: 'Notas' }).click(); await a.fill('#f-note', 'mañana temprano');
+    const c = await b.evaluate(() => JSON.parse(localStorage.getItem('bitacora-buzo-v1')).days);
+    ok(c['2026-10-13'] && c['2026-10-13'].mode === 'cansado' && c['2026-10-14'] && c['2026-10-14'].note === 'mañana temprano', 'dos pestañas abiertas no se borran entre sí');
+    await ctx.close(); }
+  // la caja de notas no se cierra sola cuando llega un cambio de la nube
+  { const { ctx, p } = await mk(() => {}); await p.goto(URL); await p.waitForTimeout(500);
+    await p.click('[data-go="1"]'); await p.locator('summary', { hasText: 'Notas' }).click(); await p.fill('#f-note', 'Nadé 1500 m ');
+    await p.evaluate(([k]) => __cloud.remoteSet(k, { note: 'otro día' }), ['data/users/u1/plan/days/2027-01-01']); await p.waitForTimeout(1500);
+    ok(await p.locator('details[data-keep^="notes"]').evaluate(e => e.open), 'Notas sigue abierta tras un cambio de la nube');
+    await ctx.close(); }
+}
+
 await browser.close();
 console.log(`\n${passes} correctas, ${fails} fallidas`);
 process.exit(fails ? 1 : 0);
