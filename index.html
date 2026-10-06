@@ -238,7 +238,7 @@ function coldSec(w){const c=cold(w);if(/:/.test(c))return toSec(c);const n=parse
 function apneaTarget(w){const m=carry(w,/apnea (piscina|\d)/i,"").match(/(\d[\d–-]*\s*m)\b/);return m?m[1]:""}
 function lakeMin(w){const e=extraOf(w);const m=/lago/i.test(e)&&e.match(/(\d[\d–-]*\s*min)/);return m?m[1]:""}
 // Sesiones de incomodidad: suben de 60 min a 4 h antes de la semana del infierno.
-const INC={10:["Prueba de incomodidad · 60 min",30,100,100,50,0,0],18:["Prueba de incomodidad · 90 min",45,150,150,100,20,0],23:["Prueba de incomodidad · 2 h",60,200,200,150,30,0],
+const INC={2:["Prueba de incomodidad · 20 min",10,30,40,30,0,0],6:["Prueba de incomodidad · 40 min",20,60,60,40,0,0],10:["Prueba de incomodidad · 60 min",30,100,100,50,0,0],18:["Prueba de incomodidad · 90 min",45,150,150,100,20,0],23:["Prueba de incomodidad · 2 h",60,200,200,150,30,0],
  31:["Mañana del infierno · 2 h 30",75,250,250,150,40,8],36:["Mañana del infierno · 3 h",90,300,300,200,50,10],41:["Mañana del infierno · 3 h 30",100,300,300,200,60,10],44:["Día del infierno · 4 h",120,400,400,300,80,12]};
 
 /* =================== UTILIDADES =================== */
@@ -380,7 +380,7 @@ function incBlocks(w){const [, tr,fl,se,ab,ba,kg]=INC[w];const bl=[B("Trote"+(kg
   bl.push(B("Flexiones",fl+" en total"),B("Sentadillas",se+" en total"),B("Abdominales",ab+" en total"),B("Ducha fría","3 min",{tm:180}),B("Cuando quieras parar","respiración de caja",{note:"“Hasta la próxima serie.” No pienses en el total."}));
   return bl}
 function hellDay(dow,ctx){
-  const mx=maxB(ctx),SEG="Come antes, hidrátate cada 30 min. Dolor agudo: paras. Duerme 9 h esta semana.";
+  const mx=maxB(ctx),SEG="Come antes, hidrátate cada 30 min. Dolor agudo: paras. Esta semana duerme lo máximo que puedas: mínimo 8 h.";
   const H=[
    ["Infierno 1 · Arranque",[B("Marcha-trote con mochila 10 kg","8 km",{note:"Alterna 5 min trotando y 5 caminando rápido."}),B("Barras",`${mx*5} en total`,{note:"Repartidas."}),B("Flexiones","300 en total"),B("Sentadillas","300 en total"),B("Ducha fría","3 min",{tm:180})]],
    ["Infierno 2 · Agua",[B("Circuito",`5 vueltas`,{s:5,r:60,note:"Barras 8 · flexiones 25 · sentadillas 30 · abdominales 30."}),B("Pataleo vertical","10 min, manos fuera los últimos 3",{tm:600,note:"Solo en piscina con salvavidas. En el lago no."})],{swim:1}],
@@ -388,7 +388,7 @@ function hellDay(dow,ctx){
    ["Infierno 4 · Frío y cabeza",[B("Simulacro completo","la prueba entera",{note:"Máximo 3 min entre ejercicios."}),B("Frío + circuito","3 rondas",{s:3,note:"Ducha fría 3 min → 10 min de circuito → respiración de caja 2 min."})]],
    ["Infierno 5 · Mochila",[B("Marcha con mochila 12 kg","15 km",{note:"Unas 3 h. Calcetines secos de repuesto; revisa los pies a mitad de camino."}),B("Flexiones","100 al llegar")]],
    ["Infierno 6 · Final",[B("Simulacro completo","la prueba entera"),B("Trote","60 min",{tm:3600}),B("Lo lograste","escribe qué aprendiste",{note:"Una hoja: qué momento fue el peor y qué te hizo seguir."})]],
-   ["Descanso total",[B("Duerme 9 h"),B("Come bien","")]]
+   ["Descanso total",[B("Duerme todo lo que puedas"),B("Come bien","")]]
   ];
   const [t,bl,o]=H[dow];
   const pre=o&&o.swim?[T("swim","Nado 3.000 m","Volumen en el agua, cansado.","07:00",[B("6 × 500 m","crol, 1 min de descanso",{s:6,r:60,m:3000})],{kind:"agua",m:3000})]:[];
@@ -407,6 +407,35 @@ function lakeify(t,w,ctx){
     const mins=Math.max(2,Math.round(b.m/100*spm/60));return Object.assign({},b,{n:b.n.replace(/^[\d.]+ m$/,"Nado continuo"),p:`~${mins} min`,tm:mins*60,note:`≈ ${nf(b.m)} m. ${b.p}`})});
   const prot=B("Antes de entrar",cap?`máximo ${cap} min`:"hoy no se entra",{tm:cap?cap*60:0,note:cap?`Agua ${temp} °C${ctx.temp?"":" (estimada)"}, ${ctx.neo?"con":"sin"} neopreno. Avisa a alguien dónde entras y a qué hora sales · gorra de color · solo donde haces pie, paralelo a la orilla · sin viento ni oleaje · entra caminando y espera a que se calme la respiración · cuando suene el temporizador, sales.`+(est>cap?` El plan son ~${Math.round(est)} min: haz los bloques en orden y lo que no alcances queda.`:""):"Con esta agua y sin neopreno, no entras. Haz 20 min de técnica en seco frente al espejo y el core de la semana."});
   return Object.assign({},t,{t:t.t+" · lago",blocks:[prot,...(cap?bl:[]),B("Al salir","sécate y abrígate",{note:"Bebida caliente. Sal ya si: temblor que no para, torpeza en las manos, confusión o labios morados."})],safe:"Vas solo: nunca te alejes de donde haces pie. Nunca apnea en el lago.",m:cap?t.m:0});
+}
+
+/* ---- tolerancia al dolor: aguantar ardor, quemazón y ganas de parar, sin lesionarse ---- */
+function tolT(w){
+  const ws=Math.min(240,45+w*4),hang=Math.min(120,20+w*2),pl=Math.min(240,60+w*4);
+  return T("tol","Tolerancia al dolor","Ardor muscular, temblor y ganas de parar: se aguantan. Dolor punzante, en una articulación o que empeora: se para.","11:00",[
+    B("Sentadilla isométrica en la pared",fmtT(ws),{tm:ws,note:"Muslos paralelos al suelo. Cuando queme, respira lento y cuenta respiraciones."}),
+    B("Colgado de la barra",fmtT(hang),{tm:hang,note:"Brazos estirados. Agarre y cabeza: lo mismo que te pedirán con frío."}),
+    B("Plancha",fmtT(pl),{tm:pl,note:"La última sin mirar el reloj. Si caes antes, vuelves a subir hasta que suene."}),
+    B("Al terminar","una frase",{note:"Anota en notas cuál fue el momento en que quisiste parar."})],{kind:"fuerza"});
+}
+/* ---- turnos de trabajo: todo antes de entrar ---- */
+const SHIFT={
+  "13":{lbl:"Entro 13:00",wake:"7:30",A:"8:00",B:"10:15",C:"11:30",lunch:"12:00",leave:"12:30",bed:"23:30",back:"22:30"},
+  "16":{lbl:"Entro 16:00",wake:"9:15",A:"9:45",B:"12:15",C:"13:45",lunch:"14:15",leave:"15:15",bed:"1:15",back:"0:30"},
+  "libre":{lbl:"Libre",wake:"7:00",A:"7:30",B:"10:00",C:"11:15",lunch:"12:30",leave:"",bed:"22:30",back:""}
+};
+const toMin=h=>{const [a,b]=h.split(":").map(Number);return a*60+(b||0)};
+const fromMin=m=>{m=((m%1440)+1440)%1440;return Math.floor(m/60)+":"+pad(m%60)};
+function mapH(h,sh){if(!h)return h;const m=toMin(h),A=toMin(sh.A),B2=toMin(sh.B),C=toMin(sh.C);
+  if(m<9*60)return fromMin(A+(m-420));if(m<11*60)return fromMin(B2+Math.max(0,m-600));if(m<12*60)return fromMin(C+(m-660));if(m<19*60)return fromMin(C+20);if(m<21*60)return fromMin(C+10);return fromMin(toMin(sh.bed)-20)}
+function applyShift(plan,turno){
+  const sh=SHIFT[turno]||SHIFT["13"];
+  const tasks=plan.tasks.map(t=>{let x=Object.assign({},t,{h:mapH(t.h,sh)});
+    if(t.id==="noche")x=Object.assign(x,{why:sh.back?`Llegas ${sh.back}: comida liviana, ducha y sin pantalla. Despiertas ${sh.wake}.`:`Despiertas ${sh.wake}.`,blocks:t.blocks.map(b=>b.n==="A la cama"?Object.assign({},b,{p:`${sh.bed} · 8 h`}):b)});
+    return x});
+  const key=t=>t.id==="noche"?1e5:t.h?toMin(t.h)+(toMin(t.h)<240?1440:0):-1;
+  tasks.sort((a,b)=>key(a)-key(b));
+  return Object.assign({},plan,{tasks,shift:sh});
 }
 
 /* =================== GENERADOR DEL DÍA =================== */
@@ -449,7 +478,7 @@ function dayPlan(w,dow,ctx){
   } else if(w<=26){
     const r=S12[w],s2=w>=14,apT=apneaTarget(w),vu=+(r[3].match(/(\d+) vueltas/)||[0,3])[1];
     if(dow===0){title="Agua + tirón";kind="agua";tasks=[swimT("swim",s2?"Natación series":"Natación técnica",s2?"Las series enseñan a mantener el ritmo.":"Hoy se aprende, no se sufre.","07:00",swimBlocks(r[0],w)),T("fa","Fuerza de tren superior","Barras y flexiones: dos pruebas del ingreso.","10:00",calA(w,ctx),{kind:"fuerza"})]}
-    if(dow===1){title="Carrera + core";tasks=[runT("run",(s2?"Carrera continua ":"Carrera suave ")+r[1],s2?"El curso tiene trotes largos.":"Base aeróbica con poco riesgo de lesión.","07:00",runBlocks(r[1],w)),T("core","Core","Abdominales fuertes protegen la espalda y suben tu nota.","08:15",core(w),{kind:"fuerza"})]}
+    if(dow===1){title="Carrera + core";tasks=[runT("run",(s2?"Carrera continua ":"Carrera suave ")+r[1].replace(/\s*suave/,""),s2?"El curso tiene trotes largos.":"Base aeróbica con poco riesgo de lesión.","07:00",runBlocks(r[1],w)),T("core","Core","Abdominales fuertes protegen la espalda y suben tu nota.","08:15",core(w),{kind:"fuerza"})]}
     if(dow===2){title="Agua + piernas";kind="agua";
       tasks=[s2?swimT("swim","Natación con aletas","Piernas y tobillos para el buceo.","07:00",finsBlocks()):swimT("swim","Natación técnica","Repetir fija el movimiento.","07:00",swimBlocks(r[0],w)),treadT(),s2?(apneaT(apT,"07:50")||asecoT()):null,T("legs","Piernas","Sentadillas y carrera dependen de esto.","10:00",piernas(w),{kind:"fuerza"})]}
     if(dow===3){title="Descanso activo";kind="descanso";tasks=rest("Descanso activo","El cuerpo se adapta mientras descansa.");if(w>=2)tasks.push(asecoT())}
@@ -482,14 +511,16 @@ function dayPlan(w,dow,ctx){
   if(kind==="prueba"&&!(tasks&&tasks.length))tasks=[T("prueba","Protocolo de la prueba","Siempre en el mismo orden. Máximo 3 min entre ejercicios. Anota cada número abajo.","07:00",testBlocks(),{kind:"fuerza",safe:"Apnea solo con salvavidas o compañero. Sin hiperventilar."})];
   tasks=tasks.filter(Boolean).map(t=>lake&&t.kind==="agua"&&t.blocks.some(b=>b.m)?lakeify(t,w,ctx):t);
   if(lake)tasks=tasks.map(t=>t.blocks.some(b=>/^1\. Apnea/.test(b.n))?Object.assign({},t,{blocks:t.blocks.map(b=>/^1\. Apnea/.test(b.n)?Object.assign({},b,{note:"Solo en piscina con salvavidas avisado. Si no hay, queda pendiente."}):/^2\. 500/.test(b.n)?Object.assign({},b,{note:"Mídelo en piscina: en el lago la distancia no es exacta."}):b)}):t);
+  if(!["descanso","admin","prueba"].includes(kind)&&w!==HELL&&!TESTS.includes(w))tasks.push(tolT(w));
+  if(w===0&&dow===2)tasks.push(tolT(0));
   if(w>=1&&kind!=="descanso"&&w!==HELL)tasks.push(T("ducha","Ducha fría "+cold(w),"Adaptación al frío.","11:15",[B("Agua fría",cold(w),{tm:coldSec(w),note:"Al final de la ducha. Respira lento y largo por la nariz."})],{kind:"rutina"}));
-  tasks.push(T("noche","Noche","Sin pantalla los últimos 30 min.","22:00",[B("Visualización","5 min",{tm:300,note:"La prueba completa, con el cansancio incluido. Te ves terminando."}),B("A la cama",w===HELL||w===51?"22:00 · 9 h":"22:30 · 8–9 h")],{kind:"rutina"}));
+  tasks.push(T("noche","Noche","Sin pantalla los últimos 30 min.","22:00",[B("Visualización","5 min",{tm:300,note:"La prueba completa, con el cansancio incluido. Te ves terminando."}),B("A la cama","8 h")],{kind:"rutina"}));
   return {w,dow,title,kind,deload,stage:stageOf(w),tasks,test:kind==="prueba"&&TESTS.includes(w)&&dow===5,lake};
 }
 // Cansado: menos series y menos tiempo. Con dolor: solo movilidad.
 function applyMode(plan,mode){
   if(mode==="dolor")return Object.assign({},plan,{tasks:[T("rest","Recuperación","Dolor agudo: hoy no se entrena lo que duele. Si no mejora en 2–3 días, al médico.","",[B("Movilidad suave","15 min",{note:"Solo lo que no duele."}),B("Hielo o frío local","10–15 min si hay inflamación"),B("Dormir","9 h")],{kind:"descanso"}),plan.tasks.find(t=>t.id==="noche")].filter(Boolean)});
-  if(mode==="cansado")return Object.assign({},plan,{tasks:plan.tasks.filter(t=>t.id!=="inc").map(t=>Object.assign({},t,{blocks:t.blocks.map(b=>b.s>2?Object.assign({},b,{s:b.s-Math.ceil(b.s*0.3),p:b.p+" (versión suave)"}):b)}))});
+  if(mode==="cansado")return Object.assign({},plan,{tasks:plan.tasks.filter(t=>t.id!=="inc"&&t.id!=="tol").map(t=>Object.assign({},t,{blocks:t.blocks.map(b=>b.s>2?Object.assign({},b,{s:b.s-Math.ceil(b.s*0.3),p:b.p+" (versión suave)"}):b)}))});
   return plan;
 }
 
@@ -506,7 +537,7 @@ function evalTest(w,t){
 
 /* =================== ALMACENAMIENTO =================== */
 const LS="bitacora-buzo-v1";
-const defCfg=()=>({name:"Diego",start:"2026-10-06",sched:Array.from({length:53},(_,i)=>i),repeats:[],place:"lago",partner:false,neo:false,temp:""});
+const defCfg=()=>({name:"Diego",start:"2026-10-06",sched:Array.from({length:53},(_,i)=>i),repeats:[],place:"lago",partner:false,neo:false,temp:"",turno:"13"});
 const fixCfg=c=>{if(c.start==="2026-10-05"&&!c.startMoved){c.start="2026-10-06";c.startMoved=true}return c};
 const clone=o=>JSON.parse(JSON.stringify(o||{}));
 const Store={mode:"local",cfg:defCfg(),days:{},timers:{},chains:{},
@@ -557,7 +588,7 @@ const weekStartOf=d=>{const st=parse(Store.cfg.start);return addDays(st,Math.flo
 let CTX=null;
 function lastTest(){if(CTX)return CTX;const c={};Object.keys(Store.days).sort().forEach(k=>{const t=Store.days[k].test;if(t)["barras","run","swim","apnea"].forEach(x=>{if(t[x])c[x]=t[x]})});return CTX=c}
 function ctxFor(date){const c=Store.cfg;return Object.assign({},lastTest(),{month:date.getMonth(),place:c.place,partner:c.partner,neo:c.neo,temp:c.temp})}
-function planFor(date){const L=locate(date);if(L.w===undefined)return null;const dd=Store.days[iso(date)]||{};return applyMode(dayPlan(L.w,L.dow,ctxFor(date)),dd.mode)}
+function planFor(date){const L=locate(date);if(L.w===undefined)return null;const dd=Store.days[iso(date)]||{};return applyShift(applyMode(dayPlan(L.w,L.dow,ctxFor(date)),dd.mode),dd.turno||Store.cfg.turno)}
 const setKey=(t,i)=>t.id+"."+i;
 const blockDone=(dd,t,i)=>Math.min(((dd&&dd.sets)||{})[setKey(t,i)]||0,t.blocks[i].s);
 const taskDone=(dd,t)=>!!dd&&(((dd.checks||{})[t.id])||(t.blocks.length>0&&t.blocks.every((b,i)=>blockDone(dd,t,i)>=b.s)));
@@ -577,7 +608,7 @@ function orders(plan,k,isToday,dd){
   else if(plan.kind==="descanso")out.push(["say",pick(["Hoy descansas. Es una orden, no un premio.","Descanso. El progreso ocurre cuando descansas.","Día libre. Cúmplelo igual de serio."],k)]);
   else if(plan.kind==="prueba")out.push(["say","Simulacro. La prueba entera, cansado, sin regalos."]);
   else if(plan.kind==="admin")out.push(["say",`${N}. Antes de mojarte, se prepara el terreno.`]);
-  else if(plan.kind==="agua")out.push(["say",plan.lake?pick(["Al lago. Vas solo: nadas donde haces pie y sales cuando suena.","Lago. El frío no perdona al que se confía.","Al agua. Resistencia sí, heroísmo no."],k):pick(["Al agua a las 07:00. Es tu punto débil: ahí vas a vivir.","Piscina. No le regales metros al agua.","Al agua. Cada largo de hoy es uno que en el curso no te hunde."],k)]);
+  else if(plan.kind==="agua")out.push(["say",plan.lake?pick(["Al lago. Vas solo: nadas donde haces pie y sales cuando suena.","Lago. El frío no perdona al que se confía.","Al agua. Resistencia sí, heroísmo no."],k):pick([`Al agua a las ${plan.shift?plan.shift.A:"8:00"}. Es tu punto débil: ahí vas a vivir.`,"Piscina. No le regales metros al agua.","Al agua. Cada largo de hoy es uno que en el curso no te hunde."],k)]);
   else out.push(["say",pick([`De pie, ${N}. Esto es lo que haces hoy.`,`Arriba, ${N}. Nadie lo va a hacer por ti.`,`${N}. Querías saber si puedes. Hoy se sigue respondiendo.`],k)]);
   if(plan.deload&&plan.kind!=="descanso")out.push(["p","Semana de descarga: la carga baja a propósito. No te la saltes por orgullo."]);
   if(INC[plan.w]&&plan.dow===5)out.push(["p","Hoy hay sesión larga de incomodidad. Come bien antes y lleva agua."]);
@@ -622,6 +653,9 @@ function viewHoy(){
   if(L.after)return h+`<div class="order"><p class="say">Terminaste las 52 semanas.</p><p>Si aún no entras a la Armada, repite la etapa 4 subiendo las metas (Plan → Ajustes). Ya dentro: 3 sesiones de nado y 2 de fuerza continua por semana, y la etapa 4 completa 3 meses antes de postular al curso.</p></div>`;
   const dd=Store.days[k]||{},plan=planFor(d),status=dayStatus(k,plan),u=units(dd,plan);
   h+=`<div class="order">${orders(plan,k,isToday,dd).map(([t,x])=>t==="alert"?`<p class="alert">${esc(x)}</p>`:t==="say"?`<p class="say">${esc(x)}</p>`:`<p>${esc(x)}</p>`).join("")}</div>`;
+  {const cur=dd.turno||Store.cfg.turno||"13",sh=plan.shift;
+   h+=`<div class="sec"><div class="row" style="justify-content:space-between;align-items:center"><span class="lbl">Hoy trabajo</span><div class="segs">${Object.keys(SHIFT).map(t=>`<button class="seg ${cur===t?"on":""}" data-turno="${t}">${t==="libre"?"Libre":"Entro "+t+":00"}</button>`).join("")}</div></div>
+   <p class="foot">Despiertas ${sh.wake} · entrenas desde ${sh.A}${sh.leave?` · sales al trabajo ${sh.leave}`:""} · cama ${sh.bed}</p></div>`}
   if(plan.kind!=="descanso"){
     const M=[["ok","Al 100%"],["cansado","Cansado"],["dolor","Con dolor"]];
     const txt={ok:"Ejecuta la orden completa.",cansado:"Versión suave: menos series, sin sesión larga. Si dura 3 días, toma 2 días suaves.",dolor:"Hoy solo recuperación. Cansancio general es normal; dolor agudo, localizado o que empeora, no."}[dd.mode]||"Antes de empezar: ¿cómo amaneciste?";
@@ -674,7 +708,7 @@ function viewPlan(){
   const c=Store.cfg,sg=(key,v,l)=>`<button class="seg ${String(c[key])===String(v)?"on":""}" data-cset="${key}|${v}">${l}</button>`;
   h+=`<div class="card"><span class="lbl">Ajustes</span>
    <div class="row"><div class="field" style="flex:1;min-width:140px"><label class="lbl" for="c-name">Tu nombre</label><input id="c-name" data-c="name" value="${esc(c.name)}"></div><div class="field" style="flex:1;min-width:150px"><label class="lbl" for="c-start">Día 1 de la semana 0</label><input id="c-start" type="date" data-c="start" value="${esc(c.start)}"></div></div>
-   <div class="row"><div class="field"><span class="lbl">Dónde nadas</span><div class="segs">${sg("place","lago","Lago")}${sg("place","piscina","Piscina")}</div></div><div class="field"><span class="lbl">Neopreno</span><div class="segs">${sg("neo",false,"No")}${sg("neo",true,"Sí")}</div></div><div class="field"><span class="lbl">Compañero de agua</span><div class="segs">${sg("partner",false,"No")}${sg("partner",true,"Sí")}</div></div></div>
+   <div class="row"><div class="field"><span class="lbl">Dónde nadas</span><div class="segs">${sg("place","lago","Lago")}${sg("place","piscina","Piscina")}</div></div><div class="field"><span class="lbl">Neopreno</span><div class="segs">${sg("neo",false,"No")}${sg("neo",true,"Sí")}</div></div><div class="field"><span class="lbl">Turno habitual</span><div class="segs">${sg("turno","13","Entro 13:00")}${sg("turno","16","Entro 16:00")}</div></div><div class="field"><span class="lbl">Compañero de agua</span><div class="segs">${sg("partner",false,"No")}${sg("partner",true,"Sí")}</div></div></div>
    <div class="field" style="max-width:170px"><label class="lbl" for="c-temp">Agua del lago (°C)</label><input id="c-temp" inputmode="decimal" data-c="temp" value="${esc(c.temp)}" placeholder="${TEMP_MES[today.getMonth()]} estimado"></div>
    ${L.after?(S.confirm==="s4"?`<div class="row"><button class="btn main sm" data-s4>Confirmar</button><button class="btn sm" data-cancel>Cancelar</button></div>`:`<button class="btn sm" data-ask="s4">Repetir etapa 4</button>`):""}
    <p class="foot">Guardado ${Store.mode==="db"?"en tu cuenta: privado y sincronizado entre tus dispositivos":"solo en este dispositivo"}.</p></div>`;
@@ -738,8 +772,24 @@ function viewGuia(){return `<div class="sec prose"><h2>Guía</h2>
  <li>No más de 10% de aumento semanal por tu cuenta.</li>
  <li>Dolor agudo, localizado o que empeora = parar y consultar.</li>
  <li>1 día de descanso total por semana y las descargas, sin excepción.</li></ul>
- <h3>Día tipo</h3><ul>
- <li>22:30 a la cama · 6:30 agua y algo liviano · 7:00–8:30 sesión principal · 8:30 desayuno · 10:00–11:15 segunda parte · 11:15 movilidad y ducha fría.</li>
+ <h3>Tus turnos</h3><ul>
+ <li><b>Entras 13:00 (sales 22:30):</b> cama 23:30 · despiertas 7:30 · sesión principal 8:00 · desayuno · segunda parte 10:15 · tolerancia y ducha fría 11:00–11:45 · almuerzo 12:00 · sales 12:30.</li>
+ <li><b>Entras 16:00 (sales 0:30):</b> cama 1:15 · despiertas 9:15 · sesión principal 9:45 · segunda parte 12:15 · ducha fría 13:45 · almuerzo 14:15 · sales 15:15.</li>
+ <li>Cada día eliges el turno arriba en Hoy y los horarios se ajustan solos. Las sesiones largas (hasta 4 h) caben antes del trabajo en los dos turnos.</li>
+ <li>Al llegar del trabajo: comida liviana con proteína, ducha y a dormir. Nada de pantallas en la cama.</li></ul>
+ <h3>Dormir poco: por qué no se entrena</h3><ul>
+ <li>El cuerpo no se acostumbra a dormir poco. Con restricción de sueño, el rendimiento sigue bajando día tras día aunque sientas que te adaptaste, y suben las lesiones.</li>
+ <li>En el curso la falta de sueño la ponen ellos. Llega mejor quien llega descansado y con la cabeza entrenada para seguir cansado.</li>
+ <li>Lo que sí entrenas: sesiones largas cuando ya estás cansado, dobles sesiones, frío e incomodidad. Esa es la sensación del infierno, sin destruirte.</li>
+ <li>Duerme 8 h. Con tus turnos se puede: solo corre la hora de dormir.</li></ul>
+ <h3>Acostumbrarte al dolor</h3><ul>
+ <li><b>Todos los días de entrenamiento</b> terminas con “Tolerancia al dolor”: sentadilla en la pared, colgado de la barra y plancha. Cada semana suben unos segundos (pared de 0:45 a 4:00).</li>
+ <li><b>Incomodidad desde la semana 2:</b> 20 min (sem 2) → 40 min (6) → 60 min (10) y sigue subiendo hasta el día del infierno.</li>
+ <li><b>Frío todos los días:</b> la ducha fría sube de 30 s a 3 min.</li>
+ <li><b>Lo que se aguanta:</b> ardor muscular, temblor, frío, falta de aire, cansancio, aburrimiento.</li>
+ <li><b>Lo que no se aguanta:</b> dolor punzante, en una articulación, en un punto del hueso, o que empeora con cada repetición. Eso es lesión: paras. Un buzo lesionado no llega al curso.</li>
+ <li>Cuando quieras parar: respiración de caja y “hasta la próxima repetición”. Después anota en qué momento quisiste parar: con las semanas ese momento llega más tarde.</li></ul>
+ <h3>Comida</h3><ul>
  <li>4 comidas reales, proteína en cada una (unos 1,6 g por kilo al día), carbohidratos en días largos, 2,5–3 L de agua, sin alcohol ni bebidas energéticas.</li></ul></div>`}
 
 const TABS=[["hoy","Hoy"],["plan","Plan"],["progreso","Progreso"],["guia","Guía"]];
@@ -769,6 +819,7 @@ document.addEventListener("click",e=>{
   if(D.s4!==undefined){Store.setCfg({sched:Store.cfg.sched.concat(Array.from({length:13},(_,i)=>40+i))});S.confirm=null;render();toast("Etapa 4 otra vez. Sube las metas.");return}
   const k=iso(S.date);
   if(D.open){const p=planFor(S.date),dd=Store.days[k]||{},firstOpen=p&&(p.tasks.find(t=>!taskDone(dd,t))||{}).id,cur=S.open[k+D.open]!=null?S.open[k+D.open]:D.open===firstOpen;S.open[k+D.open]=!cur;render();return}
+  if(D.turno){Store.setDay(k,{turno:D.turno});render();return}
   if(D.mode){const dd=Store.day(k);Store.setDay(k,{mode:dd.mode===D.mode?"":D.mode});render();return}
   if(D.task||D.set){
     const p=planFor(S.date);if(!p)return;const dd=Store.day(k),before=dayStatus(k,p);
