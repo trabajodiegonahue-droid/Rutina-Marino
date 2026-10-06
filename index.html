@@ -56,6 +56,11 @@ button:focus-visible,input:focus-visible,textarea:focus-visible,summary:focus-vi
 .rname{font-family:var(--f-label);font-weight:700;font-size:18px;text-transform:uppercase;letter-spacing:.03em}
 .rname b{color:var(--accent)}
 .rcmd{font-size:clamp(21px,5.6vw,26px);font-weight:700;line-height:1.3}
+.rcmd{white-space:pre-line}
+.how{background:var(--bg);border-radius:6px;padding:10px 12px;display:flex;flex-direction:column;gap:4px}
+.how p{font-size:15px;line-height:1.45}
+details.hw summary{font-size:13px;color:var(--accent);cursor:pointer;font-weight:600}
+details.hw p{margin:6px 0 0;font-size:14px}
 .rset{font-family:var(--f-label);font-weight:700;font-size:22px;text-transform:uppercase;color:var(--accent)}
 .rwhat{font-size:22px;font-weight:600}
 .rnote{font-size:15px;color:var(--muted)}
@@ -443,18 +448,59 @@ const toMin=h=>{const [a,b]=h.split(":").map(Number);return a*60+(b||0)};
 const fromMin=m=>{m=((m%1440)+1440)%1440;return Math.floor(m/60)+":"+pad(m%60)};
 function mapH(h,sh){if(!h)return h;const m=toMin(h),A=toMin(sh.A),B2=toMin(sh.B),C=toMin(sh.C);
   if(m<9*60)return fromMin(A+(m-420));if(m<11*60)return fromMin(B2+Math.max(0,m-600));if(m<12*60)return fromMin(C+(m-660));if(m<19*60)return fromMin(C+20);if(m<21*60)return fromMin(C+10);return fromMin(toMin(sh.bed)-20)}
-function applyShift(plan,turno){
-  const sh=SHIFT[turno]||SHIFT["13"];
+/* ---- comida: porciones según tu peso (1,6 g de proteína por kilo al día, en 4 comidas) ---- */
+function NUT(kg,train,hell){
+  const P=kg||70,known=!!kg,prot=Math.round(P*1.6),perMeal=Math.round(prot/4/5)*5;
+  const eggs=Math.max(2,Math.min(4,Math.round(perMeal/7))),chicken=Math.max(120,Math.round(perMeal/0.3/10)*10+(hell?50:0));
+  const water=Math.round((P*0.035+(train?0.75:0))*10)/10;
+  const base=known?`Con tus ${P} kg necesitas unos ${prot} g de proteína al día: unos ${perMeal} g en cada comida.`:"Cuando anotes tu peso en Plan → Ajustes, ajusto las cantidades a ti.";
+  return {P,prot,perMeal,eggs,chicken,water,base,
+   pre:`Come algo liviano 30–60 minutos antes de entrenar, para tener energía sin sentirte pesado. Elige UNA opción:
+a) 1 plátano + media marraqueta (o media hallulla) con 1 cucharada de mantequilla de maní.
+b) 1 yogur + 3 cucharadas de avena + 1 cucharadita de miel.
+c) 1 tostada con miel o mermelada + 1 manzana.
+No comas frituras, palta en cantidad, ni un plato grande: se te va a revolver el estómago.`,
+   restBreak:`Desayuna tranquilo. Elige UNA opción:
+a) ${eggs} huevos revueltos + 1 marraqueta + 1 fruta + 1 vaso de leche.
+b) 1 taza de avena (80 g) cocida en leche + 1 plátano + 1 yogur.
+c) 2 panes con palta y pollo o jamón de pavo + 1 yogur.
+${base}`,
+   breakfast:`Después de entrenar el cuerpo necesita recargar: proteína para reparar el músculo y carbohidratos para reponer energía. Elige UNA opción:
+a) ${eggs+(hell?1:0)} huevos revueltos + 2 panes (o 1 marraqueta entera) + 1 fruta + 1 vaso de leche.
+b) 1 taza de avena (80 g) cocida en leche + 1 plátano + 1 yogur + 2 huevos duros.
+c) 2 panes con palta y ${Math.round(chicken*0.6/10)*10} g de pollo o 3 láminas de jamón de pavo + 1 yogur + 1 fruta.
+${hell?"Esta semana comes más: agrega otro pan y otra fruta. ":""}${base}`,
+   lunch:`Plato grande, armado así: la mitad del plato carbohidratos, un cuarto proteína (del tamaño y grosor de tu mano) y un cuarto verduras. Elige UNA opción:
+a) 1,5 tazas de arroz cocido + 1 pechuga de pollo (unos ${chicken} g) + ensalada de tomate y lechuga con aceite.
+b) 1,5 tazas de porotos, lentejas o garbanzos con arroz + 1 huevo + ensalada.
+c) 2 tazas de fideos cocidos + ${chicken} g de carne molida en salsa de tomate + ensalada.
+d) 1 filete de pescado (merluza o salmón, ${chicken} g) + 3 papas cocidas + verduras.
+${hell?"Esta semana repite el plato. ":""}Toma 1 vaso de agua. Postre: 1 fruta.`,
+   snack:`Prepara la colación para el trabajo. Elige UNA opción:
+a) 1 sándwich de pan integral con ${Math.round(chicken*0.6/10)*10} g de pollo o 2 huevos duros, más tomate.
+b) 1 yogur + 1 fruta + un puñado de maní sin sal (30 g, lo que cabe en la palma).
+c) 1 lata de atún al agua + 4 galletas de agua + 1 fruta.
+Y una botella de 1 litro de agua. Cómela a mitad de turno.`,
+   night:`Al llegar del trabajo come algo liviano con proteína, para recuperar mientras duermes sin dormir con el estómago lleno. Elige UNA opción:
+a) ${Math.min(3,eggs)} huevos revueltos con 1 pan y tomate.
+b) 1 yogur con 4 cucharadas de avena y 1 fruta.
+c) 1 lata de atún al agua con ensalada y 1 pan.
+Nada frito, nada de café ni bebidas con azúcar.`,
+   water:`Hoy toma unos ${water.toLocaleString("es-CL")} litros de agua en total${known?` (por tus ${P} kg${train?" más el entrenamiento":""})`:""}. Truco: 1 botella de 1 L en la mañana, 1 en el trabajo y el resto en las comidas. Si tu orina sale oscura, te falta agua.`};
+}
+function bodyWeight(){let w=null;Object.keys(Store.days).sort().forEach(k=>{const v=parseFloat(String(Store.days[k].peso||"").replace(",","."));if(v>30)w=v});const c=parseFloat(String(Store.cfg.peso||"").replace(",","."));return w||(c>30?c:null)}
+function applyShift(plan,turno,kg){
+  const sh=SHIFT[turno]||SHIFT["13"],hell=plan.w===HELL,rest=plan.kind==="descanso",N=NUT(kg,!rest,hell);
   const tasks=plan.tasks.map(t=>{let x=Object.assign({},t,{h:mapH(t.h,sh)});
-    if(t.id==="noche")x=Object.assign(x,{why:sh.back?`Llegas ${sh.back}. Despiertas ${sh.wake}.`:`Despiertas ${sh.wake}.`,blocks:(sh.back?[B("Comida al llegar","liviana con proteína",{c:`Al llegar del trabajo (${sh.back}) come algo liviano con proteína: 2–3 huevos revueltos con pan, o un yogur con avena y fruta. Nada frito ni bebidas con azúcar.`})]:[]).concat(t.blocks.map(b=>b.n==="A la cama"?Object.assign({},b,{p:`${sh.bed} · 8 h`,c:`Apaga la luz a las ${sh.bed}. Deja la alarma a las ${sh.wake}. El celular lejos de la cama.`}):b))});
+    if(t.id==="noche")x=Object.assign(x,{why:sh.back?`Llegas ${sh.back}. Despiertas ${sh.wake}.`:`Despiertas ${sh.wake}.`,blocks:(sh.back?[B("Comida al llegar","liviana con proteína",{c:N.night})]:[]).concat(t.blocks.map(b=>b.n==="A la cama"?Object.assign({},b,{p:`${sh.bed} · 8 h`,c:`Apaga la luz a las ${sh.bed} y deja la alarma a las ${sh.wake}: son 8 horas. El celular lejos de la cama, pieza oscura y fresca. Si no te duermes en 20 minutos, respira en caja (4-4-4-4) sin mirar la pantalla.`}):b))});
     return x});
-  const hell=plan.w===HELL,rest=plan.kind==="descanso";
   tasks.push(T("despertar","Despertar",`Alarma a las ${sh.wake}, sin posponer.`,sh.wake,[
-    B("Levántate",sh.wake,{c:`Levántate a las ${sh.wake} apenas suene la alarma. Sin posponer: es la primera orden del día.`}),
-    B("Agua","500 ml",{c:"Toma un vaso grande de agua (500 ml) antes de cualquier otra cosa."}),
-    B("Algo liviano",rest?"desayuno normal":"antes de entrenar",{c:rest?"Desayuna tranquilo: avena con leche y fruta, o 2–3 huevos con pan.":"Come algo liviano: un plátano y un pan con mantequilla de maní. Nada pesado antes de entrenar."})],{kind:"rutina"}));
-  if(!rest)tasks.push(T("desayuno","Desayuno completo","Después de la sesión principal.",fromMin(toMin(sh.B)-25),[B("Desayuno","completo",{c:hell?"Desayuno grande: 3–4 huevos, 2 panes, avena con leche, fruta y yogur. Esta semana comes más de lo normal.":"Come: 2–3 huevos (o yogur con avena), 1–2 panes, una fruta y un vaso de leche. Toma agua."})],{kind:"rutina"}));
-  tasks.push(T("almuerzo","Almuerzo"+(sh.leave?" y colación":""),sh.leave?`Antes de salir al trabajo a las ${sh.leave}.`:"",sh.lunch,[B("Almuerzo","plato completo",{c:`Plato grande: la mitad arroz, papas o fideos; un cuarto pollo, carne, pescado o legumbres (del tamaño de tu mano); un cuarto verduras. ${hell?"Repite el plato.":"Un vaso de agua."}`})].concat(sh.leave?[B("Colación para el trabajo","prepárala ahora",{c:"Lleva: un sándwich de pollo o huevo, una fruta, un yogur y una botella de 1 L de agua."})]:[]),{kind:"rutina"}));
+    B("Levántate",sh.wake,{c:`Levántate a las ${sh.wake} apenas suene la alarma. Sin posponer: es la primera orden del día. ${plan.dow===0?"Hoy es el primer día de la semana: pésate en ayunas, después de ir al baño y antes de tomar agua, y anótalo en Notas y peso.":""}`}),
+    B("Agua","500 ml",{c:"Toma un vaso grande de agua (500 ml) antes de cualquier otra cosa: llevas 8 horas sin tomar."}),
+    B("Agua del día",N.water.match(/[\d,.]+ litros/)[0],{c:N.water}),
+    B(rest?"Desayuno":"Algo liviano",rest?"tranquilo":"antes de entrenar",{c:rest?N.restBreak:N.pre})],{kind:"rutina"}));
+  if(!rest)tasks.push(T("desayuno","Desayuno completo","Después de la sesión principal.",fromMin(toMin(sh.B)-25),[B("Desayuno","completo",{c:N.breakfast})],{kind:"rutina"}));
+  tasks.push(T("almuerzo","Almuerzo"+(sh.leave?" y colación":""),sh.leave?`Antes de salir al trabajo a las ${sh.leave}.`:"",sh.lunch,[B("Almuerzo","plato completo",{c:N.lunch})].concat(sh.leave?[B("Colación para el trabajo","prepárala ahora",{c:N.snack})]:[]),{kind:"rutina"}));
   const key=t=>t.id==="despertar"?-2:t.id==="noche"?1e5:t.h?toMin(t.h)+(toMin(t.h)<240?1440:0):-1;
   tasks.sort((a,b)=>key(a)-key(b));
   return Object.assign({},plan,{tasks,shift:sh});
@@ -611,7 +657,7 @@ let CTX=null;
 function lastTest(){if(CTX)return CTX;const c={};let bk="";Object.keys(Store.days).sort().forEach(k=>{const t=Store.days[k].test;if(t)["barras","run","swim","apnea"].forEach(x=>{if(t[x]){c[x]=t[x];if(x==="barras")bk=k}})});
   const mb=Store.cfg.maxB;if(mb&&mb.v&&(!bk||mb.k>=bk))c.barras=mb.v;return CTX=c}
 function ctxFor(date){const c=Store.cfg;return Object.assign({},lastTest(),{month:date.getMonth(),place:c.place,partner:c.partner,neo:c.neo,temp:c.temp})}
-function planFor(date){const L=locate(date);if(L.w===undefined)return null;const dd=Store.days[iso(date)]||{};return applyShift(applyMode(dayPlan(L.w,L.dow,ctxFor(date)),dd.mode),dd.turno||Store.cfg.turno)}
+function planFor(date){const L=locate(date);if(L.w===undefined)return null;const dd=Store.days[iso(date)]||{};return applyShift(applyMode(dayPlan(L.w,L.dow,ctxFor(date)),dd.mode),dd.turno||Store.cfg.turno,bodyWeight())}
 const setKey=(t,i)=>t.id+"."+i;
 const blockDone=(dd,t,i)=>Math.min(((dd&&dd.sets)||{})[setKey(t,i)]||0,t.blocks[i].s);
 const taskDone=(dd,t)=>!!dd&&(((dd.checks||{})[t.id])||(t.blocks.length>0&&t.blocks.every((b,i)=>blockDone(dd,t,i)>=b.s)));
@@ -651,6 +697,58 @@ function stepTitle(st){const b=st.b;
   if(st.set){let w=b.p.replace(/^\d+\s*×\s*/,"")||b.p;if(/^\d+$/.test(w))w+=" repeticiones";if(/^\d+ por lado/.test(w))w=w.replace(/^(\d+)/,"$1 repeticiones");
     return {big:b.n.replace(/(^|\s)\d+ × /,"$1").trim(),sub:`Serie ${st.set} de ${b.s}`,what:w}}
   return {big:b.n,sub:"",what:b.p};}
+/* ---- cómo se hace cada ejercicio ---- */
+const HOW={
+ "Barras":"Cuélgate con las palmas hacia adelante, manos un poco más abiertas que los hombros y brazos totalmente estirados. Aprieta abdomen y glúteos, sube tirando con la espalda hasta que el mentón pase sobre la barra y baja controlado hasta estirar los brazos del todo. Sin balancearte ni patear. Si no sale ninguna: salta hasta arriba y baja lo más lento que puedas (5 segundos).",
+ "Remo invertido":"Acuéstate bajo una mesa firme (o una barra baja), agárrate del borde con las manos al ancho de los hombros y deja el cuerpo recto, con los talones en el suelo. Tira del pecho hacia la mesa juntando los omóplatos y baja lento. Más difícil: pies más adelante.",
+ "Flexiones":"Manos en el suelo un poco más abiertas que los hombros, cuerpo recto de talones a cabeza (sin subir la cola ni hundir la cadera). Baja con los codos a 45° del cuerpo hasta que el pecho quede a un puño del suelo y empuja hasta estirar los brazos. Si no salen todas: termina la serie con las rodillas apoyadas.",
+ "Fondos en silla":"Siéntate en el borde de una silla firme (contra la pared), manos al lado de la cadera, y adelanta la cola fuera de la silla con las piernas estiradas. Baja doblando los codos hacia atrás hasta 90° y sube. Fortalece los tríceps para las flexiones.",
+ "Plancha":"Apoya los antebrazos en el suelo (codos bajo los hombros) y las puntas de los pies. Cuerpo recto como una tabla: aprieta abdomen y glúteos, no subas la cola ni hundas la cadera. Mira al suelo y respira normal.",
+ "Plancha lateral":"De costado, apoyado en un antebrazo (codo bajo el hombro) y en el borde del pie de abajo. Sube la cadera hasta que el cuerpo quede en línea recta y aguanta. Después cambia de lado.",
+ "Hollow hold":"Boca arriba, pega la parte baja de la espalda al suelo. Levanta los hombros y las piernas estiradas unos 20 cm del suelo, con los brazos estirados hacia atrás junto a las orejas. Tu cuerpo forma una banana. Si la espalda se despega, dobla un poco las rodillas.",
+ "Abdominales":"Boca arriba, rodillas dobladas, pies en el suelo (si puedes, que alguien te los sujete) y manos cruzadas sobre el pecho. Sube hasta tocar los muslos con los codos y baja hasta que los omóplatos toquen el suelo. Así se cuentan en la prueba.",
+ "Sentadillas":"Pies al ancho de los hombros, puntas un poco hacia afuera. Baja la cola hacia atrás como si te sentaras, hasta que los muslos queden paralelos al suelo, con los talones apoyados y las rodillas en la dirección de los pies. Sube empujando el suelo. Espalda recta y pecho arriba.",
+ "Zancadas":"De pie, da un paso largo hacia adelante y baja hasta que la rodilla de atrás casi toque el suelo, las dos rodillas en 90°. Empuja con el pie de adelante para volver. Alterna las piernas.",
+ "Zancadas caminando":"Como la zancada, pero en vez de volver avanzas: cada paso es una zancada. Tronco derecho, la rodilla de adelante no pasa la punta del pie.",
+ "Puente de glúteo":"Boca arriba, rodillas dobladas y pies en el suelo. Empuja con los talones y sube la cadera hasta que el cuerpo quede recto de rodillas a hombros. Aprieta los glúteos 1 segundo arriba y baja.",
+ "Gemelos":"Párate con la punta de los pies en el borde de un escalón y los talones en el aire, afirmado de la pared. Sube en puntas lo más alto que puedas y baja lento hasta que los talones queden bajo el escalón.",
+ "Sentadilla con salto":"Haz una sentadilla normal y, al subir, salta lo más alto que puedas. Cae suave, con las rodillas dobladas, y encadena la siguiente.",
+ "Sentadilla búlgara":"De espaldas a una silla, a un paso largo de ella, apoya el empeine de un pie sobre el asiento. Baja con la pierna de adelante hasta que el muslo quede paralelo al suelo y sube. Haz todas las de una pierna y cambia.",
+ "Saltos al cajón o escalón":"Frente a un cajón firme o un escalón alto (40–50 cm), salta con los dos pies, cae suave arriba con las rodillas dobladas y bájate caminando (no saltando).",
+ "Patada de tijera":"Boca arriba, manos bajo la cola, piernas estiradas a 20 cm del suelo. Mueve las piernas arriba y abajo alternadas, cortas y rápidas, como la patada de crol. Cada pierna cuenta 1.",
+ "Pataleo vertical":"En lo hondo de la piscina, cerca del borde. Cuerpo vertical y cabeza fuera. Piernas como batidora: cada pierna dibuja un círculo hacia adentro, alternadas, y las manos barren el agua a los lados. Si te cansas, te tomas del borde.",
+ "Cuerda":"Agarra la cuerda alto con las dos manos, sube las rodillas y deja que la cuerda pase por fuera de un pie. Pisa la cuerda entre los empeines (pinza), párate sobre los pies y sube las manos. Repite. Baja siempre mano bajo mano, nunca deslizándote (te quemas las manos).",
+ "Circuito":"Los 4 ejercicios seguidos, sin descanso entre ellos. Al terminar la vuelta descansas lo indicado y empiezas la siguiente. Técnica igual que en las series normales, aunque estés cansado: así se cuentan en la prueba.",
+ "Barras en pirámide":"Haz 1 barra, descansa unos segundos, 2 barras, descansa, 3... hasta la cima, y después bajas igual. Descansa lo justo para que cada escalón salga con buena técnica.",
+ "Flexiones en pirámide":"5 flexiones, descanso corto, 10, 15, 20, y bajas 15, 10, 5. Si una serie no sale entera, termínala con las rodillas apoyadas.",
+ "Barras cada minuto":"Inicia un temporizador de 10 minutos. Al comenzar cada minuto haces las barras indicadas y descansas lo que sobre del minuto. Cuando se ponga difícil, es justo el entrenamiento.",
+ "Trote":"Corre relajado: hombros sueltos, brazos a 90°, pasos cortos. Ritmo conversación significa que podrías hablar en frases completas. Si te ahogas, baja el ritmo.",
+ "Marcha rápida":"Mochila con el peso bien abajo y pegado a la espalda (libros o botellas de agua envueltas en una toalla), correas ajustadas. Camina rápido con paso largo, sin trotar. Usa zapatillas cómodas y calcetines secos.",
+ "Calentamiento":"Todo suave, sin cansarte: es para subir la temperatura del cuerpo y que las articulaciones se muevan antes del esfuerzo.",
+ "Elongación":"Cuádriceps: de pie, tómate un pie por detrás y llévalo a la cola. Parte de atrás del muslo: pierna estirada sobre un escalón, inclínate adelante con la espalda recta. Gemelos: manos en la pared, una pierna atrás estirada con el talón en el suelo. Pecho: brazo apoyado en un marco de puerta, gira el cuerpo hacia afuera. Espalda: abrázate y redondea la espalda. 30 segundos cada uno, sin rebotar.",
+ "Apnea en seco":"Acostado de espaldas en tu cama, relajado. Respira normal 2 minutos. Toma una bocanada normal (nunca respires rápido antes) y aguanta con la boca cerrada. Cuando vengan las ganas de respirar, relaja los hombros y la cara: esa incomodidad es lo que entrenas. Si te mareas, para.",
+ "Agua fría":"Los primeros segundos te va a cortar la respiración: es normal. Exhala largo por la boca, después respira lento por la nariz. Pon el agua primero en los pies, luego el pecho, la nuca y la cara.",
+ "Visualización":"Con los ojos cerrados, ve la prueba en primera persona: el agua, la barra, el cronómetro, el cansancio en los brazos. Imagina el momento en que quieres parar y te ves siguiendo. Termina viéndote cruzar la meta del 2.400.",
+ "Respiración de caja":"Inhala por la nariz contando 4, aguanta 4, exhala por la boca contando 4, aguanta 4. Repite. Baja el pulso y aclara la cabeza.",
+ "Sentadilla isométrica en la pared":"Espalda pegada a la pared, baja hasta que los muslos queden paralelos al suelo y las rodillas en 90°, sobre los tobillos. Brazos cruzados al pecho. Cuando queme, no te pares: respira lento y cuenta respiraciones.",
+ "Colgado de la barra":"Cuélgate con brazos estirados y hombros activos (un poco hacia abajo, lejos de las orejas). Aprieta fuerte la barra. Cuando las manos ardan, cuenta respiraciones lentas.",
+ "Movilidad":"Círculos grandes de cadera, de hombros y de tobillos; gato-vaca (en cuatro apoyos, arquea y redondea la espalda); y 1 minuto sentado en cuclillas profundas con los talones apoyados. Suave, sin dolor."
+};
+const HOW_SWIM="Crol: cuerpo horizontal, mirando al fondo. Exhala todo el aire bajo el agua por la nariz y la boca; para respirar gira la cabeza junto con el cuerpo, sin levantarla. La mano entra lejos adelante, tira hasta el muslo y sale por el aire. Patada corta y rápida desde la cadera, con las piernas casi estiradas.";
+function howFor(b,t){
+  if(HOW[b.n])return HOW[b.n];
+  if(/^Técnica/.test(b.n))return "Los ejercicios: 1) Patada con tabla: brazos estirados sobre la tabla, solo patada corta desde la cadera. 2) Patada lateral: de costado, un brazo estirado adelante, la oreja sobre ese brazo; giras la cara para respirar. 3) Nado a un brazo: un brazo quieto adelante, el otro hace la brazada completa. 4) “Pillar”: una mano espera adelante hasta que la otra llega a tocarla. 5) Respiración cada 3 brazadas: respiras una vez a cada lado.";
+  if(t.kind==="agua"&&/m$|brazadas$/.test(b.n))return HOW_SWIM;
+  if(/^Trote/.test(b.n))return HOW["Trote"];
+  if(t.kind==="carrera"&&/×/.test(b.n))return "Intervalos: corre cada tramo al tiempo indicado, ni más rápido ni más lento (mira el reloj en cada vuelta de 400 m). En la recuperación trota muy suave o camina, sin sentarte.";
+  if(/^Movilidad/.test(b.n))return HOW["Movilidad"];
+  if(/^Sentadillas/.test(b.n))return HOW["Sentadillas"];
+  if(/^Flexiones/.test(b.n))return HOW["Flexiones"];
+  if(/^Abdominales/.test(b.n))return HOW["Abdominales"];
+  if(/^Barras/.test(b.n))return HOW["Barras"];
+  if(b.n==="Cuando quieras parar")return HOW["Respiración de caja"];
+  return "";
+}
 /* ---- cada paso como orden concreta ---- */
 const PACE=[0,6,5.75,5.5,5.25]; // min/km a ritmo suave por etapa
 const km=(min,w)=>(min/PACE[stN(w)]).toLocaleString("es-CL",{maximumFractionDigits:1});
@@ -678,7 +776,7 @@ function cmdFor(st,plan){
   if(n==="Vuelta a la calma"&&(m=p.match(/(\d+) m/)))return `Nada ${m[1]} m muy suave${plan.lake?"":` (${num(m[1])/25} largos)`} para soltar.`;
   if(/^Técnica/.test(n)){if((m=n.match(/(\d+) × (\d+) (m|brazadas)/))){const unit=m[3]==="m"?`${m[2]} m`:`${m[2]} brazadas`;
     if(k)return `Nada ${unit} de técnica: ${DRILL_LIST[(k-1)%5]}.${restTxt}`;
-    return `Nada ${m[1]} tramos de ${unit} de técnica, cambiando el ejercicio en cada tramo: ${DRILL_LIST.map((d,i)=>(i+1)+") "+d.split(" (")[0]).join(", ")}. Descansa 20 s de pie entre cada uno.`}}
+    return `Nada ${m[1]} tramos de ${unit} de técnica, cambiando el ejercicio en cada tramo: ${DRILL_LIST.map((d,i)=>(i+1)+") "+d.split(" (")[0]).join(", ")}. Descansa 20 s ${plan.lake?"de pie":"en la pared"} entre cada uno.`}}
   if(t.kind==="agua"&&(m=n.match(/^(\d+) × ([\d.]+) (m|brazadas)$/))){const unit=m[3]==="m"?`${m[2]} m${plan.lake?"":` (${num(m[2])/25} ${num(m[2])===25?"largo":"largos"})`}`:`${m[2]} brazadas${b.note?" ("+b.note.split(" cada")[0].replace("≈ ","≈")+")":""}`;
     return `Nada ${unit}: ${p}.${restTxt?restTxt.replace("descansa",plan.lake?"descansa de pie":"descansa en la pared"):""}`}
   if(t.kind==="agua"&&(m=n.match(/^([\d.]+) m$/)))return `Nada ${m[1]} m ${p}${plan.lake?"":` (${num(m[1])/25} largos)`}. No te detengas.`;
@@ -732,7 +830,7 @@ function viewRun(){
     ${firstOfTask&&st.t.why?`<p class="foot">${esc(st.t.why)}</p>`:""}
     ${firstOfTask&&st.t.safe?`<p class="safe">${esc(st.t.safe)}</p>`:""}
     <p class="rname">${esc(T2.big)}${T2.sub?` · <b>${esc(T2.sub)}</b>`:""}</p>
-    ${(()=>{const c=cmdFor(st,plan);return c?`<p class="rcmd">${esc(c)}</p>${st.b.note&&!st.b.c&&!/^(Calentamiento|Elongación|Agua fría|Apnea en seco|Visualización)$/.test(st.b.n)&&!/^Técnica|isométrica|^Colgado|^Circuito/.test(st.b.n)?`<p class="rnote">${esc(st.b.note)}</p>`:""}`:`<p class="rbig">${esc(T2.what)}</p>${st.b.note?`<p class="rnote">${esc(st.b.note)}</p>`:""}`})()}
+    ${(()=>{const c=cmdFor(st,plan);const hw=howFor(st.b,st.t);return c?`<p class="rcmd">${esc(c)}</p>${hw?`<div class="how"><span class="lbl">Cómo se hace</span><p>${esc(hw)}</p></div>`:""}${st.b.note&&!st.b.c&&!hw&&!/^(Calentamiento|Elongación|Agua fría|Apnea en seco|Visualización)$/.test(st.b.n)&&!/^Técnica|isométrica|^Colgado|^Circuito/.test(st.b.n)?`<p class="rnote">${esc(st.b.note)}</p>`:""}`:`<p class="rbig">${esc(T2.what)}</p>${st.b.note?`<p class="rnote">${esc(st.b.note)}</p>`:""}`})()}
     ${st.b.tm?`<button class="btn" data-timer="${st.b.tm}" data-tl="${esc(st.b.n)}">▶ Iniciar ${fmtT(st.b.tm)}</button>`:""}
     <button class="btn main rdone" data-rdone="${i}">${done?"Hecho ✓ · siguiente":"Hecho"}</button>
     <div class="row"><button class="btn sm" data-rgo="${i-1}" ${i===0?"disabled":""}>◀ Atrás</button><button class="btn sm" data-rgo="${i+1}">Saltar ▶</button></div>
@@ -748,13 +846,14 @@ let toastT;function toast(m){const el=document.getElementById("toast");el.textCo
 function chip(s){const m={done:"Cumplido",fail:"No cumplido",injury:"Recuperación",part:"A medias"};return `<span class="chip ${s||""}">${s?m[s]:"Pendiente"}</span>`}
 
 function exHTML(t,b,i,dd,all){
+  const hw=howFor(b,t);
   const n=all?b.s:blockDone(dd,t,i);let ctl="";
   if(b.s>1&&b.s<=12)ctl=Array.from({length:b.s},(_,j)=>`<button class="dot ${j<n?"on":""}" data-set="${t.id}|${i}|${j+1}" aria-label="Serie ${j+1} de ${esc(b.n)}">${j+1}</button>`).join("");
   else if(b.s>12)ctl=`<button class="dot" data-set="${t.id}|${i}|${Math.max(0,n-1)}" aria-label="Restar">−</button><span class="cnt">${n}/${b.s}</span><button class="dot" data-set="${t.id}|${i}|${Math.min(b.s,n+1)}" aria-label="Sumar">+</button>`;
   else ctl=`<button class="dot ${n?"on":""}" data-set="${t.id}|${i}|${n?0:1}" aria-label="Hecho: ${esc(b.n)}">✓</button>`;
   if(b.tm)ctl+=`<button class="tmr" data-timer="${b.tm}" data-tl="${esc(b.n)}">▶ ${fmtT(b.tm)}</button>`;
   if(b.r)ctl+=`<button class="tmr rest" data-timer="${b.r}" data-tl="Descanso · ${esc(b.n)}">descanso ${fmtT(b.r)}</button>`;
-  return `<div class="ex ${n>=b.s?"full":""}"><div class="top"><span class="n">${esc(b.n)}</span><span class="p">${esc(b.p)}</span></div>${b.note?`<span class="note">${esc(b.note)}</span>`:""}<div class="ctl">${ctl}</div></div>`;
+  return `<div class="ex ${n>=b.s?"full":""}"><div class="top"><span class="n">${esc(b.n)}</span><span class="p">${esc(b.p)}</span></div>${b.note?`<span class="note">${esc(b.note)}</span>`:""}${b.c?`<span class="note" style="white-space:pre-line">${esc(b.c)}</span>`:""}${hw?`<details class="hw"><summary>Cómo se hace</summary><p>${esc(hw)}</p></details>`:""}<div class="ctl">${ctl}</div></div>`;
 }
 function sesHTML(t,dd,open){
   const all=taskDone(dd,t),meta=[t.h,t.min?"~"+Math.round(t.min)+" min":"",t.m?nf(t.m)+" m":""].filter(Boolean).join(" · ");
@@ -840,6 +939,7 @@ function viewPlan(){
   h+=`<div class="card"><span class="lbl">Ajustes</span>
    <div class="row"><div class="field" style="flex:1;min-width:140px"><label class="lbl" for="c-name">Tu nombre</label><input id="c-name" data-c="name" value="${esc(c.name)}"></div><div class="field" style="flex:1;min-width:150px"><label class="lbl" for="c-start">Día 1 de la semana 0</label><input id="c-start" type="date" data-c="start" value="${esc(c.start)}"></div></div>
    <div class="row"><div class="field"><span class="lbl">Dónde nadas</span><div class="segs">${sg("place","lago","Lago")}${sg("place","piscina","Piscina")}</div></div><div class="field"><span class="lbl">Neopreno</span><div class="segs">${sg("neo",false,"No")}${sg("neo",true,"Sí")}</div></div><div class="field"><span class="lbl">Turno habitual</span><div class="segs">${sg("turno","13","Entro 13:00")}${sg("turno","16","Entro 16:00")}</div></div><div class="field"><span class="lbl">Compañero de agua</span><div class="segs">${sg("partner",false,"No")}${sg("partner",true,"Sí")}</div></div></div>
+   <div class="row"><div class="field" style="max-width:140px"><label class="lbl" for="c-peso">Peso en ayunas (kg)</label><input id="c-peso" inputmode="decimal" data-c="peso" value="${esc(c.peso||"")}" placeholder="70"></div><div class="field" style="max-width:140px"><label class="lbl" for="c-alt">Estatura (cm)</label><input id="c-alt" inputmode="numeric" data-c="alt" value="${esc(c.alt||"")}" placeholder="175"></div><p class="foot" style="flex:1;min-width:150px">Con tu peso calculo la proteína, las porciones y el agua de cada día. Pésate en ayunas el primer día de cada semana.</p></div>
    <div class="row"><div class="field" style="max-width:170px"><label class="lbl" for="c-maxb">Máximo de barras hoy</label><input id="c-maxb" inputmode="numeric" data-c="maxb" value="${esc((c.maxB&&c.maxB.v)||"")}" placeholder="${esc(lastTest().barras||6)}"></div><p class="foot" style="flex:1;min-width:160px">Mídete cada 3–4 semanas: las series de barras se ajustan solas.</p></div>
    <div class="field"><label class="lbl" for="c-why">Tu por qué</label><textarea id="c-why" data-c="why" placeholder="Por qué quieres ser buzo táctico. El comandante te lo recuerda en los días duros.">${esc(c.why||"")}</textarea></div>
    <div class="field" style="max-width:170px"><label class="lbl" for="c-temp">Agua del lago (°C)</label><input id="c-temp" inputmode="decimal" data-c="temp" value="${esc(c.temp)}" placeholder="${TEMP_MES[today.getMonth()]} estimado"></div>
@@ -991,6 +1091,8 @@ document.addEventListener("input",e=>{
   else if(D.t){const t=Object.assign({},(Store.days[k]||{}).test||{});t[D.t]=el.value.trim();Store.setDay(k,{test:t})}
   else if(D.tc){const t=Object.assign({},(Store.days[k]||{}).test||{});t[D.tc]=el.checked;Store.setDay(k,{test:t});render()}
   else if(D.c==="name")Store.setCfg({name:el.value.trim()||"Recluta"});
+  else if(D.c==="peso"){const v=el.value.trim().replace(",",".");Store.setCfg({peso:v});Store.setDay(iso(new Date()),{peso:v})}
+  else if(D.c==="alt")Store.setCfg({alt:el.value.trim()});
   else if(D.c==="why")Store.setCfg({why:el.value});
   else if(D.c==="maxb"){const v=parseInt(el.value,10);Store.setCfg({maxB:v>0?{v,k:iso(new Date())}:null})}
   else if(D.c==="temp")Store.setCfg({temp:el.value.trim().replace(",",".")});
