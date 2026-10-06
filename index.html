@@ -93,6 +93,8 @@ label.btn{display:inline-block;cursor:pointer}
 .chart .cv{fill:var(--ink);font-family:var(--f-mono);font-size:12px;font-weight:600}
 .chart .cl{fill:none;stroke:var(--accent);stroke-width:2;stroke-linejoin:round;stroke-linecap:round}
 .chart .cd circle{fill:var(--accent);stroke:var(--paper);stroke-width:2}
+.chart .cd{cursor:pointer;outline:none}.chart .cd circle.hit{fill:transparent;stroke:none}.chart .cd.sel circle:not(.hit),.chart .cd:focus-visible circle:not(.hit){stroke:var(--ink);stroke-width:3}
+.cval{margin:2px 0 0;min-height:1.3em}
 .chart .cgoal path{fill:none;stroke:var(--muted);stroke-width:1.5}
 .chart g{cursor:default}
 .hmwrap{display:flex;flex-direction:column;gap:10px;overflow-x:auto}
@@ -735,13 +737,23 @@ function evalTest(w,t){
 /* =================== ALMACENAMIENTO =================== */
 const LS="bitacora-buzo-v1";
 const defCfg=()=>({name:"Diego",start:"2026-10-06",sched:Array.from({length:53},(_,i)=>i),repeats:[],place:"lago",partner:false,neo:false,temp:"",turno:"13",bigText:false});
-const fixCfg=c=>{if(c.start==="2026-10-05"&&!c.startMoved){c.start="2026-10-06";c.startMoved=true}return c};
+// ajustes guardados: si algo viene dañado (copia editada, datos viejos) se usa el valor por defecto
+const fixCfg=c=>{const d=defCfg();if(c.start==="2026-10-05"&&!c.startMoved){c.start="2026-10-06";c.startMoved=true}
+  if(typeof c.start!=="string"||!/^\d{4}-\d{2}-\d{2}$/.test(c.start)||isNaN(parse(c.start)))c.start=d.start;
+  if(!Array.isArray(c.sched)||!c.sched.length||!c.sched.every(w=>Number.isInteger(w)&&w>=0&&w<=52))c.sched=d.sched;
+  if(!Array.isArray(c.repeats))c.repeats=[];
+  c.turno=String(c.turno);if(!SHIFT[c.turno])c.turno=d.turno;
+  return c};
 const clone=o=>JSON.parse(JSON.stringify(o||{}));
-const Store={mode:"local",cfg:defCfg(),days:{},timers:{},chains:{},pend:{},edit:{},
-  loadLocal(){try{const r=JSON.parse(localStorage.getItem(LS)||"null");if(r){this.cfg=fixCfg(Object.assign(defCfg(),r.cfg||{}));this.days=r.days||{}}}catch(e){}},
-  saveLocal(){try{localStorage.setItem(LS,JSON.stringify({cfg:this.cfg,days:this.days}))}catch(e){}},
-  // un documento que acabas de tocar manda sobre lo que llega de la nube: mientras se guarda y 5 s después
-  busy(k){return !!this.timers[k]||(this.pend[k]||0)>0||Date.now()-(this.edit[k]||0)<5000},
+// errores de la nube que no se arreglan reintentando
+const HARD_ERR=["invalid_argument","quota_exceeded","revoked","not_granted","capability_disabled","capability_removed","transform_error"];
+const Store={mode:"local",cfg:defCfg(),days:{},timers:{},flying:{},again:{},wait:[],active:0,ver:{},dirty:{},edit:{},fails:0,
+  loadLocal(){try{const r=JSON.parse(localStorage.getItem(LS)||"null");if(r){this.cfg=fixCfg(Object.assign(defCfg(),r.cfg||{}));this.days=r.days&&typeof r.days==="object"&&!Array.isArray(r.days)?r.days:{};this.dirty=r.dirty||{}}}catch(e){}},
+  saveLocal(){try{localStorage.setItem(LS,JSON.stringify({cfg:this.cfg,days:this.days,dirty:this.dirty}));this.localErr=0}
+    catch(e){if(!this.localErr&&this.mode!=="db")toast("Este navegador no deja guardar. Descarga una copia en Ajustes › Respaldo.");this.localErr=Date.now()}},
+  // un documento que acabas de tocar manda sobre lo que llega de la nube: mientras no se haya subido, y 5 s después
+  busy(k){return !!this.timers[k]||!!this.flying[k]||!!this.dirty[k]||Date.now()-(this.edit[k]||0)<5000},
+  touch(k){this.ver[k]=(this.ver[k]||0)+1;this.dirty[k]=1;this.edit[k]=Date.now()},
   async init(cb){
     this.cb=cb;this.loadLocal();cb();
     try{
@@ -749,50 +761,84 @@ const Store={mode:"local",cfg:defCfg(),days:{},timers:{},chains:{},pend:{},edit:
       const [db,user]=await Promise.all([window.claude.use("db"),window.claude.use("user")]);
       if(!db||!user)return;const uid=await user.id();if(!uid)return;
       this.planRef=db.doc("data/users/"+uid+"/plan");this.daysCol=this.planRef.collection("days");
-      const localCfg=clone(this.cfg),localDays=clone(this.days);let gotCfg=false,gotDays=false;
-      this.mode="db";
-      this.planRef.onSnapshot(s=>{
-        const before=JSON.stringify(this.cfg);
-        if(s.exists){if(!this.busy("plan")){const raw=clone(s.data());this.cfg=fixCfg(Object.assign(defCfg(),raw));if(raw.start!==this.cfg.start)this.queue("plan")}}
-        else if(!gotCfg){this.cfg=localCfg;this.queue("plan")}
-        gotCfg=true;if(JSON.stringify(this.cfg)!==before){this.saveLocal();cb()}
-      },()=>{});
-      this.daysCol.limit(1000).onSnapshot(q=>{
-        const before=JSON.stringify(this.days),d={};q.docs.forEach(x=>{d[x.id]=clone(x.data())});
-        if(!gotDays&&q.empty&&Object.keys(localDays).length){this.days=localDays;Object.keys(localDays).forEach(k=>this.queue(k))}
-        else{Object.keys(this.days).forEach(k=>{if(this.busy(k))d[k]=this.days[k]});this.days=d}
-        gotDays=true;if(JSON.stringify(this.days)!==before){this.saveLocal();cb()}
-      },()=>{});
-    }catch(e){this.mode="local"}
+      this.localCfg=clone(this.cfg);this.localDays=clone(this.days);
+      this.mode="db";this.listen();this.flush();paintSave();
+      window.addEventListener("online",()=>this.flush());
+      document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="visible"&&Object.keys(this.dirty).length)this.flush()});
+    }catch(e){this.mode="local";paintSave()}
+  },
+  // escucha la nube; si la conexión con la plataforma se corta, vuelve a escuchar
+  listen(){
+    const cb=this.cb,again=e=>{if(e&&HARD_ERR.includes(e.code)){this.hardErr=e.code;paintSave();return}
+      clearTimeout(this.relisten);this.relisten=setTimeout(()=>{try{this.unP&&this.unP();this.unD&&this.unD()}catch(x){}this.listen()},10000)};
+    this.unP=this.planRef.onSnapshot(s=>{
+      const before=JSON.stringify(this.cfg);
+      if(s.exists){if(!this.busy("plan")){const raw=clone(s.data());this.cfg=fixCfg(Object.assign(defCfg(),raw));if(["start","sched","repeats","turno"].some(f=>JSON.stringify(raw[f])!==JSON.stringify(this.cfg[f]))){this.touch("plan");this.queue("plan")}}}
+      else if(!this.gotCfg){this.cfg=this.localCfg;this.touch("plan");this.queue("plan")}
+      this.gotCfg=true;paintSave();if(JSON.stringify(this.cfg)!==before){this.saveLocal();cb()}
+    },again);
+    this.unD=this.daysCol.limit(1000).onSnapshot(q=>{
+      const before=JSON.stringify(this.days),d={};q.docs.forEach(x=>{d[x.id]=clone(x.data())});
+      if(!this.gotDays&&q.empty&&Object.keys(this.localDays).length){Object.keys(this.days).forEach(k=>{this.dirty[k]=1});this.flush()}
+      else{Object.keys(this.days).forEach(k=>{if(this.busy(k))d[k]=this.days[k]});this.days=d}
+      this.gotDays=true;paintSave();if(JSON.stringify(this.days)!==before){this.saveLocal();cb()}
+    },again);
   },
   day(k){return this.days[k]||(this.days[k]={})},
-  setDay(k,patch){Object.assign(this.day(k),patch);this.edit[k]=Date.now();this.saveLocal();this.queue(k)},
-  setCfg(patch){Object.assign(this.cfg,patch);this.edit.plan=Date.now();this.saveLocal();this.queue("plan")},
+  setDay(k,patch){Object.assign(this.day(k),patch);this.touch(k);this.saveLocal();this.queue(k)},
+  setCfg(patch){Object.assign(this.cfg,patch);this.touch("plan");this.saveLocal();this.queue("plan")},
+  // junta los toques seguidos en una sola escritura
   queue(k){
     if(this.mode!=="db")return;clearTimeout(this.timers[k]);
-    const id=setTimeout(()=>{
-      if(this.timers[k]===id)delete this.timers[k];
-      const body=clone(k==="plan"?this.cfg:this.days[k]),ref=k==="plan"?this.planRef:this.daysCol.doc(k);
-      this.pend[k]=(this.pend[k]||0)+1;
-      this.chains[k]=(this.chains[k]||Promise.resolve()).then(()=>ref.set(body)).then(()=>{this.lastOk=Date.now();this.lastErr=0}).catch(()=>{this.lastErr=Date.now();toast("No se pudo guardar en la nube; quedó guardado en este teléfono.")}).finally(()=>{this.pend[k]--;this.edit[k]=Date.now();paintSave()});
-      paintSave();
-    },400);
+    const id=setTimeout(()=>{if(this.timers[k]===id)delete this.timers[k];this.want(k)},400);
     this.timers[k]=id;paintSave();
   },
+  want(k){if(!this.wait.includes(k))this.wait.push(k);this.pump()},
+  // sube de a 3 documentos a la vez, uno por documento; si falla, espera y reintenta
+  pump(){
+    if(this.mode==="db"&&!this.paused&&!this.hardErr)while(this.active<3&&this.wait.length){const k=this.wait.shift();if(this.flying[k]){this.again[k]=1;continue}this.write(k)}
+    paintSave();
+  },
+  write(k){
+    const v=this.ver[k]||0,src=k==="plan"?this.cfg:this.days[k];if(!src){delete this.dirty[k];return}
+    const body=clone(src),ref=k==="plan"?this.planRef:this.daysCol.doc(k);
+    this.active++;this.flying[k]=1;
+    Promise.resolve().then(()=>ref.set(body)).then(()=>{
+      this.lastOk=Date.now();this.fails=0;
+      if((this.ver[k]||0)===v){delete this.dirty[k];this.saveLocal()}
+    },e=>{
+      const code=e&&e.code;
+      if(HARD_ERR.includes(code)){this.hardErr=code;toast("La nube rechazó el guardado. Todo sigue en este teléfono: descarga una copia en Ajustes › Respaldo.");return}
+      if(!this.lastErr)toast("Sin señal: quedó guardado en este teléfono y se sube solo cuando vuelva.");
+      this.lastErr=Date.now();this.fails++;this.paused=true;this.retryLater();
+    }).finally(()=>{
+      this.active--;delete this.flying[k];this.edit[k]=Date.now();
+      if(this.again[k]){delete this.again[k];if(!this.wait.includes(k))this.wait.push(k)}
+      if(!Object.keys(this.dirty).length)this.lastErr=0;
+      this.pump();
+    });
+  },
+  retryLater(){if(this.retryT)return;const ms=Math.min(60000,4000*Math.pow(2,Math.min(this.fails-1,4)))*(0.8+Math.random()*0.4);this.retryT=setTimeout(()=>{this.retryT=0;this.flush()},ms)},
+  // sube todo lo que quedó pendiente (al volver la señal, al abrir la app, tras restaurar)
+  flush(){if(this.mode!=="db")return;this.paused=false;Object.keys(this.dirty).forEach(k=>{if(!this.timers[k]&&!this.wait.includes(k))this.wait.push(k)});this.pump()},
   // qué mostrar en el indicador de guardado
   saveState(){
-    if(this.mode!=="db")return {cls:"local",txt:"En este teléfono",long:"Guardado en este teléfono"};
-    const busy=Object.keys(this.timers).length>0||Object.values(this.pend).some(n=>n>0);
-    if(busy)return {cls:"busy",txt:"Guardando…",long:"Guardando en tu cuenta"};
-    if(this.lastErr)return {cls:"err",txt:"Sin conexión",long:"Sin conexión: quedó guardado en el teléfono y se sube cuando vuelva la señal"};
+    const n=Object.keys(this.dirty).length;
+    if(this.mode!=="db"){if(this.localErr)return {cls:"err",txt:"No se guarda",long:"Este navegador no deja guardar: descarga una copia en Ajustes › Respaldo"};
+      return {cls:"local",txt:"En este teléfono",long:"Guardado en este teléfono"}}
+    if(this.hardErr)return {cls:"err",txt:"No se sube",long:"La nube no acepta los cambios ("+this.hardErr+"). Siguen en este teléfono: descarga una copia en Ajustes › Respaldo"};
+    const working=Object.keys(this.timers).length>0||this.active>0||(this.wait.length>0&&!this.paused);
+    if(working)return {cls:"busy",txt:"Guardando…"+(n>3?" "+n:""),long:"Guardando en tu cuenta"+(n>1?" ("+n+" pendientes)":"")};
+    if(n)return {cls:"err",txt:"Sin conexión",long:"Sin conexión: "+(n===1?"1 cambio quedó":n+" cambios quedaron")+" en este teléfono y se suben solos cuando vuelva la señal"};
     return {cls:"ok",txt:"Guardado",long:"Guardado en tu cuenta"+(this.lastOk?" a las "+new Date(this.lastOk).toTimeString().slice(0,5):"")};
   },
   // restaurar una copia: los días de la copia reemplazan a los actuales; el resto se mantiene
   restore(data){
+    const lbs=[this.cfg.lastBackup,data.cfg.lastBackup,data.exportedAt&&!isNaN(new Date(data.exportedAt))?iso(new Date(data.exportedAt)):""];
     this.cfg=fixCfg(Object.assign(defCfg(),clone(data.cfg)));
-    Object.keys(data.days).forEach(k=>{this.days[k]=clone(data.days[k]);this.edit[k]=Date.now()});
-    this.edit.plan=Date.now();this.saveLocal();
-    this.queue("plan");Object.keys(data.days).forEach(k=>this.queue(k));
+    const lb=lbs.filter(x=>typeof x==="string"&&x).sort().pop();if(lb)this.cfg.lastBackup=lb;
+    this.touch("plan");Object.keys(data.days).forEach(k=>{this.days[k]=clone(data.days[k]);this.touch(k)});
+    this.saveLocal();this.flush();
   }
 };
 
@@ -805,9 +851,13 @@ function locate(date){
 }
 const weekStartOf=d=>{const st=parse(Store.cfg.start);return addDays(st,Math.floor(diffDays(d,st)/7)*7)};
 let CTX=null;
-function lastTest(){if(CTX)return CTX;const c={};let bk="";Object.keys(Store.days).sort().forEach(k=>{const t=Store.days[k].test||Store.days[k].sim;if(t)["barras","run","swim","apnea"].forEach(x=>{if(t[x]){c[x]=t[x];if(x==="barras")bk=k}})});
-  const mb=Store.cfg.maxB;if(mb&&mb.v&&(!bk||mb.k>=bk))c.barras=mb.v;return CTX=c}
-function ctxFor(date){const c=Store.cfg;return Object.assign({},lastTest(),{month:date.getMonth(),place:c.place,partner:c.partner,neo:c.neo,temp:c.temp})}
+// resultados que mandan en el plan de una fecha: solo pruebas y simulacros de semanas anteriores
+// (así anotar un simulacro no cambia los días que ya hiciste)
+function lastTest(date){const ws=date?weekStartOf(date):null,lim=ws?iso(ws):"9999-99-99",end=ws?iso(addDays(ws,7)):"9999-99-99";
+  CTX=CTX||{};if(CTX[lim])return CTX[lim];
+  const c={};let bk="";Object.keys(Store.days).sort().forEach(k=>{if(k>=lim)return;const t=Store.days[k].test||Store.days[k].sim;if(t)["barras","run","swim","apnea"].forEach(x=>{if(t[x]){c[x]=t[x];if(x==="barras")bk=k}})});
+  const mb=Store.cfg.maxB;if(mb&&mb.v&&mb.k<end&&(!bk||mb.k>=bk))c.barras=mb.v;return CTX[lim]=c}
+function ctxFor(date){const c=Store.cfg;return Object.assign({},lastTest(date),{month:date.getMonth(),place:c.place,partner:c.partner,neo:c.neo,temp:c.temp})}
 function planFor(date){const L=locate(date);if(L.w===undefined)return null;const dd=Store.days[iso(date)]||{};return applyShift(applyMode(dayPlan(L.w,L.dow,ctxFor(date)),dd.mode),dd.turno||Store.cfg.turno,bodyWeight())}
 const setKey=(t,i)=>t.id+"."+i;
 const blockDone=(dd,t,i)=>Math.min(((dd&&dd.sets)||{})[setKey(t,i)]||0,t.blocks[i].s);
@@ -1159,40 +1209,51 @@ const RES_FIELDS={
   sim:[["apnea","Apnea (m)","15","numeric"],["swim","500 m (mm:ss)","12:40","text"],["barras","Barras","8","numeric"],["sent","Sentadillas 2 min","65","numeric"],["flex","Flexiones 2 min","45","numeric"],["abd","Abdominales 2 min","50","numeric"],["run","2.400 m (mm:ss)","10:45","text"]],
   mini:[["swim","Nado (mm:ss)","5:30","text"],["barras","Barras","6","numeric"],["sent","Sentadillas 1 min","35","numeric"],["flex","Flexiones 1 min","30","numeric"],["abd","Abdominales 1 min","30","numeric"],["run","Carrera (mm:ss)","5:40","text"]]};
 const RES_NAMES={apnea:"Apnea",swim:"Nado",barras:"Barras",sent:"Sentadillas",flex:"Flexiones",abd:"Abdominales",run:"Carrera"};
-function resultsKind(plan){if(plan.test)return null;if(plan.kind==="prueba")return "sim";if(plan.tasks.some(t=>t.id==="fri"&&/^Mini-prueba/.test(t.t)))return "mini";return null}
+function resultsKind(plan){if(plan.test)return null;if(plan.kind==="prueba"||plan.tasks.some(t=>t.blocks.some(b=>b.n==="Simulacro completo")))return "sim";if(plan.tasks.some(t=>t.id==="fri"&&/^Mini-prueba/.test(t.t)))return "mini";return null}
+// distancias que pidió la mini-prueba de ese día (nado 200/300 m, carrera 1.200/1.600 m)
+function miniDist(plan){const t=plan&&plan.tasks.find(x=>x.id==="fri"),o={swim:null,run:null};if(!t)return o;
+  t.blocks.forEach(b=>{let m=/^Nado (\d+) m$/.exec(b.n);if(m)o.swim=+m[1];if(b.n==="Carrera"){m=/^(\d)\.?(\d{3}) m$/.exec(b.p);if(m)o.run=+(m[1]+m[2])}});return o}
+const miniFields=plan=>{const md=miniDist(plan);return RES_FIELDS.mini.map(f=>f[0]==="swim"?["swim",`Nado ${md.swim?nf(md.swim)+" m ":""}(mm:ss)`,f[2],f[3]]:f[0]==="run"?["run",`Carrera ${md.run?nf(md.run)+" m ":""}(mm:ss)`,f[2],f[3]]:f).concat(md.swim?[]:[["swimM","Metros nadados","200 o 300","numeric"]])};
 function resultsHTML(plan,k,dd){
   const kind=resultsKind(plan);if(!kind)return "";const r=dd[kind]||{};
   const f=([id,lab,ph,mode])=>`<div class="field"><label class="lbl" for="x-${kind}-${id}">${lab}</label><input id="x-${kind}-${id}" data-x="${kind}|${id}" inputmode="${mode}" value="${esc(r[id]||"")}" placeholder="${ph}"></div>`;
-  return `<div class="card"><span class="lbl">Tus resultados · ${kind==="sim"?"simulacro":"mini-prueba"}</span><div class="testform">${RES_FIELDS[kind].map(f).join("")}</div><p class="rlv" id="xv-${kind}">${esc(resultsVerdict(kind,plan,k,r))}</p></div>`;
+  return `<div class="card"><span class="lbl">Tus resultados · ${kind==="sim"?"simulacro":"mini-prueba"}</span><div class="testform">${(kind==="mini"?miniFields(plan):RES_FIELDS[kind]).map(f).join("")}</div><p class="rlv" id="xv-${kind}">${esc(resultsVerdict(kind,plan,k,r))}</p></div>`;
 }
 function resultsVerdict(kind,plan,k,r){
   if(!Object.values(r).some(Boolean))return kind==="sim"?"Anota cada número: quedan en tus gráficos y récords.":"Anota tus números para comparar con la mini-prueba anterior.";
   if(kind==="sim"){const g=nextGoalWeek(plan.w),ev=evalTest(g,Object.assign({sinParar:1,crol:1},r)),filled=ev.rows.filter((x,i)=>r[["apnea","swim","barras","sent","flex","abd","run"][i]]);
     const okN=filled.filter(x=>x[3]).length,miss=filled.filter(x=>!x[3]).map(x=>x[0]);
     return `Contra la meta de la semana ${g}: cumples ${okN} de ${filled.length}.${miss.length?" Te falta: "+miss.join(", ")+".":" Vas sobre la meta."}`}
-  const prev=Object.keys(Store.days).filter(x=>x<k&&Store.days[x].mini).sort().pop();if(!prev)return "Primera mini-prueba registrada: la próxima se compara con esta.";
-  const p=Store.days[prev].mini,out=[];
+  const has=x=>x&&["barras","sent","flex","abd","swim","run"].some(f=>x[f]);
+  const prev=Object.keys(Store.days).filter(x=>x<k&&has(Store.days[x].mini)).sort().pop();if(!prev)return "Primera mini-prueba registrada: la próxima se compara con esta.";
+  const p=Store.days[prev].mini,out=[],dA=miniDist(plan),dB=miniDist(planFor(parse(prev)));
   ["barras","sent","flex","abd"].forEach(f=>{if(r[f]&&p[f]){const d=Number(r[f])-Number(p[f]);out.push(`${RES_NAMES[f]} ${r[f]} (${d>=0?"+":""}${d})`)}});
-  ["swim","run"].forEach(f=>{const a=toSec(r[f]),b=toSec(p[f]);if(a&&b){const d=a-b;out.push(`${RES_NAMES[f]} ${r[f]} (${d<=0?"−"+fmtT(-d):"+"+fmtT(d)})`)}});
+  // mismo tramo: compara el tiempo; tramo distinto: compara el ritmo (por 100 m nadando, por km corriendo)
+  [["swim",+(r.swimM||dA.swim)||0,+(p.swimM||dB.swim)||0,100,"/100 m"],["run",dA.run,dB.run,1000,"/km"]].forEach(([f,ma,mb,u,ul])=>{const a=toSec(r[f]),b=toSec(p[f]);if(!(a&&b))return;
+    const sg=d=>d<=0?"−"+fmtT(-d):"+"+fmtT(d);
+    if(ma&&mb&&ma!==mb){const pa=a/ma*u,pb=b/mb*u;out.push(`${RES_NAMES[f]} ${nf(ma)} m ${r[f]}: ritmo ${fmtT(pa)}${ul} (${sg(Math.round(pa-pb))}${ul} contra ${nf(mb)} m)`)}
+    else out.push(`${RES_NAMES[f]} ${r[f]} (${sg(a-b)})`)});
   return out.length?"Contra la anterior ("+fmtS(parse(prev))+"): "+out.join(" · ")+".":"Completa los mismos ejercicios que la vez anterior para comparar.";
 }
 function updateResults(kind){const el=document.getElementById("xv-"+kind);if(!el)return;const p=planFor(S.date);if(!p)return;const k=iso(S.date);el.textContent=resultsVerdict(kind,p,k,(Store.days[k]||{})[kind]||{})}
 
 // series para los gráficos: pruebas + simulacros (+ peso)
 function seriesData(){
+  // x = semana del plan (si repites semanas, la prueba queda junto a su meta); el peso va por semana de calendario
   const st=parse(Store.cfg.start),pts={barras:[],run:[],swim:[],apnea:[],flex:[],peso:[]};
-  Object.keys(Store.days).sort().forEach(k=>{const d=Store.days[k],x=diffDays(parse(k),st)/7;if(x<0)return;
-    [d.test,d.sim].forEach(t=>{if(!t)return;["barras","apnea","flex"].forEach(f=>{const v=Number(t[f]);if(v>0)pts[f].push({x,v,k})});["run","swim"].forEach(f=>{const v=toSec(t[f]);if(v>0)pts[f].push({x,v,k})})});
-    const pw=parseFloat(String(d.peso||"").replace(",","."));if(pw>30)pts.peso.push({x,v:pw,k})});
+  Object.keys(Store.days).sort().forEach(k=>{const d=Store.days[k],cx=diffDays(parse(k),st)/7;if(cx<0)return;const L=locate(parse(k)),x=L.w!=null?L.w+L.dow/7:cx,w=L.w;
+    [d.test,d.sim].forEach(t=>{if(!t)return;["barras","apnea","flex"].forEach(f=>{const raw=t[f];if(raw===""||raw==null||raw===true)return;const v=Number(raw);if(v>=0&&!isNaN(v))pts[f].push({x,v,k,w})});["run","swim"].forEach(f=>{const v=toSec(t[f]);if(v>0)pts[f].push({x,v,k,w})})});
+    const pw=parseFloat(String(d.peso||"").replace(",","."));if(pw>30)pts.peso.push({x:cx,v:pw,k})});
+  Object.values(pts).forEach(a=>a.sort((p,q)=>p.x-q.x||(p.k<q.k?-1:1)));
   return pts;
 }
 const CHARTS=[["barras","Barras seguidas","más es mejor",w=>GOALS[w].barras,0],["run","2.400 m","menos tiempo es mejor",w=>toSec(GOALS[w].run),1],["swim","500 m libre","menos tiempo es mejor",w=>GOALS[w].swim?toSec(GOALS[w].swim):null,1],["apnea","Apnea dinámica (m)","más es mejor",w=>GOALS[w].apnea,0],["flex","Flexiones en 2 min","más es mejor",w=>GOALS[w].flex,0],["peso","Peso en ayunas (kg)","",null,0]];
 function lineChart(pts,goalFn,isTime){
-  const W=320,H=150,L=40,R=14,T=14,B=24,fx=v=>isTime?fmtT(v):(Math.round(v*10)/10).toLocaleString("es-CL");
+  const W=320,H=150,L=40,R=14,T=14,B=24,fx=v=>isTime?fmtT(v):(Math.round(v*100)/100).toLocaleString("es-CL",{maximumFractionDigits:2});
   const goals=goalFn?[13,26,39,52].map(g=>({x:g,v:goalFn(g)})).filter(g=>g.v!=null):[];
   const vals=pts.map(p=>p.v).concat(goals.map(g=>g.v));let lo=Math.min(...vals),hi=Math.max(...vals);if(lo===hi){lo-=1;hi+=1}
-  // paso "redondo": segundos de 15 a 5 min para tiempos; 1-2-2,5-5 × 10ⁿ para números
-  const raw=(hi-lo)/2,steps=isTime?[15,30,60,120,300,600]:[1,2,2.5,5].flatMap(m=>[-1,0,1,2,3].map(e=>m*Math.pow(10,e))).sort((a,b)=>a-b);
+  // paso "redondo": segundos de 15 a 5 min para tiempos; 1-2-5 × 10ⁿ para números
+  const raw=(hi-lo)/2,steps=isTime?[15,30,60,120,300,600]:[1,2,5].flatMap(m=>[-1,0,1,2,3].map(e=>m*Math.pow(10,e))).sort((a,b)=>a-b);
   const step=steps.find(x=>x>=raw)||steps[steps.length-1];lo=Math.floor(lo/step)*step;hi=Math.ceil(hi/step)*step;if(hi===lo)hi=lo+step;
   const ticks=[];for(let v=lo;v<=hi+1e-9;v+=step)ticks.push(v);
   const xmax=Math.max(52,...pts.map(p=>p.x)),X=x=>L+(x/xmax)*(W-L-R),Y=v=>T+(1-(v-lo)/(hi-lo))*(H-T-B);
@@ -1201,15 +1262,15 @@ function lineChart(pts,goalFn,isTime){
   [0,13,26,39,52].forEach(w=>{if(w<=xmax)g+=`<text x="${X(w)}" y="${H-6}" class="ct" text-anchor="middle">S${w}</text>`});
   goals.forEach(q=>{const x=X(q.x),y=Y(q.v);g+=`<g class="cgoal"><path d="M${x} ${y-5}L${x+5} ${y}L${x} ${y+5}L${x-5} ${y}Z"/><title>Meta semana ${q.x}: ${fx(q.v)}</title></g>`});
   if(pts.length>1)g+=`<path class="cl" d="${pts.map((p,i)=>(i?"L":"M")+X(p.x).toFixed(1)+" "+Y(p.v).toFixed(1)).join("")}"/>`;
-  pts.forEach(p=>{g+=`<g class="cd"><circle cx="${X(p.x)}" cy="${Y(p.v)}" r="5"/><title>${fmtS(parse(p.k))} (semana ${Math.floor(p.x)}): ${fx(p.v)}</title></g>`});
+  pts.forEach(p=>{const lab=`${fmtS(parse(p.k))}${p.w!=null?` · semana ${p.w}`:""}: ${fx(p.v)}`;g+=`<g class="cd" data-v="${esc(lab)}" tabindex="0" role="button" aria-label="${esc(lab)}"><circle class="hit" cx="${X(p.x)}" cy="${Y(p.v)}" r="14"/><circle cx="${X(p.x)}" cy="${Y(p.v)}" r="5"/><title>${esc(lab)}</title></g>`});
   const last=pts[pts.length-1];if(last){const x=X(last.x),y=Y(last.v),right=x>W-70;g+=`<text x="${right?x-9:x+9}" y="${y-8}" class="cv" text-anchor="${right?"end":"start"}">${fx(last.v)}</text>`}
   return `<svg viewBox="0 0 ${W} ${H}" class="chart" role="img">${g}</svg>`;
 }
 function chartsHTML(){
   const S2=seriesData();let any=false,h="";
   CHARTS.forEach(([key,name,sub,goal,isTime])=>{const pts=S2[key];if(pts.length)any=true;
-    h+=`<div class="chartbox"><div class="row" style="justify-content:space-between;align-items:baseline"><b class="ctitle">${name}</b><span class="foot">${sub}</span></div>${pts.length?lineChart(pts,goal,isTime):`<p class="foot" style="padding:20px 0">Sin datos todavía.</p>`}</div>`});
-  return `<div class="sec"><h3>Tu evolución</h3>${any?"":`<p class="muted" style="margin:0">Se llena con la prueba inicial, los simulacros y tu peso de cada semana.</p>`}<div class="charts">${h}</div><p class="foot">Punto dorado: tu resultado (prueba o simulacro). ◇ Rombo: la meta de cada prueba (semanas 13, 26, 39 y 52). Toca un punto para ver el valor.</p></div>`;
+    h+=`<div class="chartbox"><div class="row" style="justify-content:space-between;align-items:baseline"><b class="ctitle">${name}</b><span class="foot">${sub}</span></div>${pts.length?lineChart(pts,goal,isTime)+`<p class="foot cval" aria-live="polite">Toca un punto para ver el valor.</p>`:`<p class="foot" style="padding:20px 0">Sin datos todavía.</p>`}</div>`});
+  return `<div class="sec"><h3>Tu evolución</h3>${any?"":`<p class="muted" style="margin:0">Se llena con la prueba inicial, los simulacros y tu peso de cada semana.</p>`}<div class="charts">${h}</div><p class="foot">Punto dorado: tu resultado (prueba o simulacro). ◇ Rombo: la meta de cada prueba (semanas 13, 26, 39 y 52).</p></div>`;
 }
 // mapa de constancia: cada día del plan, por etapa
 function constancyHTML(){
@@ -1238,7 +1299,12 @@ function recordsHTML(){
    ${hist.length?`<h3>Resultados</h3><div class="tbl"><table><thead><tr><th>Día</th><th>Tipo</th><th>Resultados</th></tr></thead><tbody>${hist.slice(0,15).map(x=>`<tr><td class="mono">${fmtS(parse(x.k))}</td><td>${x.n}</td><td style="white-space:normal">${esc(Object.entries(x.t).filter(([f,v])=>RES_NAMES[f]&&v).map(([f,v])=>RES_NAMES[f]+" "+v).join(" · "))}</td></tr>`).join("")}</tbody></table></div>`:""}</div>`;
 }
 // diario y fatiga
-function fatigueRun(ref){let n=0,d=addDays(ref,0);const md=x=>(Store.days[iso(x)]||{}).mode;if(!["cansado","dolor"].includes(md(d)))d=addDays(d,-1);while(["cansado","dolor"].includes(md(d))&&n<30){n++;d=addDays(d,-1)}return n}
+// días seguidos cansado o con dolor. Hoy “Al 100%” corta la cuenta; hoy sin marcar cuenta desde ayer;
+// un día de descanso (que no se puede marcar) no la corta
+function fatigueRun(ref){const md=x=>(Store.days[iso(x)]||{}).mode,bad=m=>m==="cansado"||m==="dolor";
+  let n=0,d=addDays(ref,0);const m0=md(d);if(m0&&!bad(m0))return 0;if(!m0)d=addDays(d,-1);
+  for(let i=0;i<60&&n<30;i++){const m=md(d);if(bad(m))n++;else if(m)break;else{const p=planFor(d);if(!p||p.kind!=="descanso")break}d=addDays(d,-1)}
+  return n}
 function diaryHTML(){
   const today=new Date();let ca=0,dol=0;for(let i=0;i<14;i++){const m=(Store.days[iso(addDays(today,-i))]||{}).mode;if(m==="cansado")ca++;if(m==="dolor")dol++}
   const run=fatigueRun(today),items=Object.keys(Store.days).sort().reverse().filter(k=>{const d=Store.days[k];return d.note||d.mode==="cansado"||d.mode==="dolor"||d.status==="fail"}).slice(0,40);
@@ -1263,33 +1329,59 @@ function updateNowLine(){const el=document.getElementById("now-line");if(!el||di
 setInterval(updateNowLine,30000);
 
 /* ---- copia de seguridad ---- */
-const backupData=()=>JSON.stringify({app:"bitacora-buzo-tactico",version:1,exportedAt:new Date().toISOString(),cfg:Store.cfg,days:Store.days},null,1);
+const backupData=()=>JSON.stringify({app:"bitacora-buzo-tactico",version:1,exportedAt:new Date().toISOString(),cfg:Object.assign({},Store.cfg,{lastBackup:iso(new Date())}),days:Store.days},null,1);
 function backupHTML(){
   const lb=Store.cfg.lastBackup,nd=Object.keys(Store.days).length,R=S.restore;
   let h=`<div class="card" id="respaldo"><span class="lbl">Respaldo</span><p style="margin:0">Tus datos ya se guardan solos${Store.mode==="db"?" en tu cuenta y en este teléfono":" en este teléfono"}. La copia es un archivo tuyo con todo tu historial (${nd} ${nd===1?"día":"días"} registrados), por si cambias de teléfono o algo se borra.</p>
    <p class="foot">Última copia: ${lb?fmt(parse(lb)):"nunca"}.</p>
-   <div class="row"><button class="btn main" data-backup style="flex:1">Descargar copia</button><label class="btn" for="restore-file" style="flex:1;text-align:center">Restaurar copia</label><input type="file" id="restore-file" accept=".json,application/json" hidden></div>`;
+   <div class="row"><button class="btn main" data-backup style="flex:1">Descargar copia</button><label class="btn" for="restore-file" style="flex:1;text-align:center">Restaurar copia</label><input type="file" id="restore-file" accept=".json,.txt,application/json,text/plain" hidden></div>
+   <button class="btn sm" data-paste-open style="align-self:flex-start">Pegar una copia guardada como texto</button>`;
+  if(S.copyBackup)h+=`<div class="verdict"><b>Aquí no se pueden descargar archivos</b><span>Copia este texto y guárdalo en una nota o mándatelo por correo. Para recuperarlo: “Pegar una copia guardada como texto”.</span><div class="field"><textarea id="backup-text" readonly rows="4">${esc(backupData())}</textarea></div><div class="row"><button class="btn main sm" data-copy-backup>Copiar</button><button class="btn sm" data-cancel>Cerrar</button></div></div>`;
+  if(S.paste)h+=`<div class="verdict"><b>Pegar copia</b><span>Pega aquí el texto completo de una copia que guardaste.</span><div class="field"><textarea id="restore-text" rows="4">${esc(S.pasteText||"")}</textarea></div><div class="row"><button class="btn main sm" data-paste-check>Revisar copia</button><button class="btn sm" data-cancel>Cancelar</button></div></div>`;
   if(R)h+=`<div class="verdict ${R.err?"bad":"good"}">${R.err?`<b>No se pudo leer</b><span>${esc(R.err)}</span><button class="btn sm" data-cancel>Cerrar</button>`:`<b>Restaurar esta copia</b><span>Copia del ${esc(R.when)} con ${R.n} días registrados. Los días que están en la copia reemplazan a los de ahora; tus ajustes vuelven a los de la copia.</span><div class="row"><button class="btn main sm" data-restore-ok>Restaurar</button><button class="btn sm" data-cancel>Cancelar</button></div>`}</div>`;
   return h+`</div>`;
 }
 async function exportBackup(){
-  const json=backupData(),filename=`bitacora-buzo-${iso(new Date())}.json`;let done=false;
-  try{if(window.claude&&window.claude.use){const dl=await window.claude.use("downloads");
-      if(dl){await dl.save({filename,data:json});done=true}
-      else{try{await navigator.clipboard.writeText(json);toast("Aquí no se pueden descargar archivos: copié la copia al portapapeles. Pégala en una nota o un correo.");Store.setCfg({lastBackup:iso(new Date())});render()}catch(e){toast("No se pudo descargar aquí. Abre la bitácora en el navegador e inténtalo de nuevo.")}return}}
-  }catch(e){if(e&&e.code==="declined"){toast("Descarga cancelada.");return}if(e&&e.code==="rate_limited"){toast("Ya hay una descarga abierta.");return}}
-  if(!done){try{const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([json],{type:"application/json"}));a.download=filename;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},1000);done=true}catch(e){}}
-  if(done){Store.setCfg({lastBackup:iso(new Date())});toast("Copia descargada: "+filename);render()}
+  const json=backupData(),filename=`bitacora-buzo-${iso(new Date())}.json`;
+  const saved=()=>{Store.setCfg({lastBackup:iso(new Date())});S.copyBackup=false;render();toast("Copia guardada: "+filename)};
+  if(window.claude&&window.claude.use){
+    let dl=null;try{dl=await window.claude.use("downloads")}catch(e){}
+    if(dl){try{const r=await dl.save({filename,data:json});if(!r||r.status!=="delivered")saved();return}
+      catch(e){const c=e&&e.code;
+        if(c==="declined"){toast("Descarga cancelada.");return}
+        if(c==="rate_limited"){toast("Ya hay una descarga abierta: acéptala o ciérrala primero.");return}}}
+    // aquí no se pueden descargar archivos: ofrecer el texto para copiarlo
+    S.copyBackup=true;render();const el=document.getElementById("backup-text");if(el)el.scrollIntoView({block:"center"});return}
+  try{const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([json],{type:"application/json"}));a.download=filename;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},1000);saved()}
+  catch(e){toast("No se pudo descargar en este navegador.")}
+}
+async function copyBackup(){
+  const el=document.getElementById("backup-text");if(!el)return;
+  try{await navigator.clipboard.writeText(el.value);Store.setCfg({lastBackup:iso(new Date())});S.copyBackup=false;render();toast("Copia copiada. Pégala en una nota o en un correo para ti.")}
+  catch(e){el.focus();el.select();toast("Mantén apretado el texto, elige “Seleccionar todo” y “Copiar”.")}
+}
+const isObj=x=>!!x&&typeof x==="object"&&!Array.isArray(x);
+const isISO=x=>typeof x==="string"&&/^\d{4}-\d{2}-\d{2}$/.test(x)&&!isNaN(parse(x));
+// revisa que el texto sea una copia sana antes de ofrecer restaurarla
+function checkBackup(text){
+  try{let d;try{d=JSON.parse(text)}catch(e){throw new Error("no se puede leer")}
+    if(!d||d.app!=="bitacora-buzo-tactico"||!isObj(d.days)||!isObj(d.cfg))throw new Error("no es una copia de la bitácora");
+    const bad=Object.keys(d.days).find(k=>!isISO(k)||!isObj(d.days[k]));if(bad!==undefined)throw new Error("hay un día dañado: "+String(bad).slice(0,20));
+    const c=d.cfg;if(c.start!=null&&!isISO(c.start))throw new Error("la fecha de inicio está dañada");
+    if(c.sched!=null&&(!Array.isArray(c.sched)||!c.sched.length||!c.sched.every(w=>Number.isInteger(w)&&w>=0&&w<=52)))throw new Error("el orden de las semanas está dañado");
+    S.restore={data:d,n:Object.keys(d.days).length,when:d.exportedAt&&!isNaN(new Date(d.exportedAt))?fmt(new Date(d.exportedAt)):"fecha desconocida"}}
+  catch(e){S.restore={err:"El archivo no es una copia válida de la bitácora ("+e.message+")."}}
+  S.paste=false;render();const el=document.getElementById("respaldo");if(el)el.scrollIntoView({block:"center"});
 }
 function readBackup(file){
   const fr=new FileReader();
-  fr.onload=()=>{try{const d=JSON.parse(fr.result);if(!d||d.app!=="bitacora-buzo-tactico"||typeof d.days!=="object"||!d.cfg)throw new Error("no es una copia de la bitácora");
-      S.restore={data:d,n:Object.keys(d.days).length,when:d.exportedAt?fmt(new Date(d.exportedAt)):"fecha desconocida"}}
-    catch(e){S.restore={err:"El archivo no es una copia válida de la bitácora ("+e.message+")."}}
-    render();const el=document.getElementById("respaldo");if(el)el.scrollIntoView({block:"center"})};
+  fr.onload=()=>checkBackup(fr.result);
   fr.onerror=()=>{S.restore={err:"No se pudo abrir el archivo."};render()};
   fr.readAsText(file);
 }
+// si una pantalla falla, mostrar el respaldo en vez de dejar la app en blanco
+function rescueHTML(e){let b="";try{b=backupHTML()}catch(x){}
+  return `<div class="sec"><h2>Esta pantalla falló</h2><p class="alert">Tus datos siguen guardados. Prueba otra pestaña. Si sigue fallando, descarga una copia aquí abajo y cuéntale a Claude este error: ${esc(String(e&&e.message||e))}</p>${b}</div>`}
 function viewProgreso(){
   const res=Object.keys(Store.days).filter(k=>Store.days[k].test).sort().map(k=>({k,w:locate(parse(k)).w,t:Store.days[k].test})).filter(x=>x.w!=null);
   const cp=compliance();
@@ -1394,7 +1486,8 @@ function render(){
   const ae=document.activeElement,fid=ae&&app.contains(ae)&&ae.id?ae.id:null,sel=fid&&ae.selectionStart!=null?[ae.selectionStart,ae.selectionEnd]:null;
   const hqTop=()=>{const L=locate(new Date());return hqHTML(L.after?52:L.w,streak())};
   const v=S.tab==="hoy"&&S.run&&S.run.k===iso(S.date)?viewRun:{hoy:viewHoy,plan:viewPlan,progreso:viewProgreso,guia:viewGuia}[S.tab]||viewHoy;
-  app.innerHTML=(S.tab!=="hoy"?hqTop():"")+v();
+  let body;try{body=(S.tab!=="hoy"?hqTop():"")+v()}catch(e){console.error(e);body=rescueHTML(e)}
+  app.innerHTML=body;
   paintSave();
   document.documentElement.classList.toggle("bigtext",!!Store.cfg.bigText);
   document.body.classList.toggle("guided",v===viewRun);
@@ -1405,6 +1498,8 @@ function setTab(t){S.tab=t;S.confirm=null;try{sessionStorage.setItem("bit-tab",t
 
 let lastTap={sig:"",t:0};
 document.addEventListener("click",e=>{
+  const cd=e.target.closest&&e.target.closest(".cd");
+  if(cd){const box=cd.closest(".chartbox"),out=box&&box.querySelector(".cval");if(out)out.textContent=cd.dataset.v;box.querySelectorAll(".cd.sel").forEach(x=>x.classList.remove("sel"));cd.classList.add("sel");return}
   const b=e.target.closest("button");if(!b)return;const D=b.dataset;
   const sig=JSON.stringify(D),now=Date.now();if(sig===lastTap.sig&&now-lastTap.t<350&&(D.set||D.task||D.rdone))return;lastTap={sig,t:now};
   if(D.tab){if(D.tab==="hoy"&&S.tab==="hoy"){S.date=new Date();S.follow=true}if(D.tab==="plan")S.selWeek=null;setTab(D.tab);return}
@@ -1415,9 +1510,12 @@ document.addEventListener("click",e=>{
   if(D.tstop!==undefined){stopTimer();return}
   if(D.cset){const [key,v]=D.cset.split("|");Store.setCfg({[key]:v==="true"?true:v==="false"?false:v});render();return}
   if(D.ask){S.confirm=D.ask;render();return}
-  if(D.cancel!==undefined){S.confirm=null;S.restore=null;render();return}
+  if(D.cancel!==undefined){S.confirm=null;S.restore=null;S.copyBackup=false;S.paste=false;render();return}
+  if(D.copyBackup!==undefined){copyBackup();return}
+  if(D.pasteOpen!==undefined){S.paste=true;S.restore=null;render();const t=document.getElementById("restore-text");if(t){t.scrollIntoView({block:"center"});t.focus()}return}
+  if(D.pasteCheck!==undefined){const t=document.getElementById("restore-text");if(t){S.pasteText="";checkBackup(t.value)}return}
   if(D.backup!==undefined){exportBackup();return}
-  if(D.restoreOk!==undefined&&S.restore&&S.restore.data){Store.restore(S.restore.data);S.restore=null;CTX=null;render();toast("Copia restaurada.");return}
+  if(D.restoreOk!==undefined&&S.restore&&S.restore.data){Store.restore(S.restore.data);S.restore=null;CTX=null;render();toast(Store.mode==="db"?"Copia restaurada. Se está subiendo a tu cuenta: el indicador de arriba dice cuándo termina.":"Copia restaurada.");return}
   if(D.rep){const i=+D.rep,sched=Store.cfg.sched.slice(),w=sched[i];sched.splice(i+1,0,w-4,w-3,w-2,w-1,w);Store.setCfg({sched,repeats:(Store.cfg.repeats||[]).concat([i])});S.confirm=null;render();toast(`Orden recibida: semanas ${w-4}–${w-1} otra vez y la prueba de nuevo.`);return}
   if(D.s4!==undefined){Store.setCfg({sched:Store.cfg.sched.concat(Array.from({length:13},(_,i)=>40+i))});S.confirm=null;render();toast("Etapa 4 otra vez. Sube las metas.");return}
   const k=iso(S.date);
@@ -1457,6 +1555,7 @@ document.addEventListener("click",e=>{
 });
 document.addEventListener("input",e=>{
   const el=e.target,D=el.dataset,k=iso(S.date);
+  if(el.id==="restore-text"){S.pasteText=el.value;return}
   if(D.f)Store.setDay(k,{[D.f]:el.value});
   else if(D.t){const t=Object.assign({},(Store.days[k]||{}).test||{});t[D.t]=el.value.trim();Store.setDay(k,{test:t});updateVerdict()}
   else if(D.x){const [kind,f]=D.x.split("|"),dd=Store.day(k),r=Object.assign({},dd[kind]||{});r[f]=el.value.trim();Store.setDay(k,{[kind]:r});updateResults(kind)}

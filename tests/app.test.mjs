@@ -284,6 +284,121 @@ const reload = async p => { await p.reload(); await p.waitForTimeout(200); };
   ok(await p.evaluate(() => document.documentElement.classList.contains('bigtext')), 'la letra grande queda guardada');
   await ctx.close(); }
 
+// 19. Sin señal: lo que haces sin conexión no se pierde y se sube solo al volver
+{ console.log('19. Sin señal');
+  const FAKE2 = fs.readFileSync(path.join(here, 'fake-cloud-ctl.js'), 'utf8');
+  const ctx = await browser.newContext({ viewport: { width: 390, height: 1200 } });
+  const p = await ctx.newPage(); const errs = []; p.on('pageerror', e => errs.push(e.message));
+  await p.addInitScript(FAKE2); await p.goto(URL); await p.waitForTimeout(800);
+  const today = await p.evaluate(() => { const d = new Date(); return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); });
+  const localNote = () => p.evaluate(k => ((JSON.parse(localStorage.getItem('bitacora-buzo-v1')).days || {})[k] || {}).note, today);
+  const dayPath = 'data/users/u1/plan/days/' + today;
+  const chip = () => p.$eval('#savechip', e => e.textContent + ' | ' + e.title);
+  const cloudDay = () => p.evaluate(k => __cloud.server()[k] || {}, dayPath);
+  await p.evaluate(() => { __cloud.offline = true; });
+  await p.locator('summary', { hasText: 'Notas' }).click(); await p.fill('#f-note', 'nadé sin señal');
+  await p.waitForTimeout(1500);
+  ok((await chip()).includes('Sin conexión'), 'sin señal el indicador lo dice (' + await chip() + ')');
+  await p.waitForTimeout(2500);
+  ok(await localNote() === 'nadé sin señal', 'la nota sigue en el teléfono mientras no hay señal');
+  await p.evaluate(() => { __cloud.offline = false; window.dispatchEvent(new Event('online')); });
+  await p.waitForTimeout(1500);
+  ok((await cloudDay()).note === 'nadé sin señal', 'al volver la señal la nota sube sola');
+  ok((await chip()).includes('Guardado'), 'el indicador vuelve a “Guardado” (' + await chip() + ')');
+  await p.waitForTimeout(3000);
+  ok(await localNote() === 'nadé sin señal' && await p.inputValue('#f-note') === 'nadé sin señal', 'la nube no borra la nota después');
+  // cambio sin señal y recarga antes de que vuelva: queda pendiente y sube al abrir
+  await p.evaluate(() => { __cloud.offline = true; });
+  await p.click('[data-mode="cansado"]'); await p.waitForTimeout(1000);
+  ok((await cloudDay()).mode !== 'cansado', 'sin señal no llegó a la nube');
+  await p.reload(); await p.waitForTimeout(2000);
+  ok(await p.locator('[data-mode="cansado"]').evaluate(e => e.classList.contains('on')), 'después de recargar sigue “Cansado”');
+  ok((await cloudDay()).mode === 'cansado', 'el cambio pendiente sube al abrir la app');
+  // la plataforma corta las suscripciones: la app vuelve a escuchar y ve lo del otro dispositivo
+  await p.evaluate(([k, d]) => { __cloud.kill(); __cloud.remoteSet(k, Object.assign({}, d, { note: 'desde el computador' })); }, [dayPath, await cloudDay()]);
+  await p.waitForTimeout(12000);
+  ok(await localNote() === 'desde el computador', 'tras un corte vuelve a recibir los cambios de otro dispositivo');
+  // restaurar 60 días: sube de a pocos, sin rechazos, y todo llega
+  const days = {}; for (let i = 0; i < 60; i++) { const d = new Date(2026, 9, 6 + i); days[d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0')] = { status: 'done', note: 'día ' + i }; }
+  const bk = path.join(here, '..', 'node_modules', '.bk60.json');
+  fs.writeFileSync(bk, JSON.stringify({ app: 'bitacora-buzo-tactico', version: 1, exportedAt: '2026-12-04T15:00:00.000Z', cfg: { start: '2026-10-06', turno: '13' }, days }));
+  await p.evaluate(() => { __cloud.maxConcurrent = 3; __cloud.peak = 0; __cloud.rejected = 0; });
+  await p.click('[data-tab="plan"]'); await p.setInputFiles('#restore-file', bk); await p.click('[data-restore-ok]');
+  let n = 0; for (let t = 0; t < 40 && n < 60; t++) { await p.waitForTimeout(500); n = await p.evaluate(() => Object.keys(__cloud.server()).filter(k => k.includes('/days/2026-1') && __cloud.server()[k].note && __cloud.server()[k].note.startsWith('día ')).length); }
+  ok(n === 60, 'los 60 días restaurados llegan a la nube (' + n + ')');
+  ok(await p.evaluate(() => __cloud.peak <= 3 && __cloud.rejected === 0), 'sube de a 3 como máximo, sin rechazos');
+  ok((await text(p)).includes('Última copia: 4 dic 2026'), 'restaurar no borra la fecha de la última copia');
+  ok(errs.length === 0, 'sin errores: ' + errs.join(' | '));
+  await ctx.close(); }
+
+// 20. Respaldo dentro de claude.ai: sin descargas ofrece copiar; pegar una copia la restaura
+{ console.log('20. Respaldo sin descargas');
+  const mk = async (dl) => {
+    const ctx = await browser.newContext({ viewport: { width: 390, height: 1200 } }); const p = await ctx.newPage(); const errs = []; p.on('pageerror', e => errs.push(e.message));
+    await p.addInitScript(m => { window.claude = { use: async n => n === 'downloads' ? (m === 'null' ? null : { save: async () => { throw { code: m, message: m }; } }) : null }; }, dl);
+    await p.clock.install({ time: new Date('2026-10-14T09:00:00') }); await p.goto(URL); await p.waitForTimeout(300); return { p, ctx, errs }; };
+  for (const dl of ['null', 'unavailable']) {
+    const { p, ctx, errs } = await mk(dl);
+    await p.locator('.dot', { hasText: /^1$/ }).first().click();
+    await p.click('[data-tab="plan"]'); await p.click('[data-backup]'); await p.waitForTimeout(300);
+    const txt = await p.inputValue('#backup-text').catch(() => '');
+    ok(txt.includes('"bitacora-buzo-tactico"'), `downloads ${dl}: ofrece el texto de la copia para copiarlo`);
+    ok((await text(p)).includes('Última copia: nunca') && !(await p.$eval('#toast', e => e.textContent)).includes('guardada'), `downloads ${dl}: no dice que se descargó`);
+    if (dl === 'null') {
+      await p.click('[data-tab="hoy"]'); await p.locator('.dot', { hasText: /^1$/ }).first().click();
+      ok(!(await p.locator('.dot', { hasText: /^1$/ }).first().evaluate(e => e.classList.contains('on'))), 'la serie se desmarca antes de restaurar');
+      await p.click('[data-tab="plan"]'); await p.click('[data-paste-open]'); await p.fill('#restore-text', txt); await p.click('[data-paste-check]');
+      ok((await text(p)).includes('Restaurar esta copia'), 'pegar el texto ofrece restaurar');
+      await p.click('[data-restore-ok]'); await p.click('[data-tab="hoy"]');
+      ok(await p.locator('.dot', { hasText: /^1$/ }).first().evaluate(e => e.classList.contains('on')), 'la copia pegada devuelve lo marcado');
+      await p.click('[data-tab="plan"]'); await p.click('[data-paste-open]');
+      await p.fill('#restore-text', '{"app":"bitacora-buzo-tactico","cfg":{"sched":"x"},"days":{}}'); await p.click('[data-paste-check]');
+      ok((await text(p)).includes('el orden de las semanas está dañado'), 'rechaza una copia con ajustes dañados');
+      await p.click('[data-paste-open]'); await p.fill('#restore-text', '{"app":"bitacora-buzo-tactico","cfg":{"start":""},"days":{}}'); await p.click('[data-paste-check]');
+      ok((await text(p)).includes('la fecha de inicio está dañada'), 'rechaza una copia con fecha dañada');
+    }
+    ok(errs.length === 0, 'sin errores: ' + errs.join(' | '));
+    await ctx.close(); } }
+
+// 21. Cálculos de progreso: fatiga, mini-prueba con distancias distintas, gráficos y días pasados
+{ console.log('21. Cálculos de progreso');
+  const seeded = async (time, days, cfg = {}) => {
+    const ctx = await browser.newContext({ viewport: { width: 390, height: 1200 } }); const p = await ctx.newPage(); const errs = []; p.on('pageerror', e => errs.push(e.message));
+    await p.addInitScript(([d, c]) => { if (!sessionStorage.getItem('seeded')) { localStorage.setItem('bitacora-buzo-v1', JSON.stringify({ cfg: Object.assign({ start: '2026-10-06' }, c), days: d })); sessionStorage.setItem('seeded', '1'); } }, [days, cfg]);
+    await p.clock.install({ time: new Date(time) }); await p.goto(URL); await p.waitForTimeout(200); return { p, ctx, errs }; };
+  // un descanso en medio no corta la cuenta; marcar “Al 100%” la apaga
+  { const { p, ctx, errs } = await seeded('2026-10-22T09:00:00', { '2026-10-17': { mode: 'cansado' }, '2026-10-18': { mode: 'cansado' }, '2026-10-20': { mode: 'dolor' }, '2026-10-21': { mode: 'cansado' } });
+    ok((await text(p)).includes('Llevas 4 días seguidos'), 'el descanso del domingo no corta la racha de fatiga');
+    await p.click('[data-mode="ok"]');
+    ok(!(await text(p)).includes('días seguidos cansado'), '“Al 100%” hoy apaga la alerta');
+    ok(errs.length === 0, 'sin errores: ' + errs.join(' | ')); await ctx.close(); }
+  // mini-prueba con carrera de 1.600 m contra una de 1.200 m: compara ritmo, no tiempo
+  { const { p, ctx, errs } = await seeded('2027-05-29T09:00:00', { '2027-05-22': { mini: { run: '5:40', swim: '4:00', barras: '9' } }, '2027-05-15': { mini: { barras: '' } } });
+    ok((await text(p)).includes('Carrera 1.600 m (mm:ss)'), 'el formulario dice la distancia de la carrera');
+    await p.fill('#x-mini-run', '7:30');
+    const v = await p.$eval('#xv-mini', e => e.textContent);
+    ok(v.includes('ritmo 4:41/km') && v.includes('contra 1.200 m') && !v.includes('+1:50'), 'distancia distinta: compara el ritmo (' + v + ')');
+    await p.fill('#x-mini-barras', '10');
+    ok((await p.$eval('#xv-mini', e => e.textContent)).includes('Barras 10 (+1)'), 'salta la mini-prueba vacía y compara con la última con datos');
+    ok(errs.length === 0, 'sin errores: ' + errs.join(' | ')); await ctx.close(); }
+  // gráficos: el 0 cuenta y tocar un punto muestra su valor
+  { const { p, ctx, errs } = await seeded('2026-10-20T09:00:00', { '2026-10-11': { test: { barras: '0', run: '11:20' } } });
+    await p.click('[data-tab="progreso"]');
+    ok(await p.locator('.chartbox').first().locator('.cd').count() === 1, 'una prueba con 0 barras aparece en el gráfico');
+    await p.locator('.chartbox').first().locator('.cd').first().click();
+    const cv = await p.locator('.chartbox').first().locator('.cval').textContent();
+    ok(cv.includes('11 oct') && cv.includes('semana 0') && cv.includes(': 0'), 'tocar un punto muestra fecha, semana y valor (' + cv + ')');
+    ok(errs.length === 0, 'sin errores: ' + errs.join(' | ')); await ctx.close(); }
+  // anotar un simulacro no cambia el plan de días que ya pasaron
+  { const k27 = '2027-04-13';
+    const { p, ctx } = await seeded('2027-04-13T09:00:00', { '2027-01-10': { test: { barras: '10' } } });
+    const before = await text(p);
+    await p.evaluate(() => { const d = JSON.parse(localStorage.getItem('bitacora-buzo-v1')); d.days['2027-07-16'] = { sim: { barras: '14' } }; localStorage.setItem('bitacora-buzo-v1', JSON.stringify(d)); });
+    await reload(p);
+    ok(await text(p) === before, 'el plan de ' + k27 + ' no cambia al anotar un simulacro posterior');
+    await ctx.close(); }
+}
+
 await browser.close();
 console.log(`\n${passes} correctas, ${fails} fallidas`);
 process.exit(fails ? 1 : 0);
