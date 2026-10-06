@@ -7,9 +7,12 @@ export function loadApp() {
   const here = path.dirname(fileURLToPath(import.meta.url));
   const html = fs.readFileSync(path.join(here, '..', 'src', 'bitacora.html'), 'utf8');
   let js = html.split('<script>')[1].split('</script>')[0];
-  js = js.replace('Store.init(()=>', 'globalThis.APP={dayPlan,applyMode,applyShift,locate,orders,stageOf,rankOf,Store,parse,iso,dayName,fmt,HELL,TESTS,toMin,fromMin};Store.init(()=>');
+  // Solo la lógica del plan: la pantalla nunca se dibuja aquí (Store.init no se llama),
+  // así los cambios de diseño de la app no pueden romper el aviso diario ni el calendario.
+  js = js.replace('Store.init(()=>', 'globalThis.APP={dayPlan,applyMode,applyShift,locate,orders,stageOf,rankOf,Store,parse,iso,dayName,fmt,HELL,TESTS,toMin,fromMin};(()=>{})(()=>');
   const el = { hidden: true, innerHTML: '', textContent: '', contains: () => false };
-  globalThis.document = { getElementById: () => el, addEventListener() {}, activeElement: null, querySelector: () => null, hidden: false };
+  const cl = { classList: { toggle() {}, add() {}, remove() {} } };
+  globalThis.document = { getElementById: () => el, addEventListener() {}, activeElement: null, querySelector: () => null, hidden: false, documentElement: cl, body: cl };
   globalThis.window = { addEventListener() {} };
   globalThis.localStorage = { getItem: () => null, setItem() {} };
   globalThis.sessionStorage = globalThis.localStorage;

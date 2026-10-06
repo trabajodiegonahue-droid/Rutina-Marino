@@ -3,7 +3,7 @@
   "private": true,
   "description": "Bitácora diaria para la preparación de Buzos Tácticos (52 semanas).",
   "scripts": {
-    "test": "node tests/app.test.mjs"
+    "test": "node tools/orden-del-dia.mjs 2026-10-14 > /dev/null && node tests/app.test.mjs"
   },
   "devDependencies": {
     "playwright": "1.56.1"

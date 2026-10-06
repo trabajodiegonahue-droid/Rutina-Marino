@@ -215,6 +215,75 @@ const reload = async p => { await p.reload(); await p.waitForTimeout(200); };
   ok(errs.length === 0, 'sin errores: ' + errs.join(' | '));
   await ctx.close(); }
 
+// 14. Respaldo: indicador, descargar copia y restaurarla
+{ console.log('14. Respaldo');
+  const { p, ctx, errs } = await page('2026-10-14T09:00:00');
+  ok((await p.$eval('#savechip', e => e.textContent + ' | ' + e.title)).includes('Guardado en este teléfono'), 'indicador de guardado visible');
+  await p.locator('.dot', { hasText: /^1$/ }).first().click();
+  await p.click('[data-tab="plan"]');
+  const [dl] = await Promise.all([p.waitForEvent('download'), p.click('[data-backup]')]);
+  const file = await dl.path(); const json = JSON.parse(fs.readFileSync(file, 'utf8'));
+  ok(json.app === 'bitacora-buzo-tactico' && json.days['2026-10-14'], 'la copia trae el historial');
+  ok((await text(p)).includes('Última copia: 14 oct 2026'), 'registra la fecha de la última copia');
+  // borrar todo y restaurar
+  await p.evaluate(() => localStorage.clear()); await reload(p); await p.click('[data-tab="plan"]');
+  await p.setInputFiles('#restore-file', file);
+  ok((await text(p)).includes('Restaurar esta copia'), 'pide confirmar antes de restaurar');
+  await p.click('[data-restore-ok]'); await p.click('[data-tab="hoy"]');
+  ok(await p.locator('.dot', { hasText: /^1$/ }).first().evaluate(e => e.classList.contains('on')), 'la copia restaurada devuelve lo marcado');
+  fs.writeFileSync(file + '.bad', '{"hola":1}'); await p.click('[data-tab="plan"]'); await p.setInputFiles('#restore-file', file + '.bad');
+  ok((await text(p)).includes('no es una copia válida'), 'rechaza un archivo que no es copia');
+  ok(errs.length === 0, 'sin errores: ' + errs.join(' | '));
+  await ctx.close(); }
+
+// 15. Mini-prueba y simulacro: resultados y comparación
+{ console.log('15. Resultados de mini-prueba y simulacro');
+  const { p, ctx } = await page('2027-04-17T09:00:00'); // semana 27, día 5: mini-prueba
+  ok((await text(p)).includes('Tus resultados · mini-prueba'), 'formulario de mini-prueba');
+  await p.fill('#x-mini-barras', '9');
+  ok((await p.$eval('#xv-mini', e => e.textContent)).includes('Primera mini-prueba'), 'primera mini-prueba registrada');
+  for (let i = 0; i < 7; i++) await p.click('[data-go="1"]'); // semana 28, día 5: otra mini-prueba
+  await p.fill('#x-mini-barras', '11');
+  ok((await p.$eval('#xv-mini', e => e.textContent)).includes('Barras 11 (+2)'), 'compara con la anterior');
+  await ctx.close(); }
+
+// 16. Progreso: constancia, gráficos, récords y diario
+{ console.log('16. Progreso');
+  const { p, ctx, errs } = await page('2026-10-11T09:00:00'); // prueba inicial
+  for (const [id, v] of [['apnea', '8'], ['swim', '15:30'], ['barras', '7'], ['sent', '50'], ['flex', '35'], ['abd', '40'], ['run', '11:20']]) await p.fill('#t-' + id, v);
+  await p.locator('summary', { hasText: 'Notas' }).click(); await p.fill('#f-note', 'la apnea me costó');
+  await p.click('[data-tab="progreso"]');
+  const t = await text(p);
+  ok(t.includes('Constancia') && (await p.locator('.hc').count()) >= 371, 'mapa con todos los días (' + (await p.locator('.hc').count()) + ')');
+  ok((await p.locator('svg.chart').count()) >= 4, 'gráficos de evolución');
+  ok(t.includes('Récords') && t.includes('11:20'), 'récords con el 2.400');
+  ok(t.includes('la apnea me costó'), 'el diario muestra las notas');
+  await p.locator('.hc.missed').first().click();
+  ok((await text(p)).includes('SEM 0'), 'tocar un día del mapa lo abre');
+  ok(errs.length === 0, 'sin errores: ' + errs.join(' | '));
+  await ctx.close(); }
+
+// 17. Fatiga: 3 días seguidos cansado → alerta
+{ console.log('17. Fatiga');
+  const { p, ctx } = await page('2026-10-15T09:00:00');
+  for (let i = 0; i < 2; i++) await p.click('[data-go="-1"]');
+  await p.click('[data-mode="cansado"]'); await p.click('[data-go="1"]'); await p.click('[data-mode="cansado"]'); await p.click('[data-go="1"]'); await p.click('[data-mode="cansado"]');
+  ok((await text(p)).includes('Llevas 3 días seguidos'), 'alerta de fatiga en la orden');
+  await ctx.close(); }
+
+// 18. Cuenta regresiva, temporizador gigante y letra grande
+{ console.log('18. Diseño útil');
+  const { p, ctx } = await page('2026-10-14T10:00:00');
+  const nl = await p.$eval('#now-line', e => e.textContent);
+  ok(nl.includes('Sales al trabajo en 2 h 30 min'), 'cuenta regresiva (' + nl + ')');
+  await p.click('[data-rstart]'); await p.locator('.btn', { hasText: 'Iniciar' }).first().click().catch(() => {});
+  ok(await p.evaluate(() => document.body.classList.contains('guided')), 'paso a paso activa el temporizador gigante');
+  await p.click('[data-rexit]'); await p.click('[data-tab="plan"]'); await p.click('[data-cset="bigText|true"]');
+  ok(await p.evaluate(() => document.documentElement.classList.contains('bigtext')), 'letra grande activada');
+  await reload(p);
+  ok(await p.evaluate(() => document.documentElement.classList.contains('bigtext')), 'la letra grande queda guardada');
+  await ctx.close(); }
+
 await browser.close();
 console.log(`\n${passes} correctas, ${fails} fallidas`);
 process.exit(fails ? 1 : 0);
