@@ -1318,11 +1318,20 @@ function diaryHTML(){
 function nowLineText(plan){
   const now=new Date(),m=now.getHours()*60+now.getMinutes(),sh=plan.shift,tm=t=>t.h?toMin(t.h)+(toMin(t.h)<240&&m>600?1440:0):null;
   const dd=Store.days[iso(now)]||{},items=plan.tasks.filter(t=>t.h&&t.id!=="noche").map(t=>({t,at:tm(t)})).sort((a,b)=>a.at-b.at);
-  const cur=items.filter(x=>x.at<=m&&!taskDone(dd,x.t)).pop(),nxt=items.find(x=>x.at>m);
-  const parts=[];if(cur)parts.push(`Ahora: ${cur.t.t} (${cur.t.h})`);if(nxt)parts.push(`Después: ${nxt.t.t} a las ${nxt.t.h}`);
-  if(sh.leave){const lv=toMin(sh.leave),back=toMin(sh.back)+(toMin(sh.back)<240?1440:0);
-    if(m<lv){const r=lv-m;parts.push(`Sales al trabajo en ${r>=60?Math.floor(r/60)+" h "+pad(r%60)+" min":r+" min"} (${sh.leave})`)}
-    else if(m<back)parts.push(`En el trabajo hasta las ${sh.back}`)}
+  const lv=sh.leave?toMin(sh.leave):null,back=sh.back?toMin(sh.back)+(toMin(sh.back)<240?1440:0):null,atWork=lv!=null&&m>=lv&&m<back;
+  // “Ahora” es solo la tarea de este momento (la última que empezó), si no está marcada y no estás en el trabajo
+  const last=items.filter(x=>x.at<=m).pop(),nxt=items.find(x=>x.at>m),cur=!atWork&&last&&!taskDone(dd,last.t)?last:null;
+  const missed=items.filter(x=>x.at<=m&&x!==cur&&x.t.kind!=="rutina"&&!taskDone(dd,x.t)).length;
+  // de madrugada: lo que manda es dormir (con turno 16 se llega a las 0:30 y la cama es a la 1:15)
+  if(m<300){const ys=SHIFT[(Store.days[iso(addDays(now,-1))]||{}).turno||Store.cfg.turno]||sh,yb=toMin(ys.bed);
+    return yb<300&&m<yb?`Vuelves del trabajo: a la cama a la ${ys.bed}. Hoy despiertas a las ${sh.wake}.`:`A dormir. Hoy despiertas a las ${sh.wake}.`}
+  const parts=[],bed=sh.bed?toMin(sh.bed)+(toMin(sh.bed)<240?1440:0):null;
+  if(bed!=null&&m>=bed&&m<bed+360)return `Hora de dormir: cama ${sh.bed}. Mañana se sigue.`+(missed?` (${missed===1?"1 tarea quedó":missed+" tareas quedaron"} sin marcar hoy)`:"");
+  if(atWork)parts.push(`En el trabajo hasta las ${sh.back}`);
+  if(cur)parts.push(`Ahora: ${cur.t.t} (${cur.t.h})`);
+  if(nxt)parts.push(`Después: ${nxt.t.t} a las ${nxt.t.h}`);
+  if(lv!=null&&m<lv){const r=lv-m;parts.push(`Sales al trabajo en ${r>=60?Math.floor(r/60)+" h "+pad(r%60)+" min":r+" min"} (${sh.leave})`)}
+  if(missed)parts.push(`${missed===1?"1 tarea anterior quedó":missed+" tareas anteriores quedaron"} sin marcar`);
   return parts.join(" · ")||"Día terminado. A dormir a la hora.";
 }
 function updateNowLine(){const el=document.getElementById("now-line");if(!el||diffDays(S.date,new Date())!==0)return;const p=planFor(S.date);if(p)el.textContent=nowLineText(p)}

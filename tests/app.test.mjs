@@ -399,6 +399,66 @@ const reload = async p => { await p.reload(); await p.waitForTimeout(200); };
     await ctx.close(); }
 }
 
+// 22. Una semana real en el celular: abrir, entrenar, cerrar y volver; todo queda guardado
+{ console.log('22. Una semana real');
+  const ctx = await browser.newContext({ viewport: { width: 390, height: 844 }, deviceScaleFactor: 2, isMobile: true, hasTouch: true, locale: 'es-CL' });
+  const errs = [];
+  const open = async (time) => { const p = await ctx.newPage(); p.on('pageerror', e => errs.push(e.message)); await p.clock.install({ time: new Date(time) }); await p.goto(URL); await p.waitForTimeout(250); return p; };
+  const dots = p => p.$$eval('.dot', a => a.map(e => e.classList.contains('on') ? 1 : 0).join(''));
+  const tapDots = async (p, n) => { const ds = p.locator('.dot:not(.on)'); for (let i = 0; i < n; i++) { await ds.first().tap(); await p.waitForTimeout(60); } };
+  const note = async (p, v) => { await p.locator('summary', { hasText: 'Notas' }).tap(); if (v != null) await p.fill('#f-note', v); return p.inputValue('#f-note'); };
+  // martes 6, 7:30: abre por primera vez, marca dos series del trote y el aprendizaje
+  let p = await open('2026-10-06T07:30:00');
+  ok((await text(p)).includes('Semana 0') || (await text(p)).includes('SEM 0'), 'el día 1 abre en la semana 0');
+  await tapDots(p, 2); const d1 = await dots(p); await p.close();
+  // 11:00: vuelve después de entrenar
+  p = await open('2026-10-06T11:00:00');
+  ok(await dots(p) === d1, 'al volver a abrir siguen marcadas las series de la mañana');
+  await tapDots(p, 2); await note(p, 'trote 20 min, barras costaron'); await p.tap('[data-mode="ok"]');
+  const d1b = await dots(p); await p.close();
+  // miércoles 7: entra con turno 16, ayer no quedó completo
+  p = await open('2026-10-07T09:00:00');
+  await p.tap('[data-go="-1"]');
+  ok(await dots(p) === d1b && await note(p) === 'trote 20 min, barras costaron', 'el día anterior guarda series y nota');
+  ok(await p.locator('[data-mode="ok"]').evaluate(e => e.classList.contains('on')), 'el día anterior guarda “Al 100%”');
+  await p.tap('[data-go="1"]'); await p.tap('[data-turno="16"]');
+  ok((await text(p)).includes('Despiertas 9:15'), 'turno 16 cambia la hora de despertar');
+  await p.tap('[data-st="done"]'); ok((await text(p)).includes('Racha 1'), 'cumplir el día sube la racha'); await p.close();
+  // jueves 8: no abre la app. Viernes 9 (descanso): la racha se cortó y el miércoles sigue cumplido
+  p = await open('2026-10-09T10:00:00');
+  ok((await text(p)).includes('Descanso'), 'el viernes es descanso');
+  await p.tap('[data-go="-1"]'); await p.tap('[data-go="-1"]');
+  ok((await text(p)).includes('Misión cumplida') || (await text(p)).includes('CUMPLIDO'), 'el miércoles sigue cumplido');
+  ok(await p.locator('[data-turno="16"]').evaluate(e => e.classList.contains('on')), 'el miércoles conserva el turno 16');
+  await p.close();
+  // sábado 10, con turno 13 por defecto: hoy no hereda el turno 16 del miércoles
+  p = await open('2026-10-10T08:00:00');
+  ok(await p.locator('[data-turno="13"]').evaluate(e => e.classList.contains('on')), 'el turno de un día no se pega a los demás');
+  await tapDots(p, 1); await p.tap('[data-mode="cansado"]'); await p.close();
+  p = await open('2026-10-10T22:50:00');
+  ok(await p.locator('[data-mode="cansado"]').evaluate(e => e.classList.contains('on')), 'en la noche sigue “Cansado”');
+  ok(await p.locator('.dot.on').count() >= 1, 'en la noche siguen las series de la mañana');
+  await p.close();
+  // domingo 11: prueba inicial; anota resultados, cierra y vuelve
+  p = await open('2026-10-11T08:00:00');
+  await p.fill('#t-barras', '7'); await p.fill('#t-run', '11:40'); await p.close();
+  p = await open('2026-10-11T13:00:00');
+  ok(await p.inputValue('#t-barras') === '7' && await p.inputValue('#t-run') === '11:40', 'los resultados de la prueba quedan guardados');
+  await p.tap('[data-tab="progreso"]');
+  const prog = await text(p);
+  ok(prog.includes('11:40') && prog.includes('Constancia'), 'Progreso muestra la prueba y la constancia');
+  ok(await p.locator('.hc.done').count() >= 1, 'la constancia pinta el día cumplido');
+  await p.close();
+  // la línea de “ahora” dice la verdad en el trabajo y de madrugada después del turno 16
+  p = await open('2026-10-06T18:30:00');
+  let nl = await p.$eval('#now-line', e => e.textContent);
+  ok(nl.includes('En el trabajo hasta las 22:30') && !nl.includes('Almuerzo'), 'en el trabajo no manda a almorzar (' + nl + ')'); await p.close();
+  p = await open('2026-10-08T00:45:00');
+  nl = await p.$eval('#now-line', e => e.textContent);
+  ok(nl.includes('a la cama a la 1:15'), 'al volver del turno 16 manda a dormir (' + nl + ')'); await p.close();
+  ok(errs.length === 0, 'sin errores en toda la semana: ' + errs.join(' | '));
+  await ctx.close(); }
+
 await browser.close();
 console.log(`\n${passes} correctas, ${fails} fallidas`);
 process.exit(fails ? 1 : 0);
