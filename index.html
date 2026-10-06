@@ -270,7 +270,7 @@ const stageOf=w=>STAGES.find(s=>w>=s.from&&w<=s.to)||STAGES[4];
 const stN=w=>w<=13?1:w<=26?2:w<=39?3:4;
 const extraOf=w=>(S12[w]?S12[w][4]:S34[w]?S34[w][3]:"")||"";
 function carry(w,re,def){let v=def;for(let i=1;i<=w;i++){if(re.test(extraOf(i)))v=extraOf(i)}return v}
-function cold(w){const m=carry(w,/ducha/i,"Ducha fría 30 s").match(/(\d[\d:]*\s*(s|min))/);return m?m[1]:"30 s"}
+function cold(w){const m=carry(w,/ducha/i,"Ducha fría 30 s").match(/(\d+:\d+|\d+\s*(?:s|min))/);return m?m[1]:"30 s"}
 function coldSec(w){const c=cold(w);if(/:/.test(c))return toSec(c);const n=parseInt(c,10);return /min/.test(c)?n*60:n}
 function apneaTarget(w){const m=carry(w,/apnea (piscina|\d)/i,"").match(/(\d[\d–-]*\s*m)\b/);return m?m[1]:""}
 function lakeMin(w){const e=extraOf(w);const m=/lago/i.test(e)&&e.match(/(\d[\d–-]*\s*min)/);return m?m[1]:""}
