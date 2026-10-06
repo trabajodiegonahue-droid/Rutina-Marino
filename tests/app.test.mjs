@@ -196,6 +196,25 @@ const reload = async p => { await p.reload(); await p.waitForTimeout(200); };
   ok(await p.locator('.dot', { hasText: /^1$/ }).first().evaluate(e => e.classList.contains('on')), 'el doble toque deja la serie marcada');
   await ctx.close(); }
 
+// 13. Registro de adidas Running: ritmo, cumplimiento y guardado
+{ console.log('13. Registro de carrera');
+  const { p, ctx, errs } = await page('2026-10-14T09:00:00'); // semana 1, día 2: carrera suave 30 min
+  await p.fill('#rl-run-km', '5,1'); await p.fill('#rl-run-t', '31:30');
+  const v = await p.$eval('#rlv-run', e => e.textContent);
+  ok(v.includes('ritmo 6:11 por km') && v.includes('Cumpliste'), 'calcula ritmo y cumplimiento (' + v + ')');
+  await p.fill('#rl-run-t', '25:00');
+  ok((await p.$eval('#rlv-run', e => e.textContent)).includes('Te faltaron 5 min'), 'avisa si faltaron minutos');
+  await reload(p);
+  ok(await p.inputValue('#rl-run-km') === '5,1', 'el registro queda guardado');
+  await p.click('[data-tab="progreso"]');
+  ok((await text(p)).includes('5,1') && (await text(p)).includes('km corridos'), 'aparece en Progreso');
+  // intervalos: promedio por repetición
+  await p.click('[data-tab="hoy"]'); for (let i = 0; i < 3; i++) await p.click('[data-go="1"]'); // día 5: intervalos 4 × 400
+  await p.fill('#rl-int-rep', '1:52');
+  ok((await p.$eval('#rlv-int', e => e.textContent)).includes('más lento'), 'compara el promedio con el ritmo pedido');
+  ok(errs.length === 0, 'sin errores: ' + errs.join(' | '));
+  await ctx.close(); }
+
 await browser.close();
 console.log(`\n${passes} correctas, ${fails} fallidas`);
 process.exit(fails ? 1 : 0);
