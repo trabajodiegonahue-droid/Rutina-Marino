@@ -1085,7 +1085,7 @@ const HOW={
 const HOW_SWIM="Crol: cuerpo horizontal, mirando al fondo. Exhala todo el aire bajo el agua por la nariz y la boca; para respirar gira la cabeza junto con el cuerpo, sin levantarla. La mano entra lejos adelante, tira hasta el muslo y sale por el aire. Patada corta y rápida desde la cadera, con las piernas casi estiradas.";
 function howFor(b,t){
   if(HOW[b.n])return HOW[b.n];
-  if(/^Técnica/.test(b.n))return "Los ejercicios: 1) Patada con tabla: brazos estirados sobre la tabla, solo patada corta desde la cadera. 2) Patada lateral: de costado, un brazo estirado adelante, la oreja sobre ese brazo; giras la cara para respirar. 3) Nado a un brazo: un brazo quieto adelante, el otro hace la brazada completa. 4) “Pillar”: una mano espera adelante hasta que la otra llega a tocarla. 5) Respiración cada 3 brazadas: respiras una vez a cada lado.";
+  if(/^Técnica/.test(b.n))return "Los ejercicios: 1) "+(t.lake?"Patada sin tabla: boca abajo, brazos estirados adelante, solo patada corta desde la cadera; levantas la cabeza para respirar.":"Patada con tabla: brazos estirados sobre la tabla, solo patada corta desde la cadera.")+" 2) Patada lateral: de costado, un brazo estirado adelante, la oreja sobre ese brazo; giras la cara para respirar. 3) Nado a un brazo: un brazo quieto adelante, el otro hace la brazada completa. 4) “Pillar”: una mano espera adelante hasta que la otra llega a tocarla. 5) Respiración cada 3 brazadas: respiras una vez a cada lado.";
   if(t.kind==="agua"&&/m$|brazadas$/.test(b.n))return HOW_SWIM;
   if(/^Trote/.test(b.n))return HOW["Trote"];
   if(t.kind==="carrera"&&/×/.test(b.n))return "Intervalos: corre cada tramo al tiempo indicado, ni más rápido ni más lento (mira el reloj en cada vuelta de 400 m). En la recuperación trota muy suave o camina, sin sentarte.";
@@ -1102,8 +1102,14 @@ const PACE=[0,6,5.75,5.5,5.25]; // min/km a ritmo suave por etapa
 const km=(min,w)=>(min/PACE[stN(w)]).toLocaleString("es-CL",{maximumFractionDigits:1});
 const RESTS_ASECO=["2:00","1:45","1:30","1:15","1:00","0:45","0:30","0:15"];
 const DRILL_LIST=["patada con tabla (brazos estirados sobre la tabla, patada corta desde la cadera)","patada lateral (de costado, un brazo estirado adelante, la oreja sobre ese brazo)","nado a un brazo (el otro quieto adelante; cambias de brazo cada largo)","“pillar” (una mano espera adelante hasta que la otra la toca)","respiración cada 3 brazadas (un lado y el otro)"];
+const DRILL_LAKE="patada sin tabla (boca abajo, brazos estirados adelante, cara en el agua; levantas la cabeza para respirar)";
+const drills=lake=>lake?[DRILL_LAKE,...DRILL_LIST.slice(1)]:DRILL_LIST;
+// cómo medir el esfuerzo y el tiempo sin reloj
+const EFF=p=>/cómodo y constante/.test(p)?" Cómodo = podrías seguir 10 minutos más a ese ritmo y respiras sin ahogarte.":/85–90%|^rápido/.test(p)?" 85–90% = fuerte, pero el último tramo tiene que salir igual de rápido que el primero; al llegar te cuesta decir más de 3 palabras.":/intentando crol/.test(p)?" Si te ahogas, termina el tramo a pecho y vuelve a crol en el siguiente.":/cronometrado/.test(p)?" Sin reloj: deja el celular en el borde con el cronómetro, inícialo al empujar la pared y páralo al tocar al final.":/^\d+:\d\d cada uno/.test(p)?" Sin reloj: mira el segundero del reloj grande de la piscina al salir y al llegar (o el cronómetro del celular en el borde).":/aletas/.test(p)?" Patada larga desde la cadera, tobillos sueltos, rodillas casi estiradas.":"";
+const RUNCLK=" Para medir: cronómetro del celular en la mano, o adidas Running (te avisa la distancia). Si no tienes pista, mide una vez el tramo con adidas Running y márcalo con algo (un poste, un árbol).";
+const NOUN={"Remo invertido":"remos invertidos","Puente de glúteo":"puentes de glúteo","Gemelos":"elevaciones de talones (gemelos)","Sentadilla con salto":"sentadillas con salto","Patada de tijera":"patadas de tijera (cada pierna cuenta 1)","Zancadas caminando":"zancadas caminando (cuentas las dos piernas)"};
 function cmdFor(st,plan){
-  const b=st.b,t=st.t,w=plan.w,n=b.n,p=b.p,k=st.set,low=s=>s.charAt(0).toLowerCase()+s.slice(1);
+  const b=st.b,t=st.t,w=plan.w,n=b.n,p=b.p,k=st.set,low=s=>s.charAt(0).toLowerCase()+s.slice(1),lk=!!(t.lake||plan.lake);
   const restTxt=b.r&&k&&k<b.s?` Después descansa ${fmtT(b.r)}.`:"";
   if(b.c)return b.c;
   let m;
@@ -1118,8 +1124,8 @@ function cmdFor(st,plan){
   if(n==="Trote"&&(m=p.match(/(\d+)(?:–(\d+))?\s*min/))){const a=+m[1],z=m[2]?+m[2]:a;return `Corre ${m[2]?a+" a "+z:a} minutos sin parar, unos ${m[2]?km(a,w)+"–"+km(z,w):km(a,w)} km. ${/conversación/.test(b.note||"")?"Ritmo suave: tienes que poder hablar en frases completas.":"Ritmo constante y cómodo, sin caminar."}`}
   if(/^Trote con mochila/.test(n))return `Ponte la mochila con ${n.match(/\d+ kg/)[0]} y corre ${p}, unos ${(parseInt(p,10)/7).toLocaleString("es-CL",{maximumFractionDigits:1})} km. Si necesitas, alterna 5 min trotando y 1 caminando, pero no te detengas.`;
   if(n==="Vuelta a la calma"&&/trote/.test(p))return `Trota muy suave 5 a 10 minutos (alrededor de 1 km) hasta que la respiración se calme.`;
-  if(n==="Elongación")return "Estira 30 segundos cada uno, sin rebotar: cuádriceps, parte de atrás del muslo, gemelos, pecho y espalda.";
-  if(t.kind==="carrera"&&(m=n.match(/^(\d+) × ([\d.]+) m$/))){const d=num(m[2]);return `Corre ${m[2]} m en ${p.replace(" cada uno","")}${d>=400?` (${d/400} ${d/400===1?"vuelta":"vueltas"} de pista)`:""}. ${k&&k<b.s?`Al terminar, trota muy suave o camina ${fmtT(b.r)}.`:"Es el último: termina fuerte."}`}
+  if(n==="Elongación")return "Estira 30 segundos cada uno, sin rebotar, primero una pierna y después la otra: cuádriceps, parte de atrás del muslo, gemelos, pecho (cada brazo) y espalda. Son unos 5 minutos. Tiene que tirar, no doler.";
+  if(t.kind==="carrera"&&(m=n.match(/^(\d+) × ([\d.]+) m$/))){const d=num(m[2]);return `Corre ${m[2]} m en ${p.replace(" cada uno","")}${d>=400?` (${d/400} ${d/400===1?"vuelta":"vueltas"} de pista)`:""}. ${k&&k<b.s?`Al terminar, trota muy suave o camina ${fmtT(b.r)}.`:"Es el último: termina fuerte."}${!k||k===1?RUNCLK:""}`}
   if(n==="Marcha rápida")return `Ponte la mochila con ${(p.match(/\d+ kg/)||[""])[0]} bien ajustada y camina rápido ${parseInt(p,10)} minutos, unos ${(parseInt(p,10)/10).toLocaleString("es-CL",{maximumFractionDigits:1})} km. Paso largo, sin trotar.`;
   if(t.id==="med")return "Llama y pide hora para un chequeo médico completo: examen general, electrocardiograma, oídos y senos paranasales, espirometría y control dental. Cuéntale al médico cualquier lesión antigua.";
   if(t.id==="equipo")return `Consigue: ${low(n)}${p?" ("+p+")":""}.${b.note?" "+b.note:""}`;
@@ -1128,12 +1134,12 @@ function cmdFor(st,plan){
   if(n==="Vuelta a la calma"&&t.kind!=="agua")return `Trota muy suave o camina ${(p.match(/\d+ min/)||["10 min"])[0]} hasta que la respiración se calme.`;
   if(n==="Vuelta a la calma"&&(m=p.match(/(\d[\d.]*) m(?![a-z])/)))return `Nada ${m[1]} m muy suave${plan.lake?"":` (${num(m[1])/25} largos)`} para soltar.`;
   if(/^Técnica/.test(n)){if((m=n.match(/(\d+) × (\d+) (m|brazadas)/))){const unit=m[3]==="m"?`${m[2]} m`:`${m[2]} brazadas`;
-    if(k)return `Nada ${unit} de técnica: ${DRILL_LIST[(k-1)%5]}.${restTxt}`;
-    return `Nada ${m[1]} tramos de ${unit} de técnica, cambiando el ejercicio en cada tramo: ${DRILL_LIST.map((d,i)=>(i+1)+") "+d.split(" (")[0]).join(", ")}. Descansa 20 s ${plan.lake?"de pie":"en la pared"} entre cada uno.`}}
-  if(t.kind==="agua"&&!k&&b.s>12&&(m=n.match(/^(\d+) × ([\d.]+) (m|brazadas)$/)))return `Nada ${b.s} tramos de ${m[2]} ${m[3]}: ${p}. Descansa ${fmtT(b.r||30)} ${plan.lake?"de pie":"en la pared"} entre cada uno. Cuéntalos: ${b.s} tramos.`;
+    if(k)return `Nada ${unit} de técnica: ${drills(lk)[(k-1)%5]}.${restTxt?restTxt.replace("descansa",lk?"descansa de pie":"descansa en la pared"):""}`;
+    return `Nada ${m[1]} tramos de ${unit} de técnica, cambiando el ejercicio en cada tramo: ${drills(lk).map((d,i)=>(i+1)+") "+d.split(" (")[0]).join(", ")}. Descansa 20 s ${plan.lake?"de pie":"en la pared"} entre cada uno.`}}
+  if(t.kind==="agua"&&!k&&b.s>12&&(m=n.match(/^(\d+) × ([\d.]+) (m|brazadas)$/)))return `Nada ${b.s} tramos de ${m[2]} ${m[3]}: ${p}. Descansa ${fmtT(b.r||30)} ${plan.lake?"de pie":"en la pared"} entre cada uno. Cuéntalos: ${b.s} tramos.${EFF(p)}`;
   if(t.kind==="agua"&&(m=n.match(/^(\d+) × ([\d.]+) (m|brazadas)$/))){const unit=m[3]==="m"?`${m[2]} m${plan.lake?"":` (${num(m[2])/25} ${num(m[2])===25?"largo":"largos"})`}`:`${m[2]} brazadas${b.note?" ("+b.note.split(" cada")[0].replace("≈ ","≈")+")":""}`;
-    return `Nada ${unit}: ${p}.${restTxt?restTxt.replace("descansa",plan.lake?"descansa de pie":"descansa en la pared"):""}`}
-  if(t.kind==="agua"&&(m=n.match(/^([\d.]+) m$/)))return `Nada ${m[1]} m ${p}${plan.lake?"":` (${num(m[1])/25} largos)`}. No te detengas.`;
+    return `Nada ${unit}: ${p}.${restTxt?restTxt.replace("descansa",plan.lake?"descansa de pie":"descansa en la pared"):""}${m[3]==="brazadas"&&(!k||k===1)?" Cuenta cada mano que entra al agua.":""}${!k||k===1?EFF(p):""}`}
+  if(t.kind==="agua"&&(m=n.match(/^([\d.]+) m$/)))return `Nada ${m[1]} m ${p}${plan.lake?"":` (${num(m[1])/25} largos)`}. No te detengas. Cuenta los largos de a 2: cada vez que vuelves a la pared donde partiste, suma 50 m.${EFF(p)}`;
   if(n==="Nado continuo")return `Nada ${p} seguidos (${b.note.split(". ")[0]}), paralelo a la orilla, sin pararte.`;
   if(n==="Agua fría")return `Dúchate normal con agua tibia. Al final, gira la llave a fría del todo y quédate ${p} con el agua en la nuca y el pecho, respirando lento por la nariz. Después sécate y abrígate.`;
   if(n==="Apnea en seco"&&k)return `Apnea ${k} de ${b.s}: acostado de espaldas en tu cama, respira normal, toma una bocanada normal (sin respirar rápido antes) y aguanta 1:00 con el temporizador.${k<b.s?` Después respira normal ${RESTS_ASECO[k-1]}.`:" Era la última."}`;
@@ -1160,18 +1166,38 @@ function cmdFor(st,plan){
   if(/^Nado [\d.–]+ m/.test(n))return b.opt?b.note:`Nada ${n.replace("Nado ","")} lo más rápido que puedas. Al salir, cámbiate rápido y pasa al siguiente sin descansar.${/^En el lago/.test(b.note||"")?" "+b.note.split(". Sales y")[0].replace(/\. ?$/,"")+".":""}`;
   if(n==="Carrera"&&/m$/.test(p))return `Corre ${p} lo más rápido que puedas, sin pausa desde el último ejercicio (${num(p.replace(" m",""))/400} vueltas de pista).`;
   if(n==="Barras"&&/^\d+$/.test(p))return `Haz ${p} barras seguidas: es el ${b.note.replace(/\.$/,"")}.`;
-  if(/a tope$/.test(n)&&(m=n.match(/^([\d.]+) m/)))return `Corre ${m[1]} m (${num(m[1])/400} vueltas de pista) a tope. Anota el tiempo en Notas.`;
+  if(/a tope$/.test(n)&&(m=n.match(/^([\d.]+) m/)))return `Corre ${m[1]} m (${num(m[1])/400} vueltas de pista) a tope. Anota el tiempo en Notas.${RUNCLK}`;
   if(n==="Ducha fría")return `Dúchate con agua fría ${p}, con el agua en la nuca y el pecho, respirando lento por la nariz.`;
   if(n==="Cuando quieras parar")return "Cuando quieras parar: respiración de caja (inhala 4 s, sostén 4, exhala 4, sostén 4) y piensa solo en la próxima serie.";
-  if(/^Movilidad/.test(n))return `Haz ${p.replace(" suaves","")} de movilidad suave: 10 círculos de cadera por lado, 10 de hombros, 10 giros de tobillo por pie, 10 gato-vaca y 1 minuto en sentadilla profunda.`;
-  if(n==="Dormir")return `Esta noche duerme ${p}.`;
+  if(/^Movilidad/.test(n)){const mm=parseInt(p,10)||15;return `Movilidad suave ${mm} minutos. Una vuelta: 10 círculos de cadera por lado, 10 círculos de hombros hacia adelante y 10 hacia atrás, 10 giros de tobillo por pie, 10 gato-vaca y 1 minuto en sentadilla profunda (son unos 5 minutos). Haz ${Math.max(1,Math.round(mm/5))} ${Math.round(mm/5)===1?"vuelta":"vueltas"}, lento y sin dolor.`}
+  if(n==="Dormir")return `Esta noche duerme ${p}: mira a qué hora suena tu alarma mañana y acuéstate ${(p.match(/\d+/g)||[9]).pop()} horas antes. Celular lejos de la cama.`;
   if(n==="Autochequeo")return "Mientras nadas, cada 4 tramos revisa: cadera arriba (no hundida), exhalas todo bajo el agua, patada corta desde la cadera y brazada larga.";
   if(n==="La orden")return "Hoy la orden es nadar los tramos largos sin parar. Piensa solo en llegar al otro borde.";
   if(n==="Al terminar")return "Anota en Notas en qué momento quisiste parar. Con las semanas, ese momento va a llegar más tarde.";
+  const ONE={
+    "Una hoja":"Esta noche, en una hoja de tu cuaderno y a mano, escribe por qué quieres ser buzo táctico. Mínimo 10 líneas, respondiendo: 1) ¿qué te hizo querer esto?, 2) ¿quién quieres ser en 2 años?, 3) ¿qué pierdes si abandonas? Sácale una foto y guárdala en el celular.",
+    "2–3 frases":"Debajo, escribe 2 o 3 frases cortas para leerte cuando quieras parar. Por ejemplo: «Esto es lo que vine a entrenar», «Una serie más y después decido», «El frío pasa en un minuto». Cópialas en Plan → Ajustes, donde dice tu por qué: el comandante te las recuerda en los días duros.",
+    "Preguntar":"Entra a admisionarmada.cl (o llama a la Quinta Zona Naval, en Puerto Montt) y anota en tu cuaderno: 1) requisitos de la Escuela de Grumetes y de la Escuela Naval: edad, estudios, examen médico; 2) fechas de postulación de este año; 3) cómo es hoy la prueba física de buzo táctico y sus mínimas. Lo que no encuentres, escríbelo como pregunta para hacerla por teléfono.",
+    "Lista":"Esta noche deja la mochila lista junto a la puerta: celular cargado (es tu cronómetro), traje de baño, gafas, gorra, toalla, ropa de recambio, zapatillas de correr, botella de agua de 1 L y 1 plátano para después. En un papel, los 7 ejercicios en orden con tu marca anterior al lado.",
+    "Lugar":"Hoy confirma dónde la haces: la apnea y el 500 m van en piscina con salvavidas (llama, pregunta el horario y avisa que vas a hacer apnea); el 2.400 m en una pista o en un tramo plano que hayas medido con adidas Running. Decide cómo llegas rápido de una a otra.",
+    "Marcha-trote con mochila 10 kg":"Ponte la mochila con 10 kg bien ajustada y haz 8 km: 5 minutos trotando, 5 caminando rápido, y repites hasta completar (más o menos 1 h 15 min). Grábala con adidas Running para saber cuándo llegas a 8 km. Lleva agua.",
+    "Marcha con mochila 12 kg":"Ponte la mochila con 12 kg bien ajustada y camina rápido 15 km, unas 3 horas. Lleva 1,5 L de agua, 1 plátano y un puñado de maní, y un par de calcetines secos. En el km 7 u 8 para 5 minutos: sácate las zapatillas, revisa si hay ampollas y cámbiate los calcetines. Grábala con adidas Running.",
+    "Lo lograste":"Esta noche, en tu cuaderno, una hoja: 1) el peor momento de la semana, 2) qué te hizo seguir, 3) qué harías distinto. Guárdala: es para leerla antes del curso.",
+    "Duerme todo lo que puedas":"Hoy no entrenas. Duerme hasta despertar solo si tu turno lo permite, y si puedes, una siesta de 20 a 30 minutos después de almorzar (no más, o no duermes en la noche).",
+    "Come bien":"Haz las 4 comidas de siempre (desayuno, almuerzo, colación y comida al llegar), con proteína en cada una: huevos, pollo, atún, legumbres o yogur. Toma el agua del día. Hoy el cuerpo repara lo de la semana."};
+  if(ONE[n])return ONE[n];
+  if(n==="Flexiones"&&p==="100 al llegar")return "Apenas llegues, antes de sacarte la mochila: 100 flexiones en total, en las series que necesites. Serie por serie.";
+  if(n==="Aceleraciones"&&k)return `Aceleración ${k} de ${b.s}: corre unos 60 m (media cuadra) empezando suave y acelerando hasta casi tu máximo al final. Vuelve caminando.${restTxt}`;
+  if(n==="Abdominales 2 min"&&k)return `Ronda ${k} de ${b.s}: el máximo de abdominales en 2 minutos, como en la prueba (codos tocan los muslos, omóplatos al suelo). Inicia el temporizador y anota cuántas hiciste.${restTxt}`;
+  if(n==="Patada en seco"&&k)return `Serie ${k} de ${b.s}: boca abajo en el suelo o en una banca, brazos estirados adelante, patada de crol corta y rápida desde la cadera durante 3 minutos (inicia el temporizador).${restTxt}`;
+  if(n==="Pataleo vertical"&&/manos fuera/.test(p))return "En lo hondo de la piscina, junto al borde y con el salvavidas mirando: pataleo vertical 10 minutos (inicia el temporizador). Los primeros 7 con las manos ayudando; los últimos 3 con las manos fuera del agua. Si te hundes, te tomas del borde, respiras y sigues.";
+  if((m=n.match(/^(\d+) × ~(\d+) min$/))&&/aletas/.test(p))return `Tramo ${k||1} de ${b.s}: ${m[2]} minutos pateando con aletas (inicia el temporizador), paralelo a la orilla y donde haces pie. ${/buceo/.test(p)?"Boca abajo, brazos pegados al cuerpo, solo patada; giras la cabeza al lado para respirar.":"Boca abajo, brazos estirados adelante, patada larga desde la cadera; giras la cabeza al lado para respirar."}${k&&k<b.s?` Después descansa de pie ${fmtT(b.r)}.`:""}`;
+  if(n==="6 rondas sin parar"&&k)return `Ronda ${k} de ${b.s}: trota 20 minutos suave y, sin descansar, 10 minutos de circuito repitiendo la vuelta hasta que suene: 10 barras, 30 flexiones, 30 sentadillas, 30 abdominales. Toma agua al empezar cada ronda.${k<b.s?"":" Es la última."}`;
+  if(n==="Frío + circuito"&&k)return `Ronda ${k} de ${b.s}: ducha fría 3 minutos → 10 minutos de circuito repitiendo la vuelta hasta que suene (5 barras, 15 flexiones, 20 sentadillas, 20 abdominales) → 2 minutos de respiración de caja (4-4-4-4).`;
   if(k){let what=p.replace(/^\d+\s*×\s*/,"");
     if(/^\d+ s$/.test(what))return `${n}: aguanta ${what.replace(" s"," segundos")}.${restTxt}`;
-    if(/^\d+(–\d+)?$/.test(what))return `Haz ${what} ${low(n)}.${restTxt}`;
-    if(/^\d+(–\d+)? por lado$/.test(what))return `Haz ${what.replace(" por lado","")} ${low(n)} por cada lado.${restTxt}`;
+    if(/^\d+(–\d+)?$/.test(what))return `Haz ${what} ${NOUN[n]||low(n)}.${restTxt}`;
+    if(/^\d+(–\d+)? por (lado|pierna)$/.test(what))return `Haz ${what.replace(/ por (lado|pierna)/,"")} ${NOUN[n]||low(n)} con cada ${/pierna/.test(what)?"pierna":"lado"}.${restTxt}`;
     if(/^\d+ s por lado$/.test(what))return `${n}: aguanta ${what.replace(" s"," segundos")}.${restTxt}`;
     return `${n}: ${p} (serie ${k}).${restTxt}`}
   return `${n}${p?": "+p:""}.${b.note?" "+b.note:""}`;
