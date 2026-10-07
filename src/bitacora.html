@@ -515,6 +515,16 @@ function lakeCap(t,neo){const r=[[10,8,0],[12,12,5],[14,20,8],[16,30,15],[18,40,
 // (10 min la semana 1, +5 cada 2 semanas, hasta 50): el cuerpo se acostumbra al frío de a poco
 const lakeProg=w=>Math.min(50,10+5*Math.floor(Math.max(0,w-1)/2));
 const lakeCapFor=(w,ctx)=>{const t=waterTemp(ctx),c=lakeCap(t,ctx.neo);return c?Math.min(c,lakeProg(w)):0};
+// cómo entrar y salir del agua fría: el shock de frío del primer minuto es el riesgo real
+const LAKE_IN=`Entra caminando, nunca de golpe ni de cabeza:
+1) Hasta las rodillas: quédate 30 segundos.
+2) Hasta la cintura: mójate las manos, la cara y la nuca.
+3) Para y respira: si la respiración se acelera (es normal), exhala largo por la boca hasta que se calme, como 1 minuto. No sigas hasta respirar normal.
+4) Agáchate hasta los hombros y quédate 20–30 segundos respirando tranquilo.
+5) Recién ahí nadas: paralelo a la orilla, donde el agua te llegue al pecho, para poder pararte cuando quieras. Las primeras semanas puedes nadar con la cabeza afuera (pecho); cuando te sientas bien, crol normal.`;
+const LAKE_OUT=`Sal cuando suene el temporizador aunque te sientas bien: con frío uno se siente bien justo antes de ponerse torpe. Sal YA si: tiemblas sin parar, te cuesta mover los dedos, te sientes confundido o mareado, o tienes los labios morados.
+Afuera: sécate rápido, ponte ropa abrigada y gorro, toma algo caliente y camina suave. Es normal temblar unos minutos y tener más frío 5–10 min después de salir.
+Nunca: tirarte de cabeza, nadar donde no haces pie, apnea en el lago, ni entrar cansado, enfermo, con hambre o después de alcohol.`;
 const LAKE_RULES="Avisa a alguien dónde entras y a qué hora sales · gorra de color · solo donde haces pie, paralelo a la orilla · sin viento ni oleaje · entra caminando y espera a que se calme la respiración · cuando suene el temporizador, sales.";
 function lakeify(t,w,ctx){
   const st=stN(w),spm=[0,180,150,135,120][st],br25=[0,22,20,18,18][st],temp=waterTemp(ctx),cap=lakeCapFor(w,ctx),tc=lakeCap(temp,ctx.neo);
@@ -523,7 +533,7 @@ function lakeify(t,w,ctx){
       B("Hoy no entras al lago","agua muy fría",{note:`Agua ${temp} °C${ctx.temp?"":" (estimada)"}, ${ctx.neo?"con":"sin"} neopreno: solo y con esta agua no se entra. Si tienes piscina, haz ahí la sesión.`}),
       B("Técnica en seco","20 min",{tm:1200,note:"Frente a un espejo o acostado boca abajo en una banca: 3 × 1 min de brazada de crol lenta (codo alto, mano entra lejos), 3 × 30 s de patada corta desde la cadera, 3 × 1 min girando la cabeza para respirar al lado sin levantarla. Termina con 3 × 45 s de plancha."})],safe:"",m:0,lake:true});
   // se arma la sesión para que quepa en el tope: los bloques en orden hasta llenar el tiempo; lo que no cabe no aplica hoy
-  let used=0,meters=0,cut=false;const bl=[];
+  let used=2,meters=0,cut=false;const bl=[];
   t.blocks.forEach(b=>{
     if(!b.m){if(b.n==="La orden")bl.push(B("La orden","nada sin parar hasta que suene",{note:"Paralelo a la orilla, donde haces pie. No pienses en el total: hasta que suene el tope."}));else if(!cut)bl.push(b);return}
     if(cut)return;const left=cap-1-used,e=est(b);let m;
@@ -537,7 +547,7 @@ function lakeify(t,w,ctx){
       bl.push(B("Nado continuo",`~${mins} min`,{m:mm,tm:mins*60,note:`≈ ${nf(mm)} m, lo que alcances del plan de hoy, sin parar. Cuando suene el tope, sales.`}))}});
   const total=t.blocks.reduce((a,b)=>a+est(b),0);
   const prot=B("Antes de entrar",`máximo ${cap} min`,{tm:cap*60,note:`Agua ${temp} °C${ctx.temp?"":" (estimada)"}, ${ctx.neo?"con":"sin"} neopreno${cap<tc?`; tu adaptación al frío esta semana: ${cap} min`:""}. ${LAKE_RULES}`+(cut?` El plan completo son ~${Math.round(total)} min: hoy haces lo que cabe en ${cap} min y el resto no aplica.`:"")});
-  return Object.assign({},t,{t:t.t+" · lago",blocks:[prot,...bl,B("Al salir","sécate y abrígate",{note:"Bebida caliente. Sal ya si: temblor que no para, torpeza en las manos, confusión o labios morados."})],safe:"Vas solo: nunca te alejes de donde haces pie. Nunca apnea en el lago.",m:meters,lake:true});
+  return Object.assign({},t,{t:t.t+" · lago",blocks:[prot,B("Entrada al agua","de a poco · 2 min",{tm:120,c:LAKE_IN}),...bl,B("Al salir","sécate y abrígate",{c:LAKE_OUT})],safe:"Vas solo: nunca te alejes de donde haces pie. Nunca apnea en el lago.",m:meters,lake:true});
 }
 // nados a tope fuera de la sesión de agua (mini-prueba): en el lago llevan las mismas reglas y el mismo tope
 function lakeSprint(t,w,ctx){const cap=lakeCapFor(w,ctx);
@@ -1099,6 +1109,7 @@ function cmdFor(st,plan){
   if(n==="Hoy no entras al lago")return b.note;
   if(n==="Técnica en seco")return `Técnica en seco 20 minutos (inicia el temporizador): ${b.note}`;
   if(n==="La orden"&&plan.lake)return "Hoy nadas sin parar hasta que suene el tope, paralelo a la orilla y donde haces pie.";
+  if(n==="Entrada al agua"||n==="Al salir"&&b.c)return b.c;
   if(n==="Al salir"&&t.kind==="agua")return `Sal del agua, sécate de inmediato, ponte ropa abrigada y toma algo caliente. ${b.note.replace("Bebida caliente. ","")}`;
   if(n==="Calentamiento"&&/trote/.test(p))return `Trota suave 10 minutos (unos ${km(10,w)} km). Después haz 4 aceleraciones de 80 m: arrancas suave, terminas rápido y vuelves caminando.`;
   if(n==="Calentamiento")return "Calienta 8 minutos: 10 círculos de hombros hacia adelante y 10 hacia atrás, 10 círculos de cadera, 20 jumping jacks, 2 × 10 sentadillas sin peso, 2 × 5 flexiones suaves y cuélgate 3 veces 10 segundos de la barra.";
@@ -1632,7 +1643,9 @@ function viewGuia(){return `<div class="sec prose"><h2>Guía</h2>
  <li>Es lo más riesgoso del plan. El shock de frío de los primeros 1–2 min hace jadear y tragar agua: entra caminando y espera.</li>
  <li>Solo donde haces pie, paralelo a la orilla, con gorra de color, cerca de gente, sin viento ni oleaje. Avisa a alguien.</li>
  <li>Los minutos máximos dependen del agua y del neopreno. Por ejemplo, a 10–12 °C son 12 min con neopreno y 5 sin él. Cuando suena, sales.</li>
- <li>Nunca apnea en el lago. Las pruebas de 500 m y apnea se miden en piscina.</li></ul>
+ <li>Nunca apnea en el lago. Las pruebas de 500 m y apnea se miden en piscina.</li>
+ <li><b>Cómo entrar:</b> rodillas 30 s → cintura y te mojas manos, cara y nuca → respiras hasta que se calme (≈1 min) → hombros 20–30 s → nadas donde el agua te llega al pecho. Las primeras semanas, si quieres, con la cabeza afuera.</li>
+ <li><b>Cómo salir:</b> cuando suena, sales aunque te sientas bien. Sécate, ropa abrigada y gorro, algo caliente y camina. Es normal temblar unos minutos.</li></ul>
  <h3>Reglas que no se rompen</h3><ul>
  <li>Nunca apnea solo; nunca hiperventilar antes de una apnea.</li>
  <li>No más de 10% de aumento semanal por tu cuenta.</li>
