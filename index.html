@@ -727,7 +727,7 @@ function dayPlan(w,dow,ctx){
        T("naval","Consultar a la Armada","Quinta Zona Naval (Puerto Montt) o sitio de admisión.","10:00",[B("Preguntar","requisitos y fechas",{note:"Escuela de Grumetes o Escuela Naval, y el formato actual de la prueba de buzo táctico."})],{kind:"admin"})]],
      ["Descanso","descanso",rest("Descanso","El cuerpo se adapta mientras descansa.")],
      ["Activación","tierra",[runT("run","Trote suave 20 min","Prepara el cuerpo para la prueba.","07:00",runBlocks("20 min suave",1)),
-       T("prep","Preparar la prueba","Que mañana no falte nada.","20:00",[B("Lista","cronómetro, toalla, ropa de recambio"),B("Lugar","piscina con salvavidas para la apnea y el 500 m; pista para el 2.400 m")],{kind:"admin"})]],
+       T("prep","Preparar la prueba","Que mañana no falte nada.","20:00",[B("Lista","cronómetro, toalla, ropa de recambio"),B("Lugar","piscina con salvavidas para la apnea y el 500 m; pista para el 2.400 m",{pool:!lake||!!ctx.pool})],{kind:"admin"})]],
      ["Prueba inicial","prueba",null],
      ["Descanso total","descanso",rest("Descanso total","Recuperación y sueño.")]
     ];
@@ -781,12 +781,14 @@ function dayPlan(w,dow,ctx){
   }
   if(kind==="prueba"&&!(tasks&&tasks.length))tasks=[T("prueba","Protocolo de la prueba","Siempre en el mismo orden. Máximo 3 min entre ejercicios. Anota cada número abajo.","07:00",testBlocks(),{kind:"fuerza",safe:"Apnea solo con salvavidas o compañero. Sin hiperventilar."})];
   tasks=tasks.filter(Boolean).map(t=>lake&&t.kind==="agua"&&t.blocks.some(b=>b.m)?lakeify(t,w,ctx):lake&&t.blocks.some(b=>/^Nado [\d.–]+ m$/.test(b.n))?lakeSprint(t,w,ctx):t);
-  if(lake)tasks=tasks.map(t=>t.blocks.some(b=>/^1\. Apnea/.test(b.n))?Object.assign({},t,{blocks:t.blocks.map(b=>/^1\. Apnea/.test(b.n)?Object.assign({},b,{note:"Solo en piscina con salvavidas avisado. Si no hay, queda pendiente."}):/^2\. 500/.test(b.n)?Object.assign({},b,{note:"Mídelo en piscina: en el lago la distancia no es exacta."}):b)}):t);
+  // sin piscina: la apnea y el 500 m quedan pendientes (la apnea nunca en el lago; el 500 m no cabe en el tope del lago)
+  if(lake&&!ctx.pool)tasks=tasks.map(t=>t.blocks.some(b=>/^1\. Apnea/.test(b.n))?Object.assign({},t,{blocks:t.blocks.map(b=>/^1\. Apnea/.test(b.n)?Object.assign({},b,{opt:1,p:"pendiente: sin piscina",note:"Todavía no tienes piscina: la apnea queda pendiente. Nunca se hace en el lago ni solo. Cuando tengas piscina con salvavidas, marca «Sí» en Plan → Ajustes → Piscina y la haces ahí."}):/^2\. 500/.test(b.n)?Object.assign({},b,{opt:1,p:"pendiente: sin piscina",note:"Todavía no tienes piscina: el 500 m queda pendiente. En el lago no cabe en tu tope de minutos y la distancia no es exacta. Empiezas la prueba directo en las barras."}):/^3\. Barras/.test(b.n)?Object.assign({},b,{note:(b.note?b.note+" ":"")+"Hoy empiezas aquí: antes, calienta 8 minutos (trote suave, círculos de hombros y cadera, 2 × 5 flexiones suaves y colgarte 3 veces 10 s)."}):b)}):t);
+  else if(lake)tasks=tasks.map(t=>t.blocks.some(b=>/^1\. Apnea/.test(b.n))?Object.assign({},t,{blocks:t.blocks.map(b=>/^1\. Apnea/.test(b.n)?Object.assign({},b,{note:"Solo en piscina con salvavidas avisado. Si no hay, queda pendiente."}):/^2\. 500/.test(b.n)?Object.assign({},b,{note:"Mídelo en piscina: en el lago la distancia no es exacta."}):b)}):t);
   if(!["descanso","admin","prueba"].includes(kind)&&w!==HELL&&!TESTS.includes(w)&&!deload&&!(INC[w]&&dow===5)&&!(st>=3&&dow===3))tasks.push(tolT(w));
   // descarga de las etapas 3 y 4: la fuerza también baja (en la 51, solo movilidad, como dice el PDF)
   if(deload&&st>=3)tasks=tasks.map(t=>!t||!["fa","legs","core","pt"].includes(t.id)?t:w===51?Object.assign({},t,{t:"Movilidad",why:"Descarga fuerte antes de la prueba final.",blocks:[B("Movilidad","20 min",{tm:1200,note:"Círculos de cadera, hombros y tobillos, gato-vaca y sentadilla profunda. Nada de fuerza esta semana."})]}):Object.assign({},t,{why:(t.why?t.why+" ":"")+"Descarga: menos series.",blocks:t.blocks.map(b=>softBlock(b,""))}));
   if(w===0&&dow===2)tasks.push(tolT(0));
-  if(TESTS.includes(w)&&w>0&&dow===4)tasks.push(T("prep","Preparar la prueba","Que mañana no falte nada.","20:00",[B("Lista","cronómetro, toalla, ropa de recambio, agua"),B("Lugar","piscina con salvavidas avisado para la apnea y el 500 m; pista para el 2.400 m")],{kind:"prep"}));
+  if(TESTS.includes(w)&&w>0&&dow===4)tasks.push(T("prep","Preparar la prueba","Que mañana no falte nada.","20:00",[B("Lista","cronómetro, toalla, ropa de recambio, agua"),B("Lugar","piscina con salvavidas avisado para la apnea y el 500 m; pista para el 2.400 m",{pool:!lake||!!ctx.pool})],{kind:"prep"}));
   if(w>=1&&kind!=="descanso"&&w!==HELL&&!(INC[w]&&dow===5))tasks.push(T("ducha","Ducha fría "+cold(w),"Adaptación al frío.","11:15",[B("Agua fría",cold(w),{tm:coldSec(w),note:"Al final de la ducha. Respira lento y largo por la nariz."})],{kind:"rutina"}));
   tasks.push(T("noche","Noche","Sin pantalla los últimos 30 min.","22:00",[B("Visualización","5 min",{tm:300,note:"La prueba completa, con el cansancio incluido. Te ves terminando."}),B("A la cama","8 h")],{kind:"rutina"}));
   return {w,dow,title,kind,deload,stage:stageOf(w),tasks,test:kind==="prueba"&&TESTS.includes(w)&&dow===5,lake};
@@ -836,7 +838,7 @@ function evalTest(w,t){
 
 /* =================== ALMACENAMIENTO =================== */
 const LS="bitacora-buzo-v1";
-const defCfg=()=>({name:"Diego",start:"2026-10-06",sched:Array.from({length:53},(_,i)=>i),repeats:[],place:"lago",partner:false,neo:false,temp:"",turno:"13",trip:15,fins:false,boya:false,bigText:false});
+const defCfg=()=>({name:"Diego",start:"2026-10-06",sched:Array.from({length:53},(_,i)=>i),repeats:[],place:"lago",partner:false,neo:false,temp:"",turno:"13",trip:15,fins:false,boya:false,pool:false,bigText:false});
 // ajustes guardados: si algo viene dañado (copia editada, datos viejos) se usa el valor por defecto
 const fixCfg=c=>{const d=defCfg();if(c.start==="2026-10-05"&&!c.startMoved){c.start="2026-10-06";c.startMoved=true}
   if(typeof c.start!=="string"||!/^\d{4}-\d{2}-\d{2}$/.test(c.start)||isNaN(parse(c.start)))c.start=d.start;
@@ -996,7 +998,7 @@ function lastTest(date){const ws=date?weekStartOf(date):null,lim=ws?iso(ws):"999
 const CTXF=["place","neo","temp","partner"];
 const tempFor=(c,date)=>c.temp!==""&&c.temp!=null&&c.tempK&&Math.abs(diffDays(date,parse(c.tempK)))<=10?c.temp:"";
 function ctxFor(date){const c=Store.cfg,dd=Store.days[iso(date)],fz=dd&&dd.ctx&&diffDays(date,today())<0?dd.ctx:null;
-  const base={month:date.getMonth(),place:c.place,partner:c.partner,neo:c.neo,temp:tempFor(c,date),trip:c.trip,fins:!!c.fins,boya:!!c.boya,nolake:!!(dd&&dd.nolake)};
+  const base={month:date.getMonth(),place:c.place,partner:c.partner,neo:c.neo,temp:tempFor(c,date),trip:c.trip,fins:!!c.fins,boya:!!c.boya,pool:!!c.pool,nolake:!!(dd&&dd.nolake)};
   return Object.assign({},lastTest(date),base,fz?{place:fz.place,partner:fz.partner,neo:fz.neo,temp:fz.temp}:{})}
 let PLANC={};
 function planFor(date){const ck=iso(date);if(ck in PLANC)return PLANC[ck];return PLANC[ck]=planFor0(date)}
@@ -1193,6 +1195,7 @@ Horario: llegas ${at(b.trip)}, entras ${at(b.trip+5)}, sales del agua a más tar
     "5. Flexiones":"Haz el máximo de flexiones en 2 minutos, pecho a un puño del suelo. Inicia el temporizador. Anota el número.",
     "6. Abdominales":"Haz el máximo de abdominales en 2 minutos. Inicia el temporizador. Anota el número.",
     "7. 2.400 m":"Corre 2.400 m (6 vueltas de pista) lo más rápido que puedas. Anota el tiempo."};
+  if(TESTC[n]&&b.opt&&/pendiente/.test(p))return b.note;
   if(TESTC[n])return TESTC[n]+(t.kind==="admin"||n==="7. 2.400 m"?"":n==="6. Abdominales"?" Después vas a la pista: solo el tiempo de llegar.":" Máximo 3 minutos y pasas al siguiente.");
   if(/ en total$/.test(p))return `Haz ${p.replace(" en total","")} ${low(n)} en total, repartidas en las series que necesites. No pienses en el total: serie por serie.`;
   if(/1 min a tope/.test(p))return `${n.replace(" 1 min","")}: el máximo que puedas en 1 minuto. Inicia el temporizador y pasa directo al siguiente.`;
@@ -1219,6 +1222,7 @@ Horario: llegas ${at(b.trip)}, entras ${at(b.trip+5)}, sales del agua a más tar
     "Lo lograste":"Esta noche, en tu cuaderno, una hoja: 1) el peor momento de la semana, 2) qué te hizo seguir, 3) qué harías distinto. Guárdala: es para leerla antes del curso.",
     "Duerme todo lo que puedas":"Hoy no entrenas. Duerme hasta despertar solo si tu turno lo permite, y si puedes, una siesta de 20 a 30 minutos después de almorzar (no más, o no duermes en la noche).",
     "Come bien":"Haz las 4 comidas de siempre (desayuno, almuerzo, colación y comida al llegar), con proteína en cada una: huevos, pollo, atún, legumbres o yogur. Toma el agua del día. Hoy el cuerpo repara lo de la semana."};
+  if(n==="Lugar"&&!b.pool)return "Hoy confirma dónde la haces. Sin piscina todavía: la apnea y el 500 m quedan pendientes, y empiezas por las barras. Barras, sentadillas, flexiones y abdominales en tu barra de siempre, cerca de la casa; el 2.400 m en piso firme y plano (la vereda de la costanera) medido con adidas Running.";
   if(ONE[n])return ONE[n];
   if(n==="Flexiones"&&p==="100 al llegar")return "Apenas llegues, antes de sacarte la mochila: 100 flexiones en total, en las series que necesites. Serie por serie.";
   if(n==="Aceleraciones"&&k)return `Aceleración ${k} de ${b.s}: corre unos 60 m (media cuadra) empezando suave y acelerando hasta casi tu máximo al final. Vuelve caminando.${restTxt}`;
@@ -1437,7 +1441,7 @@ function viewPlan(){
   const c=Store.cfg,sg=(key,v,l)=>`<button class="seg ${String(c[key])===String(v)?"on":""}" data-cset="${key}|${v}">${l}</button>`;
   h+=`<div class="card"><span class="lbl">Ajustes</span>
    <div class="row"><div class="field" style="flex:1;min-width:140px"><label class="lbl" for="c-name">Tu nombre</label><input id="c-name" data-c="name" value="${esc(c.name)}"></div><div class="field" style="flex:1;min-width:150px"><label class="lbl" for="c-start">Día 1 de la semana 0</label><input id="c-start" type="date" data-c="start" value="${esc(c.start)}"></div></div>
-   <div class="row"><div class="field"><span class="lbl">Dónde nadas</span><div class="segs">${sg("place","lago","Lago")}${sg("place","piscina","Piscina")}</div></div><div class="field"><span class="lbl">Neopreno</span><div class="segs">${sg("neo",false,"No")}${sg("neo",true,"Sí")}</div></div><div class="field"><span class="lbl">Turno habitual</span><div class="segs">${sg("turno","13","Entro 13:00")}${sg("turno","16","Entro 16:00")}</div></div><div class="field"><span class="lbl">Aletas</span><div class="segs">${sg("fins",false,"No tengo")}${sg("fins",true,"Sí")}</div></div><div class="field"><span class="lbl">Boya de natación</span><div class="segs">${sg("boya",false,"No tengo")}${sg("boya",true,"Sí")}</div></div><div class="field"><span class="lbl">Compañero de agua</span><div class="segs">${sg("partner",false,"No")}${sg("partner",true,"Sí")}</div></div></div>
+   <div class="row"><div class="field"><span class="lbl">Dónde nadas</span><div class="segs">${sg("place","lago","Lago")}${sg("place","piscina","Piscina")}</div></div><div class="field"><span class="lbl">Neopreno</span><div class="segs">${sg("neo",false,"No")}${sg("neo",true,"Sí")}</div></div><div class="field"><span class="lbl">Turno habitual</span><div class="segs">${sg("turno","13","Entro 13:00")}${sg("turno","16","Entro 16:00")}</div></div><div class="field"><span class="lbl">Aletas</span><div class="segs">${sg("fins",false,"No tengo")}${sg("fins",true,"Sí")}</div></div><div class="field"><span class="lbl">Piscina con salvavidas</span><div class="segs">${sg("pool",false,"No tengo")}${sg("pool",true,"Sí")}</div></div><div class="field"><span class="lbl">Boya de natación</span><div class="segs">${sg("boya",false,"No tengo")}${sg("boya",true,"Sí")}</div></div><div class="field"><span class="lbl">Compañero de agua</span><div class="segs">${sg("partner",false,"No")}${sg("partner",true,"Sí")}</div></div></div>
    <div class="row"><div class="field" style="max-width:140px"><label class="lbl" for="c-peso">Peso en ayunas (kg)</label><input id="c-peso" inputmode="decimal" data-c="peso" value="${esc(bodyWeight()?nf(bodyWeight()):"")}" placeholder="70"></div><div class="field" style="max-width:140px"><label class="lbl" for="c-alt">Estatura (cm)</label><input id="c-alt" inputmode="numeric" data-c="alt" value="${esc(c.alt||"")}" placeholder="175"></div><p class="foot" style="flex:1;min-width:150px">Con tu peso calculo la proteína, las porciones y el agua de cada día. Pésate en ayunas el primer día de cada semana.</p></div>
    <div class="row"><div class="field" style="max-width:170px"><label class="lbl" for="c-maxb">Máximo de barras hoy</label><input id="c-maxb" inputmode="numeric" data-c="maxb" value="${esc((c.maxB&&c.maxB.v)||"")}" placeholder="${esc(lastTest().barras||6)}"></div><p class="foot" style="flex:1;min-width:160px">Mídete cada 3–4 semanas: las series de barras se ajustan solas.</p></div>
    <div class="field"><label class="lbl" for="c-why">Tu por qué</label><textarea id="c-why" data-c="why" placeholder="Por qué quieres ser buzo táctico. El comandante te lo recuerda en los días duros.">${esc(c.why||"")}</textarea></div>
