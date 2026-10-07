@@ -252,11 +252,11 @@ const reload = async p => { await p.reload(); await p.waitForTimeout(200); };
 { console.log('15. Resultados de mini-prueba y simulacro');
   const { p, ctx } = await page('2027-04-17T09:00:00'); // semana 27, día 5: mini-prueba
   ok((await text(p)).includes('Tus resultados · mini-prueba'), 'formulario de mini-prueba');
-  await p.fill('#x-mini-barras', '9');
+  await p.fill('#x-mini-flex', '30');
   ok((await p.$eval('#xv-mini', e => e.textContent)).includes('Primera mini-prueba'), 'primera mini-prueba registrada');
   for (let i = 0; i < 7; i++) await p.click('[data-go="1"]'); // semana 28, día 5: otra mini-prueba
-  await p.fill('#x-mini-barras', '11');
-  ok((await p.$eval('#xv-mini', e => e.textContent)).includes('Barras 11 (+2)'), 'compara con la anterior');
+  await p.fill('#x-mini-flex', '32');
+  ok((await p.$eval('#xv-mini', e => e.textContent)).includes('Flexiones 32 (+2)'), 'compara con la anterior');
   await ctx.close(); }
 
 // 16. Progreso: constancia, gráficos, récords y diario
@@ -386,13 +386,13 @@ const reload = async p => { await p.reload(); await p.waitForTimeout(200); };
     ok(!(await text(p)).includes('días seguidos cansado'), '“Al 100%” hoy apaga la alerta');
     ok(errs.length === 0, 'sin errores: ' + errs.join(' | ')); await ctx.close(); }
   // mini-prueba con carrera de 1.600 m contra una de 1.200 m: compara ritmo, no tiempo
-  { const { p, ctx, errs } = await seeded('2027-05-29T09:00:00', { '2027-05-22': { mini: { run: '5:40', swim: '4:00', barras: '9' } }, '2027-05-15': { mini: { barras: '' } } });
+  { const { p, ctx, errs } = await seeded('2027-05-29T09:00:00', { '2027-05-22': { mini: { run: '5:40', swim: '4:00', barras: '9', abd: '30' } }, '2027-05-15': { mini: { barras: '' } } });
     ok((await text(p)).includes('Carrera 1.600 m (mm:ss)'), 'el formulario dice la distancia de la carrera');
     await p.fill('#x-mini-run', '7:30');
     const v = await p.$eval('#xv-mini', e => e.textContent);
     ok(v.includes('ritmo 4:41/km') && v.includes('contra 1.200 m') && !v.includes('+1:50'), 'distancia distinta: compara el ritmo (' + v + ')');
-    await p.fill('#x-mini-barras', '10');
-    ok((await p.$eval('#xv-mini', e => e.textContent)).includes('Barras 10 (+1)'), 'salta la mini-prueba vacía y compara con la última con datos');
+    await p.fill('#x-mini-abd', '31');
+    ok((await p.$eval('#xv-mini', e => e.textContent)).includes('Abdominales 31 (+1)'), 'salta la mini-prueba vacía y compara con la última con datos');
     ok(errs.length === 0, 'sin errores: ' + errs.join(' | ')); await ctx.close(); }
   // gráficos: el 0 cuenta y tocar un punto muestra su valor
   { const { p, ctx, errs } = await seeded('2026-10-20T09:00:00', { '2026-10-11': { test: { barras: '0', run: '11:20' } } });
