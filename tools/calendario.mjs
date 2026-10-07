@@ -1,5 +1,5 @@
 // Genera un archivo .ics con la orden de cada día para importar en Google Calendar.
-// Uso: node tools/calendario.mjs [AAAA-MM-DD desde] [días] [--turno 13|16|libre] > bitacora.ics
+// Uso: node tools/calendario.mjs [AAAA-MM-DD desde] [días] [--turno 13|16|libre] [--inicio AAAA-MM-DD] > bitacora.ics
 import { loadApp, ordenDelDia } from './app-logic.mjs';
 const args = process.argv.slice(2);
 const opt = (name, def) => { const i = args.indexOf('--' + name); return i >= 0 ? args[i + 1] : def; };
@@ -14,7 +14,7 @@ const fold = line => { const out = []; let s = line; while (Buffer.byteLength(s)
 const L = ['BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//Bitacora Buzo Tactico//ES', 'CALSCALE:GREGORIAN', 'METHOD:PUBLISH', 'X-WR-CALNAME:Bitácora Buzo Táctico', 'X-WR-TIMEZONE:America/Santiago'];
 for (let i = 0; i < days; i++) {
   const d = new Date(from); d.setDate(d.getDate() + i);
-  const o = ordenDelDia(A, d, { turno });
+  const o = ordenDelDia(A, d, { turno, start: opt('inicio', '2026-10-19') });
   if (!o.L) continue;
   const [sh, sm] = (o.rest ? '10:00' : o.shift.A).split(':').map(Number);
   const [eh, em] = (o.rest ? '10:30' : o.shift.lunch).split(':').map(Number);

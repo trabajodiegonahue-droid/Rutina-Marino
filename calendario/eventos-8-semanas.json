@@ -1,9 +1,20 @@
 [
  {
+  "summary": "⚓ Sem 0 · Día 1 · Arranque",
+  "startTime": "2026-10-19T08:00:00",
+  "endTime": "2026-10-19T12:00:00",
+  "description": "«De pie, Diego. Esto es lo que haces hoy.»\n\n8:00 Trote suave 20 min: Trote 20 min\n10:15 Aprende los ejercicios de la prueba: Barras 2 × 3 · Flexiones 2 × 10 · Sentadillas 2 × 15 · Abdominales 2 × 15 · Plancha 2 × 30 s\n10:15 Pedir hora al médico: Pedir examen general\n11:40 Escribir tu “por qué”: Una hoja por qué quieres ser buzo táctico · 2–3 frases para cuando cueste\n22:45 Estudio: La Armada y tu camino\n\nDespiertas 7:30 · entrenas desde 8:00 · sales al trabajo 12:30 · cama 23:30\nSi hoy entras a las 16:00: despiertas 9:15 · entrenas desde 9:45 · sales 15:15 · cama 1:15 (en la app toca «Entro 16:00»).\nSi repetiste semanas o cambiaste ajustes, manda lo que dice la app.\n\nÓrdenes paso a paso: https://claude.ai/artifact/Y7MgtsGPPBnXAaGzJpKC7H",
+  "reminders": [
+   15,
+   0
+  ],
+  "colorId": "9"
+ },
+ {
   "summary": "⚓ Sem 0 · Día 2 · Reconocimiento",
-  "startTime": "2026-10-07T08:00:00",
-  "endTime": "2026-10-07T12:00:00",
-  "description": "«De pie, Diego. Esto es lo que haces hoy.»\n\n8:00 Trote suave 30 min: Trote 30 min\n10:15 Conseguir equipo: Gafas y gorra de color · Neopreno 3–5 mm si puedes · Barra para dominadas en casa o en una plaza\n22:45 Estudio: La prueba de ingreso al curso\n\nDespiertas 7:30 · entrenas desde 8:00 · sales al trabajo 12:30 · cama 23:30\nSi hoy entras a las 16:00: despiertas 9:15 · entrenas desde 9:45 · sales 15:15 · cama 1:15 (en la app toca «Entro 16:00»).\nSi repetiste semanas o cambiaste ajustes, manda lo que dice la app.\n\nÓrdenes paso a paso: https://claude.ai/artifact/Y7MgtsGPPBnXAaGzJpKC7H",
+  "startTime": "2026-10-20T08:00:00",
+  "endTime": "2026-10-20T12:00:00",
+  "description": "«Arriba, Diego. Nadie lo va a hacer por ti.»\n\n8:00 Trote suave 30 min: Trote 30 min\n10:15 Conseguir equipo: Gafas y gorra de color · Neopreno 3–5 mm si puedes · Barra para dominadas en casa o en una plaza\n22:45 Estudio: La prueba de ingreso al curso\n\nDespiertas 7:30 · entrenas desde 8:00 · sales al trabajo 12:30 · cama 23:30\nSi hoy entras a las 16:00: despiertas 9:15 · entrenas desde 9:45 · sales 15:15 · cama 1:15 (en la app toca «Entro 16:00»).\nSi repetiste semanas o cambiaste ajustes, manda lo que dice la app.\n\nÓrdenes paso a paso: https://claude.ai/artifact/Y7MgtsGPPBnXAaGzJpKC7H",
   "reminders": [
    15,
    0
@@ -12,9 +23,9 @@
  },
  {
   "summary": "⚓ Sem 0 · Día 3 · Ensayo de técnica",
-  "startTime": "2026-10-08T08:00:00",
-  "endTime": "2026-10-08T12:00:00",
-  "description": "«Arriba, Diego. Nadie lo va a hacer por ti.»\n\n8:00 Fuerza de ensayo: Barras 3 × 3 · Flexiones 3 × 10 · Sentadillas 3 × 15 · Abdominales 3 × 15 · Plancha 2 × 30 s\n10:15 Consultar a la Armada: Preguntar requisitos y fechas\n11:30 Tolerancia al dolor: Sentadilla isométrica en la pared 0:45 · Colgado de la barra 0:20 · Plancha 1:00\n22:45 Estudio: Combate Naval de Iquique\n\nDespiertas 7:30 · entrenas desde 8:00 · sales al trabajo 12:30 · cama 23:30\nSi hoy entras a las 16:00: despiertas 9:15 · entrenas desde 9:45 · sales 15:15 · cama 1:15 (en la app toca «Entro 16:00»).\nSi repetiste semanas o cambiaste ajustes, manda lo que dice la app.\n\nÓrdenes paso a paso: https://claude.ai/artifact/Y7MgtsGPPBnXAaGzJpKC7H",
+  "startTime": "2026-10-21T08:00:00",
+  "endTime": "2026-10-21T12:00:00",
+  "description": "«Diego. Querías saber si puedes. Hoy se sigue respondiendo.»\n\n8:00 Fuerza de ensayo: Barras 3 × 3 · Flexiones 3 × 10 · Sentadillas 3 × 15 · Abdominales 3 × 15 · Plancha 2 × 30 s\n10:15 Consultar a la Armada: Preguntar requisitos y fechas\n11:30 Tolerancia al dolor: Sentadilla isométrica en la pared 0:45 · Colgado de la barra 0:20 · Plancha 1:00\n22:45 Estudio: Combate Naval de Iquique\n\nDespiertas 7:30 · entrenas desde 8:00 · sales al trabajo 12:30 · cama 23:30\nSi hoy entras a las 16:00: despiertas 9:15 · entrenas desde 9:45 · sales 15:15 · cama 1:15 (en la app toca «Entro 16:00»).\nSi repetiste semanas o cambiaste ajustes, manda lo que dice la app.\n\nÓrdenes paso a paso: https://claude.ai/artifact/Y7MgtsGPPBnXAaGzJpKC7H",
   "reminders": [
    15,
    0
@@ -23,9 +34,9 @@
  },
  {
   "summary": "⚓ Sem 0 · Día 4 · Descanso",
-  "startTime": "2026-10-09T10:00:00",
-  "endTime": "2026-10-09T10:30:00",
-  "description": "«Día libre. Cúmplelo igual de serio.»\n\nDescanso: Movilidad 15 min suaves · Dormir 8–9 h\n22:45 Estudio: Presión bajo el agua\n\nDespiertas 7:30 · entrenas desde 8:00 · sales al trabajo 12:30 · cama 23:30\nSi hoy entras a las 16:00: despiertas 9:15 · entrenas desde 9:45 · sales 15:15 · cama 1:15 (en la app toca «Entro 16:00»).\nSi repetiste semanas o cambiaste ajustes, manda lo que dice la app.\n\nÓrdenes paso a paso: https://claude.ai/artifact/Y7MgtsGPPBnXAaGzJpKC7H",
+  "startTime": "2026-10-22T10:00:00",
+  "endTime": "2026-10-22T10:30:00",
+  "description": "«Hoy descansas. Es una orden, no un premio.»\n\nDescanso: Movilidad 15 min suaves · Dormir 8–9 h\n22:45 Estudio: Presión bajo el agua\n\nDespiertas 7:30 · entrenas desde 8:00 · sales al trabajo 12:30 · cama 23:30\nSi hoy entras a las 16:00: despiertas 9:15 · entrenas desde 9:45 · sales 15:15 · cama 1:15 (en la app toca «Entro 16:00»).\nSi repetiste semanas o cambiaste ajustes, manda lo que dice la app.\n\nÓrdenes paso a paso: https://claude.ai/artifact/Y7MgtsGPPBnXAaGzJpKC7H",
   "reminders": [
    0
   ],
@@ -33,9 +44,9 @@
  },
  {
   "summary": "⚓ Sem 0 · Día 5 · Activación",
-  "startTime": "2026-10-10T08:00:00",
-  "endTime": "2026-10-10T12:00:00",
-  "description": "«De pie, Diego. Esto es lo que haces hoy.»\n\n8:00 Trote suave 20 min: Trote 20 min\n11:40 Preparar la prueba: Lista cronómetro, toalla, ropa de recambio · Lugar piscina con salvavidas para la apnea y el 500 m; pista para el 2.400 m\n22:45 Estudio: Ley de Boyle\n\nDespiertas 7:30 · entrenas desde 8:00 · sales al trabajo 12:30 · cama 23:30\nSi hoy entras a las 16:00: despiertas 9:15 · entrenas desde 9:45 · sales 15:15 · cama 1:15 (en la app toca «Entro 16:00»).\nSi repetiste semanas o cambiaste ajustes, manda lo que dice la app.\n\nÓrdenes paso a paso: https://claude.ai/artifact/Y7MgtsGPPBnXAaGzJpKC7H",
+  "startTime": "2026-10-23T08:00:00",
+  "endTime": "2026-10-23T12:00:00",
+  "description": "«Arriba, Diego. Nadie lo va a hacer por ti.»\n\n8:00 Trote suave 20 min: Trote 20 min\n11:40 Preparar la prueba: Lista cronómetro, toalla, ropa de recambio · Lugar piscina con salvavidas para la apnea y el 500 m; pista para el 2.400 m\n22:45 Estudio: Ley de Boyle\n\nDespiertas 7:30 · entrenas desde 8:00 · sales al trabajo 12:30 · cama 23:30\nSi hoy entras a las 16:00: despiertas 9:15 · entrenas desde 9:45 · sales 15:15 · cama 1:15 (en la app toca «Entro 16:00»).\nSi repetiste semanas o cambiaste ajustes, manda lo que dice la app.\n\nÓrdenes paso a paso: https://claude.ai/artifact/Y7MgtsGPPBnXAaGzJpKC7H",
   "reminders": [
    15,
    0
@@ -44,9 +55,9 @@
  },
  {
   "summary": "⚓ Sem 0 · Día 6 · PRUEBA · Prueba inicial",
-  "startTime": "2026-10-11T08:00:00",
-  "endTime": "2026-10-11T12:00:00",
-  "description": "«Diego. Hoy se mide el punto de partida. Que sea verdad, no bonito.»\n\n8:00 Protocolo de la prueba: 1. Apnea dinámica metros, una respiración · 2. 500 m libre tiempo · 3. Barras máximo seguidas · 4. Sentadillas máximo en 2 min · 5. Flexiones máximo en 2 min · 6. Abdominales máximo en 2 min · 7. 2.400 m tiempo\n   ⚠ Apnea solo con salvavidas o compañero. Sin hiperventilar.\n\nDespiertas 7:30 · entrenas desde 8:00 · sales al trabajo 12:30 · cama 23:30\nSi hoy entras a las 16:00: despiertas 9:15 · entrenas desde 9:45 · sales 15:15 · cama 1:15 (en la app toca «Entro 16:00»).\nSi repetiste semanas o cambiaste ajustes, manda lo que dice la app.\n\nÓrdenes paso a paso: https://claude.ai/artifact/Y7MgtsGPPBnXAaGzJpKC7H",
+  "startTime": "2026-10-24T08:00:00",
+  "endTime": "2026-10-24T12:00:00",
+  "description": "«Diego. Hoy se mide el punto de partida. Que sea verdad, no bonito.»\n\n8:00 Protocolo de la prueba: 1. Apnea dinámica pendiente: sin piscina · 2. 500 m libre pendiente: sin piscina · 3. Barras máximo seguidas · 4. Sentadillas máximo en 2 min · 5. Flexiones máximo en 2 min · 6. Abdominales máximo en 2 min · 7. 2.400 m tiempo\n   ⚠ Apnea solo con salvavidas o compañero. Sin hiperventilar.\n\nDespiertas 7:30 · entrenas desde 8:00 · sales al trabajo 12:30 · cama 23:30\nSi hoy entras a las 16:00: despiertas 9:15 · entrenas desde 9:45 · sales 15:15 · cama 1:15 (en la app toca «Entro 16:00»).\nSi repetiste semanas o cambiaste ajustes, manda lo que dice la app.\n\nÓrdenes paso a paso: https://claude.ai/artifact/Y7MgtsGPPBnXAaGzJpKC7H",
   "reminders": [
    60,
    0
@@ -55,9 +66,9 @@
  },
  {
   "summary": "⚓ Sem 0 · Día 7 · Descanso total",
-  "startTime": "2026-10-12T10:00:00",
-  "endTime": "2026-10-12T10:30:00",
-  "description": "«Día libre. Cúmplelo igual de serio.»\n\nDescanso total: Movilidad 15 min suaves · Dormir 8–9 h\n22:45 Estudio: Barotrauma\n\nDespiertas 7:30 · entrenas desde 8:00 · sales al trabajo 12:30 · cama 23:30\nSi hoy entras a las 16:00: despiertas 9:15 · entrenas desde 9:45 · sales 15:15 · cama 1:15 (en la app toca «Entro 16:00»).\nSi repetiste semanas o cambiaste ajustes, manda lo que dice la app.\n\nÓrdenes paso a paso: https://claude.ai/artifact/Y7MgtsGPPBnXAaGzJpKC7H",
+  "startTime": "2026-10-25T10:00:00",
+  "endTime": "2026-10-25T10:30:00",
+  "description": "«Hoy descansas. Es una orden, no un premio.»\n\nDescanso total: Movilidad 15 min suaves · Dormir 8–9 h\n22:45 Estudio: Barotrauma\n\nDespiertas 7:30 · entrenas desde 8:00 · sales al trabajo 12:30 · cama 23:30\nSi hoy entras a las 16:00: despiertas 9:15 · entrenas desde 9:45 · sales 15:15 · cama 1:15 (en la app toca «Entro 16:00»).\nSi repetiste semanas o cambiaste ajustes, manda lo que dice la app.\n\nÓrdenes paso a paso: https://claude.ai/artifact/Y7MgtsGPPBnXAaGzJpKC7H",
   "reminders": [
    0
   ],
@@ -65,9 +76,9 @@
  },
  {
   "summary": "⚓ Sem 1 · Día 1 · Agua + tirón",
-  "startTime": "2026-10-13T08:00:00",
-  "endTime": "2026-10-13T12:00:00",
-  "description": "«Al lago. Vas solo: nadas donde haces pie y sales cuando suena.»\n\n8:00 Natación técnica · lago [máximo 5 min en el agua · solo donde haces pie · avisa a alguien]: Nado continuo ~4 min\n10:15 Fuerza de tren superior: Barras 4 × 4 · Remo invertido 3 × 10 · Flexiones 4 × 12 · Fondos en silla 3 × 10 · Plancha 3 × 45 s\n11:30 Tolerancia al dolor: Sentadilla isométrica en la pared 0:49 · Colgado de la barra 0:22 · Plancha 1:04\n11:45 Ducha fría 30 s: Agua fría 30 s\n22:45 Estudio: Apagón en apnea\n\nDespiertas 7:30 · entrenas desde 8:00 · sales al trabajo 12:30 · cama 23:30\nSi hoy entras a las 16:00: despiertas 9:15 · entrenas desde 9:45 · sales 15:15 · cama 1:15 (en la app toca «Entro 16:00»).\nSi repetiste semanas o cambiaste ajustes, manda lo que dice la app.\n\nÓrdenes paso a paso: https://claude.ai/artifact/Y7MgtsGPPBnXAaGzJpKC7H",
+  "startTime": "2026-10-26T08:00:00",
+  "endTime": "2026-10-26T12:00:00",
+  "description": "«Lago. El frío no perdona al que se confía.»\n\n8:00 Natación técnica · lago [máximo 5 min en el agua · solo donde haces pie · avisa a alguien]: Ida en bicicleta 15 min · ≈3,8 km · Entrada al agua de a poco · 2 min · Nado continuo ~2 min · Vuelta en bicicleta 15 min suave\n10:15 Fuerza de tren superior: Barras 4 × 4 · Remo invertido 3 × 10 · Flexiones 4 × 12 · Fondos en silla 3 × 10 · Plancha 3 × 45 s\n11:30 Tolerancia al dolor: Sentadilla isométrica en la pared 0:49 · Colgado de la barra 0:22 · Plancha 1:04\n11:45 Ducha fría 30 s: Agua fría 30 s\n22:45 Estudio: Apagón en apnea\n\nDespiertas 7:30 · entrenas desde 8:00 · sales al trabajo 12:30 · cama 23:30\nSi hoy entras a las 16:00: despiertas 9:15 · entrenas desde 9:45 · sales 15:15 · cama 1:15 (en la app toca «Entro 16:00»).\nSi repetiste semanas o cambiaste ajustes, manda lo que dice la app.\n\nÓrdenes paso a paso: https://claude.ai/artifact/Y7MgtsGPPBnXAaGzJpKC7H",
   "reminders": [
    15,
    0
@@ -76,9 +87,9 @@
  },
  {
   "summary": "⚓ Sem 1 · Día 2 · Carrera + core",
-  "startTime": "2026-10-14T08:00:00",
-  "endTime": "2026-10-14T12:00:00",
-  "description": "«Arriba, Diego. Nadie lo va a hacer por ti.»\n\n8:00 Carrera suave 30 min: Trote 30 min\n9:15 Core: Plancha 3 × 45 s · Plancha lateral 2 × 30 s por lado · Hollow hold 3 × 20 s · Abdominales 3 × 20\n11:30 Tolerancia al dolor: Sentadilla isométrica en la pared 0:49 · Colgado de la barra 0:22 · Plancha 1:04\n11:45 Ducha fría 30 s: Agua fría 30 s\n22:45 Estudio: Shock de frío: regla 1-10-1\n\nDespiertas 7:30 · entrenas desde 8:00 · sales al trabajo 12:30 · cama 23:30\nSi hoy entras a las 16:00: despiertas 9:15 · entrenas desde 9:45 · sales 15:15 · cama 1:15 (en la app toca «Entro 16:00»).\nSi repetiste semanas o cambiaste ajustes, manda lo que dice la app.\n\nÓrdenes paso a paso: https://claude.ai/artifact/Y7MgtsGPPBnXAaGzJpKC7H",
+  "startTime": "2026-10-27T08:00:00",
+  "endTime": "2026-10-27T12:00:00",
+  "description": "«Diego. Querías saber si puedes. Hoy se sigue respondiendo.»\n\n8:00 Carrera suave 30 min: Trote 30 min\n9:15 Core: Plancha 3 × 45 s · Plancha lateral 2 × 30 s por lado · Hollow hold 3 × 20 s · Abdominales 3 × 20\n11:30 Tolerancia al dolor: Sentadilla isométrica en la pared 0:49 · Colgado de la barra 0:22 · Plancha 1:04\n11:45 Ducha fría 30 s: Agua fría 30 s\n22:45 Estudio: Shock de frío: regla 1-10-1\n\nDespiertas 7:30 · entrenas desde 8:00 · sales al trabajo 12:30 · cama 23:30\nSi hoy entras a las 16:00: despiertas 9:15 · entrenas desde 9:45 · sales 15:15 · cama 1:15 (en la app toca «Entro 16:00»).\nSi repetiste semanas o cambiaste ajustes, manda lo que dice la app.\n\nÓrdenes paso a paso: https://claude.ai/artifact/Y7MgtsGPPBnXAaGzJpKC7H",
   "reminders": [
    15,
    0
@@ -87,9 +98,9 @@
  },
  {
   "summary": "⚓ Sem 1 · Día 3 · Agua + piernas",
-  "startTime": "2026-10-15T08:00:00",
-  "endTime": "2026-10-15T12:00:00",
-  "description": "«Al agua. Resistencia sí, heroísmo no.»\n\n8:00 Natación técnica · lago [máximo 5 min en el agua · solo donde haces pie · avisa a alguien]: Nado continuo ~4 min\n10:15 Piernas: Sentadillas 4 × 20 · Zancadas 3 × 10 por pierna · Puente de glúteo 3 × 15 · Gemelos 3 × 20\n11:30 Tolerancia al dolor: Sentadilla isométrica en la pared 0:49 · Colgado de la barra 0:22 · Plancha 1:04\n11:45 Ducha fría 30 s: Agua fría 30 s\n22:45 Estudio: Hipotermia\n\nDespiertas 7:30 · entrenas desde 8:00 · sales al trabajo 12:30 · cama 23:30\nSi hoy entras a las 16:00: despiertas 9:15 · entrenas desde 9:45 · sales 15:15 · cama 1:15 (en la app toca «Entro 16:00»).\nSi repetiste semanas o cambiaste ajustes, manda lo que dice la app.\n\nÓrdenes paso a paso: https://claude.ai/artifact/Y7MgtsGPPBnXAaGzJpKC7H",
+  "startTime": "2026-10-28T08:00:00",
+  "endTime": "2026-10-28T12:00:00",
+  "description": "«Al lago. Vas solo: nadas donde haces pie y sales cuando suena.»\n\n8:00 Natación técnica · lago [máximo 5 min en el agua · solo donde haces pie · avisa a alguien]: Ida en bicicleta 15 min · ≈3,8 km · Entrada al agua de a poco · 2 min · Nado continuo ~2 min · Vuelta en bicicleta 15 min suave\n10:15 Piernas: Sentadillas 4 × 20 · Zancadas 3 × 10 por pierna · Puente de glúteo 3 × 15 · Gemelos 3 × 20\n11:30 Tolerancia al dolor: Sentadilla isométrica en la pared 0:49 · Colgado de la barra 0:22 · Plancha 1:04\n11:45 Ducha fría 30 s: Agua fría 30 s\n22:45 Estudio: Hipotermia\n\nDespiertas 7:30 · entrenas desde 8:00 · sales al trabajo 12:30 · cama 23:30\nSi hoy entras a las 16:00: despiertas 9:15 · entrenas desde 9:45 · sales 15:15 · cama 1:15 (en la app toca «Entro 16:00»).\nSi repetiste semanas o cambiaste ajustes, manda lo que dice la app.\n\nÓrdenes paso a paso: https://claude.ai/artifact/Y7MgtsGPPBnXAaGzJpKC7H",
   "reminders": [
    15,
    0
@@ -98,9 +109,9 @@
  },
  {
   "summary": "⚓ Sem 1 · Día 4 · Descanso activo",
-  "startTime": "2026-10-16T10:00:00",
-  "endTime": "2026-10-16T10:30:00",
-  "description": "«Hoy descansas. Es una orden, no un premio.»\n\nDescanso activo: Movilidad 15 min suaves · Dormir 8–9 h\n22:45 Estudio: RCP: reanimación\n\nDespiertas 7:30 · entrenas desde 8:00 · sales al trabajo 12:30 · cama 23:30\nSi hoy entras a las 16:00: despiertas 9:15 · entrenas desde 9:45 · sales 15:15 · cama 1:15 (en la app toca «Entro 16:00»).\nSi repetiste semanas o cambiaste ajustes, manda lo que dice la app.\n\nÓrdenes paso a paso: https://claude.ai/artifact/Y7MgtsGPPBnXAaGzJpKC7H",
+  "startTime": "2026-10-29T10:00:00",
+  "endTime": "2026-10-29T10:30:00",
+  "description": "«Descanso. El progreso ocurre cuando descansas.»\n\nDescanso activo: Movilidad 15 min suaves · Dormir 8–9 h\n22:45 Estudio: RCP: reanimación\n\nDespiertas 7:30 · entrenas desde 8:00 · sales al trabajo 12:30 · cama 23:30\nSi hoy entras a las 16:00: despiertas 9:15 · entrenas desde 9:45 · sales 15:15 · cama 1:15 (en la app toca «Entro 16:00»).\nSi repetiste semanas o cambiaste ajustes, manda lo que dice la app.\n\nÓrdenes paso a paso: https://claude.ai/artifact/Y7MgtsGPPBnXAaGzJpKC7H",
   "reminders": [
    0
   ],
@@ -108,9 +119,9 @@
  },
  {
   "summary": "⚓ Sem 1 · Día 5 · Circuito + intervalos",
-  "startTime": "2026-10-17T08:00:00",
-  "endTime": "2026-10-17T12:00:00",
-  "description": "«Arriba, Diego. Nadie lo va a hacer por ti.»\n\n8:00 Circuito de prueba: Circuito 3 vueltas\n10:15 Intervalos 4 × 400 m: 4 × 400 m 1:45 cada uno · Vuelta a la calma 5–10 min trote suave\n11:30 Tolerancia al dolor: Sentadilla isométrica en la pared 0:49 · Colgado de la barra 0:22 · Plancha 1:04\n11:45 Ducha fría 30 s: Agua fría 30 s\n22:45 Estudio: Posición lateral de seguridad\n\nDespiertas 7:30 · entrenas desde 8:00 · sales al trabajo 12:30 · cama 23:30\nSi hoy entras a las 16:00: despiertas 9:15 · entrenas desde 9:45 · sales 15:15 · cama 1:15 (en la app toca «Entro 16:00»).\nSi repetiste semanas o cambiaste ajustes, manda lo que dice la app.\n\nÓrdenes paso a paso: https://claude.ai/artifact/Y7MgtsGPPBnXAaGzJpKC7H",
+  "startTime": "2026-10-30T08:00:00",
+  "endTime": "2026-10-30T12:00:00",
+  "description": "«Diego. Querías saber si puedes. Hoy se sigue respondiendo.»\n\n8:00 Circuito de prueba: Circuito 3 vueltas\n10:15 Intervalos 4 × 400 m: 4 × 400 m 1:45 cada uno · Vuelta a la calma 5–10 min trote suave\n11:30 Tolerancia al dolor: Sentadilla isométrica en la pared 0:49 · Colgado de la barra 0:22 · Plancha 1:04\n11:45 Ducha fría 30 s: Agua fría 30 s\n22:45 Estudio: Posición lateral de seguridad\n\nDespiertas 7:30 · entrenas desde 8:00 · sales al trabajo 12:30 · cama 23:30\nSi hoy entras a las 16:00: despiertas 9:15 · entrenas desde 9:45 · sales 15:15 · cama 1:15 (en la app toca «Entro 16:00»).\nSi repetiste semanas o cambiaste ajustes, manda lo que dice la app.\n\nÓrdenes paso a paso: https://claude.ai/artifact/Y7MgtsGPPBnXAaGzJpKC7H",
   "reminders": [
    15,
    0
@@ -119,9 +130,9 @@
  },
  {
   "summary": "⚓ Sem 1 · Día 6 · Agua larga",
-  "startTime": "2026-10-18T08:00:00",
-  "endTime": "2026-10-18T12:00:00",
-  "description": "«Al agua. Resistencia sí, heroísmo no.»\n\n8:00 Distancia continua · lago [máximo 5 min en el agua · solo donde haces pie · avisa a alguien]: Nado continuo ~4 min\n11:30 Tolerancia al dolor: Sentadilla isométrica en la pared 0:49 · Colgado de la barra 0:22 · Plancha 1:04\n11:45 Ducha fría 30 s: Agua fría 30 s\n22:45 Estudio: Rescate: lanzar, no ir\n\nDespiertas 7:30 · entrenas desde 8:00 · sales al trabajo 12:30 · cama 23:30\nSi hoy entras a las 16:00: despiertas 9:15 · entrenas desde 9:45 · sales 15:15 · cama 1:15 (en la app toca «Entro 16:00»).\nSi repetiste semanas o cambiaste ajustes, manda lo que dice la app.\n\nÓrdenes paso a paso: https://claude.ai/artifact/Y7MgtsGPPBnXAaGzJpKC7H",
+  "startTime": "2026-10-31T08:00:00",
+  "endTime": "2026-10-31T12:00:00",
+  "description": "«Al lago. Vas solo: nadas donde haces pie y sales cuando suena.»\n\n8:00 Distancia continua · lago [máximo 5 min en el agua · solo donde haces pie · avisa a alguien]: Ida en bicicleta 15 min · ≈3,8 km · Entrada al agua de a poco · 2 min · Nado continuo ~2 min · Vuelta en bicicleta 15 min suave\n11:30 Tolerancia al dolor: Sentadilla isométrica en la pared 0:49 · Colgado de la barra 0:22 · Plancha 1:04\n11:45 Ducha fría 30 s: Agua fría 30 s\n22:45 Estudio: Rescate: lanzar, no ir\n\nDespiertas 7:30 · entrenas desde 8:00 · sales al trabajo 12:30 · cama 23:30\nSi hoy entras a las 16:00: despiertas 9:15 · entrenas desde 9:45 · sales 15:15 · cama 1:15 (en la app toca «Entro 16:00»).\nSi repetiste semanas o cambiaste ajustes, manda lo que dice la app.\n\nÓrdenes paso a paso: https://claude.ai/artifact/Y7MgtsGPPBnXAaGzJpKC7H",
   "reminders": [
    15,
    0
@@ -130,9 +141,9 @@
  },
  {
   "summary": "⚓ Sem 1 · Día 7 · Descanso total",
-  "startTime": "2026-10-19T10:00:00",
-  "endTime": "2026-10-19T10:30:00",
-  "description": "«Hoy descansas. Es una orden, no un premio.»\n\nDescanso total: Movilidad 15 min suaves · Dormir 8–9 h\n22:45 Estudio: Corrientes de retorno\n\nDespiertas 7:30 · entrenas desde 8:00 · sales al trabajo 12:30 · cama 23:30\nSi hoy entras a las 16:00: despiertas 9:15 · entrenas desde 9:45 · sales 15:15 · cama 1:15 (en la app toca «Entro 16:00»).\nSi repetiste semanas o cambiaste ajustes, manda lo que dice la app.\n\nÓrdenes paso a paso: https://claude.ai/artifact/Y7MgtsGPPBnXAaGzJpKC7H",
+  "startTime": "2026-11-01T10:00:00",
+  "endTime": "2026-11-01T10:30:00",
+  "description": "«Descanso. El progreso ocurre cuando descansas.»\n\nDescanso total: Movilidad 15 min suaves · Dormir 8–9 h\n22:45 Estudio: Corrientes de retorno\n\nDespiertas 7:30 · entrenas desde 8:00 · sales al trabajo 12:30 · cama 23:30\nSi hoy entras a las 16:00: despiertas 9:15 · entrenas desde 9:45 · sales 15:15 · cama 1:15 (en la app toca «Entro 16:00»).\nSi repetiste semanas o cambiaste ajustes, manda lo que dice la app.\n\nÓrdenes paso a paso: https://claude.ai/artifact/Y7MgtsGPPBnXAaGzJpKC7H",
   "reminders": [
    0
   ],
@@ -140,9 +151,9 @@
  },
  {
   "summary": "⚓ Sem 2 · Día 1 · Agua + tirón",
-  "startTime": "2026-10-20T08:00:00",
-  "endTime": "2026-10-20T12:00:00",
-  "description": "«Lago. El frío no perdona al que se confía.»\n\n8:00 Natación técnica · lago [máximo 5 min en el agua · solo donde haces pie · avisa a alguien]: Nado continuo ~4 min\n10:15 Fuerza de tren superior: Barras 4 × 4 · Remo invertido 3 × 10 · Flexiones 4 × 12 · Fondos en silla 3 × 10 · Plancha 3 × 45 s\n11:30 Tolerancia al dolor: Sentadilla isométrica en la pared 0:53 · Colgado de la barra 0:24 · Plancha 1:08\n11:45 Ducha fría 30 s: Agua fría 30 s\n22:45 Estudio: Nudo as de guía\n\nDespiertas 7:30 · entrenas desde 8:00 · sales al trabajo 12:30 · cama 23:30\nSi hoy entras a las 16:00: despiertas 9:15 · entrenas desde 9:45 · sales 15:15 · cama 1:15 (en la app toca «Entro 16:00»).\nSi repetiste semanas o cambiaste ajustes, manda lo que dice la app.\n\nÓrdenes paso a paso: https://claude.ai/artifact/Y7MgtsGPPBnXAaGzJpKC7H",
+  "startTime": "2026-11-02T08:00:00",
+  "endTime": "2026-11-02T12:00:00",
+  "description": "«Al agua. Resistencia sí, heroísmo no.»\n\n8:00 Natación técnica · lago [máximo 8 min en el agua · solo donde haces pie · avisa a alguien]: Ida en bicicleta 15 min · ≈3,8 km · Entrada al agua de a poco · 2 min · Entrada en calor ~5 min · Vuelta en bicicleta 15 min suave\n10:15 Fuerza de tren superior: Barras 4 × 4 · Remo invertido 3 × 10 · Flexiones 4 × 12 · Fondos en silla 3 × 10 · Plancha 3 × 45 s\n11:30 Tolerancia al dolor: Sentadilla isométrica en la pared 0:53 · Colgado de la barra 0:24 · Plancha 1:08\n11:45 Ducha fría 30 s: Agua fría 30 s\n22:45 Estudio: Nudo as de guía\n\nDespiertas 7:30 · entrenas desde 8:00 · sales al trabajo 12:30 · cama 23:30\nSi hoy entras a las 16:00: despiertas 9:15 · entrenas desde 9:45 · sales 15:15 · cama 1:15 (en la app toca «Entro 16:00»).\nSi repetiste semanas o cambiaste ajustes, manda lo que dice la app.\n\nÓrdenes paso a paso: https://claude.ai/artifact/Y7MgtsGPPBnXAaGzJpKC7H",
   "reminders": [
    15,
    0
@@ -151,9 +162,9 @@
  },
  {
   "summary": "⚓ Sem 2 · Día 2 · Carrera + core",
-  "startTime": "2026-10-21T08:00:00",
-  "endTime": "2026-10-21T12:00:00",
-  "description": "«Diego. Querías saber si puedes. Hoy se sigue respondiendo.»\n\n8:00 Carrera suave 30 min: Trote 30 min\n9:15 Core: Plancha 3 × 45 s · Plancha lateral 2 × 30 s por lado · Hollow hold 3 × 20 s · Abdominales 3 × 20\n11:30 Tolerancia al dolor: Sentadilla isométrica en la pared 0:53 · Colgado de la barra 0:24 · Plancha 1:08\n11:45 Ducha fría 30 s: Agua fría 30 s\n22:45 Estudio: Nudo ballestrinque\n\nDespiertas 7:30 · entrenas desde 8:00 · sales al trabajo 12:30 · cama 23:30\nSi hoy entras a las 16:00: despiertas 9:15 · entrenas desde 9:45 · sales 15:15 · cama 1:15 (en la app toca «Entro 16:00»).\nSi repetiste semanas o cambiaste ajustes, manda lo que dice la app.\n\nÓrdenes paso a paso: https://claude.ai/artifact/Y7MgtsGPPBnXAaGzJpKC7H",
+  "startTime": "2026-11-03T08:00:00",
+  "endTime": "2026-11-03T12:00:00",
+  "description": "«De pie, Diego. Esto es lo que haces hoy.»\n\n8:00 Carrera suave 30 min: Trote 30 min\n9:15 Core: Plancha 3 × 45 s · Plancha lateral 2 × 30 s por lado · Hollow hold 3 × 20 s · Abdominales 3 × 20\n11:30 Tolerancia al dolor: Sentadilla isométrica en la pared 0:53 · Colgado de la barra 0:24 · Plancha 1:08\n11:45 Ducha fría 30 s: Agua fría 30 s\n22:45 Estudio: Nudo ballestrinque\n\nDespiertas 7:30 · entrenas desde 8:00 · sales al trabajo 12:30 · cama 23:30\nSi hoy entras a las 16:00: despiertas 9:15 · entrenas desde 9:45 · sales 15:15 · cama 1:15 (en la app toca «Entro 16:00»).\nSi repetiste semanas o cambiaste ajustes, manda lo que dice la app.\n\nÓrdenes paso a paso: https://claude.ai/artifact/Y7MgtsGPPBnXAaGzJpKC7H",
   "reminders": [
    15,
    0
@@ -162,9 +173,9 @@
  },
  {
   "summary": "⚓ Sem 2 · Día 3 · Agua + piernas",
-  "startTime": "2026-10-22T08:00:00",
-  "endTime": "2026-10-22T12:00:00",
-  "description": "«Al lago. Vas solo: nadas donde haces pie y sales cuando suena.»\n\n8:00 Natación técnica · lago [máximo 5 min en el agua · solo donde haces pie · avisa a alguien]: Nado continuo ~4 min\n10:15 Piernas: Sentadillas 4 × 20 · Zancadas 3 × 10 por pierna · Puente de glúteo 3 × 15 · Gemelos 3 × 20\n11:30 Tolerancia al dolor: Sentadilla isométrica en la pared 0:53 · Colgado de la barra 0:24 · Plancha 1:08\n11:45 Ducha fría 30 s: Agua fría 30 s\n22:45 Estudio: Nudo llano\n\nDespiertas 7:30 · entrenas desde 8:00 · sales al trabajo 12:30 · cama 23:30\nSi hoy entras a las 16:00: despiertas 9:15 · entrenas desde 9:45 · sales 15:15 · cama 1:15 (en la app toca «Entro 16:00»).\nSi repetiste semanas o cambiaste ajustes, manda lo que dice la app.\n\nÓrdenes paso a paso: https://claude.ai/artifact/Y7MgtsGPPBnXAaGzJpKC7H",
+  "startTime": "2026-11-04T08:00:00",
+  "endTime": "2026-11-04T12:00:00",
+  "description": "«Lago. El frío no perdona al que se confía.»\n\n8:00 Natación técnica · lago [máximo 8 min en el agua · solo donde haces pie · avisa a alguien]: Ida en bicicleta 15 min · ≈3,8 km · Entrada al agua de a poco · 2 min · Entrada en calor ~5 min · Vuelta en bicicleta 15 min suave\n10:15 Piernas: Sentadillas 4 × 20 · Zancadas 3 × 10 por pierna · Puente de glúteo 3 × 15 · Gemelos 3 × 20\n11:30 Tolerancia al dolor: Sentadilla isométrica en la pared 0:53 · Colgado de la barra 0:24 · Plancha 1:08\n11:45 Ducha fría 30 s: Agua fría 30 s\n22:45 Estudio: Nudo llano\n\nDespiertas 7:30 · entrenas desde 8:00 · sales al trabajo 12:30 · cama 23:30\nSi hoy entras a las 16:00: despiertas 9:15 · entrenas desde 9:45 · sales 15:15 · cama 1:15 (en la app toca «Entro 16:00»).\nSi repetiste semanas o cambiaste ajustes, manda lo que dice la app.\n\nÓrdenes paso a paso: https://claude.ai/artifact/Y7MgtsGPPBnXAaGzJpKC7H",
   "reminders": [
    15,
    0
@@ -173,9 +184,9 @@
  },
  {
   "summary": "⚓ Sem 2 · Día 4 · Descanso activo",
-  "startTime": "2026-10-23T10:00:00",
-  "endTime": "2026-10-23T10:30:00",
-  "description": "«Descanso. El progreso ocurre cuando descansas.»\n\nDescanso activo: Movilidad 15 min suaves · Dormir 8–9 h\n11:50 Apnea en seco: Apnea en seco 8 × 1:00\n22:45 Estudio: Nudo ocho\n\nDespiertas 7:30 · entrenas desde 8:00 · sales al trabajo 12:30 · cama 23:30\nSi hoy entras a las 16:00: despiertas 9:15 · entrenas desde 9:45 · sales 15:15 · cama 1:15 (en la app toca «Entro 16:00»).\nSi repetiste semanas o cambiaste ajustes, manda lo que dice la app.\n\nÓrdenes paso a paso: https://claude.ai/artifact/Y7MgtsGPPBnXAaGzJpKC7H",
+  "startTime": "2026-11-05T10:00:00",
+  "endTime": "2026-11-05T10:30:00",
+  "description": "«Día libre. Cúmplelo igual de serio.»\n\nDescanso activo: Movilidad 15 min suaves · Dormir 8–9 h\n11:50 Apnea en seco: Apnea en seco 8 × 1:00\n22:45 Estudio: Nudo ocho\n\nDespiertas 7:30 · entrenas desde 8:00 · sales al trabajo 12:30 · cama 23:30\nSi hoy entras a las 16:00: despiertas 9:15 · entrenas desde 9:45 · sales 15:15 · cama 1:15 (en la app toca «Entro 16:00»).\nSi repetiste semanas o cambiaste ajustes, manda lo que dice la app.\n\nÓrdenes paso a paso: https://claude.ai/artifact/Y7MgtsGPPBnXAaGzJpKC7H",
   "reminders": [
    0
   ],
@@ -183,9 +194,9 @@
  },
  {
   "summary": "⚓ Sem 2 · Día 5 · Circuito + intervalos",
-  "startTime": "2026-10-24T08:00:00",
-  "endTime": "2026-10-24T12:00:00",
-  "description": "«Diego. Querías saber si puedes. Hoy se sigue respondiendo.»\n\n8:00 Circuito de prueba: Circuito 3 vueltas\n10:15 Intervalos 5 × 400 m: 5 × 400 m 1:45 cada uno · Vuelta a la calma 5–10 min trote suave\n11:30 Tolerancia al dolor: Sentadilla isométrica en la pared 0:53 · Colgado de la barra 0:24 · Plancha 1:08\n11:45 Ducha fría 30 s: Agua fría 30 s\n11:50 Apnea en seco: Apnea en seco 8 × 1:00\n22:45 Estudio: La brújula\n\nDespiertas 7:30 · entrenas desde 8:00 · sales al trabajo 12:30 · cama 23:30\nSi hoy entras a las 16:00: despiertas 9:15 · entrenas desde 9:45 · sales 15:15 · cama 1:15 (en la app toca «Entro 16:00»).\nSi repetiste semanas o cambiaste ajustes, manda lo que dice la app.\n\nÓrdenes paso a paso: https://claude.ai/artifact/Y7MgtsGPPBnXAaGzJpKC7H",
+  "startTime": "2026-11-06T08:00:00",
+  "endTime": "2026-11-06T12:00:00",
+  "description": "«De pie, Diego. Esto es lo que haces hoy.»\n\n8:00 Circuito de prueba: Circuito 3 vueltas\n10:15 Intervalos 5 × 400 m: 5 × 400 m 1:45 cada uno · Vuelta a la calma 5–10 min trote suave\n11:30 Tolerancia al dolor: Sentadilla isométrica en la pared 0:53 · Colgado de la barra 0:24 · Plancha 1:08\n11:45 Ducha fría 30 s: Agua fría 30 s\n11:50 Apnea en seco: Apnea en seco 8 × 1:00\n22:45 Estudio: La brújula\n\nDespiertas 7:30 · entrenas desde 8:00 · sales al trabajo 12:30 · cama 23:30\nSi hoy entras a las 16:00: despiertas 9:15 · entrenas desde 9:45 · sales 15:15 · cama 1:15 (en la app toca «Entro 16:00»).\nSi repetiste semanas o cambiaste ajustes, manda lo que dice la app.\n\nÓrdenes paso a paso: https://claude.ai/artifact/Y7MgtsGPPBnXAaGzJpKC7H",
   "reminders": [
    15,
    0
@@ -194,9 +205,9 @@
  },
  {
   "summary": "⚓ Sem 2 · Día 6 · Agua larga",
-  "startTime": "2026-10-25T08:00:00",
-  "endTime": "2026-10-25T12:00:00",
-  "description": "«Al lago. Vas solo: nadas donde haces pie y sales cuando suena.»\n\n8:00 Distancia continua · lago [máximo 5 min en el agua · solo donde haces pie · avisa a alguien]: Nado continuo ~4 min\n10:15 Prueba de incomodidad · 20 min: Trote 10 min · Flexiones 30 en total · Sentadillas 40 en total · Abdominales 30 en total · Ducha fría 3 min\n   ⚠ Hidrátate. Dolor agudo: paras.\n22:45 Estudio: Cartas y millas náuticas\n\nDespiertas 7:30 · entrenas desde 8:00 · sales al trabajo 12:30 · cama 23:30\nSi hoy entras a las 16:00: despiertas 9:15 · entrenas desde 9:45 · sales 15:15 · cama 1:15 (en la app toca «Entro 16:00»).\nSi repetiste semanas o cambiaste ajustes, manda lo que dice la app.\n\nÓrdenes paso a paso: https://claude.ai/artifact/Y7MgtsGPPBnXAaGzJpKC7H",
+  "startTime": "2026-11-07T08:00:00",
+  "endTime": "2026-11-07T12:00:00",
+  "description": "«Lago. El frío no perdona al que se confía.»\n\n8:00 Distancia continua · lago [máximo 8 min en el agua · solo donde haces pie · avisa a alguien]: Ida en bicicleta 15 min · ≈3,8 km · Entrada al agua de a poco · 2 min · Entrada en calor ~5 min · Vuelta en bicicleta 15 min suave\n10:15 Prueba de incomodidad · 20 min: Trote 10 min · Flexiones 30 en total · Sentadillas 40 en total · Abdominales 30 en total · Ducha fría 3 min\n   ⚠ Hidrátate. Dolor agudo: paras.\n22:45 Estudio: Cartas y millas náuticas\n\nDespiertas 7:30 · entrenas desde 8:00 · sales al trabajo 12:30 · cama 23:30\nSi hoy entras a las 16:00: despiertas 9:15 · entrenas desde 9:45 · sales 15:15 · cama 1:15 (en la app toca «Entro 16:00»).\nSi repetiste semanas o cambiaste ajustes, manda lo que dice la app.\n\nÓrdenes paso a paso: https://claude.ai/artifact/Y7MgtsGPPBnXAaGzJpKC7H",
   "reminders": [
    15,
    0
@@ -205,9 +216,9 @@
  },
  {
   "summary": "⚓ Sem 2 · Día 7 · Descanso total",
-  "startTime": "2026-10-26T10:00:00",
-  "endTime": "2026-10-26T10:30:00",
-  "description": "«Descanso. El progreso ocurre cuando descansas.»\n\nDescanso total: Movilidad 15 min suaves · Dormir 8–9 h\n22:45 Estudio: Mareas\n\nDespiertas 7:30 · entrenas desde 8:00 · sales al trabajo 12:30 · cama 23:30\nSi hoy entras a las 16:00: despiertas 9:15 · entrenas desde 9:45 · sales 15:15 · cama 1:15 (en la app toca «Entro 16:00»).\nSi repetiste semanas o cambiaste ajustes, manda lo que dice la app.\n\nÓrdenes paso a paso: https://claude.ai/artifact/Y7MgtsGPPBnXAaGzJpKC7H",
+  "startTime": "2026-11-08T10:00:00",
+  "endTime": "2026-11-08T10:30:00",
+  "description": "«Día libre. Cúmplelo igual de serio.»\n\nDescanso total: Movilidad 15 min suaves · Dormir 8–9 h\n22:45 Estudio: Mareas\n\nDespiertas 7:30 · entrenas desde 8:00 · sales al trabajo 12:30 · cama 23:30\nSi hoy entras a las 16:00: despiertas 9:15 · entrenas desde 9:45 · sales 15:15 · cama 1:15 (en la app toca «Entro 16:00»).\nSi repetiste semanas o cambiaste ajustes, manda lo que dice la app.\n\nÓrdenes paso a paso: https://claude.ai/artifact/Y7MgtsGPPBnXAaGzJpKC7H",
   "reminders": [
    0
   ],
@@ -215,9 +226,9 @@
  },
  {
   "summary": "⚓ Sem 3 · Día 1 · Agua + tirón",
-  "startTime": "2026-10-27T08:00:00",
-  "endTime": "2026-10-27T12:00:00",
-  "description": "«Al agua. Resistencia sí, heroísmo no.»\n\n8:00 Natación técnica · lago [máximo 5 min en el agua · solo donde haces pie · avisa a alguien]: Nado continuo ~4 min\n10:15 Fuerza de tren superior: Barras 4 × 4 · Remo invertido 3 × 10 · Flexiones 4 × 12 · Fondos en silla 3 × 10 · Plancha 3 × 45 s\n11:30 Tolerancia al dolor: Sentadilla isométrica en la pared 0:57 · Colgado de la barra 0:26 · Plancha 1:12\n11:45 Ducha fría 1 min: Agua fría 1 min\n22:45 Estudio: Viento y mar: Beaufort\n\nDespiertas 7:30 · entrenas desde 8:00 · sales al trabajo 12:30 · cama 23:30\nSi hoy entras a las 16:00: despiertas 9:15 · entrenas desde 9:45 · sales 15:15 · cama 1:15 (en la app toca «Entro 16:00»).\nSi repetiste semanas o cambiaste ajustes, manda lo que dice la app.\n\nÓrdenes paso a paso: https://claude.ai/artifact/Y7MgtsGPPBnXAaGzJpKC7H",
+  "startTime": "2026-11-09T08:00:00",
+  "endTime": "2026-11-09T12:00:00",
+  "description": "«Al lago. Vas solo: nadas donde haces pie y sales cuando suena.»\n\n8:00 Natación técnica · lago [máximo 8 min en el agua · solo donde haces pie · avisa a alguien]: Ida en bicicleta 15 min · ≈3,8 km · Entrada al agua de a poco · 2 min · Entrada en calor ~5 min · Vuelta en bicicleta 15 min suave\n10:15 Fuerza de tren superior: Barras 4 × 4 · Remo invertido 3 × 10 · Flexiones 4 × 12 · Fondos en silla 3 × 10 · Plancha 3 × 45 s\n11:30 Tolerancia al dolor: Sentadilla isométrica en la pared 0:57 · Colgado de la barra 0:26 · Plancha 1:12\n11:45 Ducha fría 1 min: Agua fría 1 min\n22:45 Estudio: Viento y mar: Beaufort\n\nDespiertas 7:30 · entrenas desde 8:00 · sales al trabajo 12:30 · cama 23:30\nSi hoy entras a las 16:00: despiertas 9:15 · entrenas desde 9:45 · sales 15:15 · cama 1:15 (en la app toca «Entro 16:00»).\nSi repetiste semanas o cambiaste ajustes, manda lo que dice la app.\n\nÓrdenes paso a paso: https://claude.ai/artifact/Y7MgtsGPPBnXAaGzJpKC7H",
   "reminders": [
    15,
    0
@@ -226,9 +237,9 @@
  },
  {
   "summary": "⚓ Sem 3 · Día 2 · Carrera + core",
-  "startTime": "2026-10-28T08:00:00",
-  "endTime": "2026-10-28T12:00:00",
-  "description": "«De pie, Diego. Esto es lo que haces hoy.»\n\n8:00 Carrera suave 35 min: Trote 35 min\n9:15 Core: Plancha 3 × 45 s · Plancha lateral 2 × 30 s por lado · Hollow hold 3 × 20 s · Abdominales 3 × 20\n11:30 Tolerancia al dolor: Sentadilla isométrica en la pared 0:57 · Colgado de la barra 0:26 · Plancha 1:12\n11:45 Ducha fría 1 min: Agua fría 1 min\n22:45 Estudio: Alfabeto fonético\n\nDespiertas 7:30 · entrenas desde 8:00 · sales al trabajo 12:30 · cama 23:30\nSi hoy entras a las 16:00: despiertas 9:15 · entrenas desde 9:45 · sales 15:15 · cama 1:15 (en la app toca «Entro 16:00»).\nSi repetiste semanas o cambiaste ajustes, manda lo que dice la app.\n\nÓrdenes paso a paso: https://claude.ai/artifact/Y7MgtsGPPBnXAaGzJpKC7H",
+  "startTime": "2026-11-10T08:00:00",
+  "endTime": "2026-11-10T12:00:00",
+  "description": "«Arriba, Diego. Nadie lo va a hacer por ti.»\n\n8:00 Carrera suave 35 min: Trote 35 min\n9:15 Core: Plancha 3 × 45 s · Plancha lateral 2 × 30 s por lado · Hollow hold 3 × 20 s · Abdominales 3 × 20\n11:30 Tolerancia al dolor: Sentadilla isométrica en la pared 0:57 · Colgado de la barra 0:26 · Plancha 1:12\n11:45 Ducha fría 1 min: Agua fría 1 min\n22:45 Estudio: Alfabeto fonético\n\nDespiertas 7:30 · entrenas desde 8:00 · sales al trabajo 12:30 · cama 23:30\nSi hoy entras a las 16:00: despiertas 9:15 · entrenas desde 9:45 · sales 15:15 · cama 1:15 (en la app toca «Entro 16:00»).\nSi repetiste semanas o cambiaste ajustes, manda lo que dice la app.\n\nÓrdenes paso a paso: https://claude.ai/artifact/Y7MgtsGPPBnXAaGzJpKC7H",
   "reminders": [
    15,
    0
@@ -237,9 +248,9 @@
  },
  {
   "summary": "⚓ Sem 3 · Día 3 · Agua + piernas",
-  "startTime": "2026-10-29T08:00:00",
-  "endTime": "2026-10-29T12:00:00",
-  "description": "«Lago. El frío no perdona al que se confía.»\n\n8:00 Natación técnica · lago [máximo 5 min en el agua · solo donde haces pie · avisa a alguien]: Nado continuo ~4 min\n10:15 Piernas: Sentadillas 4 × 20 · Zancadas 3 × 10 por pierna · Puente de glúteo 3 × 15 · Gemelos 3 × 20\n11:30 Tolerancia al dolor: Sentadilla isométrica en la pared 0:57 · Colgado de la barra 0:26 · Plancha 1:12\n11:45 Ducha fría 1 min: Agua fría 1 min\n22:45 Estudio: Hora militar y comunicación\n\nDespiertas 7:30 · entrenas desde 8:00 · sales al trabajo 12:30 · cama 23:30\nSi hoy entras a las 16:00: despiertas 9:15 · entrenas desde 9:45 · sales 15:15 · cama 1:15 (en la app toca «Entro 16:00»).\nSi repetiste semanas o cambiaste ajustes, manda lo que dice la app.\n\nÓrdenes paso a paso: https://claude.ai/artifact/Y7MgtsGPPBnXAaGzJpKC7H",
+  "startTime": "2026-11-11T08:00:00",
+  "endTime": "2026-11-11T12:00:00",
+  "description": "«Al agua. Resistencia sí, heroísmo no.»\n\n8:00 Natación técnica · lago [máximo 8 min en el agua · solo donde haces pie · avisa a alguien]: Ida en bicicleta 15 min · ≈3,8 km · Entrada al agua de a poco · 2 min · Entrada en calor ~5 min · Vuelta en bicicleta 15 min suave\n10:15 Piernas: Sentadillas 4 × 20 · Zancadas 3 × 10 por pierna · Puente de glúteo 3 × 15 · Gemelos 3 × 20\n11:30 Tolerancia al dolor: Sentadilla isométrica en la pared 0:57 · Colgado de la barra 0:26 · Plancha 1:12\n11:45 Ducha fría 1 min: Agua fría 1 min\n22:45 Estudio: Hora militar y comunicación\n\nDespiertas 7:30 · entrenas desde 8:00 · sales al trabajo 12:30 · cama 23:30\nSi hoy entras a las 16:00: despiertas 9:15 · entrenas desde 9:45 · sales 15:15 · cama 1:15 (en la app toca «Entro 16:00»).\nSi repetiste semanas o cambiaste ajustes, manda lo que dice la app.\n\nÓrdenes paso a paso: https://claude.ai/artifact/Y7MgtsGPPBnXAaGzJpKC7H",
   "reminders": [
    15,
    0
@@ -248,9 +259,9 @@
  },
  {
   "summary": "⚓ Sem 3 · Día 4 · Descanso activo",
-  "startTime": "2026-10-30T10:00:00",
-  "endTime": "2026-10-30T10:30:00",
-  "description": "«Día libre. Cúmplelo igual de serio.»\n\nDescanso activo: Movilidad 15 min suaves · Dormir 8–9 h\n11:50 Apnea en seco: Apnea en seco 8 × 1:00\n22:45 Estudio: Equipo básico de buceo\n\nDespiertas 7:30 · entrenas desde 8:00 · sales al trabajo 12:30 · cama 23:30\nSi hoy entras a las 16:00: despiertas 9:15 · entrenas desde 9:45 · sales 15:15 · cama 1:15 (en la app toca «Entro 16:00»).\nSi repetiste semanas o cambiaste ajustes, manda lo que dice la app.\n\nÓrdenes paso a paso: https://claude.ai/artifact/Y7MgtsGPPBnXAaGzJpKC7H",
+  "startTime": "2026-11-12T10:00:00",
+  "endTime": "2026-11-12T10:30:00",
+  "description": "«Hoy descansas. Es una orden, no un premio.»\n\nDescanso activo: Movilidad 15 min suaves · Dormir 8–9 h\n11:50 Apnea en seco: Apnea en seco 8 × 1:00\n22:45 Estudio: Equipo básico de buceo\n\nDespiertas 7:30 · entrenas desde 8:00 · sales al trabajo 12:30 · cama 23:30\nSi hoy entras a las 16:00: despiertas 9:15 · entrenas desde 9:45 · sales 15:15 · cama 1:15 (en la app toca «Entro 16:00»).\nSi repetiste semanas o cambiaste ajustes, manda lo que dice la app.\n\nÓrdenes paso a paso: https://claude.ai/artifact/Y7MgtsGPPBnXAaGzJpKC7H",
   "reminders": [
    0
   ],
@@ -258,9 +269,9 @@
  },
  {
   "summary": "⚓ Sem 3 · Día 5 · Circuito + intervalos",
-  "startTime": "2026-10-31T08:00:00",
-  "endTime": "2026-10-31T12:00:00",
-  "description": "«De pie, Diego. Esto es lo que haces hoy.»\n\n8:00 Circuito de prueba: Circuito 4 vueltas\n10:15 Intervalos 6 × 400 m: 6 × 400 m 1:45 cada uno · Vuelta a la calma 5–10 min trote suave\n11:30 Tolerancia al dolor: Sentadilla isométrica en la pared 0:57 · Colgado de la barra 0:26 · Plancha 1:12\n11:45 Ducha fría 1 min: Agua fría 1 min\n11:50 Apnea en seco: Apnea en seco 8 × 1:00\n22:45 Estudio: Nitrógeno y descompresión\n\nDespiertas 7:30 · entrenas desde 8:00 · sales al trabajo 12:30 · cama 23:30\nSi hoy entras a las 16:00: despiertas 9:15 · entrenas desde 9:45 · sales 15:15 · cama 1:15 (en la app toca «Entro 16:00»).\nSi repetiste semanas o cambiaste ajustes, manda lo que dice la app.\n\nÓrdenes paso a paso: https://claude.ai/artifact/Y7MgtsGPPBnXAaGzJpKC7H",
+  "startTime": "2026-11-13T08:00:00",
+  "endTime": "2026-11-13T12:00:00",
+  "description": "«Arriba, Diego. Nadie lo va a hacer por ti.»\n\n8:00 Circuito de prueba: Circuito 4 vueltas\n10:15 Intervalos 6 × 400 m: 6 × 400 m 1:45 cada uno · Vuelta a la calma 5–10 min trote suave\n11:30 Tolerancia al dolor: Sentadilla isométrica en la pared 0:57 · Colgado de la barra 0:26 · Plancha 1:12\n11:45 Ducha fría 1 min: Agua fría 1 min\n11:50 Apnea en seco: Apnea en seco 8 × 1:00\n22:45 Estudio: Nitrógeno y descompresión\n\nDespiertas 7:30 · entrenas desde 8:00 · sales al trabajo 12:30 · cama 23:30\nSi hoy entras a las 16:00: despiertas 9:15 · entrenas desde 9:45 · sales 15:15 · cama 1:15 (en la app toca «Entro 16:00»).\nSi repetiste semanas o cambiaste ajustes, manda lo que dice la app.\n\nÓrdenes paso a paso: https://claude.ai/artifact/Y7MgtsGPPBnXAaGzJpKC7H",
   "reminders": [
    15,
    0
@@ -269,9 +280,9 @@
  },
  {
   "summary": "⚓ Sem 3 · Día 6 · Agua larga",
-  "startTime": "2026-11-01T08:00:00",
-  "endTime": "2026-11-01T12:00:00",
-  "description": "«Lago. El frío no perdona al que se confía.»\n\n8:00 Distancia continua · lago [máximo 8 min en el agua · solo donde haces pie · avisa a alguien]: Entrada en calor ~5 min · Nado continuo ~2 min\n11:30 Tolerancia al dolor: Sentadilla isométrica en la pared 0:57 · Colgado de la barra 0:26 · Plancha 1:12\n11:45 Ducha fría 1 min: Agua fría 1 min\n11:50 Apnea en seco: Apnea en seco 8 × 1:00\n22:45 Estudio: Lesiones del corredor\n\nDespiertas 7:30 · entrenas desde 8:00 · sales al trabajo 12:30 · cama 23:30\nSi hoy entras a las 16:00: despiertas 9:15 · entrenas desde 9:45 · sales 15:15 · cama 1:15 (en la app toca «Entro 16:00»).\nSi repetiste semanas o cambiaste ajustes, manda lo que dice la app.\n\nÓrdenes paso a paso: https://claude.ai/artifact/Y7MgtsGPPBnXAaGzJpKC7H",
+  "startTime": "2026-11-14T08:00:00",
+  "endTime": "2026-11-14T12:00:00",
+  "description": "«Al agua. Resistencia sí, heroísmo no.»\n\n8:00 Distancia continua · lago [máximo 8 min en el agua · solo donde haces pie · avisa a alguien]: Ida en bicicleta 15 min · ≈3,8 km · Entrada al agua de a poco · 2 min · Entrada en calor ~5 min · Vuelta en bicicleta 15 min suave\n11:30 Tolerancia al dolor: Sentadilla isométrica en la pared 0:57 · Colgado de la barra 0:26 · Plancha 1:12\n11:45 Ducha fría 1 min: Agua fría 1 min\n11:50 Apnea en seco: Apnea en seco 8 × 1:00\n22:45 Estudio: Lesiones del corredor\n\nDespiertas 7:30 · entrenas desde 8:00 · sales al trabajo 12:30 · cama 23:30\nSi hoy entras a las 16:00: despiertas 9:15 · entrenas desde 9:45 · sales 15:15 · cama 1:15 (en la app toca «Entro 16:00»).\nSi repetiste semanas o cambiaste ajustes, manda lo que dice la app.\n\nÓrdenes paso a paso: https://claude.ai/artifact/Y7MgtsGPPBnXAaGzJpKC7H",
   "reminders": [
    15,
    0
@@ -280,9 +291,9 @@
  },
  {
   "summary": "⚓ Sem 3 · Día 7 · Descanso total",
-  "startTime": "2026-11-02T10:00:00",
-  "endTime": "2026-11-02T10:30:00",
-  "description": "«Día libre. Cúmplelo igual de serio.»\n\nDescanso total: Movilidad 15 min suaves · Dormir 8–9 h\n22:45 Estudio: Hombro del nadador\n\nDespiertas 7:30 · entrenas desde 8:00 · sales al trabajo 12:30 · cama 23:30\nSi hoy entras a las 16:00: despiertas 9:15 · entrenas desde 9:45 · sales 15:15 · cama 1:15 (en la app toca «Entro 16:00»).\nSi repetiste semanas o cambiaste ajustes, manda lo que dice la app.\n\nÓrdenes paso a paso: https://claude.ai/artifact/Y7MgtsGPPBnXAaGzJpKC7H",
+  "startTime": "2026-11-15T10:00:00",
+  "endTime": "2026-11-15T10:30:00",
+  "description": "«Hoy descansas. Es una orden, no un premio.»\n\nDescanso total: Movilidad 15 min suaves · Dormir 8–9 h\n22:45 Estudio: Hombro del nadador\n\nDespiertas 7:30 · entrenas desde 8:00 · sales al trabajo 12:30 · cama 23:30\nSi hoy entras a las 16:00: despiertas 9:15 · entrenas desde 9:45 · sales 15:15 · cama 1:15 (en la app toca «Entro 16:00»).\nSi repetiste semanas o cambiaste ajustes, manda lo que dice la app.\n\nÓrdenes paso a paso: https://claude.ai/artifact/Y7MgtsGPPBnXAaGzJpKC7H",
   "reminders": [
    0
   ],
@@ -290,9 +301,9 @@
  },
  {
   "summary": "⚓ Sem 4 · Día 1 · Agua + tirón",
-  "startTime": "2026-11-03T08:00:00",
-  "endTime": "2026-11-03T12:00:00",
-  "description": "«Al lago. Vas solo: nadas donde haces pie y sales cuando suena.»\n\n8:00 Natación técnica · lago [máximo 8 min en el agua · solo donde haces pie · avisa a alguien]: Entrada en calor ~5 min · Nado continuo ~2 min\n10:15 Fuerza de tren superior: Barras 3 × 4 · Remo invertido 3 × 10 · Flexiones 3 × 13 · Fondos en silla 3 × 10 · Plancha 3 × 45 s\n11:45 Ducha fría 1 min: Agua fría 1 min\n22:45 Estudio: Comer para entrenar\n\nDespiertas 7:30 · entrenas desde 8:00 · sales al trabajo 12:30 · cama 23:30\nSi hoy entras a las 16:00: despiertas 9:15 · entrenas desde 9:45 · sales 15:15 · cama 1:15 (en la app toca «Entro 16:00»).\nSi repetiste semanas o cambiaste ajustes, manda lo que dice la app.\n\nÓrdenes paso a paso: https://claude.ai/artifact/Y7MgtsGPPBnXAaGzJpKC7H",
+  "startTime": "2026-11-16T08:00:00",
+  "endTime": "2026-11-16T12:00:00",
+  "description": "«Lago. El frío no perdona al que se confía.»\n\n8:00 Natación técnica · lago [máximo 8 min en el agua · solo donde haces pie · avisa a alguien]: Ida en bicicleta 15 min · ≈3,8 km · Entrada al agua de a poco · 2 min · Entrada en calor ~5 min · Vuelta en bicicleta 15 min suave\n10:15 Fuerza de tren superior: Barras 3 × 4 · Remo invertido 3 × 10 · Flexiones 3 × 13 · Fondos en silla 3 × 10 · Plancha 3 × 45 s\n11:45 Ducha fría 1 min: Agua fría 1 min\n22:45 Estudio: Comer para entrenar\n\nDespiertas 7:30 · entrenas desde 8:00 · sales al trabajo 12:30 · cama 23:30\nSi hoy entras a las 16:00: despiertas 9:15 · entrenas desde 9:45 · sales 15:15 · cama 1:15 (en la app toca «Entro 16:00»).\nSi repetiste semanas o cambiaste ajustes, manda lo que dice la app.\n\nÓrdenes paso a paso: https://claude.ai/artifact/Y7MgtsGPPBnXAaGzJpKC7H",
   "reminders": [
    15,
    0
@@ -301,9 +312,9 @@
  },
  {
   "summary": "⚓ Sem 4 · Día 2 · Carrera + core",
-  "startTime": "2026-11-04T08:00:00",
-  "endTime": "2026-11-04T12:00:00",
-  "description": "«Arriba, Diego. Nadie lo va a hacer por ti.»\n\n8:00 Carrera suave 30 min: Trote 30 min\n9:15 Core: Plancha 3 × 45 s · Plancha lateral 2 × 30 s por lado · Hollow hold 3 × 20 s · Abdominales 3 × 20\n11:45 Ducha fría 1 min: Agua fría 1 min\n22:45 Estudio: Dormir es entrenar\n\nDespiertas 7:30 · entrenas desde 8:00 · sales al trabajo 12:30 · cama 23:30\nSi hoy entras a las 16:00: despiertas 9:15 · entrenas desde 9:45 · sales 15:15 · cama 1:15 (en la app toca «Entro 16:00»).\nSi repetiste semanas o cambiaste ajustes, manda lo que dice la app.\n\nÓrdenes paso a paso: https://claude.ai/artifact/Y7MgtsGPPBnXAaGzJpKC7H",
+  "startTime": "2026-11-17T08:00:00",
+  "endTime": "2026-11-17T12:00:00",
+  "description": "«Diego. Querías saber si puedes. Hoy se sigue respondiendo.»\n\n8:00 Carrera suave 30 min: Trote 30 min\n9:15 Core: Plancha 3 × 45 s · Plancha lateral 2 × 30 s por lado · Hollow hold 3 × 20 s · Abdominales 3 × 20\n11:45 Ducha fría 1 min: Agua fría 1 min\n22:45 Estudio: Dormir es entrenar\n\nDespiertas 7:30 · entrenas desde 8:00 · sales al trabajo 12:30 · cama 23:30\nSi hoy entras a las 16:00: despiertas 9:15 · entrenas desde 9:45 · sales 15:15 · cama 1:15 (en la app toca «Entro 16:00»).\nSi repetiste semanas o cambiaste ajustes, manda lo que dice la app.\n\nÓrdenes paso a paso: https://claude.ai/artifact/Y7MgtsGPPBnXAaGzJpKC7H",
   "reminders": [
    15,
    0
@@ -312,9 +323,9 @@
  },
  {
   "summary": "⚓ Sem 4 · Día 3 · Agua + piernas",
-  "startTime": "2026-11-05T08:00:00",
-  "endTime": "2026-11-05T12:00:00",
-  "description": "«Al agua. Resistencia sí, heroísmo no.»\n\n8:00 Natación técnica · lago [máximo 8 min en el agua · solo donde haces pie · avisa a alguien]: Entrada en calor ~5 min · Nado continuo ~2 min\n10:15 Piernas: Sentadillas 3 × 20 · Zancadas 3 × 10 por pierna · Puente de glúteo 3 × 15 · Gemelos 3 × 20\n11:45 Ducha fría 1 min: Agua fría 1 min\n22:45 Estudio: Entrevista: tu por qué\n\nDespiertas 7:30 · entrenas desde 8:00 · sales al trabajo 12:30 · cama 23:30\nSi hoy entras a las 16:00: despiertas 9:15 · entrenas desde 9:45 · sales 15:15 · cama 1:15 (en la app toca «Entro 16:00»).\nSi repetiste semanas o cambiaste ajustes, manda lo que dice la app.\n\nÓrdenes paso a paso: https://claude.ai/artifact/Y7MgtsGPPBnXAaGzJpKC7H",
+  "startTime": "2026-11-18T08:00:00",
+  "endTime": "2026-11-18T12:00:00",
+  "description": "«Al lago. Vas solo: nadas donde haces pie y sales cuando suena.»\n\n8:00 Natación técnica · lago [máximo 8 min en el agua · solo donde haces pie · avisa a alguien]: Ida en bicicleta 15 min · ≈3,8 km · Entrada al agua de a poco · 2 min · Entrada en calor ~5 min · Vuelta en bicicleta 15 min suave\n10:15 Piernas: Sentadillas 3 × 20 · Zancadas 3 × 10 por pierna · Puente de glúteo 3 × 15 · Gemelos 3 × 20\n11:45 Ducha fría 1 min: Agua fría 1 min\n22:45 Estudio: Entrevista: tu por qué\n\nDespiertas 7:30 · entrenas desde 8:00 · sales al trabajo 12:30 · cama 23:30\nSi hoy entras a las 16:00: despiertas 9:15 · entrenas desde 9:45 · sales 15:15 · cama 1:15 (en la app toca «Entro 16:00»).\nSi repetiste semanas o cambiaste ajustes, manda lo que dice la app.\n\nÓrdenes paso a paso: https://claude.ai/artifact/Y7MgtsGPPBnXAaGzJpKC7H",
   "reminders": [
    15,
    0
@@ -323,9 +334,9 @@
  },
  {
   "summary": "⚓ Sem 4 · Día 4 · Descanso activo",
-  "startTime": "2026-11-06T10:00:00",
-  "endTime": "2026-11-06T10:30:00",
-  "description": "«Hoy descansas. Es una orden, no un premio.»\n\nDescanso activo: Movilidad 15 min suaves · Dormir 8–9 h\n11:50 Apnea en seco: Apnea en seco 8 × 1:00\n22:45 Estudio: Entrevista: fortalezas y debilidades\n\nDespiertas 7:30 · entrenas desde 8:00 · sales al trabajo 12:30 · cama 23:30\nSi hoy entras a las 16:00: despiertas 9:15 · entrenas desde 9:45 · sales 15:15 · cama 1:15 (en la app toca «Entro 16:00»).\nSi repetiste semanas o cambiaste ajustes, manda lo que dice la app.\n\nÓrdenes paso a paso: https://claude.ai/artifact/Y7MgtsGPPBnXAaGzJpKC7H",
+  "startTime": "2026-11-19T10:00:00",
+  "endTime": "2026-11-19T10:30:00",
+  "description": "«Descanso. El progreso ocurre cuando descansas.»\n\nDescanso activo: Movilidad 15 min suaves · Dormir 8–9 h\n11:50 Apnea en seco: Apnea en seco 8 × 1:00\n22:45 Estudio: Entrevista: fortalezas y debilidades\n\nDespiertas 7:30 · entrenas desde 8:00 · sales al trabajo 12:30 · cama 23:30\nSi hoy entras a las 16:00: despiertas 9:15 · entrenas desde 9:45 · sales 15:15 · cama 1:15 (en la app toca «Entro 16:00»).\nSi repetiste semanas o cambiaste ajustes, manda lo que dice la app.\n\nÓrdenes paso a paso: https://claude.ai/artifact/Y7MgtsGPPBnXAaGzJpKC7H",
   "reminders": [
    0
   ],
@@ -333,9 +344,9 @@
  },
  {
   "summary": "⚓ Sem 4 · Día 5 · Circuito + intervalos",
-  "startTime": "2026-11-07T08:00:00",
-  "endTime": "2026-11-07T12:00:00",
-  "description": "«Arriba, Diego. Nadie lo va a hacer por ti.»\n\n8:00 Circuito de prueba: Circuito 3 vueltas\n10:15 Trote suave 15 min: Trote 15 min\n11:45 Ducha fría 1 min: Agua fría 1 min\n11:50 Apnea en seco: Apnea en seco 8 × 1:00\n22:45 Estudio: Trabajo en equipo\n\nDespiertas 7:30 · entrenas desde 8:00 · sales al trabajo 12:30 · cama 23:30\nSi hoy entras a las 16:00: despiertas 9:15 · entrenas desde 9:45 · sales 15:15 · cama 1:15 (en la app toca «Entro 16:00»).\nSi repetiste semanas o cambiaste ajustes, manda lo que dice la app.\n\nÓrdenes paso a paso: https://claude.ai/artifact/Y7MgtsGPPBnXAaGzJpKC7H",
+  "startTime": "2026-11-20T08:00:00",
+  "endTime": "2026-11-20T12:00:00",
+  "description": "«Diego. Querías saber si puedes. Hoy se sigue respondiendo.»\n\n8:00 Circuito de prueba: Circuito 3 vueltas\n10:15 Trote suave 15 min: Trote 15 min\n11:45 Ducha fría 1 min: Agua fría 1 min\n11:50 Apnea en seco: Apnea en seco 8 × 1:00\n22:45 Estudio: Trabajo en equipo\n\nDespiertas 7:30 · entrenas desde 8:00 · sales al trabajo 12:30 · cama 23:30\nSi hoy entras a las 16:00: despiertas 9:15 · entrenas desde 9:45 · sales 15:15 · cama 1:15 (en la app toca «Entro 16:00»).\nSi repetiste semanas o cambiaste ajustes, manda lo que dice la app.\n\nÓrdenes paso a paso: https://claude.ai/artifact/Y7MgtsGPPBnXAaGzJpKC7H",
   "reminders": [
    15,
    0
@@ -344,9 +355,9 @@
  },
  {
   "summary": "⚓ Sem 4 · Día 6 · Agua larga",
-  "startTime": "2026-11-08T08:00:00",
-  "endTime": "2026-11-08T12:00:00",
-  "description": "«Al agua. Resistencia sí, heroísmo no.»\n\n8:00 Distancia continua · lago [máximo 8 min en el agua · solo donde haces pie · avisa a alguien]: Entrada en calor ~5 min · Nado continuo ~2 min\n11:45 Ducha fría 1 min: Agua fría 1 min\n11:50 Apnea en seco: Apnea en seco 8 × 1:00\n22:45 Estudio: Disciplina\n\nDespiertas 7:30 · entrenas desde 8:00 · sales al trabajo 12:30 · cama 23:30\nSi hoy entras a las 16:00: despiertas 9:15 · entrenas desde 9:45 · sales 15:15 · cama 1:15 (en la app toca «Entro 16:00»).\nSi repetiste semanas o cambiaste ajustes, manda lo que dice la app.\n\nÓrdenes paso a paso: https://claude.ai/artifact/Y7MgtsGPPBnXAaGzJpKC7H",
+  "startTime": "2026-11-21T08:00:00",
+  "endTime": "2026-11-21T12:00:00",
+  "description": "«Al lago. Vas solo: nadas donde haces pie y sales cuando suena.»\n\n8:00 Distancia continua · lago [máximo 8 min en el agua · solo donde haces pie · avisa a alguien]: Ida en bicicleta 15 min · ≈3,8 km · Entrada al agua de a poco · 2 min · Entrada en calor ~5 min · Vuelta en bicicleta 15 min suave\n11:45 Ducha fría 1 min: Agua fría 1 min\n11:50 Apnea en seco: Apnea en seco 8 × 1:00\n22:45 Estudio: Disciplina\n\nDespiertas 7:30 · entrenas desde 8:00 · sales al trabajo 12:30 · cama 23:30\nSi hoy entras a las 16:00: despiertas 9:15 · entrenas desde 9:45 · sales 15:15 · cama 1:15 (en la app toca «Entro 16:00»).\nSi repetiste semanas o cambiaste ajustes, manda lo que dice la app.\n\nÓrdenes paso a paso: https://claude.ai/artifact/Y7MgtsGPPBnXAaGzJpKC7H",
   "reminders": [
    15,
    0
@@ -355,9 +366,9 @@
  },
  {
   "summary": "⚓ Sem 4 · Día 7 · Descanso total",
-  "startTime": "2026-11-09T10:00:00",
-  "endTime": "2026-11-09T10:30:00",
-  "description": "«Hoy descansas. Es una orden, no un premio.»\n\nDescanso total: Movilidad 15 min suaves · Dormir 8–9 h\n22:45 Estudio: Preparación académica\n\nDespiertas 7:30 · entrenas desde 8:00 · sales al trabajo 12:30 · cama 23:30\nSi hoy entras a las 16:00: despiertas 9:15 · entrenas desde 9:45 · sales 15:15 · cama 1:15 (en la app toca «Entro 16:00»).\nSi repetiste semanas o cambiaste ajustes, manda lo que dice la app.\n\nÓrdenes paso a paso: https://claude.ai/artifact/Y7MgtsGPPBnXAaGzJpKC7H",
+  "startTime": "2026-11-22T10:00:00",
+  "endTime": "2026-11-22T10:30:00",
+  "description": "«Descanso. El progreso ocurre cuando descansas.»\n\nDescanso total: Movilidad 15 min suaves · Dormir 8–9 h\n22:45 Estudio: Preparación académica\n\nDespiertas 7:30 · entrenas desde 8:00 · sales al trabajo 12:30 · cama 23:30\nSi hoy entras a las 16:00: despiertas 9:15 · entrenas desde 9:45 · sales 15:15 · cama 1:15 (en la app toca «Entro 16:00»).\nSi repetiste semanas o cambiaste ajustes, manda lo que dice la app.\n\nÓrdenes paso a paso: https://claude.ai/artifact/Y7MgtsGPPBnXAaGzJpKC7H",
   "reminders": [
    0
   ],
@@ -365,9 +376,9 @@
  },
  {
   "summary": "⚓ Sem 5 · Día 1 · Agua + tirón",
-  "startTime": "2026-11-10T08:00:00",
-  "endTime": "2026-11-10T12:00:00",
-  "description": "«Lago. El frío no perdona al que se confía.»\n\n8:00 Natación técnica · lago [máximo 8 min en el agua · solo donde haces pie · avisa a alguien]: Entrada en calor ~5 min · Nado continuo ~2 min\n10:15 Fuerza de tren superior: Barras 4 × 4 · Remo invertido 3 × 10 · Flexiones 4 × 13 · Fondos en silla 3 × 10 · Plancha 3 × 45 s\n11:30 Tolerancia al dolor: Sentadilla isométrica en la pared 1:05 · Colgado de la barra 0:30 · Plancha 1:20\n11:45 Ducha fría 1 min: Agua fría 1 min\n22:45 Estudio: Comprensión lectora\n\nDespiertas 7:30 · entrenas desde 8:00 · sales al trabajo 12:30 · cama 23:30\nSi hoy entras a las 16:00: despiertas 9:15 · entrenas desde 9:45 · sales 15:15 · cama 1:15 (en la app toca «Entro 16:00»).\nSi repetiste semanas o cambiaste ajustes, manda lo que dice la app.\n\nÓrdenes paso a paso: https://claude.ai/artifact/Y7MgtsGPPBnXAaGzJpKC7H",
+  "startTime": "2026-11-23T08:00:00",
+  "endTime": "2026-11-23T12:00:00",
+  "description": "«Al agua. Resistencia sí, heroísmo no.»\n\n8:00 Natación técnica · lago [máximo 8 min en el agua · solo donde haces pie · avisa a alguien]: Ida en bicicleta 15 min · ≈3,8 km · Entrada al agua de a poco · 2 min · Entrada en calor ~5 min · Vuelta en bicicleta 15 min suave\n10:15 Fuerza de tren superior: Barras 4 × 4 · Remo invertido 3 × 10 · Flexiones 4 × 13 · Fondos en silla 3 × 10 · Plancha 3 × 45 s\n11:30 Tolerancia al dolor: Sentadilla isométrica en la pared 1:05 · Colgado de la barra 0:30 · Plancha 1:20\n11:45 Ducha fría 1 min: Agua fría 1 min\n22:45 Estudio: Comprensión lectora\n\nDespiertas 7:30 · entrenas desde 8:00 · sales al trabajo 12:30 · cama 23:30\nSi hoy entras a las 16:00: despiertas 9:15 · entrenas desde 9:45 · sales 15:15 · cama 1:15 (en la app toca «Entro 16:00»).\nSi repetiste semanas o cambiaste ajustes, manda lo que dice la app.\n\nÓrdenes paso a paso: https://claude.ai/artifact/Y7MgtsGPPBnXAaGzJpKC7H",
   "reminders": [
    15,
    0
@@ -376,9 +387,9 @@
  },
  {
   "summary": "⚓ Sem 5 · Día 2 · Carrera + core",
-  "startTime": "2026-11-11T08:00:00",
-  "endTime": "2026-11-11T12:00:00",
-  "description": "«Diego. Querías saber si puedes. Hoy se sigue respondiendo.»\n\n8:00 Carrera suave 35 min: Trote 35 min\n9:15 Core: Plancha 3 × 45 s · Plancha lateral 2 × 30 s por lado · Hollow hold 3 × 20 s · Abdominales 3 × 20\n11:30 Tolerancia al dolor: Sentadilla isométrica en la pared 1:05 · Colgado de la barra 0:30 · Plancha 1:20\n11:45 Ducha fría 1 min: Agua fría 1 min\n22:45 Repaso: La Armada y tu camino\n\nDespiertas 7:30 · entrenas desde 8:00 · sales al trabajo 12:30 · cama 23:30\nSi hoy entras a las 16:00: despiertas 9:15 · entrenas desde 9:45 · sales 15:15 · cama 1:15 (en la app toca «Entro 16:00»).\nSi repetiste semanas o cambiaste ajustes, manda lo que dice la app.\n\nÓrdenes paso a paso: https://claude.ai/artifact/Y7MgtsGPPBnXAaGzJpKC7H",
+  "startTime": "2026-11-24T08:00:00",
+  "endTime": "2026-11-24T12:00:00",
+  "description": "«De pie, Diego. Esto es lo que haces hoy.»\n\n8:00 Carrera suave 35 min: Trote 35 min\n9:15 Core: Plancha 3 × 45 s · Plancha lateral 2 × 30 s por lado · Hollow hold 3 × 20 s · Abdominales 3 × 20\n11:30 Tolerancia al dolor: Sentadilla isométrica en la pared 1:05 · Colgado de la barra 0:30 · Plancha 1:20\n11:45 Ducha fría 1 min: Agua fría 1 min\n22:45 Repaso: La Armada y tu camino\n\nDespiertas 7:30 · entrenas desde 8:00 · sales al trabajo 12:30 · cama 23:30\nSi hoy entras a las 16:00: despiertas 9:15 · entrenas desde 9:45 · sales 15:15 · cama 1:15 (en la app toca «Entro 16:00»).\nSi repetiste semanas o cambiaste ajustes, manda lo que dice la app.\n\nÓrdenes paso a paso: https://claude.ai/artifact/Y7MgtsGPPBnXAaGzJpKC7H",
   "reminders": [
    15,
    0
@@ -387,9 +398,9 @@
  },
  {
   "summary": "⚓ Sem 5 · Día 3 · Agua + piernas",
-  "startTime": "2026-11-12T08:00:00",
-  "endTime": "2026-11-12T12:00:00",
-  "description": "«Al lago. Vas solo: nadas donde haces pie y sales cuando suena.»\n\n8:00 Natación técnica · lago [máximo 8 min en el agua · solo donde haces pie · avisa a alguien]: Entrada en calor ~5 min · Nado continuo ~2 min\n10:15 Piernas: Sentadillas 4 × 20 · Zancadas 3 × 10 por pierna · Puente de glúteo 3 × 15 · Gemelos 3 × 20\n11:30 Tolerancia al dolor: Sentadilla isométrica en la pared 1:05 · Colgado de la barra 0:30 · Plancha 1:20\n11:45 Ducha fría 1 min: Agua fría 1 min\n22:45 Repaso: La prueba de ingreso al curso\n\nDespiertas 7:30 · entrenas desde 8:00 · sales al trabajo 12:30 · cama 23:30\nSi hoy entras a las 16:00: despiertas 9:15 · entrenas desde 9:45 · sales 15:15 · cama 1:15 (en la app toca «Entro 16:00»).\nSi repetiste semanas o cambiaste ajustes, manda lo que dice la app.\n\nÓrdenes paso a paso: https://claude.ai/artifact/Y7MgtsGPPBnXAaGzJpKC7H",
+  "startTime": "2026-11-25T08:00:00",
+  "endTime": "2026-11-25T12:00:00",
+  "description": "«Lago. El frío no perdona al que se confía.»\n\n8:00 Natación técnica · lago [máximo 8 min en el agua · solo donde haces pie · avisa a alguien]: Ida en bicicleta 15 min · ≈3,8 km · Entrada al agua de a poco · 2 min · Entrada en calor ~5 min · Vuelta en bicicleta 15 min suave\n10:15 Piernas: Sentadillas 4 × 20 · Zancadas 3 × 10 por pierna · Puente de glúteo 3 × 15 · Gemelos 3 × 20\n11:30 Tolerancia al dolor: Sentadilla isométrica en la pared 1:05 · Colgado de la barra 0:30 · Plancha 1:20\n11:45 Ducha fría 1 min: Agua fría 1 min\n22:45 Repaso: La prueba de ingreso al curso\n\nDespiertas 7:30 · entrenas desde 8:00 · sales al trabajo 12:30 · cama 23:30\nSi hoy entras a las 16:00: despiertas 9:15 · entrenas desde 9:45 · sales 15:15 · cama 1:15 (en la app toca «Entro 16:00»).\nSi repetiste semanas o cambiaste ajustes, manda lo que dice la app.\n\nÓrdenes paso a paso: https://claude.ai/artifact/Y7MgtsGPPBnXAaGzJpKC7H",
   "reminders": [
    15,
    0
@@ -398,9 +409,9 @@
  },
  {
   "summary": "⚓ Sem 5 · Día 4 · Descanso activo",
-  "startTime": "2026-11-13T10:00:00",
-  "endTime": "2026-11-13T10:30:00",
-  "description": "«Descanso. El progreso ocurre cuando descansas.»\n\nDescanso activo: Movilidad 15 min suaves · Dormir 8–9 h\n11:50 Apnea en seco: Apnea en seco 8 × 1:00\n22:45 Repaso: Combate Naval de Iquique\n\nDespiertas 7:30 · entrenas desde 8:00 · sales al trabajo 12:30 · cama 23:30\nSi hoy entras a las 16:00: despiertas 9:15 · entrenas desde 9:45 · sales 15:15 · cama 1:15 (en la app toca «Entro 16:00»).\nSi repetiste semanas o cambiaste ajustes, manda lo que dice la app.\n\nÓrdenes paso a paso: https://claude.ai/artifact/Y7MgtsGPPBnXAaGzJpKC7H",
+  "startTime": "2026-11-26T10:00:00",
+  "endTime": "2026-11-26T10:30:00",
+  "description": "«Día libre. Cúmplelo igual de serio.»\n\nDescanso activo: Movilidad 15 min suaves · Dormir 8–9 h\n11:50 Apnea en seco: Apnea en seco 8 × 1:00\n22:45 Repaso: Combate Naval de Iquique\n\nDespiertas 7:30 · entrenas desde 8:00 · sales al trabajo 12:30 · cama 23:30\nSi hoy entras a las 16:00: despiertas 9:15 · entrenas desde 9:45 · sales 15:15 · cama 1:15 (en la app toca «Entro 16:00»).\nSi repetiste semanas o cambiaste ajustes, manda lo que dice la app.\n\nÓrdenes paso a paso: https://claude.ai/artifact/Y7MgtsGPPBnXAaGzJpKC7H",
   "reminders": [
    0
   ],
@@ -408,9 +419,9 @@
  },
  {
   "summary": "⚓ Sem 5 · Día 5 · Circuito + intervalos",
-  "startTime": "2026-11-14T08:00:00",
-  "endTime": "2026-11-14T12:00:00",
-  "description": "«Diego. Querías saber si puedes. Hoy se sigue respondiendo.»\n\n8:00 Circuito de prueba: Circuito 4 vueltas\n10:15 Intervalos 4 × 800 m: 4 × 800 m 3:34 cada uno · Vuelta a la calma 5–10 min trote suave\n11:30 Tolerancia al dolor: Sentadilla isométrica en la pared 1:05 · Colgado de la barra 0:30 · Plancha 1:20\n11:45 Ducha fría 1 min: Agua fría 1 min\n11:50 Apnea en seco: Apnea en seco 8 × 1:00\n22:45 Repaso: Presión bajo el agua\n\nDespiertas 7:30 · entrenas desde 8:00 · sales al trabajo 12:30 · cama 23:30\nSi hoy entras a las 16:00: despiertas 9:15 · entrenas desde 9:45 · sales 15:15 · cama 1:15 (en la app toca «Entro 16:00»).\nSi repetiste semanas o cambiaste ajustes, manda lo que dice la app.\n\nÓrdenes paso a paso: https://claude.ai/artifact/Y7MgtsGPPBnXAaGzJpKC7H",
+  "startTime": "2026-11-27T08:00:00",
+  "endTime": "2026-11-27T12:00:00",
+  "description": "«De pie, Diego. Esto es lo que haces hoy.»\n\n8:00 Circuito de prueba: Circuito 4 vueltas\n10:15 Intervalos 4 × 800 m: 4 × 800 m 3:34 cada uno · Vuelta a la calma 5–10 min trote suave\n11:30 Tolerancia al dolor: Sentadilla isométrica en la pared 1:05 · Colgado de la barra 0:30 · Plancha 1:20\n11:45 Ducha fría 1 min: Agua fría 1 min\n11:50 Apnea en seco: Apnea en seco 8 × 1:00\n22:45 Repaso: Presión bajo el agua\n\nDespiertas 7:30 · entrenas desde 8:00 · sales al trabajo 12:30 · cama 23:30\nSi hoy entras a las 16:00: despiertas 9:15 · entrenas desde 9:45 · sales 15:15 · cama 1:15 (en la app toca «Entro 16:00»).\nSi repetiste semanas o cambiaste ajustes, manda lo que dice la app.\n\nÓrdenes paso a paso: https://claude.ai/artifact/Y7MgtsGPPBnXAaGzJpKC7H",
   "reminders": [
    15,
    0
@@ -419,9 +430,9 @@
  },
  {
   "summary": "⚓ Sem 5 · Día 6 · Agua larga",
-  "startTime": "2026-11-15T08:00:00",
-  "endTime": "2026-11-15T12:00:00",
-  "description": "«Al lago. Vas solo: nadas donde haces pie y sales cuando suena.»\n\n8:00 Distancia continua · lago [máximo 8 min en el agua · solo donde haces pie · avisa a alguien]: Entrada en calor ~5 min · Nado continuo ~2 min\n11:30 Tolerancia al dolor: Sentadilla isométrica en la pared 1:05 · Colgado de la barra 0:30 · Plancha 1:20\n11:45 Ducha fría 1 min: Agua fría 1 min\n11:50 Apnea en seco: Apnea en seco 8 × 1:00\n22:45 Repaso: Ley de Boyle\n\nDespiertas 7:30 · entrenas desde 8:00 · sales al trabajo 12:30 · cama 23:30\nSi hoy entras a las 16:00: despiertas 9:15 · entrenas desde 9:45 · sales 15:15 · cama 1:15 (en la app toca «Entro 16:00»).\nSi repetiste semanas o cambiaste ajustes, manda lo que dice la app.\n\nÓrdenes paso a paso: https://claude.ai/artifact/Y7MgtsGPPBnXAaGzJpKC7H",
+  "startTime": "2026-11-28T08:00:00",
+  "endTime": "2026-11-28T12:00:00",
+  "description": "«Lago. El frío no perdona al que se confía.»\n\n8:00 Distancia continua · lago [máximo 8 min en el agua · solo donde haces pie · avisa a alguien]: Ida en bicicleta 15 min · ≈3,8 km · Entrada al agua de a poco · 2 min · Entrada en calor ~5 min · Vuelta en bicicleta 15 min suave\n11:30 Tolerancia al dolor: Sentadilla isométrica en la pared 1:05 · Colgado de la barra 0:30 · Plancha 1:20\n11:45 Ducha fría 1 min: Agua fría 1 min\n11:50 Apnea en seco: Apnea en seco 8 × 1:00\n22:45 Repaso: Ley de Boyle\n\nDespiertas 7:30 · entrenas desde 8:00 · sales al trabajo 12:30 · cama 23:30\nSi hoy entras a las 16:00: despiertas 9:15 · entrenas desde 9:45 · sales 15:15 · cama 1:15 (en la app toca «Entro 16:00»).\nSi repetiste semanas o cambiaste ajustes, manda lo que dice la app.\n\nÓrdenes paso a paso: https://claude.ai/artifact/Y7MgtsGPPBnXAaGzJpKC7H",
   "reminders": [
    15,
    0
@@ -430,9 +441,9 @@
  },
  {
   "summary": "⚓ Sem 5 · Día 7 · Descanso total",
-  "startTime": "2026-11-16T10:00:00",
-  "endTime": "2026-11-16T10:30:00",
-  "description": "«Descanso. El progreso ocurre cuando descansas.»\n\nDescanso total: Movilidad 15 min suaves · Dormir 8–9 h\n22:45 Repaso: Compensar los oídos\n\nDespiertas 7:30 · entrenas desde 8:00 · sales al trabajo 12:30 · cama 23:30\nSi hoy entras a las 16:00: despiertas 9:15 · entrenas desde 9:45 · sales 15:15 · cama 1:15 (en la app toca «Entro 16:00»).\nSi repetiste semanas o cambiaste ajustes, manda lo que dice la app.\n\nÓrdenes paso a paso: https://claude.ai/artifact/Y7MgtsGPPBnXAaGzJpKC7H",
+  "startTime": "2026-11-29T10:00:00",
+  "endTime": "2026-11-29T10:30:00",
+  "description": "«Día libre. Cúmplelo igual de serio.»\n\nDescanso total: Movilidad 15 min suaves · Dormir 8–9 h\n22:45 Repaso: Compensar los oídos\n\nDespiertas 7:30 · entrenas desde 8:00 · sales al trabajo 12:30 · cama 23:30\nSi hoy entras a las 16:00: despiertas 9:15 · entrenas desde 9:45 · sales 15:15 · cama 1:15 (en la app toca «Entro 16:00»).\nSi repetiste semanas o cambiaste ajustes, manda lo que dice la app.\n\nÓrdenes paso a paso: https://claude.ai/artifact/Y7MgtsGPPBnXAaGzJpKC7H",
   "reminders": [
    0
   ],
@@ -440,9 +451,9 @@
  },
  {
   "summary": "⚓ Sem 6 · Día 1 · Agua + tirón",
-  "startTime": "2026-11-17T08:00:00",
-  "endTime": "2026-11-17T12:00:00",
-  "description": "«Al agua. Resistencia sí, heroísmo no.»\n\n8:00 Natación técnica · lago [máximo 8 min en el agua · solo donde haces pie · avisa a alguien]: Entrada en calor ~5 min · Nado continuo ~2 min\n10:15 Fuerza de tren superior: Barras 4 × 4 · Remo invertido 3 × 10 · Flexiones 4 × 13 · Fondos en silla 3 × 10 · Plancha 3 × 45 s\n11:30 Tolerancia al dolor: Sentadilla isométrica en la pared 1:09 · Colgado de la barra 0:32 · Plancha 1:24\n11:45 Ducha fría 1:30: Agua fría 1:30\n22:45 Repaso: Barotrauma\n\nDespiertas 7:30 · entrenas desde 8:00 · sales al trabajo 12:30 · cama 23:30\nSi hoy entras a las 16:00: despiertas 9:15 · entrenas desde 9:45 · sales 15:15 · cama 1:15 (en la app toca «Entro 16:00»).\nSi repetiste semanas o cambiaste ajustes, manda lo que dice la app.\n\nÓrdenes paso a paso: https://claude.ai/artifact/Y7MgtsGPPBnXAaGzJpKC7H",
+  "startTime": "2026-11-30T08:00:00",
+  "endTime": "2026-11-30T12:00:00",
+  "description": "«Al lago. Vas solo: nadas donde haces pie y sales cuando suena.»\n\n8:00 Natación técnica · lago [máximo 8 min en el agua · solo donde haces pie · avisa a alguien]: Ida en bicicleta 15 min · ≈3,8 km · Entrada al agua de a poco · 2 min · Entrada en calor ~5 min · Vuelta en bicicleta 15 min suave\n10:15 Fuerza de tren superior: Barras 4 × 4 · Remo invertido 3 × 10 · Flexiones 4 × 13 · Fondos en silla 3 × 10 · Plancha 3 × 45 s\n11:30 Tolerancia al dolor: Sentadilla isométrica en la pared 1:09 · Colgado de la barra 0:32 · Plancha 1:24\n11:45 Ducha fría 1:30: Agua fría 1:30\n22:45 Repaso: Barotrauma\n\nDespiertas 7:30 · entrenas desde 8:00 · sales al trabajo 12:30 · cama 23:30\nSi hoy entras a las 16:00: despiertas 9:15 · entrenas desde 9:45 · sales 15:15 · cama 1:15 (en la app toca «Entro 16:00»).\nSi repetiste semanas o cambiaste ajustes, manda lo que dice la app.\n\nÓrdenes paso a paso: https://claude.ai/artifact/Y7MgtsGPPBnXAaGzJpKC7H",
   "reminders": [
    15,
    0
@@ -451,9 +462,9 @@
  },
  {
   "summary": "⚓ Sem 6 · Día 2 · Carrera + core",
-  "startTime": "2026-11-18T08:00:00",
-  "endTime": "2026-11-18T12:00:00",
-  "description": "«De pie, Diego. Esto es lo que haces hoy.»\n\n8:00 Carrera suave 40 min: Trote 40 min\n9:15 Core: Plancha 3 × 45 s · Plancha lateral 2 × 30 s por lado · Hollow hold 3 × 20 s · Abdominales 3 × 20\n11:30 Tolerancia al dolor: Sentadilla isométrica en la pared 1:09 · Colgado de la barra 0:32 · Plancha 1:24\n11:45 Ducha fría 1:30: Agua fría 1:30\n22:45 Repaso: Apagón en apnea\n\nDespiertas 7:30 · entrenas desde 8:00 · sales al trabajo 12:30 · cama 23:30\nSi hoy entras a las 16:00: despiertas 9:15 · entrenas desde 9:45 · sales 15:15 · cama 1:15 (en la app toca «Entro 16:00»).\nSi repetiste semanas o cambiaste ajustes, manda lo que dice la app.\n\nÓrdenes paso a paso: https://claude.ai/artifact/Y7MgtsGPPBnXAaGzJpKC7H",
+  "startTime": "2026-12-01T08:00:00",
+  "endTime": "2026-12-01T12:00:00",
+  "description": "«Diego. Querías saber si puedes. Hoy se sigue respondiendo.»\n\n8:00 Carrera suave 40 min: Trote 40 min\n9:15 Core: Plancha 3 × 45 s · Plancha lateral 2 × 30 s por lado · Hollow hold 3 × 20 s · Abdominales 3 × 20\n11:30 Tolerancia al dolor: Sentadilla isométrica en la pared 1:09 · Colgado de la barra 0:32 · Plancha 1:24\n11:45 Ducha fría 1:30: Agua fría 1:30\n22:45 Repaso: Apagón en apnea\n\nDespiertas 7:30 · entrenas desde 8:00 · sales al trabajo 12:30 · cama 23:30\nSi hoy entras a las 16:00: despiertas 9:15 · entrenas desde 9:45 · sales 15:15 · cama 1:15 (en la app toca «Entro 16:00»).\nSi repetiste semanas o cambiaste ajustes, manda lo que dice la app.\n\nÓrdenes paso a paso: https://claude.ai/artifact/Y7MgtsGPPBnXAaGzJpKC7H",
   "reminders": [
    15,
    0
@@ -462,9 +473,9 @@
  },
  {
   "summary": "⚓ Sem 6 · Día 3 · Agua + piernas",
-  "startTime": "2026-11-19T08:00:00",
-  "endTime": "2026-11-19T12:00:00",
-  "description": "«Lago. El frío no perdona al que se confía.»\n\n8:00 Natación técnica · lago [máximo 8 min en el agua · solo donde haces pie · avisa a alguien]: Entrada en calor ~5 min · Nado continuo ~2 min\n10:15 Piernas: Sentadillas 4 × 20 · Zancadas 3 × 10 por pierna · Puente de glúteo 3 × 15 · Gemelos 3 × 20\n11:30 Tolerancia al dolor: Sentadilla isométrica en la pared 1:09 · Colgado de la barra 0:32 · Plancha 1:24\n11:45 Ducha fría 1:30: Agua fría 1:30\n22:45 Repaso: Shock de frío: regla 1-10-1\n\nDespiertas 7:30 · entrenas desde 8:00 · sales al trabajo 12:30 · cama 23:30\nSi hoy entras a las 16:00: despiertas 9:15 · entrenas desde 9:45 · sales 15:15 · cama 1:15 (en la app toca «Entro 16:00»).\nSi repetiste semanas o cambiaste ajustes, manda lo que dice la app.\n\nÓrdenes paso a paso: https://claude.ai/artifact/Y7MgtsGPPBnXAaGzJpKC7H",
+  "startTime": "2026-12-02T08:00:00",
+  "endTime": "2026-12-02T12:00:00",
+  "description": "«Al lago. Vas solo: nadas donde haces pie y sales cuando suena.»\n\n8:00 Natación técnica · lago [máximo 15 min en el agua · solo donde haces pie · avisa a alguien]: Ida en bicicleta 15 min · ≈3,8 km · Entrada al agua de a poco · 2 min · Entrada en calor ~5 min · Nado continuo ~7 min · Vuelta en bicicleta 15 min suave\n10:15 Piernas: Sentadillas 4 × 20 · Zancadas 3 × 10 por pierna · Puente de glúteo 3 × 15 · Gemelos 3 × 20\n11:30 Tolerancia al dolor: Sentadilla isométrica en la pared 1:09 · Colgado de la barra 0:32 · Plancha 1:24\n11:45 Ducha fría 1:30: Agua fría 1:30\n22:45 Repaso: Shock de frío: regla 1-10-1\n\nDespiertas 7:30 · entrenas desde 8:00 · sales al trabajo 12:30 · cama 23:30\nSi hoy entras a las 16:00: despiertas 9:15 · entrenas desde 9:45 · sales 15:15 · cama 1:15 (en la app toca «Entro 16:00»).\nSi repetiste semanas o cambiaste ajustes, manda lo que dice la app.\n\nÓrdenes paso a paso: https://claude.ai/artifact/Y7MgtsGPPBnXAaGzJpKC7H",
   "reminders": [
    15,
    0
@@ -473,9 +484,9 @@
  },
  {
   "summary": "⚓ Sem 6 · Día 4 · Descanso activo",
-  "startTime": "2026-11-20T10:00:00",
-  "endTime": "2026-11-20T10:30:00",
-  "description": "«Día libre. Cúmplelo igual de serio.»\n\nDescanso activo: Movilidad 15 min suaves · Dormir 8–9 h\n11:50 Apnea en seco: Apnea en seco 8 × 1:00\n22:45 Repaso: Hipotermia\n\nDespiertas 7:30 · entrenas desde 8:00 · sales al trabajo 12:30 · cama 23:30\nSi hoy entras a las 16:00: despiertas 9:15 · entrenas desde 9:45 · sales 15:15 · cama 1:15 (en la app toca «Entro 16:00»).\nSi repetiste semanas o cambiaste ajustes, manda lo que dice la app.\n\nÓrdenes paso a paso: https://claude.ai/artifact/Y7MgtsGPPBnXAaGzJpKC7H",
+  "startTime": "2026-12-03T10:00:00",
+  "endTime": "2026-12-03T10:30:00",
+  "description": "«Descanso. El progreso ocurre cuando descansas.»\n\nDescanso activo: Movilidad 15 min suaves · Dormir 8–9 h\n11:50 Apnea en seco: Apnea en seco 8 × 1:00\n22:45 Repaso: Hipotermia\n\nDespiertas 7:30 · entrenas desde 8:00 · sales al trabajo 12:30 · cama 23:30\nSi hoy entras a las 16:00: despiertas 9:15 · entrenas desde 9:45 · sales 15:15 · cama 1:15 (en la app toca «Entro 16:00»).\nSi repetiste semanas o cambiaste ajustes, manda lo que dice la app.\n\nÓrdenes paso a paso: https://claude.ai/artifact/Y7MgtsGPPBnXAaGzJpKC7H",
   "reminders": [
    0
   ],
@@ -483,9 +494,9 @@
  },
  {
   "summary": "⚓ Sem 6 · Día 5 · Circuito + intervalos",
-  "startTime": "2026-11-21T08:00:00",
-  "endTime": "2026-11-21T12:00:00",
-  "description": "«De pie, Diego. Esto es lo que haces hoy.»\n\n8:00 Circuito de prueba: Circuito 4 vueltas\n10:15 Intervalos 6 × 400 m rápido: 6 × 400 m 1:42 cada uno · Vuelta a la calma 5–10 min trote suave\n11:30 Tolerancia al dolor: Sentadilla isométrica en la pared 1:09 · Colgado de la barra 0:32 · Plancha 1:24\n11:45 Ducha fría 1:30: Agua fría 1:30\n11:50 Apnea en seco: Apnea en seco 8 × 1:00\n22:45 Repaso: RCP: reanimación\n\nDespiertas 7:30 · entrenas desde 8:00 · sales al trabajo 12:30 · cama 23:30\nSi hoy entras a las 16:00: despiertas 9:15 · entrenas desde 9:45 · sales 15:15 · cama 1:15 (en la app toca «Entro 16:00»).\nSi repetiste semanas o cambiaste ajustes, manda lo que dice la app.\n\nÓrdenes paso a paso: https://claude.ai/artifact/Y7MgtsGPPBnXAaGzJpKC7H",
+  "startTime": "2026-12-04T08:00:00",
+  "endTime": "2026-12-04T12:00:00",
+  "description": "«Diego. Querías saber si puedes. Hoy se sigue respondiendo.»\n\n8:00 Circuito de prueba: Circuito 4 vueltas\n10:15 Intervalos 6 × 400 m rápido: 6 × 400 m 1:42 cada uno · Vuelta a la calma 5–10 min trote suave\n11:30 Tolerancia al dolor: Sentadilla isométrica en la pared 1:09 · Colgado de la barra 0:32 · Plancha 1:24\n11:45 Ducha fría 1:30: Agua fría 1:30\n11:50 Apnea en seco: Apnea en seco 8 × 1:00\n22:45 Repaso: RCP: reanimación\n\nDespiertas 7:30 · entrenas desde 8:00 · sales al trabajo 12:30 · cama 23:30\nSi hoy entras a las 16:00: despiertas 9:15 · entrenas desde 9:45 · sales 15:15 · cama 1:15 (en la app toca «Entro 16:00»).\nSi repetiste semanas o cambiaste ajustes, manda lo que dice la app.\n\nÓrdenes paso a paso: https://claude.ai/artifact/Y7MgtsGPPBnXAaGzJpKC7H",
   "reminders": [
    15,
    0
@@ -494,9 +505,9 @@
  },
  {
   "summary": "⚓ Sem 6 · Día 6 · Agua larga",
-  "startTime": "2026-11-22T08:00:00",
-  "endTime": "2026-11-22T12:00:00",
-  "description": "«Lago. El frío no perdona al que se confía.»\n\n8:00 Distancia continua · lago [máximo 8 min en el agua · solo donde haces pie · avisa a alguien]: Entrada en calor ~5 min · Nado continuo ~2 min\n10:15 Prueba de incomodidad · 40 min: Trote 20 min · Flexiones 60 en total · Sentadillas 60 en total · Abdominales 40 en total · Ducha fría 3 min\n   ⚠ Hidrátate. Dolor agudo: paras.\n22:45 Repaso: Posición lateral de seguridad\n\nDespiertas 7:30 · entrenas desde 8:00 · sales al trabajo 12:30 · cama 23:30\nSi hoy entras a las 16:00: despiertas 9:15 · entrenas desde 9:45 · sales 15:15 · cama 1:15 (en la app toca «Entro 16:00»).\nSi repetiste semanas o cambiaste ajustes, manda lo que dice la app.\n\nÓrdenes paso a paso: https://claude.ai/artifact/Y7MgtsGPPBnXAaGzJpKC7H",
+  "startTime": "2026-12-05T08:00:00",
+  "endTime": "2026-12-05T12:00:00",
+  "description": "«Al lago. Vas solo: nadas donde haces pie y sales cuando suena.»\n\n8:00 Distancia continua · lago [máximo 15 min en el agua · solo donde haces pie · avisa a alguien]: Ida en bicicleta 15 min · ≈3,8 km · Entrada al agua de a poco · 2 min · Entrada en calor ~5 min · Nado continuo ~7 min · Vuelta en bicicleta 15 min suave\n10:15 Prueba de incomodidad · 40 min: Trote 20 min · Flexiones 60 en total · Sentadillas 60 en total · Abdominales 40 en total · Ducha fría 3 min\n   ⚠ Hidrátate. Dolor agudo: paras.\n22:45 Repaso: Posición lateral de seguridad\n\nDespiertas 7:30 · entrenas desde 8:00 · sales al trabajo 12:30 · cama 23:30\nSi hoy entras a las 16:00: despiertas 9:15 · entrenas desde 9:45 · sales 15:15 · cama 1:15 (en la app toca «Entro 16:00»).\nSi repetiste semanas o cambiaste ajustes, manda lo que dice la app.\n\nÓrdenes paso a paso: https://claude.ai/artifact/Y7MgtsGPPBnXAaGzJpKC7H",
   "reminders": [
    15,
    0
@@ -505,9 +516,9 @@
  },
  {
   "summary": "⚓ Sem 6 · Día 7 · Descanso total",
-  "startTime": "2026-11-23T10:00:00",
-  "endTime": "2026-11-23T10:30:00",
-  "description": "«Día libre. Cúmplelo igual de serio.»\n\nDescanso total: Movilidad 15 min suaves · Dormir 8–9 h\n22:45 Repaso: Rescate: lanzar, no ir\n\nDespiertas 7:30 · entrenas desde 8:00 · sales al trabajo 12:30 · cama 23:30\nSi hoy entras a las 16:00: despiertas 9:15 · entrenas desde 9:45 · sales 15:15 · cama 1:15 (en la app toca «Entro 16:00»).\nSi repetiste semanas o cambiaste ajustes, manda lo que dice la app.\n\nÓrdenes paso a paso: https://claude.ai/artifact/Y7MgtsGPPBnXAaGzJpKC7H",
+  "startTime": "2026-12-06T10:00:00",
+  "endTime": "2026-12-06T10:30:00",
+  "description": "«Descanso. El progreso ocurre cuando descansas.»\n\nDescanso total: Movilidad 15 min suaves · Dormir 8–9 h\n22:45 Repaso: Rescate: lanzar, no ir\n\nDespiertas 7:30 · entrenas desde 8:00 · sales al trabajo 12:30 · cama 23:30\nSi hoy entras a las 16:00: despiertas 9:15 · entrenas desde 9:45 · sales 15:15 · cama 1:15 (en la app toca «Entro 16:00»).\nSi repetiste semanas o cambiaste ajustes, manda lo que dice la app.\n\nÓrdenes paso a paso: https://claude.ai/artifact/Y7MgtsGPPBnXAaGzJpKC7H",
   "reminders": [
    0
   ],
@@ -515,9 +526,9 @@
  },
  {
   "summary": "⚓ Sem 7 · Día 1 · Agua + tirón",
-  "startTime": "2026-11-24T08:00:00",
-  "endTime": "2026-11-24T12:00:00",
-  "description": "«Al lago. Vas solo: nadas donde haces pie y sales cuando suena.»\n\n8:00 Natación técnica · lago [máximo 8 min en el agua · solo donde haces pie · avisa a alguien]: Entrada en calor ~5 min · Nado continuo ~2 min\n10:15 Fuerza de tren superior: Barras 4 × 4 · Remo invertido 3 × 10 · Flexiones 4 × 13 · Fondos en silla 3 × 10 · Plancha 3 × 45 s\n11:30 Tolerancia al dolor: Sentadilla isométrica en la pared 1:13 · Colgado de la barra 0:34 · Plancha 1:28\n11:45 Ducha fría 1:30: Agua fría 1:30\n22:45 Repaso: Corrientes de retorno\n\nDespiertas 7:30 · entrenas desde 8:00 · sales al trabajo 12:30 · cama 23:30\nSi hoy entras a las 16:00: despiertas 9:15 · entrenas desde 9:45 · sales 15:15 · cama 1:15 (en la app toca «Entro 16:00»).\nSi repetiste semanas o cambiaste ajustes, manda lo que dice la app.\n\nÓrdenes paso a paso: https://claude.ai/artifact/Y7MgtsGPPBnXAaGzJpKC7H",
+  "startTime": "2026-12-07T08:00:00",
+  "endTime": "2026-12-07T12:00:00",
+  "description": "«Al agua. Resistencia sí, heroísmo no.»\n\n8:00 Natación técnica · lago [máximo 15 min en el agua · solo donde haces pie · avisa a alguien]: Ida en bicicleta 15 min · ≈3,8 km · Entrada al agua de a poco · 2 min · Entrada en calor ~5 min · Nado continuo ~7 min · Vuelta en bicicleta 15 min suave\n10:15 Fuerza de tren superior: Barras 4 × 4 · Remo invertido 3 × 10 · Flexiones 4 × 13 · Fondos en silla 3 × 10 · Plancha 3 × 45 s\n11:30 Tolerancia al dolor: Sentadilla isométrica en la pared 1:13 · Colgado de la barra 0:34 · Plancha 1:28\n11:45 Ducha fría 1:30: Agua fría 1:30\n22:45 Repaso: Corrientes de retorno\n\nDespiertas 7:30 · entrenas desde 8:00 · sales al trabajo 12:30 · cama 23:30\nSi hoy entras a las 16:00: despiertas 9:15 · entrenas desde 9:45 · sales 15:15 · cama 1:15 (en la app toca «Entro 16:00»).\nSi repetiste semanas o cambiaste ajustes, manda lo que dice la app.\n\nÓrdenes paso a paso: https://claude.ai/artifact/Y7MgtsGPPBnXAaGzJpKC7H",
   "reminders": [
    15,
    0
@@ -526,9 +537,9 @@
  },
  {
   "summary": "⚓ Sem 7 · Día 2 · Carrera + core",
-  "startTime": "2026-11-25T08:00:00",
-  "endTime": "2026-11-25T12:00:00",
-  "description": "«Arriba, Diego. Nadie lo va a hacer por ti.»\n\n8:00 Carrera suave 40 min: Trote 40 min\n9:15 Core: Plancha 3 × 45 s · Plancha lateral 2 × 30 s por lado · Hollow hold 3 × 20 s · Abdominales 3 × 20\n11:30 Tolerancia al dolor: Sentadilla isométrica en la pared 1:13 · Colgado de la barra 0:34 · Plancha 1:28\n11:45 Ducha fría 1:30: Agua fría 1:30\n22:45 Repaso: Nudo as de guía\n\nDespiertas 7:30 · entrenas desde 8:00 · sales al trabajo 12:30 · cama 23:30\nSi hoy entras a las 16:00: despiertas 9:15 · entrenas desde 9:45 · sales 15:15 · cama 1:15 (en la app toca «Entro 16:00»).\nSi repetiste semanas o cambiaste ajustes, manda lo que dice la app.\n\nÓrdenes paso a paso: https://claude.ai/artifact/Y7MgtsGPPBnXAaGzJpKC7H",
+  "startTime": "2026-12-08T08:00:00",
+  "endTime": "2026-12-08T12:00:00",
+  "description": "«De pie, Diego. Esto es lo que haces hoy.»\n\n8:00 Carrera suave 40 min: Trote 40 min\n9:15 Core: Plancha 3 × 45 s · Plancha lateral 2 × 30 s por lado · Hollow hold 3 × 20 s · Abdominales 3 × 20\n11:30 Tolerancia al dolor: Sentadilla isométrica en la pared 1:13 · Colgado de la barra 0:34 · Plancha 1:28\n11:45 Ducha fría 1:30: Agua fría 1:30\n22:45 Repaso: Nudo as de guía\n\nDespiertas 7:30 · entrenas desde 8:00 · sales al trabajo 12:30 · cama 23:30\nSi hoy entras a las 16:00: despiertas 9:15 · entrenas desde 9:45 · sales 15:15 · cama 1:15 (en la app toca «Entro 16:00»).\nSi repetiste semanas o cambiaste ajustes, manda lo que dice la app.\n\nÓrdenes paso a paso: https://claude.ai/artifact/Y7MgtsGPPBnXAaGzJpKC7H",
   "reminders": [
    15,
    0
@@ -537,9 +548,9 @@
  },
  {
   "summary": "⚓ Sem 7 · Día 3 · Agua + piernas",
-  "startTime": "2026-11-26T08:00:00",
-  "endTime": "2026-11-26T12:00:00",
-  "description": "«Al agua. Resistencia sí, heroísmo no.»\n\n8:00 Natación técnica · lago [máximo 8 min en el agua · solo donde haces pie · avisa a alguien]: Entrada en calor ~5 min · Nado continuo ~2 min\n10:15 Piernas: Sentadillas 4 × 20 · Zancadas 3 × 10 por pierna · Puente de glúteo 3 × 15 · Gemelos 3 × 20\n11:30 Tolerancia al dolor: Sentadilla isométrica en la pared 1:13 · Colgado de la barra 0:34 · Plancha 1:28\n11:45 Ducha fría 1:30: Agua fría 1:30\n22:45 Repaso: Nudo ballestrinque\n\nDespiertas 7:30 · entrenas desde 8:00 · sales al trabajo 12:30 · cama 23:30\nSi hoy entras a las 16:00: despiertas 9:15 · entrenas desde 9:45 · sales 15:15 · cama 1:15 (en la app toca «Entro 16:00»).\nSi repetiste semanas o cambiaste ajustes, manda lo que dice la app.\n\nÓrdenes paso a paso: https://claude.ai/artifact/Y7MgtsGPPBnXAaGzJpKC7H",
+  "startTime": "2026-12-09T08:00:00",
+  "endTime": "2026-12-09T12:00:00",
+  "description": "«Lago. El frío no perdona al que se confía.»\n\n8:00 Natación técnica · lago [máximo 15 min en el agua · solo donde haces pie · avisa a alguien]: Ida en bicicleta 15 min · ≈3,8 km · Entrada al agua de a poco · 2 min · Entrada en calor ~5 min · Nado continuo ~7 min · Vuelta en bicicleta 15 min suave\n10:15 Piernas: Sentadillas 4 × 20 · Zancadas 3 × 10 por pierna · Puente de glúteo 3 × 15 · Gemelos 3 × 20\n11:30 Tolerancia al dolor: Sentadilla isométrica en la pared 1:13 · Colgado de la barra 0:34 · Plancha 1:28\n11:45 Ducha fría 1:30: Agua fría 1:30\n22:45 Repaso: Nudo ballestrinque\n\nDespiertas 7:30 · entrenas desde 8:00 · sales al trabajo 12:30 · cama 23:30\nSi hoy entras a las 16:00: despiertas 9:15 · entrenas desde 9:45 · sales 15:15 · cama 1:15 (en la app toca «Entro 16:00»).\nSi repetiste semanas o cambiaste ajustes, manda lo que dice la app.\n\nÓrdenes paso a paso: https://claude.ai/artifact/Y7MgtsGPPBnXAaGzJpKC7H",
   "reminders": [
    15,
    0
@@ -548,9 +559,9 @@
  },
  {
   "summary": "⚓ Sem 7 · Día 4 · Descanso activo",
-  "startTime": "2026-11-27T10:00:00",
-  "endTime": "2026-11-27T10:30:00",
-  "description": "«Hoy descansas. Es una orden, no un premio.»\n\nDescanso activo: Movilidad 15 min suaves · Dormir 8–9 h\n11:50 Apnea en seco: Apnea en seco 8 × 1:00\n22:45 Repaso: Nudo llano\n\nDespiertas 7:30 · entrenas desde 8:00 · sales al trabajo 12:30 · cama 23:30\nSi hoy entras a las 16:00: despiertas 9:15 · entrenas desde 9:45 · sales 15:15 · cama 1:15 (en la app toca «Entro 16:00»).\nSi repetiste semanas o cambiaste ajustes, manda lo que dice la app.\n\nÓrdenes paso a paso: https://claude.ai/artifact/Y7MgtsGPPBnXAaGzJpKC7H",
+  "startTime": "2026-12-10T10:00:00",
+  "endTime": "2026-12-10T10:30:00",
+  "description": "«Día libre. Cúmplelo igual de serio.»\n\nDescanso activo: Movilidad 15 min suaves · Dormir 8–9 h\n11:50 Apnea en seco: Apnea en seco 8 × 1:00\n22:45 Repaso: Nudo llano\n\nDespiertas 7:30 · entrenas desde 8:00 · sales al trabajo 12:30 · cama 23:30\nSi hoy entras a las 16:00: despiertas 9:15 · entrenas desde 9:45 · sales 15:15 · cama 1:15 (en la app toca «Entro 16:00»).\nSi repetiste semanas o cambiaste ajustes, manda lo que dice la app.\n\nÓrdenes paso a paso: https://claude.ai/artifact/Y7MgtsGPPBnXAaGzJpKC7H",
   "reminders": [
    0
   ],
@@ -558,9 +569,9 @@
  },
  {
   "summary": "⚓ Sem 7 · Día 5 · Circuito + intervalos",
-  "startTime": "2026-11-28T08:00:00",
-  "endTime": "2026-11-28T12:00:00",
-  "description": "«Arriba, Diego. Nadie lo va a hacer por ti.»\n\n8:00 Circuito de prueba: Circuito 5 vueltas\n10:15 Intervalos 5 × 800 m: 5 × 800 m 3:34 cada uno · Vuelta a la calma 5–10 min trote suave\n11:30 Tolerancia al dolor: Sentadilla isométrica en la pared 1:13 · Colgado de la barra 0:34 · Plancha 1:28\n11:45 Ducha fría 1:30: Agua fría 1:30\n11:50 Apnea en seco: Apnea en seco 8 × 1:00\n22:45 Repaso: Nudo ocho\n\nDespiertas 7:30 · entrenas desde 8:00 · sales al trabajo 12:30 · cama 23:30\nSi hoy entras a las 16:00: despiertas 9:15 · entrenas desde 9:45 · sales 15:15 · cama 1:15 (en la app toca «Entro 16:00»).\nSi repetiste semanas o cambiaste ajustes, manda lo que dice la app.\n\nÓrdenes paso a paso: https://claude.ai/artifact/Y7MgtsGPPBnXAaGzJpKC7H",
+  "startTime": "2026-12-11T08:00:00",
+  "endTime": "2026-12-11T12:00:00",
+  "description": "«De pie, Diego. Esto es lo que haces hoy.»\n\n8:00 Circuito de prueba: Circuito 5 vueltas\n10:15 Intervalos 5 × 800 m: 5 × 800 m 3:34 cada uno · Vuelta a la calma 5–10 min trote suave\n11:30 Tolerancia al dolor: Sentadilla isométrica en la pared 1:13 · Colgado de la barra 0:34 · Plancha 1:28\n11:45 Ducha fría 1:30: Agua fría 1:30\n11:50 Apnea en seco: Apnea en seco 8 × 1:00\n22:45 Repaso: Nudo ocho\n\nDespiertas 7:30 · entrenas desde 8:00 · sales al trabajo 12:30 · cama 23:30\nSi hoy entras a las 16:00: despiertas 9:15 · entrenas desde 9:45 · sales 15:15 · cama 1:15 (en la app toca «Entro 16:00»).\nSi repetiste semanas o cambiaste ajustes, manda lo que dice la app.\n\nÓrdenes paso a paso: https://claude.ai/artifact/Y7MgtsGPPBnXAaGzJpKC7H",
   "reminders": [
    15,
    0
@@ -569,9 +580,9 @@
  },
  {
   "summary": "⚓ Sem 7 · Día 6 · Agua larga",
-  "startTime": "2026-11-29T08:00:00",
-  "endTime": "2026-11-29T12:00:00",
-  "description": "«Al agua. Resistencia sí, heroísmo no.»\n\n8:00 Distancia continua · lago [máximo 8 min en el agua · solo donde haces pie · avisa a alguien]: Entrada en calor ~5 min · Nado continuo ~2 min\n11:30 Tolerancia al dolor: Sentadilla isométrica en la pared 1:13 · Colgado de la barra 0:34 · Plancha 1:28\n11:45 Ducha fría 1:30: Agua fría 1:30\n11:50 Apnea en seco: Apnea en seco 8 × 1:00\n22:45 Repaso: La brújula\n\nDespiertas 7:30 · entrenas desde 8:00 · sales al trabajo 12:30 · cama 23:30\nSi hoy entras a las 16:00: despiertas 9:15 · entrenas desde 9:45 · sales 15:15 · cama 1:15 (en la app toca «Entro 16:00»).\nSi repetiste semanas o cambiaste ajustes, manda lo que dice la app.\n\nÓrdenes paso a paso: https://claude.ai/artifact/Y7MgtsGPPBnXAaGzJpKC7H",
+  "startTime": "2026-12-12T08:00:00",
+  "endTime": "2026-12-12T12:00:00",
+  "description": "«Lago. El frío no perdona al que se confía.»\n\n8:00 Distancia continua · lago [máximo 15 min en el agua · solo donde haces pie · avisa a alguien]: Ida en bicicleta 15 min · ≈3,8 km · Entrada al agua de a poco · 2 min · Entrada en calor ~5 min · Nado continuo ~7 min · Vuelta en bicicleta 15 min suave\n11:30 Tolerancia al dolor: Sentadilla isométrica en la pared 1:13 · Colgado de la barra 0:34 · Plancha 1:28\n11:45 Ducha fría 1:30: Agua fría 1:30\n11:50 Apnea en seco: Apnea en seco 8 × 1:00\n22:45 Repaso: La brújula\n\nDespiertas 7:30 · entrenas desde 8:00 · sales al trabajo 12:30 · cama 23:30\nSi hoy entras a las 16:00: despiertas 9:15 · entrenas desde 9:45 · sales 15:15 · cama 1:15 (en la app toca «Entro 16:00»).\nSi repetiste semanas o cambiaste ajustes, manda lo que dice la app.\n\nÓrdenes paso a paso: https://claude.ai/artifact/Y7MgtsGPPBnXAaGzJpKC7H",
   "reminders": [
    15,
    0
@@ -580,21 +591,10 @@
  },
  {
   "summary": "⚓ Sem 7 · Día 7 · Descanso total",
-  "startTime": "2026-11-30T10:00:00",
-  "endTime": "2026-11-30T10:30:00",
-  "description": "«Hoy descansas. Es una orden, no un premio.»\n\nDescanso total: Movilidad 15 min suaves · Dormir 8–9 h\n22:45 Repaso: Cartas y millas náuticas\n\nDespiertas 7:30 · entrenas desde 8:00 · sales al trabajo 12:30 · cama 23:30\nSi hoy entras a las 16:00: despiertas 9:15 · entrenas desde 9:45 · sales 15:15 · cama 1:15 (en la app toca «Entro 16:00»).\nSi repetiste semanas o cambiaste ajustes, manda lo que dice la app.\n\nÓrdenes paso a paso: https://claude.ai/artifact/Y7MgtsGPPBnXAaGzJpKC7H",
+  "startTime": "2026-12-13T10:00:00",
+  "endTime": "2026-12-13T10:30:00",
+  "description": "«Día libre. Cúmplelo igual de serio.»\n\nDescanso total: Movilidad 15 min suaves · Dormir 8–9 h\n22:45 Repaso: Cartas y millas náuticas\n\nDespiertas 7:30 · entrenas desde 8:00 · sales al trabajo 12:30 · cama 23:30\nSi hoy entras a las 16:00: despiertas 9:15 · entrenas desde 9:45 · sales 15:15 · cama 1:15 (en la app toca «Entro 16:00»).\nSi repetiste semanas o cambiaste ajustes, manda lo que dice la app.\n\nÓrdenes paso a paso: https://claude.ai/artifact/Y7MgtsGPPBnXAaGzJpKC7H",
   "reminders": [
-   0
-  ],
-  "colorId": "9"
- },
- {
-  "summary": "⚓ Sem 8 · Día 1 · Agua + tirón",
-  "startTime": "2026-12-01T08:00:00",
-  "endTime": "2026-12-01T12:00:00",
-  "description": "«Al agua. Resistencia sí, heroísmo no.»\n\n8:00 Natación técnica · lago [máximo 15 min en el agua · solo donde haces pie · avisa a alguien]: Entrada en calor ~5 min · Nado continuo ~9 min\n10:15 Fuerza de tren superior: Barras 3 × 4 · Remo invertido 3 × 10 · Flexiones 3 × 14 · Fondos en silla 3 × 10 · Plancha 3 × 45 s\n11:45 Ducha fría 1:30: Agua fría 1:30\n22:45 Repaso: Mareas\n\nDespiertas 7:30 · entrenas desde 8:00 · sales al trabajo 12:30 · cama 23:30\nSi hoy entras a las 16:00: despiertas 9:15 · entrenas desde 9:45 · sales 15:15 · cama 1:15 (en la app toca «Entro 16:00»).\nSi repetiste semanas o cambiaste ajustes, manda lo que dice la app.\n\nÓrdenes paso a paso: https://claude.ai/artifact/Y7MgtsGPPBnXAaGzJpKC7H",
-  "reminders": [
-   15,
    0
   ],
   "colorId": "9"

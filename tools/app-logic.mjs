@@ -27,7 +27,10 @@ export function ordenDelDia(A, date, { turno = '13', start, place } = {}) {
   if (start) cfg.start = start;
   if (place) cfg.place = place;
   const L = A.locate(date), out = [];
-  if (L.before) return { title: 'Antes del inicio', lines: [`La operación empieza el ${A.fmt(A.parse(cfg.start))}.`], rest: true };
+  if (L.before) { const left = Math.round((A.parse(cfg.start) - A.parse(A.iso(date))) / 864e5);
+    return { title: 'Antes del inicio', lines: [`La operación empieza el ${A.dayName(A.parse(cfg.start)).toLowerCase()} ${A.fmt(A.parse(cfg.start))}: ${left === 1 ? 'mañana' : `faltan ${left} días`}.`, '', 'Mientras tanto, deja todo listo:',
+      '• Luces para la bici (blanca adelante, roja atrás), casco y termo.', '• Gorra de natación de color fuerte y gafas.', '• adidas Running en el celular y un cuaderno.',
+      '• En la app, Plan → Ajustes: peso en ayunas, estatura y tu por qué.', '• Aletas y boya cuando puedas; al tenerlas, márcalas «Sí» en Ajustes.', '', left === 1 ? 'Esta noche: a la cama a la hora que dice la app. Mañana empieza.' : 'Duerme bien estos días y llega descansado al día 1.'], rest: true }; }
   const ctx = { month: date.getMonth(), place: cfg.place, partner: cfg.partner, neo: cfg.neo, temp: cfg.temp, trip: cfg.trip, fins: cfg.fins, boya: cfg.boya, pool: cfg.pool };
   // después de la semana 52, la app da una semana de mantención (la 47 con menos carga)
   const base = L.after ? Object.assign(A.dayPlan(47, L.dow, ctx), { w: 52, deload: false, maint: true }) : A.dayPlan(L.w, L.dow, ctx);
