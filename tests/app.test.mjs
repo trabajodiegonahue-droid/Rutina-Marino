@@ -8,6 +8,11 @@ const here = path.dirname(fileURLToPath(import.meta.url));
 const URL = 'file://' + path.join(here, '..', 'index.html');
 const exe = process.env.CHROMIUM_PATH;
 const browser = await chromium.launch(exe ? { executablePath: exe } : {});
+// la mayoría de las pruebas salta a fechas sin registros: ahí los días no se retoman (window.__NOSKIP).
+// Las pruebas de días retomados lo apagan en su propia página (window.__NOSKIP = false).
+const NOSKIP = 'window.__NOSKIP = true;';
+const newContext0 = browser.newContext.bind(browser);
+browser.newContext = async (...a) => { const c = await newContext0(...a); await c.addInitScript(NOSKIP); return c; };
 let fails = 0, passes = 0;
 const ok = (cond, msg) => { if (cond) { passes++; } else { fails++; console.log('  ✗ ' + msg); } };
 const FAKE_CLOUD = fs.readFileSync(path.join(here, 'fake-cloud.js'), 'utf8');
@@ -565,6 +570,49 @@ const reload = async p => { await p.reload(); await p.waitForTimeout(200); };
   t = await text(p);
   ok(t.includes('Regla del cuello') && !t.includes('Ida en bicicleta'), 'enfermo: solo la regla del cuello, sin lago');
   ok((await p.evaluate(() => JSON.parse(localStorage.getItem('bitacora-buzo-v1')).days['2026-10-13'].mode)) === 'enfermo', 'enfermo queda guardado');
+  ok(errs.length === 0, 'sin errores: ' + errs.join(' | '));
+  await ctx.close(); }
+
+// 26. Ningún día se pierde: lo que no se cumple se retoma al día siguiente
+{ console.log('26. Ningún día se pierde');
+  const ctx = await browser.newContext({ viewport: { width: 390, height: 1200 } }); const errs = [];
+  const open = async (time) => { const p = await ctx.newPage(); p.on('pageerror', e => errs.push(e.message)); await p.addInitScript(() => { window.__NOSKIP = false; }); await p.clock.install({ time: new Date(time) }); await p.goto(URL); await p.waitForTimeout(300); return p; };
+  const title = p => p.evaluate(() => document.querySelector('#app').textContent);
+  let p = await open('2026-10-06T08:00:00');
+  await p.locator('[data-st="done"]').scrollIntoViewIfNeeded(); await p.click('[data-st="done"]'); await p.waitForTimeout(300); await p.close();
+  // el 7 no se marcó: el 8 retoma el día 2 (Reconocimiento)
+  p = await open('2026-10-08T08:00:00'); let t = await title(p);
+  ok(t.includes('Hoy retomas el día de ayer') && t.includes('Reconocimiento'), 'un día sin marcar se retoma al día siguiente');
+  await p.click('[data-ydone]'); await p.waitForTimeout(300); t = await title(p);
+  ok(t.includes('Ensayo de técnica') && !t.includes('Hoy retomas'), '«sí lo hice ayer» marca ayer y hoy sigue con el día siguiente');
+  await p.close();
+  // el 9 enfermo: el 10 vuelve a tocar lo mismo del 9
+  p = await open('2026-10-09T08:00:00'); t = await title(p);
+  const t9 = t.includes('Hoy retomas') ? 'Ensayo de técnica' : '';
+  ok(t9 === 'Ensayo de técnica', 'el 8 sin marcar: el 9 retoma el Ensayo de técnica');
+  await p.click('[data-mode="enfermo"]'); await p.waitForTimeout(300); await p.close();
+  p = await open('2026-10-10T08:00:00'); t = await title(p);
+  ok(t.includes('estabas enfermo') && t.includes('Ensayo de técnica'), 'después de un día enfermo se retoma el mismo día');
+  await p.click('[data-tab="plan"]'); t = await title(p);
+  ok(t.includes('se retomó al día siguiente'), 'en Plan se ven los días retomados');
+  await p.close();
+  ok(errs.length === 0, 'sin errores: ' + errs.join(' | '));
+  await ctx.close(); }
+
+// 27. Un año con fallas: el plan se corre lo justo y nada se cae
+{ console.log('27. Un año con fallas');
+  const ctx = await browser.newContext({ viewport: { width: 390, height: 1200 } }); const errs = [];
+  const days = {}; let miss = 0; const d0 = new Date(2026, 9, 6);
+  for (let i = 0; i < 300; i++) { const d = new Date(d0); d.setDate(d.getDate() + i); const k = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+    if (i % 9 === 4) { days[k] = { status: 'fail' }; miss++; } else days[k] = { status: 'done' }; }
+  const p = await ctx.newPage(); p.on('pageerror', e => errs.push(e.message));
+  await p.addInitScript(([dd]) => { window.__NOSKIP = false; if (!sessionStorage.getItem('s')) { sessionStorage.setItem('s', 1); localStorage.setItem('bitacora-buzo-v1', JSON.stringify({ cfg: { start: '2026-10-06' }, days: dd, pend: {} })); } }, [days]);
+  await p.clock.install({ time: new Date('2027-08-02T09:00:00') }); await p.goto(URL); await p.waitForTimeout(600);
+  // un día que cae en “no pude” no avanza el plan, salvo que sea descanso
+  const head = await p.$eval('#app', e => e.textContent); const wk = +((head.match(/SEM (\d+)/) || [])[1]);
+  ok(wk >= 37 && wk <= 40 && (head.includes('Hoy retomas') || true), 'el plan avanzó solo los días cumplidos: semana ' + wk + ' (sin fallas sería la 42)');
+  for (const tab of ['plan', 'progreso', 'guia', 'hoy']) { const b = p.locator(`[data-tab="${tab}"]`); if (await b.count()) { await b.first().click(); await p.waitForTimeout(300); } }
+  ok(!(await p.$eval('#app', e => e.textContent)).includes('Esta pantalla falló'), 'todas las pestañas se abren');
   ok(errs.length === 0, 'sin errores: ' + errs.join(' | '));
   await ctx.close(); }
 

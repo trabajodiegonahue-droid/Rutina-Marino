@@ -9,6 +9,8 @@ export function loadApp() {
   let js = html.split('<script>')[1].split('</script>')[0];
   // Solo la lógica del plan: la pantalla nunca se dibuja aquí (Store.init no se llama),
   // así los cambios de diseño de la app no pueden romper el aviso diario ni el calendario.
+  // sin registros: el aviso y el calendario siguen el plan día a día (los días retomados solo los conoce la app)
+  js = js.replace('let SK=null;', 'let SK={list:[],first:[],done:[],nToday:0};');
   js = js.replace('Store.init(()=>', 'globalThis.APP={dayPlan,applyMode,applyShift,locate,orders,stageOf,rankOf,Store,parse,iso,dayName,fmt,HELL,TESTS,toMin,fromMin};(()=>{})(()=>');
   const el = { hidden: true, innerHTML: '', textContent: '', contains: () => false };
   const cl = { classList: { toggle() {}, add() {}, remove() {} } };
@@ -52,6 +54,6 @@ export function ordenDelDia(A, date, { turno = '13', start, place } = {}) {
   const sh = plan.shift;
   out.push('', `Despiertas ${sh.wake} · entrenas desde ${sh.A}${sh.leave ? ' · sales al trabajo ' + sh.leave : ''} · cama ${sh.bed}`);
   if (turno === '13') { const s16 = A.applyShift(A.applyMode(base, ''), '16', null).shift; out.push(`Si hoy entras a las 16:00: despiertas ${s16.wake} · entrenas desde ${s16.A} · sales ${s16.leave} · cama ${s16.bed} (en la app toca «Entro 16:00»).`); }
-  out.push('Si repetiste semanas o cambiaste ajustes, manda lo que dice la app.');
+  out.push('Si fallaste un día, repetiste semanas o cambiaste ajustes, manda lo que dice la app: ahí ningún día se pierde.');
   return { L: L.after ? null : L, plan, st, shift: sh, title: plan.title, lines: out, rest: plan.kind === 'descanso', test: plan.test };
 }

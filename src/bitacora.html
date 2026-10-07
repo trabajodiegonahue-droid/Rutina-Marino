@@ -888,7 +888,7 @@ const Store={mode:"local",cfg:defCfg(),days:{},pend:{},ver:{},recent:{},remote:{
   listen(){
     const cb=this.cb,again=e=>{if(e&&HARD_ERR.includes(e.code)){this.hardErr=e.code;paintSave();return}
       clearTimeout(this.relisten);this.relisten=setTimeout(()=>{try{this.unP&&this.unP();this.unD&&this.unD()}catch(x){}this.listen()},10000)};
-    this.unP=this.planRef.onSnapshot(s=>{PLANC={};CTX=null;
+    this.unP=this.planRef.onSnapshot(s=>{PLANC={},SK=null;CTX=null;
       const before=canon(this.cfg),raw=s.exists?clone(s.data()):null;this.remote.plan=raw;
       if(!this.got.plan&&!raw&&!this.pend.plan)this.addPend("plan",Object.assign({__all:1},this.cfg));
       this.cfg=fixCfg(Object.assign(defCfg(),this.merged("plan",raw)||{}));
@@ -896,7 +896,7 @@ const Store={mode:"local",cfg:defCfg(),days:{},pend:{},ver:{},recent:{},remote:{
       if(raw&&!this.pend.plan){const fx={};["start","sched","repeats","turno"].forEach(f=>{if(canon(raw[f])!==canon(this.cfg[f]))fx[f]=this.cfg[f]});if(Object.keys(fx).length)this.addPend("plan",fx)}
       this.got.plan=true;this.sync("plan");paintSave();if(canon(this.cfg)!==before){this.saveLocal();cb()}
     },again);
-    this.unD=this.daysCol.limit(1000).onSnapshot(q=>{PLANC={};CTX=null;
+    this.unD=this.daysCol.limit(1000).onSnapshot(q=>{PLANC={},SK=null;CTX=null;
       const before=canon(this.days),cloud={};q.docs.forEach(x=>{cloud[x.id]=clone(x.data())});
       // primera vez con la nube vacía: todo lo del teléfono queda pendiente de subir
       if(!this.got.days&&q.empty)Object.keys(this.days).forEach(k=>{if(!this.pend[k])this.addPend(k,Object.assign({__all:1},this.days[k]))});
@@ -912,11 +912,11 @@ const Store={mode:"local",cfg:defCfg(),days:{},pend:{},ver:{},recent:{},remote:{
   sync(k){if(this.pend[k]&&!this.timers[k]&&!this.flying[k]&&!this.wait.includes(k)&&!this.paused)this.want(k)},
   ready(k){return this.mode==="db"&&(k==="plan"?this.got.plan:this.got.days)},
   day(k){return this.days[k]||(this.days[k]={})},
-  setDay(k,patch){PLANC={};CTX=null;
+  setDay(k,patch){PLANC={},SK=null;CTX=null;
     // el día de hoy guarda con qué ajustes se entrenó (lago o piscina, neopreno, agua): cambiar Ajustes después no lo reescribe
     if(k===iso(today())){const c=this.cfg,cx={place:c.place,neo:!!c.neo,temp:tempFor(c,today()),partner:!!c.partner};if(canon(cx)!==canon((this.days[k]||{}).ctx))patch=Object.assign({},patch,{ctx:cx})}
     const d=this.day(k),old={};Object.keys(patch).forEach(f=>{old[f]=d[f]});Object.assign(d,patch);this.addPend(k,patch,old);this.saveLocal();this.queue(k)},
-  setCfg(patch){PLANC={};CTX=null;Object.assign(this.cfg,patch);this.addPend("plan",patch);this.saveLocal();this.queue("plan");
+  setCfg(patch){PLANC={},SK=null;CTX=null;Object.assign(this.cfg,patch);this.addPend("plan",patch);this.saveLocal();this.queue("plan");
     if(CTXF.some(f=>f in patch)&&this.days[iso(today())])this.setDay(iso(today()),{})},
   // junta los toques seguidos en una sola escritura (antes de la primera foto de la nube no se escribe: se mezcla al llegar)
   queue(k){
@@ -979,13 +979,27 @@ const Store={mode:"local",cfg:defCfg(),days:{},pend:{},ver:{},recent:{},remote:{
 };
 
 /* =================== CÁLCULOS =================== */
+/* ---- nunca se pierde un día: un día de entrenamiento que pasó sin cumplirse (no marcado, «no pude», enfermo o con dolor)
+   no avanza el plan; al día siguiente se retoma el mismo. Los descansos que pasan siempre avanzan. ---- */
+let SK=null;
+function missedDay(k,d){const p=planFor(d);if(!p||p.kind==="descanso")return false;const dd=Store.days[k]||{};
+  if(dd.mode==="enfermo"||dd.mode==="dolor")return true;const s=dayStatus(k,p);return s==="fail"||s===""}
+function skipData(){if(SK)return SK;const st=parse(Store.cfg.start),td=today(),len=Store.cfg.sched.length;
+  SK={list:[],first:[],done:[],nToday:0};let n=0;
+  for(let d=st;diffDays(d,td)<0;d=addDays(d,1)){if(Math.floor(n/7)>=len)break;const k=iso(d);if(SK.first[n]==null)SK.first[n]=k;
+    if(!window.__NOSKIP&&missedDay(k,d))SK.list.push(k);else{SK.done[n]=k;n++}}
+  SK.nToday=n;return SK}
+const skipsBefore=k=>{const L=skipData().list;let c=0;for(const x of L){if(x<k)c++;else break}return c};
+// primer y último día del calendario en que toca el día n del plan
+function firstOfN(n){const S=skipData();if(n<S.nToday||(n===S.nToday&&S.first[n]!=null&&S.first[n]<iso(today())))return parse(S.first[n]);return addDays(today(),n-S.nToday)}
+function lastOfN(n){const S=skipData();if(n<S.nToday)return parse(S.done[n]);return addDays(today(),n-S.nToday)}
 function locate(date){
-  const n=diffDays(date,parse(Store.cfg.start));if(n<0)return {before:true,n};
+  const n0=diffDays(date,parse(Store.cfg.start));if(n0<0)return {before:true,n:n0};const n=n0-skipsBefore(iso(date));
   const idx=Math.floor(n/7),dow=n%7,sched=Store.cfg.sched;
   if(idx>=sched.length)return {after:true,n,idx,dow};
   return {n,idx,dow,w:sched[idx]};
 }
-const weekStartOf=d=>{const st=parse(Store.cfg.start);return addDays(st,Math.floor(diffDays(d,st)/7)*7)};
+const weekStartOf=d=>{const L=locate(d);if(L.before)return parse(Store.cfg.start);return firstOfN(Math.floor(L.n/7)*7)};
 let CTX=null;
 // resultados que mandan en el plan de una fecha: solo pruebas y simulacros de semanas anteriores
 // (así anotar un simulacro no cambia los días que ya hiciste)
@@ -1009,6 +1023,7 @@ function planFor0(date){const L=locate(date);
   if(Store.cfg.sched.indexOf(L.w)!==L.idx)p=Object.assign({},p,{tasks:p.tasks.filter(t=>t.kind!=="admin")});
   return p}
 const setKey=(t,i)=>t.id+"."+i;
+function markAllDone(k,p){const dd0=Store.day(k),c={},sets={};p.tasks.forEach(t=>{c[t.id]=true;t.blocks.forEach((x,i)=>sets[setKey(t,i)]=x.s)});Store.setDay(k,{checks:c,sets,status:"",undo:{checks:Object.assign({},dd0.checks),sets:Object.assign({},dd0.sets)}})}
 const blockDone=(dd,t,i)=>Math.min(((dd&&dd.sets)||{})[setKey(t,i)]||0,t.blocks[i].s);
 const taskDone=(dd,t)=>!!dd&&(((dd.checks||{})[t.id])||(t.blocks.length>0&&t.blocks.every((b,i)=>b.opt||blockDone(dd,t,i)>=b.s)));
 // para cerrar el día cuentan las sesiones, no las rutinas (despertar, comidas, noche)
@@ -1033,7 +1048,7 @@ function compliance(){const td=today();let tot=0,ok=0;for(let d=parse(Store.cfg.
 function orders(plan,k,isToday,dd){
   const N=Store.cfg.name||"recluta",out=[];
   if(isToday){const fr=fatigueRun(today());if(fr>=3)out.push(["alert",`Llevas ${fr} días seguidos cansado o con dolor. Hoy versión suave o descanso: solo técnica o movilidad. Si es dolor y no mejora, al médico.`])}
-  if(isToday){const yd=addDays(today(),-1),yp=planFor(yd);if(yp&&!okSt(dayStatus(iso(yd),yp))){const ys=dayStatus(iso(yd),yp),yx=Store.days[iso(yd)]||{};if(ys==="fail")out.push(["alert","Ayer fallaste. Un día no te saca del curso; dos seguidos empiezan a hacerlo."]);
+  if(isToday){const yd=addDays(today(),-1),yp=planFor(yd);if(yp&&!okSt(dayStatus(iso(yd),yp))&&!skipData().list.includes(iso(yd))){const ys=dayStatus(iso(yd),yp),yx=Store.days[iso(yd)]||{};if(ys==="fail")out.push(["alert","Ayer fallaste. Un día no te saca del curso; dos seguidos empiezan a hacerlo."]);
       else if(!yx.status){const ms=missingTasks(yx,yp);out.push(["alert",units(yx,yp).a?`Ayer quedó a medias${ms.length?" (faltó: "+ms.slice(0,3).join(", ")+")":""}. Si lo hiciste, márcalo con ◀; si no, ciérralo ahí con «Cerrar el día así».`:"Ayer no registraste nada. Si entrenaste, márcalo con ◀; si no, toca «No pude ese día» ahí."])}}}
   if(plan.maint)out.push(["say",plan.kind==="descanso"?"Descanso. La mantención también descansa.":`Mantención, ${N}. Lo que ganaste en 52 semanas se cuida igual.`]);
   else if(plan.w===HELL&&plan.kind!=="descanso")out.push(["say",pick([`${N}. Semana del infierno. Aquí se ve para qué fueron 47 semanas.`,`Infierno, día ${plan.dow+1}. No pienses en el último día: piensa en la próxima serie.`],k)]);
@@ -1349,6 +1364,9 @@ function viewHoy(){
     return h+`<div class="order"><p class="say">Empiezas el ${dayName(st).toLowerCase()} ${fmt(st)}.</p><p>Esta noche: bolso listo y a la cama a las ${(SHIFT[Store.cfg.turno]||SHIFT["13"]).bed}. El día 1 tienes: ${p1.tasks.map(t=>esc(t.t.toLowerCase())).join(", ")}.</p><button class="btn main" data-goto="${iso(st)}">Ver el día 1</button></div>`}
   if(L.after)h+=`<div class="card"><span class="lbl">Plan terminado</span><p style="margin:0">Terminaste las 52 semanas. Ahora es mantención: el mismo tipo de semana con menos carga, para no perder lo ganado. Si aún no entras a la Armada y quieres otra vuelta dura, en Plan está «Repetir etapa 4». Ya dentro: 3 sesiones de nado y 2 de fuerza continua por semana, y la etapa 4 completa 3 meses antes de postular al curso.</p></div>`;
   const dd=Store.days[k]||{},plan=planFor(d),status=dayStatus(k,plan),u=units(dd,plan);
+  // ayer no se cumplió: hoy se retoma el mismo día del plan
+  if(isToday){const y=addDays(d,-1),yk=iso(y);if(skipData().list.includes(yk)){const yd=Store.days[yk]||{},why=yd.mode==="enfermo"?"estabas enfermo":yd.mode==="dolor"?"estabas con dolor":yd.status==="fail"?"marcaste que no pudiste":"quedó sin marcar";
+    h+=`<div class="card"><span class="lbl">Hoy retomas el día de ayer</span><p style="margin:0">Ayer ${why}, así que hoy toca lo mismo: ${esc(plan.title)}. Ningún día se pierde: el plan entero se corre un día.</p>${why==="quedó sin marcar"?`<button class="btn sm" data-ydone>Sí lo hice ayer: marcarlo cumplido</button>`:""}</div>`}}
   h+=`<div class="order"><div class="msg-h"><span>De: Comandante · Para: ${esc(Store.cfg.name||"Recluta")}</span><span>DTG ${dtg(d)}</span></div>${orders(plan,k,isToday,dd).map(([t,x])=>t==="alert"?`<p class="alert">${esc(x)}</p>`:t==="say"?`<p class="say">${esc(x)}</p>`:t==="why"?`<p class="why-q">Tu por qué: “${esc(x)}”</p>`:`<p>${esc(x)}</p>`).join("")}</div>`;
   {const cur=dd.turno||Store.cfg.turno||"13",sh=plan.shift;
    h+=`<div class="sec"><div class="row" style="justify-content:space-between;align-items:center"><span class="lbl">Hoy trabajo</span><div class="segs">${Object.keys(SHIFT).map(t=>`<button class="seg ${cur===t?"on":""}" data-turno="${t}">${t==="libre"?"Libre":"Entro "+t+":00"}</button>`).join("")}</div></div>
@@ -1424,17 +1442,17 @@ function updateVerdict(){const el=document.getElementById("verdict");if(!el)retu
 function viewPlan(){
   const td=today(),L=locate(td),sched=Store.cfg.sched,start=parse(Store.cfg.start);
   const sel=S.selWeek!=null?S.selWeek:(L.idx!=null&&!L.after?L.idx:0);
-  const done=new Set();sched.forEach((w,i)=>{let ok=0;for(let j=0;j<7;j++){const d=addDays(start,i*7+j);if(okSt(dayStatus(iso(d),planFor(d))))ok++}if(ok>=6)done.add(i)});
+  const done=new Set();sched.forEach((w,i)=>{let ok=0;for(let j=0;j<7;j++){const d=lastOfN(i*7+j);if(okSt(dayStatus(iso(d),planFor(d))))ok++}if(ok>=6)done.add(i)});
   const cur=L.after?sched.length:L.idx||0,pct=L.after?100:L.before?0:Math.round(cur/(sched.length-1)*100);
   let h=`<div class="sec"><h2>Plan</h2><div class="prog"><div class="row"><span class="lbl">${L.after?"Plan terminado · mantención":L.before?"Antes del inicio":`Semana ${L.w}`+(sched.length!==53?` · ${cur+1}.ª de ${sched.length} (con repeticiones)`:"")}</span><span class="mono">${pct}%</span></div><div class="bar"><i style="width:${pct}%"></i></div></div></div>`;
   STAGES.forEach(s=>{h+=`<div class="sec"><h3>${s.n} · ${s.name}</h3><div class="weeks">`;
     sched.forEach((w,i)=>{if(w<s.from||w>s.to)return;h+=`<button class="wc ${TESTS.includes(w)?"test":""} ${w===HELL?"hell":""} ${i===cur&&!L.after&&!L.before?"cur":""} ${i===sel?"sel":""}" data-wk="${i}" aria-label="Semana ${w}">${w}${done.has(i)?"<i></i>":""}</button>`});
     h+=`</div></div>`});
   h+=`<p class="foot">Borde grueso: prueba. Rojo: semana del infierno. Línea verde: semana cumplida.</p>`;
-  const ws=addDays(start,sel*7),w=sched[sel];
-  h+=`<div class="sec"><h3>Semana ${w} · ${fmtS(ws)} – ${fmtS(addDays(ws,6))}</h3><div class="list">`;
-  for(let i=0;i<7;i++){const d=addDays(ws,i),p=planFor(d),k=iso(d),isT=diffDays(d,today())===0;
-    h+=`<button class="li" data-goto="${k}" ${isT?'style="background:var(--chip)"':""}><span class="a">${dayName(d).slice(0,3)}<span>${fmtS(d)}</span></span><span class="b">${p?esc(p.title):"—"}</span>${p?chip(dayStatus(k,p)):""}</button>`}
+  const ws=firstOfN(sel*7),we=lastOfN(sel*7+6),w=sched[sel],sk=skipData().list;
+  h+=`<div class="sec"><h3>Semana ${w} · ${fmtS(ws)} – ${fmtS(we)}</h3><div class="list">`;
+  for(let d=ws;diffDays(d,we)<=0;d=addDays(d,1)){const p=planFor(d),k=iso(d),isT=diffDays(d,today())===0,re=sk.includes(k);
+    h+=`<button class="li" data-goto="${k}" ${isT?'style="background:var(--chip)"':""}><span class="a">${dayName(d).slice(0,3)}<span>${fmtS(d)}</span></span><span class="b">${p?esc(p.title):"—"}${re?" · <i>se retomó al día siguiente</i>":""}</span>${p?chip(dayStatus(k,p)):""}</button>`}
   h+=`</div></div>`;
   const c=Store.cfg,sg=(key,v,l)=>`<button class="seg ${String(c[key])===String(v)?"on":""}" data-cset="${key}|${v}">${l}</button>`;
   h+=`<div class="card"><span class="lbl">Ajustes</span>
@@ -1526,13 +1544,13 @@ function constancyHTML(){
   const groups=[];sched.forEach((w,i)=>{const sg=stageOf(w);if(!groups.length||groups[groups.length-1].s!==sg)groups.push({s:sg,idx:[]});groups[groups.length-1].idx.push(i)});
   const lab={done:"Cumplido",part:"A medias",injury:"Recuperación",fail:"No cumplido",missed:"Sin registrar",future:"Por venir",today:"Hoy"};
   let h="";groups.forEach(gp=>{h+=`<div class="hmg"><span class="lbl">${gp.s.n}</span><div class="hm" style="grid-template-columns:repeat(${gp.idx.length},minmax(18px,26px))">`;
-    gp.idx.forEach(i=>{for(let j=0;j<7;j++){const d=addDays(st,i*7+j),k=iso(d),dd0=diffDays(d,td);let c=!Store.days[k]&&dd0>=0?"":dayStatus(k,planFor(d));
+    gp.idx.forEach(i=>{for(let j=0;j<7;j++){const d=lastOfN(i*7+j),k=iso(d),dd0=diffDays(d,td);let c=!Store.days[k]&&dd0>=0?"":dayStatus(k,planFor(d));
       if(!c)c=dd0>0?"future":dd0===0?"today":"missed";else if(c==="part"&&dd0===0)c="today";if(cnt[c]!=null)cnt[c]++;
       h+=`<button class="hc ${c}" style="grid-column:${gp.idx.indexOf(i)+1};grid-row:${j+1}" data-goto="${k}" title="${dayName(d)} ${fmtS(d)} · semana ${sched[i]} · ${lab[c]}" aria-label="${dayName(d)} ${fmtS(d)}: ${lab[c]}"></button>`}});
     h+=`</div></div>`});
   const leg=["done","part","injury","fail","missed","future"].map(c=>`<span class="lg"><i class="hc ${c}"></i>${lab[c]}</span>`).join("");
   return `<div class="sec"><h3>Constancia</h3><p class="foot" style="margin:0">Cada cuadro es un día (columnas = semanas, filas = días 1 a 7). Toca uno para abrirlo.</p><div class="hmwrap">${h}</div><div class="legend">${leg}</div>
-   <span class="foot">Cumplidos ${cnt.done} · recuperación ${cnt.injury} · a medias ${cnt.part} · no cumplidos ${cnt.fail} · sin registrar ${cnt.missed}</span></div>`;
+   <span class="foot">Cumplidos ${cnt.done} · recuperación ${cnt.injury} · a medias ${cnt.part} · no cumplidos ${cnt.fail} · sin registrar ${cnt.missed}${skipData().list.length?` · días retomados ${skipData().list.length}`:""}</span></div>`;
 }
 // récords
 function recordsHTML(){
@@ -1645,9 +1663,9 @@ function viewProgreso(){
   const cp=compliance();
   let h=`<div class="sec"><h2>Progreso</h2><div class="kpis"><div class="kpi"><span class="lbl">Racha</span><b>${streak()}</b></div><div class="kpi"><span class="lbl">Cumplido</span><b>${cp==null?"—":cp+"%"}</b></div><div class="kpi"><span class="lbl">Pruebas</span><b>${new Set(res.map(x=>x.w)).size}/5</b></div></div></div>`;
   // semana actual
-  const L=locate(today());if(L.w!=null){const ws=weekStartOf(today());let sm=[0,0],ua=0,ub=0;
-    for(let i=0;i<7;i++){const d=addDays(ws,i),p=planFor(d);if(!p)continue;const dd=Store.days[iso(d)];const u=units(dd,p);ua+=u.a;ub+=u.b;p.tasks.forEach(t=>{if(t.m){sm[1]+=t.m;if(taskDone(dd,t))sm[0]+=t.m}})}
-    let kmw=0;for(let i=0;i<7;i++){const x=Store.days[iso(addDays(ws,i))];Object.values((x&&x.runlog)||{}).forEach(r=>{const v=parseFloat(String(r.km||"").replace(",","."));if(v>0)kmw+=v})}
+  const L=locate(today());if(L.w!=null){const ws=weekStartOf(today()),wds=[];for(let d=ws;diffDays(d,lastOfN(Math.floor(L.n/7)*7+6))<=0;d=addDays(d,1))wds.push(d);let sm=[0,0],ua=0,ub=0;
+    for(const d of wds){const p=planFor(d);if(!p)continue;const dd=Store.days[iso(d)];const u=units(dd,p);ua+=u.a;ub+=u.b;p.tasks.forEach(t=>{if(t.m){sm[1]+=t.m;if(taskDone(dd,t))sm[0]+=t.m}})}
+    let kmw=0;for(const d of wds){const x=Store.days[iso(d)];Object.values((x&&x.runlog)||{}).forEach(r=>{const v=parseFloat(String(r.km||"").replace(",","."));if(v>0)kmw+=v})}
     h+=`<div class="card"><div class="row" style="justify-content:space-between"><span class="lbl">Esta semana</span><span class="mono">${ub?Math.round(ua/ub*100):0}%</span></div><div class="bar"><i style="width:${ub?ua/ub*100:0}%"></i></div><span>${ua} de ${ub} series · ${nf(sm[0])} de ${nf(sm[1])} m de nado · ${kmw.toLocaleString("es-CL",{maximumFractionDigits:1})} km corridos</span></div>`}
   {const runs=[];Object.keys(Store.days).sort().reverse().forEach(k=>{const rl=Store.days[k].runlog||{};const p=Object.keys(rl).length?planFor(parse(k)):null;Object.keys(rl).forEach(tid=>{const r=rl[tid],km=parseFloat(String(r.km||"").replace(",",".")),t=parseDur(r.t);if(km>0&&t>0){const tk=p&&p.tasks.find(x=>x.id===tid);runs.push({k,name:tk?tk.t:"Carrera",km,t,lvl:tk?runVerdict(tk.goal,r).lvl:""})}})});
    h+=`<div class="sec"><h3>Tus carreras</h3>${runs.length?`<div class="tbl"><table><thead><tr><th>Día</th><th>Sesión</th><th>Km</th><th>Tiempo</th><th>Ritmo</th></tr></thead><tbody>${runs.slice(0,12).map(r=>`<tr><td class="mono">${fmtS(parse(r.k))}</td><td>${esc(r.name)}</td><td class="mono">${String(r.km).replace(".",",")}</td><td class="mono">${fmtDur(r.t)}</td><td class="mono ${r.lvl==="ok"?"pass":r.lvl==="bad"?"miss":""}">${fmtT(r.t/r.km)}/km</td></tr>`).join("")}</tbody></table></div>`:`<p class="muted" style="margin:0">Todavía no hay carreras registradas. Graba tus trotes con adidas Running y copia los km y el tiempo en la sesión de carrera del día.</p>`}</div>`}
@@ -1665,6 +1683,7 @@ function viewProgreso(){
 }
 function viewGuia(){return `<div class="sec prose"><h2>Guía</h2>
  <h3>Cómo usar la app</h3><ul>
+  <li><b>Ningún día se pierde.</b> Si un día de entrenamiento pasa sin marcar, marcas «No pude», o estás enfermo o con dolor, al día siguiente te toca ese mismo día y el plan entero se corre un día. Los descansos no se repiten. Si entrenaste pero olvidaste marcar, toca «Sí lo hice ayer».</li>
  <li><b>Cada mañana</b> abre Hoy y marca cómo amaneciste. “Cansado” recorta series; “Con dolor” deja solo recuperación.</li>
  <li><b>Cada círculo es una serie.</b> Al tocarlo arranca solo el descanso. ▶ es el temporizador de trabajo.</li>
  <li><b>El cuadrado</b> de una sesión la marca entera. Con todas marcadas, el día queda cumplido.</li>
@@ -1741,7 +1760,7 @@ function viewGuia(){return `<div class="sec prose"><h2>Guía</h2>
 const TABS=[["hoy","Hoy"],["plan","Plan"],["progreso","Progreso"],["guia","Guía"]];
 const ICON={hoy:'<circle cx="12" cy="5" r="2"/><path d="M12 7v13M8 10h8M5 15c1 3 4 5 7 5s6-2 7-5"/>',plan:'<path d="M3 6l6-2 6 2 6-2v14l-6 2-6-2-6 2z"/><path d="M9 4v14M15 6v14"/>',progreso:'<path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/>',guia:'<path d="M4 4h7a3 3 0 013 3v13a2 2 0 00-2-2H4zM20 4h-5a3 3 0 00-3 3"/><path d="M20 4v14h-6"/>'};
 function render(){
-  CTX=null;PLANC={};if(S.follow&&diffDays(S.date,today())!==0){S.date=today();S.run=null}
+  CTX=null;PLANC={},SK=null;if(S.follow&&diffDays(S.date,today())!==0){S.date=today();S.run=null}
   // conservar el foco y el cursor si una actualización llega mientras escribes
   const ae=document.activeElement,fid=ae&&app.contains(ae)&&ae.id?ae.id:null,sel=fid&&ae.selectionStart!=null?[ae.selectionStart,ae.selectionEnd]:null;
   const hqTop=()=>{const L=locate(today());return hqHTML(L.after?52:L.w,streak())};
@@ -1801,6 +1820,7 @@ document.addEventListener("click",e=>{
     const ndd=Store.days[k];let ni=ss.findIndex((x,j)=>j>i&&!stepDone(ndd,x));if(ni<0)ni=firstPending(p,ndd);S.run.i=ni;
     render();window.scrollTo(0,0);if(dayStatus(k,p)==="done"&&before!=="done")toast("Misión cumplida, "+(Store.cfg.name||"recluta")+".");return}
   if(D.turno){Store.setDay(k,{turno:D.turno});render();return}
+  if(D.ydone!==undefined){const y=addDays(today(),-1),p=planFor(y);if(p){markAllDone(iso(y),p);toast("Ayer quedó cumplido: hoy sigues con el día siguiente.")}render();return}
   if(D.nolake!==undefined){const dd=Store.day(k);Store.setDay(k,{nolake:!dd.nolake});render();return}
   if(D.mode){const dd=Store.day(k);Store.setDay(k,{mode:dd.mode===D.mode?"":D.mode});render();return}
   if(D.task||D.set){
@@ -1821,7 +1841,7 @@ document.addEventListener("click",e=>{
     if(after==="done"&&before!=="done")toast("Misión cumplida, "+(Store.cfg.name||"recluta")+".");
     return}
   if(D.st!==undefined){const p=planFor(S.date);
-    if(D.st==="done"&&p){const dd0=Store.day(k),c={},sets={};p.tasks.forEach(t=>{c[t.id]=true;t.blocks.forEach((x,i)=>sets[setKey(t,i)]=x.s)});Store.setDay(k,{checks:c,sets,status:"",undo:{checks:Object.assign({},dd0.checks),sets:Object.assign({},dd0.sets)}});toast("Misión cumplida.")}
+    if(D.st==="done"&&p){markAllDone(k,p);toast("Misión cumplida.")}
     // desmarcar vuelve a lo que tenías antes de “Cumplí todo” (no a cero)
     else if(D.clear){S.confirm=null;const dd=Store.day(k),u0=dd.undo||{checks:{},sets:{}},back=(cur,old,v)=>Object.keys(Object.assign({},cur,old)).reduce((a,x)=>(a[x]=old&&old[x]!=null?old[x]:v,a),{});Store.setDay(k,{checks:back(dd.checks,u0.checks,false),sets:back(dd.sets,u0.sets,0),status:"",undo:null})}
     else Store.setDay(k,{status:D.st});
