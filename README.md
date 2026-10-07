@@ -12,7 +12,13 @@ Uso: abre `index.html` en el navegador. Los datos se guardan en ese navegador (l
 
 ## Pruebas
 
-`npm install` y después `npm test`. Las pruebas abren `index.html` en Chromium y revisan: guardado del progreso, día cumplido y racha, turnos, ajustes, fecha de inicio, temporizador, modo paso a paso, cambio de día a medianoche, prueba de evaluación con repetición de semanas, navegación, guardado en la nube con retraso (con `tests/fake-cloud.js`), doble toque y registro de carrera. Si Chromium está en otra ruta, usa `CHROMIUM_PATH=/ruta/al/chrome npm test`.
+`npm install` y después `npm test`. Corre tres cosas:
+
+- `tools/orden-del-dia.mjs`: el aviso diario se genera sin errores.
+- `tests/plan.test.mjs` (sin navegador): todas las semanas, días, meses, lago y piscina, con y sin neopreno, y los tres turnos. Revisa que ningún texto salga roto, que nada en el lago pase el tope de minutos, que con agua muy fría no se entre, que la cuerda no pase de 8 subidas y que nada caiga en horario de trabajo.
+- `tests/app.test.mjs`: abre `index.html` en Chromium y prueba el uso real. Cubre guardado al recargar, racha, turnos, ajustes, temporizador y paso a paso, medianoche, prueba y repetición de semanas, nube con retraso, sin señal y dos dispositivos (con `tests/fake-cloud.js` y `tests/fake-cloud-ctl.js`), respaldo y restauración, progreso, una semana real en el celular y lago con ajustes.
+
+Si Chromium está en otra ruta, usa `CHROMIUM_PATH=/ruta/al/chrome npm test`. `tools/build-index.sh` genera `index.html` desde `src/bitacora.html`.
 
 Si cambias `src/bitacora.html`, regenera `index.html` (es el mismo contenido con `<!doctype html>`, `<head>` y `<body>` alrededor).
 
