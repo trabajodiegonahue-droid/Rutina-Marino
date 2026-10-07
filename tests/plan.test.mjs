@@ -23,6 +23,12 @@ for (let w = 0; w <= 52; w++) for (let dow = 0; dow < 7; dow++) for (const month
     ok(swim.reduce((a, b) => a + b.tm * (b.s > 1 ? 1 : 1), 0) <= cap * 60 + 60, `${where}: ${t.t} suma más minutos que el tope de ${cap}`);
     ok(t.blocks.every(b => !/brazadas/.test(b.n) || !/aletas|patada/.test(b.p)), `${where}: patada con aletas contada en brazadas`);
   });
+  // lago: ida y vuelta en bici, y el desayuno después de llegar a la casa
+  plan.tasks.filter(t => t.blocks.some(b => b.n === 'Antes de entrar')).forEach(t => {
+    ok(t.blocks[0].n === 'Ida en bicicleta' && t.blocks[t.blocks.length - 1].n === 'Vuelta en bicicleta', `${where}: ${t.t} sin ida y vuelta en bici`);
+    const ds = plan.tasks.find(x => x.id === 'desayuno'), home = plan.shift && plan.shift.home;
+    if (ds && home) ok(A.toMin(ds.h) >= A.toMin(home), `${where}: desayuno ${ds.h} antes de volver del lago ${home}`);
+  });
   if (place === 'lago') plan.tasks.forEach(t => t.blocks.filter(b => /^Nado [\d.–]+ m$/.test(b.n)).forEach(b => ok(b.opt || /En el lago/.test(b.note || ''), `${where}: nado a tope sin reglas del lago`)));
   // cuerda: nunca más de 8 subidas en una sesión
   plan.tasks.forEach(t => t.blocks.filter(b => b.n === 'Cuerda').forEach(b => ok(b.s <= 8 && /en total/.test(b.p), `${where}: cuerda ${b.p} en ${b.s} series`)));

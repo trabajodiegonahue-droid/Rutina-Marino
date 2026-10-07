@@ -528,6 +528,13 @@ const LAKE_OUT=`Sal cuando suene el temporizador aunque te sientas bien: con fr�
 Afuera: sécate rápido, ponte ropa abrigada y gorro, toma algo caliente y camina suave. Es normal temblar unos minutos y tener más frío 5–10 min después de salir.
 Nunca: tirarte de cabeza, nadar donde no haces pie, apnea en el lago, ni entrar cansado, enfermo, con hambre o después de alcohol.`;
 const LAKE_RULES="Avisa a alguien dónde entras y a qué hora sales · gorra de color · solo donde haces pie, paralelo a la orilla · sin viento ni oleaje · entra caminando y espera a que se calme la respiración · cuando suene el temporizador, sales.";
+// ida y vuelta al lago en bicicleta (minutos de la casa a la orilla, en Ajustes)
+const tripMin=ctx=>ctx.trip===undefined||ctx.trip===null||ctx.trip===""?15:Math.max(0,Math.min(60,+ctx.trip||0));
+const tripKm=mi=>(mi/4).toLocaleString("es-CL",{maximumFractionDigits:1});
+function tripBlocks(ctx,cap){const mi=tripMin(ctx);if(!mi)return [[],[]];
+  return [[B("Ida en bicicleta",`${mi} min · ≈${tripKm(mi)} km`,{trip:mi,cap})],[B("Vuelta en bicicleta",`${mi} min suave`,{trip:mi,cap})]]}
+// minutos totales fuera de casa en un día de lago: ida + cambiarse 5 + agua + secarse y vestirse 10 + vuelta
+const tripTotal=b=>b.trip*2+5+b.cap+10;
 function lakeify(t,w,ctx){
   const st=stN(w),spm=[0,180,150,135,120][st],br25=[0,22,20,18,18][st],temp=waterTemp(ctx),cap=lakeCapFor(w,ctx),tc=lakeCap(temp,ctx.neo);
   const est=b=>b.m?b.m/100*spm/60+(b.s>1?(b.s-1)*(b.r||30)/60:0):0;
@@ -549,11 +556,12 @@ function lakeify(t,w,ctx){
       bl.push(B("Nado continuo",`~${mins} min`,{m:mm,tm:mins*60,note:`≈ ${nf(mm)} m, lo que alcances del plan de hoy, sin parar. Cuando suene el tope, sales.`}))}});
   const total=t.blocks.reduce((a,b)=>a+est(b),0);
   const prot=B("Antes de entrar",`máximo ${cap} min`,{tm:cap*60,note:`Agua ${temp} °C${ctx.temp?"":" (estimada)"}, ${ctx.neo?"con":"sin"} neopreno${cap<tc?`; tu adaptación al frío esta semana: ${cap} min`:""}. ${LAKE_RULES}`+(cut?` El plan completo son ~${Math.round(total)} min: hoy haces lo que cabe en ${cap} min y el resto no aplica.`:"")});
-  return Object.assign({},t,{t:t.t+" · lago",blocks:[prot,B("Entrada al agua","de a poco · 2 min",{tm:120,c:LAKE_IN}),...bl,B("Al salir","sécate y abrígate",{c:LAKE_OUT})],safe:"Vas solo: nunca te alejes de donde haces pie. Nunca apnea en el lago.",m:meters,lake:true});
+  const [go,back]=tripBlocks(ctx,cap);
+  return Object.assign({},t,{t:t.t+" · lago",blocks:[...go,prot,B("Entrada al agua","de a poco · 2 min",{tm:120,c:LAKE_IN}),...bl,B("Al salir","sécate y abrígate",{c:LAKE_OUT}),...back],safe:"Vas solo: nunca te alejes de donde haces pie. Nunca apnea en el lago.",m:meters,lake:true});
 }
 // nados a tope fuera de la sesión de agua (mini-prueba): en el lago llevan las mismas reglas y el mismo tope
-function lakeSprint(t,w,ctx){const cap=lakeCapFor(w,ctx);
-  return Object.assign({},t,{blocks:t.blocks.map(b=>/^Nado [\d.–]+ m$/.test(b.n)?(cap?Object.assign({},b,{note:`En el lago: máximo ${cap} min en el agua (inicia el temporizador al entrar). ${LAKE_RULES} ${b.note||""}`.trim()}):Object.assign({},b,{p:"en piscina o pendiente",opt:1,note:"Con el agua así de fría no se nada a tope solo en el lago. Hazlo en piscina con salvavidas o queda pendiente."})):b),safe:[t.safe,"En el lago: solo donde haces pie, nunca apnea."].filter(Boolean).join(" ")})}
+function lakeSprint(t,w,ctx){const cap=lakeCapFor(w,ctx),[go,back]=cap?tripBlocks(ctx,cap):[[],[]];
+  return Object.assign({},t,{blocks:[...go,...t.blocks.map(b=>/^Nado [\d.–]+ m$/.test(b.n)?(cap?Object.assign({},b,{note:`En el lago: máximo ${cap} min en el agua (inicia el temporizador al entrar). ${LAKE_RULES} ${b.note||""}`.trim()}):Object.assign({},b,{p:"en piscina o pendiente",opt:1,note:"Con el agua así de fría no se nada a tope solo en el lago. Hazlo en piscina con salvavidas o queda pendiente."})):b),...back],safe:[t.safe,"En el lago: solo donde haces pie, nunca apnea."].filter(Boolean).join(" ")})}
 
 /* ---- tolerancia al dolor: aguantar ardor, quemazón y ganas de parar, sin lesionarse ---- */
 function tolT(w){
@@ -669,6 +677,9 @@ function applyShift(plan,turno,kg,o){
   if(o.prev){const ps=SHIFT[o.prev]||sh,wk=wakeAfter(ps.bed,sh);if(wk>toMin(sh.wake)){sh.late=ps.bed;sh.wake=fromMin(wk);sh.A=fromMin(Math.max(toMin(sh.A),wk+30));if(toMin(sh.B)<toMin(sh.A)+45)sh.B=fromMin(toMin(sh.A)+45)}}
   const ns=o.next?SHIFT[o.next]:sh,alarm=fromMin(o.next?wakeAfter(sh.bed,ns):toMin(sh.wake)),slp=(toMin(alarm)-toMin(sh.bed)+1440)%1440,slpT=Math.floor(slp/60)+(slp%60?" h "+pad(slp%60):" horas");
   const longInc=(plan.tasks.some(t=>t.id==="inc")&&incMin(plan.w)>=120)||(hell&&!rest);
+  // día de lago: el desayuno y lo que sigue van después de volver a la casa
+  {const lt=plan.tasks.find(t=>t.h&&t.blocks.some(b=>b.n==="Ida en bicicleta"));if(lt){const tb=lt.blocks.find(b=>b.n==="Ida en bicicleta"),st0=toMin(mapH(lt.h,sh)),end=st0+tripTotal(tb);
+    sh.home=fromMin(end);if(end+25>toMin(sh.B))sh.B=fromMin(Math.min(end+25,toMin(sh.C)-15))}}
   const tasks=plan.tasks.map(t=>{let x=Object.assign({},t,{h:mapH(t.h,sh)});
     if(t.id==="noche")x=Object.assign(x,{why:sh.back?`Llegas ${sh.back}. Despiertas ${sh.wake}.`:`Despiertas ${sh.wake}.`,blocks:[sh.back?B("Comida al llegar","liviana con proteína",{c:N.night}):B("Cena","liviana con proteína",{c:N.night.replace("Al llegar del trabajo come","En la cena come")})].concat(t.blocks.map(b=>b.n==="A la cama"?Object.assign({},b,{p:`${sh.bed} · alarma ${alarm}`,c:`Apaga la luz a las ${sh.bed} y deja la alarma a las ${alarm}: son ${slpT}.${o.next&&o.next!==turno?` Mañana ${o.next==="libre"?"estás libre":"entras a las "+o.next+":00"}.`:""} El celular lejos de la cama, pieza oscura y fresca. Si no te duermes en 20 minutos, respira en caja (4-4-4-4) sin mirar la pantalla.`}):b))});
     return x});
@@ -677,7 +688,7 @@ function applyShift(plan,turno,kg,o){
     B("Agua","500 ml",{c:"Toma un vaso grande de agua (500 ml) antes de cualquier otra cosa: llevas 8 horas sin tomar."}),
     B("Agua del día",N.water.match(/[\d,.]+ litros/)[0],{c:N.water}),
     longInc?B("Desayuno","antes de salir",{c:N.breakfast+"\nHoy la sesión es larga: lleva agua y una colación (plátano, pan con mantequilla de maní) para la mitad."}):B(rest?"Desayuno":"Algo liviano",rest?"tranquilo":"antes de entrenar",{c:rest?N.restBreak:N.pre})],{kind:"rutina"}));
-  if(!rest&&!longInc)tasks.push(T("desayuno","Desayuno completo","Después de la sesión principal.",fromMin(toMin(sh.B)-25),[B("Desayuno","completo",{c:N.breakfast})],{kind:"rutina"}));
+  if(!rest&&!longInc)tasks.push(T("desayuno","Desayuno completo",sh.home?`Al volver del lago (${sh.home}).`:"Después de la sesión principal.",fromMin(Math.max(toMin(sh.B)-25,sh.home?toMin(sh.home):0)),[B("Desayuno","completo",{c:N.breakfast})],{kind:"rutina"}));
   tasks.push(T("almuerzo","Almuerzo"+(sh.leave?" y colación":""),sh.leave?`Antes de salir al trabajo a las ${sh.leave}.`:"",sh.lunch,[B("Almuerzo","plato completo",{c:N.lunch})].concat(sh.leave?[B("Colación para el trabajo","prepárala ahora",{c:N.snack})]:[]),{kind:"rutina"}));
   if(plan.kind!=="prueba"||!plan.test)tasks.push(Object.assign(studyT(plan),{h:turno==="13"?fromMin(toMin(sh.back)+15):fromMin(toMin(sh.lunch)+20)}));
   const key=t=>t.id==="despertar"?-2:t.id==="noche"?1e5:t.h?toMin(t.h)+(toMin(t.h)<240?1440:0):-1;
@@ -812,7 +823,7 @@ function evalTest(w,t){
 
 /* =================== ALMACENAMIENTO =================== */
 const LS="bitacora-buzo-v1";
-const defCfg=()=>({name:"Diego",start:"2026-10-06",sched:Array.from({length:53},(_,i)=>i),repeats:[],place:"lago",partner:false,neo:false,temp:"",turno:"13",bigText:false});
+const defCfg=()=>({name:"Diego",start:"2026-10-06",sched:Array.from({length:53},(_,i)=>i),repeats:[],place:"lago",partner:false,neo:false,temp:"",turno:"13",trip:15,bigText:false});
 // ajustes guardados: si algo viene dañado (copia editada, datos viejos) se usa el valor por defecto
 const fixCfg=c=>{const d=defCfg();if(c.start==="2026-10-05"&&!c.startMoved){c.start="2026-10-06";c.startMoved=true}
   if(typeof c.start!=="string"||!/^\d{4}-\d{2}-\d{2}$/.test(c.start)||isNaN(parse(c.start)))c.start=d.start;
@@ -972,7 +983,7 @@ function lastTest(date){const ws=date?weekStartOf(date):null,lim=ws?iso(ws):"999
 const CTXF=["place","neo","temp","partner"];
 const tempFor=(c,date)=>c.temp!==""&&c.temp!=null&&c.tempK&&Math.abs(diffDays(date,parse(c.tempK)))<=10?c.temp:"";
 function ctxFor(date){const c=Store.cfg,dd=Store.days[iso(date)],fz=dd&&dd.ctx&&diffDays(date,today())<0?dd.ctx:null;
-  const base={month:date.getMonth(),place:c.place,partner:c.partner,neo:c.neo,temp:tempFor(c,date)};
+  const base={month:date.getMonth(),place:c.place,partner:c.partner,neo:c.neo,temp:tempFor(c,date),trip:c.trip};
   return Object.assign({},lastTest(date),base,fz?{place:fz.place,partner:fz.partner,neo:fz.neo,temp:fz.temp}:{})}
 let PLANC={};
 function planFor(date){const ck=iso(date);if(ck in PLANC)return PLANC[ck];return PLANC[ck]=planFor0(date)}
@@ -1115,6 +1126,12 @@ function cmdFor(st,plan){
   let m;
   if(n==="Antes de entrar")return `Antes de entrar al lago: ${LAKE_RULES} Inicia el temporizador de ${p.replace("máximo ","")} al entrar: ningún otro lo borra.${/no aplica/.test(b.note)?" Hoy no cabe todo el plan: haces lo que alcances y el resto no aplica.":""}`;
   if(n==="Hoy no entras al lago")return b.note;
+  if(n==="Ida en bicicleta"){const h0=t.h?toMin(t.h):null,at=x=>fromMin(h0+x);
+    return `${h0!==null?`Sal de la casa a las ${t.h} en bicicleta`:"Sal en bicicleta"}: ${b.trip} minutos pedaleando suave hasta la costanera (unos ${tripKm(b.trip)} km). Es tu calentamiento: llegas con el cuerpo tibio, justo lo que necesitas antes del agua fría. Ve con casco.
+En la mochila: toalla grande, polerón, pantalón de buzo, gorro de lana, cortaviento, calcetines secos, un termo con té o leche caliente y el celular en una bolsa plástica. El traje de baño, puesto debajo de la ropa.
+Al llegar: amarra la bici a la vista, deja la mochila arriba de ella (no en el suelo mojado) y entra dentro de 5 minutos: si esperas parado, se te va el calor del pedaleo.${h0!==null?`
+Horario: llegas ${at(b.trip)}, entras ${at(b.trip+5)}, sales del agua a más tardar ${at(b.trip+5+b.cap)}, partes de vuelta ${at(b.trip+15+b.cap)} y estás en la casa ${at(tripTotal(b))}.`:""}`}
+  if(n==="Vuelta en bicicleta")return `Antes de subirte: seco, con ropa seca, gorro y cortaviento puestos, y tómate la mitad del termo. Prueba los frenos apretando fuerte 3 veces: si las manos no te responden o tiemblas tanto que no puedes manejar, camina con la bici 5 minutos y vuelve a probar. Después pedalea suave ${b.trip} minutos hasta la casa, sin apurarte: el movimiento te calienta desde adentro. Al llegar: ducha tibia (no hirviendo), ropa seca y a comer.`;
   if(n==="Técnica en seco")return `Técnica en seco 20 minutos (inicia el temporizador): ${b.note}`;
   if(n==="La orden"&&plan.lake)return "Hoy nadas sin parar hasta que suene el tope, paralelo a la orilla y donde haces pie.";
   if(n==="Entrada al agua"||n==="Al salir"&&b.c)return b.c;
@@ -1405,6 +1422,7 @@ function viewPlan(){
    <div class="row"><div class="field" style="max-width:140px"><label class="lbl" for="c-peso">Peso en ayunas (kg)</label><input id="c-peso" inputmode="decimal" data-c="peso" value="${esc(bodyWeight()?nf(bodyWeight()):"")}" placeholder="70"></div><div class="field" style="max-width:140px"><label class="lbl" for="c-alt">Estatura (cm)</label><input id="c-alt" inputmode="numeric" data-c="alt" value="${esc(c.alt||"")}" placeholder="175"></div><p class="foot" style="flex:1;min-width:150px">Con tu peso calculo la proteína, las porciones y el agua de cada día. Pésate en ayunas el primer día de cada semana.</p></div>
    <div class="row"><div class="field" style="max-width:170px"><label class="lbl" for="c-maxb">Máximo de barras hoy</label><input id="c-maxb" inputmode="numeric" data-c="maxb" value="${esc((c.maxB&&c.maxB.v)||"")}" placeholder="${esc(lastTest().barras||6)}"></div><p class="foot" style="flex:1;min-width:160px">Mídete cada 3–4 semanas: las series de barras se ajustan solas.</p></div>
    <div class="field"><label class="lbl" for="c-why">Tu por qué</label><textarea id="c-why" data-c="why" placeholder="Por qué quieres ser buzo táctico. El comandante te lo recuerda en los días duros.">${esc(c.why||"")}</textarea></div>
+   <div class="row"><div class="field" style="max-width:170px"><label class="lbl" for="c-trip">Casa → lago en bici (min)</label><input id="c-trip" inputmode="numeric" data-c="trip" value="${esc(c.trip===undefined?15:c.trip)}" placeholder="15"></div><p class="foot" style="flex:1;min-width:150px">Con esto calculo a qué hora sales, entras al agua y vuelves. Pon 0 si vas en auto o vives al lado.</p></div>
    <div class="field" style="max-width:170px"><label class="lbl" for="c-temp">Agua del lago (°C)</label><input id="c-temp" inputmode="decimal" data-c="temp" value="${esc(tempFor(c,td))}" placeholder="${TEMP_MES[td.getMonth()]} estimado"><span class="foot">${tempFor(c,td)?`Medida el ${fmtS(parse(c.tempK))}: vale 10 días.`:c.temp?`La de ${fmtS(parse(c.tempK||c.start))} venció: mide de nuevo.`:"Vale 10 días; después se usa la estimada."}</span></div>
    ${L.after?(S.confirm==="s4"?`<div class="row"><button class="btn main sm" data-s4>Confirmar</button><button class="btn sm" data-cancel>Cancelar</button></div>`:`<button class="btn sm" data-ask="s4">Repetir etapa 4</button>`):""}
    <div class="row"><div class="field"><span class="lbl">Letra grande</span><div class="segs">${sg("bigText",false,"No")}${sg("bigText",true,"Sí")}</div></div></div>
@@ -1802,6 +1820,7 @@ document.addEventListener("input",e=>{
   else if(D.c==="alt")Store.setCfg({alt:el.value.trim()});
   else if(D.c==="why")Store.setCfg({why:el.value});
   else if(D.c==="maxb"){const v=parseInt(el.value,10);Store.setCfg({maxB:v>0?{v,k:iso(new Date())}:null})}
+  else if(D.c==="trip"){const v=parseInt(el.value,10);Store.setCfg({trip:v>=0&&v<=60?v:15})}
   else if(D.c==="temp")Store.setCfg({temp:el.value.trim().replace(",","."),tempK:iso(today())});
 });
 // la fecha de inicio se aplica al terminar de escribirla (en el computador, cada número dispara un cambio)

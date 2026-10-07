@@ -28,7 +28,7 @@ export function ordenDelDia(A, date, { turno = '13', start, place } = {}) {
   if (place) cfg.place = place;
   const L = A.locate(date), out = [];
   if (L.before) return { title: 'Antes del inicio', lines: [`La operación empieza el ${A.fmt(A.parse(cfg.start))}.`], rest: true };
-  const ctx = { month: date.getMonth(), place: cfg.place, partner: cfg.partner, neo: cfg.neo, temp: cfg.temp };
+  const ctx = { month: date.getMonth(), place: cfg.place, partner: cfg.partner, neo: cfg.neo, temp: cfg.temp, trip: cfg.trip };
   // después de la semana 52, la app da una semana de mantención (la 47 con menos carga)
   const base = L.after ? Object.assign(A.dayPlan(47, L.dow, ctx), { w: 52, deload: false, maint: true }) : A.dayPlan(L.w, L.dow, ctx);
   if (L.after) base.title = 'Mantención · ' + base.title;
