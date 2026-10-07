@@ -126,12 +126,12 @@ body.guided{padding-bottom:calc(420px + env(safe-area-inset-bottom,0px))}
 .alert{background:repeating-linear-gradient(-45deg,rgba(226,85,62,.12) 0 10px,transparent 10px 20px);border:1px solid var(--bad);color:var(--bad);padding:8px 12px;font-weight:600;font-size:15px;margin:0}
 
 /* cómo amaneciste */
-.mode{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.mode{display:grid;grid-template-columns:repeat(2,1fr);gap:6px}
 .mode button{border:2px solid var(--line);background:var(--paper);border-radius:8px;padding:10px 4px;font-family:var(--f-label);font-weight:700;text-transform:uppercase;letter-spacing:.04em;font-size:15px}
 .seg.on{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
 .mode button.on.m-ok{background:var(--ok);border-color:var(--ok);color:var(--paper)}
 .mode button.on.m-cansado{background:var(--warn);border-color:var(--warn);color:var(--paper)}
-.mode button.on.m-dolor{background:var(--bad);border-color:var(--bad);color:var(--paper)}
+.mode button.on.m-dolor,.mode button.on.m-enfermo{background:var(--bad);border-color:var(--bad);color:var(--paper)}
 .modetxt{font-size:15px;margin:0;font-weight:600}
 
 /* progreso */
@@ -543,8 +543,8 @@ const tripTotal=b=>b.trip*2+5+b.cap+10;
 function lakeify(t,w,ctx){
   const st=stN(w),spm=[0,180,150,135,120][st],br25=[0,22,20,18,18][st],temp=waterTemp(ctx),cap=lakeCapFor(w,ctx),tc=lakeCap(temp,ctx.neo);
   const est=b=>b.m?b.m/100*spm/60+(b.s>1?(b.s-1)*(b.r||30)/60:0):0;
-  if(!cap)return Object.assign({},t,{t:t.t.replace(/ · lago$/,"")+" · en seco",blocks:[
-      B("Hoy no entras al lago","agua muy fría",{note:`Agua ${temp} °C${ctx.temp?"":" (estimada)"}, ${ctx.neo?"con":"sin"} neopreno: solo y con esta agua no se entra. Si tienes piscina, haz ahí la sesión.`}),
+  if(!cap||ctx.nolake)return Object.assign({},t,{t:t.t.replace(/ · lago$/,"")+" · en seco",blocks:[
+      ctx.nolake?B("Hoy no entras al lago","viento, oleaje o tormenta",{note:"Con viento, olas, lluvia fuerte, truenos o neblina que no deja ver la orilla, solo no se entra: nadie te ve y el agua te enfría el doble. No vas a la costanera. Haz la técnica en seco en la casa y, si quieres, 20 minutos de trote suave. Si tienes piscina, haz ahí la sesión."}):B("Hoy no entras al lago","agua muy fría",{note:`Agua ${temp} °C${ctx.temp?"":" (estimada)"}, ${ctx.neo?"con":"sin"} neopreno: solo y con esta agua no se entra. Si tienes piscina, haz ahí la sesión.`}),
       B("Técnica en seco","20 min",{tm:1200,note:"Frente a un espejo o acostado boca abajo en una banca: 3 × 1 min de brazada de crol lenta (codo alto, mano entra lejos), 3 × 30 s de patada corta desde la cadera, 3 × 1 min girando la cabeza para respirar al lado sin levantarla. Termina con 3 × 45 s de plancha."})],safe:"",m:0,lake:true});
   // se arma la sesión para que quepa en el tope: los bloques en orden hasta llenar el tiempo; lo que no cabe no aplica hoy
   let used=2,meters=0,cut=false;const bl=[];
@@ -565,7 +565,7 @@ function lakeify(t,w,ctx){
   return Object.assign({},t,{t:t.t+" · lago",blocks:[...go,prot,B("Entrada al agua","de a poco · 2 min",{tm:120,c:LAKE_IN}),...bl,B("Al salir","sécate y abrígate",{c:LAKE_OUT}),...back],safe:"Vas solo: nunca te alejes de donde haces pie. Nunca apnea en el lago.",m:meters,lake:true});
 }
 // nados a tope fuera de la sesión de agua (mini-prueba): en el lago llevan las mismas reglas y el mismo tope
-function lakeSprint(t,w,ctx){const cap=lakeCapFor(w,ctx),[go,back0]=cap?tripBlocks(ctx,cap):[[],[]],back=back0.map(b=>Object.assign({},b,{mini:1}));
+function lakeSprint(t,w,ctx){const cap=ctx.nolake?0:lakeCapFor(w,ctx),[go,back0]=cap?tripBlocks(ctx,cap):[[],[]],back=back0.map(b=>Object.assign({},b,{mini:1}));
   const out=t.blocks.map(b=>/^Nado [\d.–]+ m$/.test(b.n)?(cap?Object.assign({},b,{note:`En el lago: máximo ${cap} min en el agua (inicia el temporizador al entrar). ${LAKE_RULES} ${b.note||""}`.trim()}):Object.assign({},b,{p:"en piscina o pendiente",opt:1,note:"Con el agua así de fría no se nada a tope solo en el lago. Hazlo en piscina con salvavidas o queda pendiente."})):b),i=out.findIndex(b=>/^Nado [\d.–]+ m$/.test(b.n));
   return Object.assign({},t,{blocks:back.length&&i>=0?[...go,...out.slice(0,i+1),B("Al salir","sécate y abrígate",{c:LAKE_OUT}),...back,...out.slice(i+1)]:out,safe:[t.safe,"En el lago: solo donde haces pie, nunca apnea."].filter(Boolean).join(" ")})}
 
@@ -802,6 +802,11 @@ function softBlock(b,tag){
   // un ritmo o un tiempo no se “suaviza”: se hacen menos repeticiones al mismo ritmo
   return Object.assign({},b,{s:ns,n:n2,p:p2+(tag&&!/cada uno|\d:\d\d/.test(p2)?tag:"")})}
 function applyMode(plan,mode){
+  if(mode==="enfermo")return Object.assign({},plan,{tasks:[T("rest","Enfermo: hoy no se entrena","El que entrena enfermo pierde una semana en vez de un día.","",[
+    B("Regla del cuello","antes de moverte",{c:"Revisa dónde están los síntomas:\n• Solo sobre el cuello (nariz tapada o que corre, estornudos, garganta un poco irritada) y SIN fiebre: puedes caminar suave 20–30 minutos. Nada más.\n• Bajo el cuello (fiebre, tos con pecho apretado, dolor de cuerpo, diarrea o vómitos): reposo total.\nCon cualquier síntoma: nada de lago, ni apnea, ni ducha fría, ni barras pesadas."}),
+    B("Agua y comida","como siempre",{c:"Toma agua todo el día (una botella de 1 L en la mañana y otra en la tarde) y come las comidas de siempre, aunque tengas menos hambre: el cuerpo necesita energía para sanar. Sopa, frutas, huevos, arroz."}),
+    B("Dormir","9 h o más",{c:"Duerme todo lo que puedas esta noche, y siesta si te da sueño."}),
+    B("Cuándo vuelves","",{c:"Vuelves cuando lleves 24 horas sin fiebre. El primer día de vuelta marca «Cansado» (versión suave). Al médico si: fiebre más de 3 días, te falta el aire, dolor en el pecho o empeoras en vez de mejorar."})],{kind:"descanso"}),plan.tasks.find(t=>t.id==="noche")].filter(Boolean)});
   if(mode==="dolor")return Object.assign({},plan,{tasks:[T("rest","Recuperación","Dolor agudo: hoy no se entrena lo que duele. Si no mejora en 2–3 días, al médico.","",[B("Movilidad suave","15 min",{note:"Solo lo que no duele."}),B("Hielo o frío local","10–15 min si hay inflamación"),B("Dormir","8 h o más")],{kind:"descanso"}),plan.tasks.find(t=>t.id==="noche")].filter(Boolean)});
   if(mode==="cansado")return Object.assign({},plan,{tasks:plan.tasks.filter(t=>t.id!=="inc"&&t.id!=="tol").map(t=>{let tt=t.t;const blocks=t.blocks.map(b=>{
       // sesión larga continua (trote, marcha, nado): 60 %, redondeado
@@ -984,12 +989,12 @@ let CTX=null;
 // (así anotar un simulacro no cambia los días que ya hiciste)
 function lastTest(date){const ws=date?weekStartOf(date):null,lim=ws?iso(ws):"9999-99-99",end=ws?iso(addDays(ws,7)):"9999-99-99";
   CTX=CTX||{};if(CTX[lim])return CTX[lim];
-  const c={};let bk="";Object.keys(Store.days).sort().forEach(k=>{if(k>=lim)return;const D=Store.days[k],t=D.test||(D.sim&&!["cansado","dolor"].includes(D.mode)&&locate(parse(k)).w!==HELL?D.sim:null);if(t)["barras","run","swim","apnea"].forEach(x=>{if(t[x]){c[x]=t[x];if(x==="barras")bk=k}})});
+  const c={};let bk="";Object.keys(Store.days).sort().forEach(k=>{if(k>=lim)return;const D=Store.days[k],t=D.test||(D.sim&&!["cansado","dolor","enfermo"].includes(D.mode)&&locate(parse(k)).w!==HELL?D.sim:null);if(t)["barras","run","swim","apnea"].forEach(x=>{if(t[x]){c[x]=t[x];if(x==="barras")bk=k}})});
   const mb=Store.cfg.maxB;if(mb&&mb.v&&mb.k<end&&(!bk||mb.k>=bk))c.barras=mb.v;return CTX[lim]=c}
 const CTXF=["place","neo","temp","partner"];
 const tempFor=(c,date)=>c.temp!==""&&c.temp!=null&&c.tempK&&Math.abs(diffDays(date,parse(c.tempK)))<=10?c.temp:"";
 function ctxFor(date){const c=Store.cfg,dd=Store.days[iso(date)],fz=dd&&dd.ctx&&diffDays(date,today())<0?dd.ctx:null;
-  const base={month:date.getMonth(),place:c.place,partner:c.partner,neo:c.neo,temp:tempFor(c,date),trip:c.trip,fins:!!c.fins,boya:!!c.boya};
+  const base={month:date.getMonth(),place:c.place,partner:c.partner,neo:c.neo,temp:tempFor(c,date),trip:c.trip,fins:!!c.fins,boya:!!c.boya,nolake:!!(dd&&dd.nolake)};
   return Object.assign({},lastTest(date),base,fz?{place:fz.place,partner:fz.partner,neo:fz.neo,temp:fz.temp}:{})}
 let PLANC={};
 function planFor(date){const ck=iso(date);if(ck in PLANC)return PLANC[ck];return PLANC[ck]=planFor0(date)}
@@ -1012,7 +1017,7 @@ function dayStatus(k,plan){if(!plan)return "";const d=Store.days[k],core=plan.ta
   // un descanso que ya pasó cuenta como cumplido, salvo que marques “no pude”
   if(plan.kind==="descanso"&&diffDays(parse(k),today())<0)return "done";
   if(!d)return "";
-  if(d.mode==="dolor"&&core.every(t=>taskDone(d,t)))return "injury";if(core.every(t=>taskDone(d,t)))return "done";return units(d,plan).a?"part":""}
+  if((d.mode==="dolor"||d.mode==="enfermo")&&core.every(t=>taskDone(d,t)))return "injury";if(core.every(t=>taskDone(d,t)))return "done";return units(d,plan).a?"part":""}
 // lo que falta para cerrar el día
 function missingTasks(dd,plan){return plan.tasks.filter(t=>counts(t)&&!taskDone(dd,t)).map(t=>{const left=t.blocks.filter((b,i)=>!b.opt&&blockDone(dd,t,i)<b.s).map(b=>b.n);return left.length<t.blocks.length&&left.length<=2?`${left.join(" y ")} (${t.t})`:t.t})}
 const okSt=s=>s==="done"||s==="injury";
@@ -1037,6 +1042,7 @@ function orders(plan,k,isToday,dd){
   else if(plan.kind==="agua"&&plan.tasks.some(t=>/ · en seco$/.test(t.t)))out.push(["say","Hoy el agua está demasiado fría para entrar solo. Técnica en seco y lo demás igual."]);
   else if(plan.kind==="agua")out.push(["say",plan.lake?pick(["Al lago. Vas solo: nadas donde haces pie y sales cuando suena.","Lago. El frío no perdona al que se confía.","Al agua. Resistencia sí, heroísmo no."],k):pick([`Al agua a las ${plan.shift?plan.shift.A:"8:00"}. Es tu punto débil: ahí vas a vivir.`,"Piscina. No le regales metros al agua.","Al agua. Cada largo de hoy es uno que en el curso no te hunde."],k)]);
   else out.push(["say",pick([`De pie, ${N}. Esto es lo que haces hoy.`,`Arriba, ${N}. Nadie lo va a hacer por ti.`,`${N}. Querías saber si puedes. Hoy se sigue respondiendo.`],k)]);
+  if(dd.mode==="enfermo"){out.splice(out.findIndex(x=>x[0]==="say"),1,["say",`${N}, hoy se descansa para sanar. Mañana se vuelve más fuerte.`])}
   if(dd.mode==="dolor"){out.splice(out.findIndex(x=>x[0]==="say"),1,["say",`${N}, hoy se recupera. El que se lesiona no llega al curso.`])}
   else{if(plan.deload&&plan.kind!=="descanso")out.push(["p","Semana de descarga: la carga baja a propósito. No te la saltes por orgullo."]);
     if(INC[plan.w]&&plan.dow===5&&dd.mode!=="cansado")out.push(["p","Hoy hay sesión larga de incomodidad. Come bien antes y lleva agua."])}
@@ -1344,9 +1350,10 @@ function viewHoy(){
    h+=`<div class="sec"><div class="row" style="justify-content:space-between;align-items:center"><span class="lbl">Hoy trabajo</span><div class="segs">${Object.keys(SHIFT).map(t=>`<button class="seg ${cur===t?"on":""}" data-turno="${t}">${t==="libre"?"Libre":"Entro "+t+":00"}</button>`).join("")}</div></div>
    <p class="foot">Despiertas ${sh.wake}${sh.late?` (ayer te acostaste a la ${sh.late}: 8 h de sueño)`:""} · entrenas desde ${sh.A}${sh.leave?` · sales al trabajo ${sh.leave}`:""} · cama ${sh.bed}</p></div>`}
   if(plan.kind!=="descanso"){
-    const M=[["ok","Al 100%"],["cansado","Cansado"],["dolor","Con dolor"]];
-    const txt={ok:"Ejecuta la orden completa.",cansado:"Versión suave: menos series, sin sesión larga. Si dura 3 días, toma 2 días suaves.",dolor:"Hoy solo recuperación. Cansancio general es normal; dolor agudo, localizado o que empeora, no."}[dd.mode]||"Antes de empezar: ¿cómo amaneciste?";
+    const M=[["ok","Al 100%"],["cansado","Cansado"],["dolor","Con dolor"],["enfermo","Enfermo"]];
+    const txt={ok:"Ejecuta la orden completa.",cansado:"Versión suave: menos series, sin sesión larga. Si dura 3 días, toma 2 días suaves.",dolor:"Hoy solo recuperación. Cansancio general es normal; dolor agudo, localizado o que empeora, no.",enfermo:"Resfrío, fiebre o malestar: hoy no se entrena. Sigue la regla del cuello."}[dd.mode]||"Antes de empezar: ¿cómo amaneciste?";
     h+=`<div class="sec"><div class="mode">${M.map(([v,l])=>`<button class="m-${v} ${dd.mode===v?"on":""}" data-mode="${v}">${l}</button>`).join("")}</div><p class="modetxt">${esc(txt)}</p></div>`;
+    if(dd.nolake||plan.tasks.some(t=>t.blocks.some(b=>b.n==="Ida en bicicleta")))h+=`<div class="sec"><button class="btn ${dd.nolake?"main":""}" data-nolake>${dd.nolake?"✓ Hoy no entro al lago (toca para deshacer)":"Hay viento, olas o tormenta: hoy no entro al lago"}</button><p class="foot">${dd.nolake?"La sesión de agua cambió a técnica en seco en la casa.":"Míralo por la ventana o en el pronóstico antes de salir. Si hay viento con olas, lluvia fuerte, truenos o neblina, tócalo: te doy el plan B."}</p></div>`;
   }
   if(isToday&&plan.shift)h+=`<p class="nowline" id="now-line">${esc(nowLineText(plan))}</p>`;
   const pct=u.b?Math.round(u.a/u.b*100):0;
@@ -1538,14 +1545,14 @@ function recordsHTML(){
 // diario y fatiga
 // días seguidos cansado o con dolor. Hoy “Al 100%” corta la cuenta; hoy sin marcar cuenta desde ayer;
 // un día de descanso (que no se puede marcar) no la corta
-function fatigueRun(ref){const md=x=>(Store.days[iso(x)]||{}).mode,bad=m=>m==="cansado"||m==="dolor";
+function fatigueRun(ref){const md=x=>(Store.days[iso(x)]||{}).mode,bad=m=>m==="cansado"||m==="dolor"||m==="enfermo";
   let n=0,d=addDays(ref,0);const m0=md(d);if(m0&&!bad(m0))return 0;if(!m0)d=addDays(d,-1);
   for(let i=0;i<60&&n<30;i++){const m=md(d);if(bad(m))n++;else if(m)break;else{const p=planFor(d);if(!p||p.kind!=="descanso")break}d=addDays(d,-1)}
   return n}
 function diaryHTML(){
-  const td=today();let ca=0,dol=0;for(let i=0;i<14;i++){const m=(Store.days[iso(addDays(td,-i))]||{}).mode;if(m==="cansado")ca++;if(m==="dolor")dol++}
-  const run=fatigueRun(td),items=Object.keys(Store.days).sort().reverse().filter(k=>{const d=Store.days[k];return d.note||d.mode==="cansado"||d.mode==="dolor"||d.status==="fail"}).slice(0,40);
-  const chipM={cansado:"Cansado",dolor:"Con dolor"};
+  const td=today();let ca=0,dol=0;for(let i=0;i<14;i++){const m=(Store.days[iso(addDays(td,-i))]||{}).mode;if(m==="cansado")ca++;if(m==="dolor"||m==="enfermo")dol++}
+  const run=fatigueRun(td),items=Object.keys(Store.days).sort().reverse().filter(k=>{const d=Store.days[k];return d.note||d.mode==="cansado"||d.mode==="dolor"||d.mode==="enfermo"||d.status==="fail"}).slice(0,40);
+  const chipM={cansado:"Cansado",dolor:"Con dolor",enfermo:"Enfermo"};
   return `<div class="sec"><h3>Diario</h3>
    <div class="kpis"><div class="kpi"><span class="lbl">Cansado</span><b>${ca}</b><span class="foot">últimos 14 días</span></div><div class="kpi"><span class="lbl">Con dolor</span><b>${dol}</b><span class="foot">últimos 14 días</span></div><div class="kpi"><span class="lbl">Seguidos</span><b>${run}</b><span class="foot">días cargado</span></div></div>
    ${run>=3?`<p class="alert">Llevas ${run} días seguidos cansado o con dolor. Haz 2–3 días suaves (solo técnica o movilidad). Si es dolor y no mejora, al médico.</p>`:""}
@@ -1790,6 +1797,7 @@ document.addEventListener("click",e=>{
     const ndd=Store.days[k];let ni=ss.findIndex((x,j)=>j>i&&!stepDone(ndd,x));if(ni<0)ni=firstPending(p,ndd);S.run.i=ni;
     render();window.scrollTo(0,0);if(dayStatus(k,p)==="done"&&before!=="done")toast("Misión cumplida, "+(Store.cfg.name||"recluta")+".");return}
   if(D.turno){Store.setDay(k,{turno:D.turno});render();return}
+  if(D.nolake!==undefined){const dd=Store.day(k);Store.setDay(k,{nolake:!dd.nolake});render();return}
   if(D.mode){const dd=Store.day(k);Store.setDay(k,{mode:dd.mode===D.mode?"":D.mode});render();return}
   if(D.task||D.set){
     const p=planFor(S.date);if(!p)return;const dd=Store.day(k),before=dayStatus(k,p);

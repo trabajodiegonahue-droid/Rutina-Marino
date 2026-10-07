@@ -551,6 +551,23 @@ const reload = async p => { await p.reload(); await p.waitForTimeout(200); };
   ok(errs.length === 0, 'sin errores: ' + errs.join(' | '));
   await ctx.close(); }
 
+// 25. Plan B: viento en el lago y día enfermo
+{ console.log('25. Plan B: viento y enfermo');
+  const ctx = await browser.newContext({ viewport: { width: 390, height: 1200 } }); const errs = [];
+  const p = await ctx.newPage(); p.on('pageerror', e => errs.push(e.message)); await p.clock.install({ time: new Date('2026-10-13T08:00:00') }); await p.goto(URL); await p.waitForTimeout(250);
+  ok((await text(p)).includes('Ida en bicicleta'), 'día de lago: ida en bici');
+  await p.click('[data-nolake]'); await p.waitForTimeout(300);
+  let t = await text(p);
+  ok(t.includes('viento, oleaje o tormenta') && !t.includes('Ida en bicicleta'), 'con viento: técnica en seco y sin viaje');
+  await p.click('[data-nolake]'); await p.waitForTimeout(300);
+  ok((await text(p)).includes('Ida en bicicleta'), 'deshacer vuelve al lago');
+  await p.click('[data-mode="enfermo"]'); await p.waitForTimeout(300);
+  t = await text(p);
+  ok(t.includes('Regla del cuello') && !t.includes('Ida en bicicleta'), 'enfermo: solo la regla del cuello, sin lago');
+  ok((await p.evaluate(() => JSON.parse(localStorage.getItem('bitacora-buzo-v1')).days['2026-10-13'].mode)) === 'enfermo', 'enfermo queda guardado');
+  ok(errs.length === 0, 'sin errores: ' + errs.join(' | '));
+  await ctx.close(); }
+
 await browser.close();
 console.log(`\n${passes} correctas, ${fails} fallidas`);
 process.exit(fails ? 1 : 0);
