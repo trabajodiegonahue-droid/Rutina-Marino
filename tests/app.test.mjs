@@ -16,7 +16,8 @@ async function page(time, cloud) {
   const p = await ctx.newPage();
   const errs = [];
   p.on('pageerror', e => errs.push(e.message));
-  if (cloud) await p.addInitScript(FAKE_CLOUD); else await p.clock.install({ time: new Date(time) });
+  if (cloud) await p.addInitScript(FAKE_CLOUD);
+  if (time) await p.clock.install({ time: new Date(time) });
   await p.goto(URL); await p.waitForTimeout(200);
   return { p, ctx, errs };
 }
@@ -177,7 +178,7 @@ const reload = async p => { await p.reload(); await p.waitForTimeout(200); };
 
 // 11. Guardado en la nube con retraso: lo que marcas no se desmarca solo
 { console.log('11. Nube con retraso');
-  const { p, ctx, errs } = await page(null, true);
+  const { p, ctx, errs } = await page('2026-10-13T09:00:00', true);
   await p.waitForTimeout(600);
   const dots = p.locator('.dot', { hasText: /^[1-9]$/ });
   const state = async () => { const a = []; for (let i = 0; i < 4; i++) a.push(await dots.nth(i).evaluate(e => e.classList.contains('on') ? 1 : 0)); return a.join(''); };
@@ -301,7 +302,7 @@ const reload = async p => { await p.reload(); await p.waitForTimeout(200); };
   const FAKE2 = fs.readFileSync(path.join(here, 'fake-cloud-ctl.js'), 'utf8');
   const ctx = await browser.newContext({ viewport: { width: 390, height: 1200 } });
   const p = await ctx.newPage(); const errs = []; p.on('pageerror', e => errs.push(e.message));
-  await p.addInitScript(FAKE2); await p.goto(URL); await p.waitForTimeout(800);
+  await p.addInitScript(FAKE2); await p.clock.install({ time: new Date('2026-10-13T09:00:00') }); await p.goto(URL); await p.waitForTimeout(800);
   const today = await p.evaluate(() => { const d = new Date(); return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); });
   const localNote = () => p.evaluate(k => ((JSON.parse(localStorage.getItem('bitacora-buzo-v1')).days || {})[k] || {}).note, today);
   const dayPath = 'data/users/u1/plan/days/' + today;
@@ -475,10 +476,10 @@ const reload = async p => { await p.reload(); await p.waitForTimeout(200); };
 // 23. Nube, casos difíciles: teléfono nuevo, nube que no carga, otro dispositivo y dos pestañas
 { console.log('23. Nube: casos difíciles');
   const FAKE2 = fs.readFileSync(path.join(here, 'fake-cloud-ctl.js'), 'utf8');
-  const today = (() => { const d = new Date(); return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); })();
+  const today = '2026-10-13';
   const dayPath = 'data/users/u1/plan/days/' + today, planPath = 'data/users/u1/plan';
   const mk = async (pre, arg) => { const ctx = await browser.newContext({ viewport: { width: 390, height: 1200 } }); const p = await ctx.newPage(); const errs = []; p.on('pageerror', e => errs.push(e.message));
-    await p.addInitScript(pre, arg); await p.addInitScript(FAKE2); return { ctx, p, errs }; };
+    await p.addInitScript(pre, arg); await p.addInitScript(FAKE2); await p.clock.install({ time: new Date('2026-10-13T09:00:00') }); return { ctx, p, errs }; };
   const cloud = p => p.evaluate(() => __cloud.server());
   // teléfono nuevo: la nube ya tiene tus datos y tocas algo antes de que carguen (2 s)
   { const server = { [planPath]: { start: '2026-09-29', turno: '16', why: 'por mi familia', sched: Array.from({ length: 53 }, (_, i) => i), repeats: [] }, [dayPath]: { sets: { 'a.0': 1 }, mode: 'cansado', note: 'nota de ayer en el computador' } };
