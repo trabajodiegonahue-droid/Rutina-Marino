@@ -115,6 +115,8 @@ const reload = async p => { await p.reload(); await p.waitForTimeout(200); };
   const t1 = await p.$eval('#timerbar b', e => e.textContent);
   ok(t0 !== t1, `cuenta hacia atrás (${t0} → ${t1})`);
   await p.click('[data-tstop]');
+  // el tope del lago pide un segundo toque para pararse
+  if (await p.isVisible('#timerbar .tin.safe')) { ok((await p.$eval('#timerbar', e => e.textContent)).includes('Toca otra vez'), 'el tope del lago pide confirmar'); await p.click('[data-tstop]'); }
   ok(!(await p.isVisible('#timerbar .tin')), 'parar lo cierra');
   // descanso automático al marcar una serie
   await p.locator('.dot', { hasText: /^1$/ }).first().click();
@@ -639,9 +641,10 @@ const reload = async p => { await p.reload(); await p.waitForTimeout(200); };
   let q = await ctx2.newPage(); q.on('pageerror', e => errs.push(e.message)); await q.clock.install({ time: new Date('2026-10-11T09:00:00') }); await q.goto(URL); await q.waitForTimeout(300);
   await q.click('[data-tset="sinParar|true"]'); await q.waitForTimeout(150);
   ok(await q.locator('[data-tset="sinParar|true"]').evaluate(e => e.classList.contains('on')), 'el Sí de «500 m sin parar» queda marcado');
-  await q.fill('#t-barras', '5'); await q.locator('#t-barras').blur(); await q.waitForTimeout(200); await q.close();
+  await q.fill('#t-barras', '5'); await q.locator('#t-barras').blur(); await q.waitForTimeout(600); await q.evaluate(() => localStorage.getItem('bitacora-buzo-v1')); await q.close();
   q = await ctx2.newPage(); q.on('pageerror', e => errs.push(e.message)); await q.clock.install({ time: new Date('2026-10-12T09:00:00') }); await q.goto(URL); await q.waitForTimeout(300);
-  ok(!(await q.$eval('#app', e => e.textContent)).includes('Hoy retomas'), 'una prueba con resultados anotados no se repite');
+  const tq = await q.$eval('#app', e => e.textContent);
+  ok(!tq.includes('Hoy retomas'), 'una prueba con resultados anotados no se repite: ' + tq.slice(0, 160) + ' | ' + await q.evaluate(() => localStorage.getItem('bitacora-buzo-v1').slice(0, 400)));
   await q.close(); await ctx2.close();
   ok(errs.length === 0, 'sin errores: ' + errs.join(' | '));
   await ctx.close(); }

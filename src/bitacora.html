@@ -333,6 +333,7 @@ const fmtT=s=>{s=Math.round(s);return Math.floor(s/60)+":"+pad(s%60)};
 const toSec=s=>{s=String(s==null?"":s).trim().replace(/\s+/g,"");if(!s)return NaN;let m;
   if((m=s.match(/^(\d+)[:.,'’´](\d{2})[:.,'’´](\d{2})$/)))return +m[2]<60&&+m[3]<60?+m[1]*3600+ +m[2]*60+ +m[3]:NaN;
   if((m=s.match(/^(\d+):(\d{1,2})$/))||(m=s.match(/^(\d+)[.,'’´](\d{2})$/)))return +m[2]<60?+m[1]*60+ +m[2]:NaN;
+  if((m=s.match(/^(\d{1,2})(\d{2})$/))&&+m[1]>0)return +m[2]<60?+m[1]*60+ +m[2]:NaN;
   if((m=s.match(/^(\d+)(?:[.,](\d))?$/)))return Math.round((+m[1]+(m[2]?+m[2]/10:0))*60);
   return NaN};
 const num=s=>Number(String(s).replace(/\./g,""));
@@ -451,7 +452,7 @@ function treadBlock(w){const st=stN(w);
 
 /* ---- fuerza ---- */
 // tu máximo de barras (el 0 vale: con 0, 1 o 2 se trabajan negativas hasta que salga la primera)
-const maxB=ctx=>{const v=ctx.barras,n=v===""||v==null||v===true?NaN:Number(v);return n>=0?n:6};
+const maxB=ctx=>{const v=ctx.barras,n=v===""||v==null||v===true?NaN:cnt(v);return n>=0?Math.min(40,Math.round(n)):6};
 const barrasB=(s,mx,r,extra)=>mx<=2?B("Barras negativas",`${s} × 3`,{s,r,note:`Tu máximo (${mx}) todavía es bajo: sube con un salto o una silla hasta tener el mentón sobre la barra y baja lento contando 5 s. Así sale la primera.`}):B("Barras",`${s} × ${mx-2}`,{s,r,note:`Tu máximo (${mx}) menos 2.`+(extra||"")});
 function calA(w,ctx){
   const st=stN(w),mx=maxB(ctx),dl=DELOAD.includes(w)?1:0;let bl=[CAL];
@@ -516,8 +517,9 @@ function hellDay(dow,ctx){
 
 /* ---- lago ---- */
 const TEMP_MES=[18,18,16,14,12,10,9,9,10,11,13,15]; // estimación °C del lago Llanquihue por mes
-const waterTemp=ctx=>ctx.temp!==""&&ctx.temp!=null&&!isNaN(+ctx.temp)?+ctx.temp:TEMP_MES[ctx.month==null?9:ctx.month];
-function lakeCap(t,neo){const r=[[10,8,0],[12,12,5],[14,20,8],[16,30,15],[18,40,25],[99,50,35]].find(x=>t<x[0]);return neo?r[1]:r[2]}
+const okTemp=v=>{if(v===""||v==null)return false;const n=+String(v).replace(",",".");return isFinite(n)&&n>=0&&n<=30};
+const waterTemp=ctx=>okTemp(ctx.temp)?+String(ctx.temp).replace(",","."):TEMP_MES[ctx.month==null?9:ctx.month];
+function lakeCap(t,neo){const R=[[10,8,0],[12,12,5],[14,20,8],[16,30,15],[18,40,25],[99,50,35]],r=R.find(x=>t<x[0])||R[R.length-1];return neo?r[1]:r[2]}
 // minutos en el lago: el tope es el menor entre el del agua (temperatura y neopreno) y la adaptación gradual
 // (10 min la semana 1, +5 cada 2 semanas, hasta 50): el cuerpo se acostumbra al frío de a poco
 const lakeProg=w=>Math.min(50,10+5*Math.floor(Math.max(0,w-1)/2));
@@ -675,7 +677,7 @@ Nada frito, nada de café ni bebidas con azúcar.`,
    water:`Hoy toma unos ${water.toLocaleString("es-CL")} litros de agua en total${known?` (por tus ${P} kg${train?" más el entrenamiento":""})`:""}. Truco: 1 botella de 1 L en la mañana, 1 en el trabajo y el resto en las comidas. Si tu orina sale oscura, te falta agua.`};
 }
 const okKg=v=>v>=35&&v<=150;
-function bodyWeight(){let w=null;Object.keys(Store.days).sort().forEach(k=>{const v=parseFloat(String(Store.days[k].peso||"").replace(",","."));if(okKg(v))w=v});const c=parseFloat(String(Store.cfg.peso||"").replace(",","."));return w||(okKg(c)?c:null)}
+function bodyWeight(){let w=null;const tk=iso(today());Object.keys(Store.days).sort().forEach(k=>{if(k>tk)return;const v=parseFloat(String(Store.days[k].peso||"").replace(",","."));if(okKg(v))w=v});const c=parseFloat(String(Store.cfg.peso||"").replace(",","."));return w||(okKg(c)?c:null)}
 // o.prev / o.next: turno de ayer y de mañana. Después de acostarte pasada la medianoche, hoy se despierta 8 h después
 // (y la mañana se corre); la alarma de la noche es la del turno de mañana.
 const wakeAfter=(bedT,sh)=>{const b=toMin(bedT),pb=b<300?b:b-1440;return Math.max(toMin(sh.wake),pb+480)};
@@ -826,8 +828,9 @@ function applyMode(plan,mode){
 
 /* =================== METAS Y PRUEBAS =================== */
 const GOALS={13:{apnea:15,sinParar:1,barras:10,sent:70,flex:50,abd:55,run:"10:30"},26:{apnea:25,crol:1,sinParar:1,barras:13,sent:80,flex:65,abd:65,run:"10:00"},39:{apnea:35,swim:"11:00",barras:15,sent:90,flex:75,abd:75,run:"9:30"},52:{apnea:50,swim:"9:30",barras:18,sent:100,flex:85,abd:85,run:"9:00"}};
+const cnt=v=>{const x=String(v==null?"":v).trim().replace(/\s*(m|mts?|metros|reps?|rep\.?|barras|veces)$/i,"").replace(",",".");return /^\d+(\.\d+)?$/.test(x)?+x:NaN};
 function evalTest(w,t){
-  const g=GOALS[w];if(!g||!t)return null;const n=k=>Number(t[k]),rows=[];
+  const g=GOALS[w];if(!g||!t)return null;const n=k=>cnt(t[k]),rows=[];
   rows.push(["Apnea dinámica",(t.apnea||"—")+" m","≥ "+g.apnea+" m",n("apnea")>=g.apnea]);
   if(g.swim)rows.push(["500 m libre",t.swim||"—","< "+g.swim,toSec(t.swim)<toSec(g.swim)]);
   else rows.push(["500 m libre",t.swim||"—",g.crol?"crol sin parar":"sin parar",!!t.sinParar&&(!g.crol||!!t.crol)]);
@@ -844,7 +847,17 @@ const fixCfg=c=>{const d=defCfg();if(c.start==="2026-10-05"&&!c.startMoved){c.st
   if(!Array.isArray(c.sched)||!c.sched.length||!c.sched.every(w=>Number.isInteger(w)&&w>=0&&w<=52))c.sched=d.sched;
   if(!Array.isArray(c.repeats))c.repeats=[];
   c.turno=String(c.turno);if(!SHIFT[c.turno])c.turno=d.turno;
+  if(c.start<"2025-01-01"||c.start>"2030-12-31")c.start=d.start;
+  if(c.temp!==""&&!okTemp(c.temp))c.temp="";if(typeof c.why!=="string")c.why="";if(typeof c.name!=="string")c.name=d.name;
+  if(c.trip!==undefined&&!(Number.isInteger(+c.trip)&&+c.trip>=0&&+c.trip<=60))c.trip=15;
+  if(c.maxB&&!(isObj(c.maxB)&&Number.isInteger(+c.maxB.v)&&+c.maxB.v>0&&+c.maxB.v<=40))c.maxB=null;
   return c};
+const MODES=["","ok","cansado","dolor","enfermo"];
+const fixDay=x=>{if(!isObj(x))return {};if(x.turno!=null&&!SHIFT[String(x.turno)])delete x.turno;if(x.mode!=null&&!MODES.includes(x.mode))delete x.mode;
+  ["checks","sets","test","sim","mini","runlog","ctx","undo","tprev"].forEach(f=>{if(x[f]!=null&&!isObj(x[f]))delete x[f]});
+  if(x.runlog)Object.keys(x.runlog).forEach(t=>{if(!isObj(x.runlog[t]))delete x.runlog[t]});
+  if(x.ctx&&x.ctx.temp!==""&&x.ctx.temp!=null&&!okTemp(x.ctx.temp))x.ctx.temp="";if(typeof x.note!=="string"&&x.note!=null)delete x.note;return x};
+const fixDays=o=>{Object.keys(o).forEach(k=>{if(!isISO(k))delete o[k];else o[k]=fixDay(o[k])});return o};
 const clone=o=>JSON.parse(JSON.stringify(o||{}));
 const isObj=x=>!!x&&typeof x==="object"&&!Array.isArray(x);
 // errores de la nube que no se arreglan reintentando
@@ -856,7 +869,7 @@ const canon=o=>JSON.stringify(o,(k,v)=>v&&typeof v==="object"&&!Array.isArray(v)
 // nube lo confirma. Lo que llega de la nube se mezcla con lo pendiente: nunca se pisa un cambio tuyo ni se borra
 // lo que viene de otro dispositivo. “plan” son los ajustes; las demás claves son días (AAAA-MM-DD).
 const Store={mode:"local",cfg:defCfg(),days:{},pend:{},ver:{},recent:{},remote:{},got:{},timers:{},flying:{},again:{},wait:[],active:0,fails:0,
-  loadLocal(){try{const r=JSON.parse(localStorage.getItem(LS)||"null");if(r){this.cfg=fixCfg(Object.assign(defCfg(),r.cfg||{}));this.days=isObj(r.days)?r.days:{};
+  loadLocal(){try{const r=JSON.parse(localStorage.getItem(LS)||"null");if(r){this.cfg=fixCfg(Object.assign(defCfg(),r.cfg||{}));this.days=isObj(r.days)?fixDays(r.days):{};
     this.pend=isObj(r.pend)?r.pend:{};if(isObj(r.dirty))Object.keys(r.dirty).forEach(k=>{if(!this.pend[k])this.pend[k]=Object.assign({__all:1},clone(k==="plan"?this.cfg:this.days[k]))})}}catch(e){}},
   saveLocal(){try{localStorage.setItem(LS,JSON.stringify({cfg:this.cfg,days:this.days,pend:this.pend}));this.localErr=0}
     catch(e){if(!this.localErr&&this.mode!=="db")toast("Este navegador no deja guardar. Descarga una copia en Ajustes › Respaldo.");this.localErr=Date.now()}},
@@ -905,7 +918,7 @@ const Store={mode:"local",cfg:defCfg(),days:{},pend:{},ver:{},recent:{},remote:{
       Object.keys(this.pend).forEach(k=>{if(k!=="plan"&&!d[k])d[k]=this.merged(k,null)});
       // un día recién subido que todavía no aparece en una foto atrasada no desaparece
       Object.keys(this.recent).forEach(k=>{const r=this.recent[k];if(k!=="plan"&&!d[k]&&Date.now()<r.until)d[k]=clone(r.body)});
-      this.days=d;this.got.days=true;Object.keys(this.pend).forEach(k=>{if(k!=="plan")this.sync(k)});
+      this.days=fixDays(d);this.got.days=true;Object.keys(this.pend).forEach(k=>{if(k!=="plan")this.sync(k)});
       paintSave();if(canon(this.days)!==before){this.saveLocal();cb()}
     },again);
   },
@@ -917,7 +930,8 @@ const Store={mode:"local",cfg:defCfg(),days:{},pend:{},ver:{},recent:{},remote:{
     if(frozenN(this.days[k])==null&&!("pn" in patch)&&["checks","sets","status","test","sim","mini","runlog","mode"].some(f=>f in patch)){try{const L=locate(parse(k));if(!L.before&&Number.isInteger(L.n))patch=Object.assign({},patch,{pn:L.n})}catch(e){}}
     PLANC={},SK=null;CTX=null;
     // el día de hoy guarda con qué ajustes se entrenó (lago o piscina, neopreno, agua): cambiar Ajustes después no lo reescribe
-    if(k===iso(today())){const c=this.cfg,cx={place:c.place,neo:!!c.neo,temp:tempFor(c,today()),partner:!!c.partner};if(canon(cx)!==canon((this.days[k]||{}).ctx))patch=Object.assign({},patch,{ctx:cx})}
+    {const isT=k===iso(today()),marks=["checks","sets","status","test","sim","mini","runlog"].some(f=>f in patch),has=isObj((this.days[k]||{}).ctx);
+      if(isT||(marks&&!has&&k<iso(today()))){const c=this.cfg,dt=parse(k),cx={place:c.place,neo:!!c.neo,temp:tempFor(c,dt),partner:!!c.partner,fins:!!c.fins,boya:!!c.boya,pool:!!c.pool};if(canon(cx)!==canon((this.days[k]||{}).ctx))patch=Object.assign({},patch,{ctx:cx})}}
     const d=this.day(k),old={};Object.keys(patch).forEach(f=>{old[f]=d[f]});Object.assign(d,patch);this.addPend(k,patch,old);this.saveLocal();this.queue(k)},
   setCfg(patch){PLANC={},SK=null;CTX=null;Object.assign(this.cfg,patch);this.addPend("plan",patch);this.saveLocal();this.queue("plan");
     if(CTXF.some(f=>f in patch)&&this.days[iso(today())])this.setDay(iso(today()),{})},
@@ -976,7 +990,7 @@ const Store={mode:"local",cfg:defCfg(),days:{},pend:{},ver:{},recent:{},remote:{
     this.cfg=fixCfg(Object.assign(defCfg(),clone(data.cfg)));
     const lb=lbs.filter(x=>typeof x==="string"&&x).sort().pop();if(lb)this.cfg.lastBackup=lb;
     this.pend.plan=null;this.addPend("plan",Object.assign({__all:1},this.cfg));
-    Object.keys(data.days).forEach(k=>{this.days[k]=clone(data.days[k]);this.pend[k]=null;this.addPend(k,Object.assign({__all:1},this.days[k]))});
+    Object.keys(data.days).forEach(k=>{this.days[k]=fixDay(clone(data.days[k]));this.pend[k]=null;this.addPend(k,Object.assign({__all:1},this.days[k]))});
     this.saveLocal();this.flush();
   }
 };
@@ -1014,11 +1028,11 @@ function lastTest(date){const ws=date?weekStartOf(date):null,lim=ws?iso(ws):"999
   CTX=CTX||{};if(CTX[lim])return CTX[lim];
   const c={};let bk="";Object.keys(Store.days).sort().forEach(k=>{if(k>=lim)return;const D=Store.days[k],t=D.test||(D.sim&&!["cansado","dolor","enfermo"].includes(D.mode)&&locate(parse(k)).w!==HELL?D.sim:null);if(t)["barras","run","swim","apnea"].forEach(x=>{if(t[x]){c[x]=t[x];if(x==="barras")bk=k}})});
   const mb=Store.cfg.maxB;if(mb&&mb.v&&mb.k<end&&(!bk||mb.k>=bk))c.barras=mb.v;return CTX[lim]=c}
-const CTXF=["place","neo","temp","partner"];
+const CTXF=["place","neo","temp","partner","fins","boya","pool"];
 const tempFor=(c,date)=>c.temp!==""&&c.temp!=null&&c.tempK&&Math.abs(diffDays(date,parse(c.tempK)))<=10?c.temp:"";
 function ctxFor(date){const c=Store.cfg,dd=Store.days[iso(date)],fz=dd&&dd.ctx&&diffDays(date,today())<0?dd.ctx:null;
   const base={month:date.getMonth(),place:c.place,partner:c.partner,neo:c.neo,temp:tempFor(c,date),trip:c.trip,fins:!!c.fins,boya:!!c.boya,pool:!!c.pool,nolake:!!(dd&&dd.nolake)};
-  return Object.assign({},lastTest(date),base,fz?{place:fz.place,partner:fz.partner,neo:fz.neo,temp:fz.temp}:{})}
+  return Object.assign({},lastTest(date),base,fz?Object.assign({place:fz.place,partner:fz.partner,neo:fz.neo,temp:fz.temp},...["fins","boya","pool"].filter(f=>f in fz).map(f=>({[f]:fz[f]}))):{})}
 let PLANC={};
 function planFor(date){const ck=iso(date);if(ck in PLANC)return PLANC[ck];return PLANC[ck]=planFor0(date)}
 function planFor0(date){const L=locate(date);
@@ -1318,7 +1332,8 @@ function exHTML(t,b,i,dd,all){
   return `<div class="ex ${n>=b.s?"full":""}"><div class="top"><span class="n">${esc(b.n)}</span><span class="p">${esc(b.p)}</span></div>${b.note?`<span class="note">${esc(b.note)}</span>`:""}${b.c?`<span class="note" style="white-space:pre-line">${esc(b.c)}</span>`:""}${hw?`<details class="hw" data-keep="hw:${esc(t.id)}.${i}" ${S.keep["hw:"+t.id+"."+i]?"open":""}><summary>Cómo se hace</summary><p>${esc(hw)}</p></details>`:""}<div class="ctl">${ctl}</div></div>`;
 }
 /* ---- registro de carrera (lo que marca adidas Running u otra app) ---- */
-const parseDur=toSec;
+// duración de un trote o marcha: un número solo son minutos (120 = 2 horas); lo demás, como toSec
+const parseDur=s=>{const t=String(s==null?"":s).trim();return /^\d+$/.test(t)?+t*60:toSec(t)};
 const fmtDur=x=>x>=3600?Math.floor(x/3600)+":"+pad(Math.floor(x%3600/60))+":"+pad(Math.round(x%60)):fmtT(x);
 function runVerdict(g,r){
   if(!r)return {txt:"",lvl:""};const km=parseFloat(String(r.km||"").replace(",",".")),t=parseDur(r.t),rep=parseDur(r.rep);
@@ -1423,11 +1438,13 @@ function verdictHTML(plan,dd,L){
   const t=dd.test||{},w=plan.w;let h="";
   const badT=[["swim","500 m"],["run","2.400 m"]].filter(([f])=>t[f]&&isNaN(toSec(t[f]))).map(x=>x[1]);
   if(badT.length)h+=`<p class="alert">No entendí el tiempo de ${badT.join(" y ")}. Escríbelo así: 10:45.</p>`;
+  const badN=[["apnea","apnea"],["barras","barras"],["sent","sentadillas"],["flex","flexiones"],["abd","abdominales"]].filter(([f])=>t[f]&&isNaN(cnt(t[f]))).map(x=>x[1]);
+  if(badN.length)h+=`<p class="alert">No entendí el número de ${badN.join(", ")}. Escribe solo el número (por ejemplo 12).</p>`;
   if(t.swim&&w>0&&!(GOALS[w]||{}).swim&&(t.sinParar===undefined||((GOALS[w]||{}).crol&&t.crol===undefined)))h+=`<p class="foot">Responde abajo si nadaste los 500 m sin parar${(GOALS[w]||{}).crol?" y todo en crol":""}: sin eso no se puede evaluar el nado.</p>`;
   if(w===0)return h+`<p class="foot">Punto de partida: no hay meta. Tus barras de hoy ajustan las series de todo el plan.</p>`;
   const ev=evalTest(w,t);if(!ev)return h;
   // se evalúa lo que anotaste: una apnea pendiente (sin salvavidas) no deja la prueba sin veredicto
-  const g0=GOALS[w]||{},F=["apnea","swim","barras","sent","flex","abd","run"],has=i=>F[i]==="swim"?(g0.swim?!!t.swim&&!isNaN(toSec(t.swim)):t.sinParar!==undefined&&(!g0.crol||t.crol!==undefined)):!!t[F[i]]&&!(F[i]!=="apnea"&&isNaN(Number(t[F[i]]))&&isNaN(toSec(t[F[i]])));
+  const g0=GOALS[w]||{},F=["apnea","swim","barras","sent","flex","abd","run"],has=i=>F[i]==="swim"?(g0.swim?!!t.swim&&!isNaN(toSec(t.swim)):t.sinParar!==undefined&&(!g0.crol||t.crol!==undefined)):!!t[F[i]]&&!(F[i]==="run"?isNaN(toSec(t[F[i]])):isNaN(cnt(t[F[i]])));
   const rows=ev.rows.map((r,i)=>({r,i,has:has(i)})),filled=rows.filter(x=>x.has),miss=rows.filter(x=>!x.has).map(x=>x.r[0]),fails=filled.filter(x=>!x.r[3]).map(x=>x.r[0]);
   if(!filled.length)return h;
   const reps=Store.cfg.repeats||[],already=reps.includes(L.idx);
@@ -1464,7 +1481,7 @@ function viewPlan(){
   h+=`</div></div>`;
   const c=Store.cfg,sg=(key,v,l)=>`<button class="seg ${String(c[key])===String(v)?"on":""}" data-cset="${key}|${v}">${l}</button>`;
   h+=`<div class="card"><span class="lbl">Ajustes</span>
-   <div class="row"><div class="field" style="flex:1;min-width:140px"><label class="lbl" for="c-name">Tu nombre</label><input id="c-name" data-c="name" value="${esc(c.name)}"></div><div class="field" style="flex:1;min-width:150px"><label class="lbl" for="c-start">Día 1 de la semana 0</label><input id="c-start" type="date" data-c="start" value="${esc(c.start)}"></div></div>
+   <div class="row"><div class="field" style="flex:1;min-width:140px"><label class="lbl" for="c-name">Tu nombre</label><input id="c-name" data-c="name" value="${esc(c.name)}"></div><div class="field" style="flex:1;min-width:150px"><label class="lbl" for="c-start">Día 1 de la semana 0</label><input id="c-start" type="date" min="2025-01-01" max="2030-12-31" data-c="start" value="${esc(c.start)}"></div></div>
    <div class="row"><div class="field"><span class="lbl">Dónde nadas</span><div class="segs">${sg("place","lago","Lago")}${sg("place","piscina","Piscina")}</div></div><div class="field"><span class="lbl">Neopreno</span><div class="segs">${sg("neo",false,"No")}${sg("neo",true,"Sí")}</div></div><div class="field"><span class="lbl">Turno habitual</span><div class="segs">${sg("turno","13","Entro 13:00")}${sg("turno","16","Entro 16:00")}</div></div><div class="field"><span class="lbl">Aletas</span><div class="segs">${sg("fins",false,"No tengo")}${sg("fins",true,"Sí")}</div></div><div class="field"><span class="lbl">Piscina con salvavidas</span><div class="segs">${sg("pool",false,"No tengo")}${sg("pool",true,"Sí")}</div></div><div class="field"><span class="lbl">Boya de natación</span><div class="segs">${sg("boya",false,"No tengo")}${sg("boya",true,"Sí")}</div></div><div class="field"><span class="lbl">Compañero de agua</span><div class="segs">${sg("partner",false,"No")}${sg("partner",true,"Sí")}</div></div></div>
    <div class="row"><div class="field" style="max-width:140px"><label class="lbl" for="c-peso">Peso en ayunas (kg)</label><input id="c-peso" inputmode="decimal" data-c="peso" value="${esc(bodyWeight()?nf(bodyWeight()):"")}" placeholder="70"></div><div class="field" style="max-width:140px"><label class="lbl" for="c-alt">Estatura (cm)</label><input id="c-alt" inputmode="numeric" data-c="alt" value="${esc(c.alt||"")}" placeholder="175"></div><p class="foot" style="flex:1;min-width:150px">Con tu peso calculo la proteína, las porciones y el agua de cada día. Pésate en ayunas el primer día de cada semana.</p></div>
    <div class="row"><div class="field" style="max-width:170px"><label class="lbl" for="c-maxb">Máximo de barras hoy</label><input id="c-maxb" inputmode="numeric" data-c="maxb" value="${esc((c.maxB&&c.maxB.v)||"")}" placeholder="${esc(lastTest().barras||6)}"></div><p class="foot" style="flex:1;min-width:160px">Mídete cada 3–4 semanas: las series de barras se ajustan solas.</p></div>
@@ -1495,13 +1512,13 @@ function resultsHTML(plan,k,dd){
 }
 function resultsVerdict(kind,plan,k,r){
   if(!Object.values(r).some(Boolean))return kind==="sim"?"Anota cada número: quedan en tus gráficos y récords.":"Anota tus números para comparar con la mini-prueba anterior.";
-  if(kind==="sim"){const g=nextGoalWeek(plan.w),ev=evalTest(g,Object.assign({sinParar:1,crol:1},r)),filled=ev.rows.filter((x,i)=>r[["apnea","swim","barras","sent","flex","abd","run"][i]]);
+  if(kind==="sim"){const g=nextGoalWeek(plan.w),ev=evalTest(g,Object.assign({sinParar:1,crol:1},r)),filled=ev.rows.filter((x,i)=>{const f=["apnea","swim","barras","sent","flex","abd","run"][i];return r[f]&&(f==="swim"||f==="run"?!isNaN(toSec(r[f])):!isNaN(cnt(r[f])))});
     const okN=filled.filter(x=>x[3]).length,miss=filled.filter(x=>!x[3]).map(x=>x[0]);
     return `Contra la meta de la semana ${g}: cumples ${okN} de ${filled.length}.${miss.length?" Te falta: "+miss.join(", ")+".":" Vas sobre la meta."}`}
   const has=x=>x&&["barras","sent","flex","abd","swim","run"].some(f=>x[f]);
   const prev=Object.keys(Store.days).filter(x=>x<k&&has(Store.days[x].mini)).sort().pop();if(!prev)return "Primera mini-prueba registrada: la próxima se compara con esta.";
   const p=Store.days[prev].mini,out=[],dA=miniDist(plan),dB=miniDist(planFor(parse(prev)));
-  ["sent","flex","abd"].forEach(f=>{if(r[f]&&p[f]){const d=Number(r[f])-Number(p[f]);out.push(`${RES_NAMES[f]} ${r[f]} (${d>=0?"+":""}${d})`)}});
+  ["sent","flex","abd"].forEach(f=>{const a=cnt(r[f]),b=cnt(p[f]);if(isFinite(a)&&isFinite(b)){const d=Math.round((a-b)*10)/10;out.push(`${RES_NAMES[f]} ${r[f]} (${d>=0?"+":""}${d})`)}});
   // mismo tramo: compara el tiempo; tramo distinto: compara el ritmo (por 100 m nadando, por km corriendo)
   [["swim",+(r.swimM||dA.swim)||0,+(p.swimM||dB.swim)||0,100,"/100 m"],["run",dA.run,dB.run,1000,"/km"]].forEach(([f,ma,mb,u,ul])=>{const a=toSec(r[f]),b=toSec(p[f]);if(!(a&&b))return;
     const sg=d=>d<=0?"−"+fmtT(-d):"+"+fmtT(d);
@@ -1516,7 +1533,7 @@ function seriesData(){
   // x = semana del plan (si repites semanas, la prueba queda junto a su meta); el peso va por semana de calendario
   const st=parse(Store.cfg.start),pts={barras:[],run:[],swim:[],apnea:[],flex:[],peso:[]};
   Object.keys(Store.days).sort().forEach(k=>{const d=Store.days[k],cx=diffDays(parse(k),st)/7;if(cx<0)return;const L=locate(parse(k)),x=L.w!=null?L.w+L.dow/7:cx,w=L.w;
-    [d.test,d.sim].forEach(t=>{if(!t)return;["barras","apnea","flex"].forEach(f=>{const raw=t[f];if(raw===""||raw==null||raw===true)return;const v=Number(raw);if(v>=0&&!isNaN(v))pts[f].push({x,v,k,w})});["run","swim"].forEach(f=>{const v=toSec(t[f]);if(v>0)pts[f].push({x,v,k,w})})});
+    [d.test,d.sim].forEach(t=>{if(!t)return;["barras","apnea","flex"].forEach(f=>{const raw=t[f];if(raw===""||raw==null||raw===true)return;const v=cnt(raw);if(v>=0&&!isNaN(v))pts[f].push({x,v,k,w})});["run","swim"].forEach(f=>{const v=toSec(t[f]);if(v>0)pts[f].push({x,v,k,w})})});
     const pw=parseFloat(String(d.peso||"").replace(",","."));if(pw>30)pts.peso.push({x:cx,v:pw,k})});
   Object.values(pts).forEach(a=>a.sort((p,q)=>p.x-q.x||(p.k<q.k?-1:1)));
   return pts;
@@ -1527,8 +1544,8 @@ function lineChart(pts,goalFn,isTime){
   const goals=goalFn?[13,26,39,52].map(g=>({x:g,v:goalFn(g)})).filter(g=>g.v!=null):[];
   const vals=pts.map(p=>p.v).concat(goals.map(g=>g.v));let lo=Math.min(...vals),hi=Math.max(...vals);if(lo===hi){lo-=1;hi+=1}
   // paso "redondo": segundos de 15 a 5 min para tiempos; 1-2-5 × 10ⁿ para números
-  const raw=(hi-lo)/2,steps=isTime?[15,30,60,120,300,600]:[1,2,5].flatMap(m=>[-1,0,1,2,3].map(e=>m*Math.pow(10,e))).sort((a,b)=>a-b);
-  const step=steps.find(x=>x>=raw)||steps[steps.length-1];lo=Math.floor(lo/step)*step;hi=Math.ceil(hi/step)*step;if(hi===lo)hi=lo+step;
+  const raw=(hi-lo)/2,steps=isTime?[15,30,60,120,300,600,900,1800,3600,7200]:[1,2,5].flatMap(m=>[-1,0,1,2,3].map(e=>m*Math.pow(10,e))).sort((a,b)=>a-b);
+  const step=steps.find(x=>x>=raw)||Math.pow(10,Math.ceil(Math.log10(raw||1)));lo=Math.floor(lo/step)*step;hi=Math.ceil(hi/step)*step;if(hi===lo)hi=lo+step;
   const ticks=[];for(let v=lo;v<=hi+1e-9;v+=step)ticks.push(v);
   const xmax=Math.max(52,...pts.map(p=>p.x)),X=x=>L+(x/xmax)*(W-L-R),Y=v=>T+(1-(v-lo)/(hi-lo))*(H-T-B);
   let g="";
@@ -1564,7 +1581,7 @@ function constancyHTML(){
 function recordsHTML(){
   const best={},set=(key,v,k,better,fmtv)=>{if(!(v>0))return;const b=best[key];if(!b||(better==="up"?v>b.v:v<b.v))best[key]={v,k,f:fmtv(v)}};
   Object.keys(Store.days).sort().forEach(k=>{const d=Store.days[k];
-    [d.test,d.sim].forEach(t=>{if(!t)return;set("barras",Number(t.barras),k,"up",v=>v);set("apnea",Number(t.apnea),k,"up",v=>v+" m");set("flex",Number(t.flex),k,"up",v=>v);set("abd",Number(t.abd),k,"up",v=>v);set("sent",Number(t.sent),k,"up",v=>v);set("run",toSec(t.run),k,"down",fmtT);set("swim",toSec(t.swim),k,"down",fmtT)});
+    [d.test,d.sim].forEach(t=>{if(!t)return;set("barras",cnt(t.barras),k,"up",v=>v);set("apnea",cnt(t.apnea),k,"up",v=>v+" m");set("flex",cnt(t.flex),k,"up",v=>v);set("abd",cnt(t.abd),k,"up",v=>v);set("sent",Number(t.sent),k,"up",v=>v);set("run",toSec(t.run),k,"down",fmtT);set("swim",toSec(t.swim),k,"down",fmtT)});
     Object.values(d.runlog||{}).forEach(r=>{const km=parseFloat(String(r.km||"").replace(",",".")),t=parseDur(r.t);if(km>0&&t>0){set("long",km,k,"up",v=>String(v).replace(".",",")+" km");if(km>=3)set("pace",t/km,k,"down",v=>fmtT(v)+"/km")}})});
   const R=[["barras","Barras seguidas"],["run","2.400 m"],["swim","500 m libre"],["apnea","Apnea"],["flex","Flexiones 2 min"],["abd","Abdominales 2 min"],["sent","Sentadillas 2 min"],["long","Carrera más larga"],["pace","Mejor ritmo (3 km o más)"]];
   const cards=R.filter(([key])=>best[key]).map(([key,n])=>`<div class="kpi"><span class="lbl">${n}</span><b>${esc(String(best[key].f))}</b><span class="foot">${fmtS(parse(best[key].k))}</span></div>`).join("");
@@ -1648,7 +1665,7 @@ async function copyBackup(){
 const isISO=x=>typeof x==="string"&&/^\d{4}-\d{2}-\d{2}$/.test(x)&&!isNaN(parse(x));
 // revisa que el texto sea una copia sana antes de ofrecer restaurarla
 function checkBackup(text){
-  try{let d;try{d=JSON.parse(text)}catch(e){throw new Error("no se puede leer")}
+  try{let d;const tx=String(text||"").replace(/[“”]/g,'"'),a=tx.indexOf("{"),z=tx.lastIndexOf("}");try{d=JSON.parse(a>=0&&z>a?tx.slice(a,z+1):tx)}catch(e){throw new Error("no se puede leer")}
     if(!d||d.app!=="bitacora-buzo-tactico"||!isObj(d.days)||!isObj(d.cfg))throw new Error("no es una copia de la bitácora");
     const bad=Object.keys(d.days).find(k=>!isISO(k)||!isObj(d.days[k]));if(bad!==undefined)throw new Error("hay un día dañado: "+String(bad).slice(0,20));
     const c=d.cfg;if(c.start!=null&&!isISO(c.start))throw new Error("la fecha de inicio está dañada");
@@ -1871,12 +1888,12 @@ document.addEventListener("input",e=>{
   else if(D.c==="peso"){const v=el.value.trim().replace(",",".");if(v&&!okKg(+v)){kgWarn();return}clearTimeout(kgT);Store.setCfg({peso:v});Store.setDay(iso(today()),{peso:v})}
   else if(D.c==="alt")Store.setCfg({alt:el.value.trim()});
   else if(D.c==="why")Store.setCfg({why:el.value});
-  else if(D.c==="maxb"){const v=parseInt(el.value,10);Store.setCfg({maxB:v>0?{v,k:iso(today())}:null})}
-  else if(D.c==="trip"){const v=parseInt(el.value,10);Store.setCfg({trip:v>=0&&v<=60?v:15})}
-  else if(D.c==="temp")Store.setCfg({temp:el.value.trim().replace(",","."),tempK:iso(today())});
+  else if(D.c==="maxb"){const v=parseInt(el.value,10);if(v>40){toast("¿Más de 40 barras seguidas? Revisa el número.");el.value=(Store.cfg.maxB&&Store.cfg.maxB.v)||"";return}Store.setCfg({maxB:v>0?{v,k:iso(today())}:null})}
+  else if(D.c==="trip"){const v=Number(el.value.trim());if(el.value.trim()===""||!Number.isInteger(v)||v<0||v>60){toast("Escribe los minutos en bici de la casa al lago: de 0 a 60.");el.value=Store.cfg.trip===undefined?15:Store.cfg.trip;return}Store.setCfg({trip:v})}
+  else if(D.c==="temp"){const v=el.value.trim().replace(",",".");if(v&&!okTemp(v)){toast("Esa temperatura no sirve: escribe los grados del agua entre 0 y 30 (por ejemplo 12,5).");el.value=Store.cfg.temp||"";return}Store.setCfg({temp:v,tempK:iso(today())})}
 });
 // la fecha de inicio se aplica al terminar de escribirla (en el computador, cada número dispara un cambio)
-function applyStart(el){if(isISO(el.value)&&el.value!==Store.cfg.start){Store.setCfg({start:el.value,startMoved:true});CTX=null;if(pressing)pendingRender=true;else render()}}
+function applyStart(el){if(isISO(el.value)&&(el.value<"2025-01-01"||el.value>"2030-12-31")){toast("Revisa el año de la fecha de inicio.");el.value=Store.cfg.start;return}if(isISO(el.value)&&el.value!==Store.cfg.start){Store.setCfg({start:el.value,startMoved:true});CTX=null;if(pressing)pendingRender=true;else render()}}
 document.addEventListener("focusout",e=>{const el=e.target;if(el&&el.dataset&&el.dataset.c==="start"&&el.value)applyStart(el)});
 document.addEventListener("change",e=>{const el=e.target;
   if(el.id==="restore-file"&&el.files&&el.files[0]){readBackup(el.files[0]);el.value="";return}
