@@ -11,14 +11,14 @@ export function loadApp(data) {
   // Solo la lógica del plan: la pantalla nunca se dibuja aquí (Store.init no se llama),
   // así los cambios de diseño de la app no pueden romper el aviso diario ni el calendario.
   // sin registros: el aviso y el calendario siguen el plan día a día (los días retomados solo los conoce la app)
-  if (!data) js = js.replace('let SK=null;', 'let SK={list:[],first:[],done:[],nToday:0};');
+
   // solo para probar: data.now fija la hora actual (la de hoy define qué días ya pasaron)
   if (data && data.now) { const f = 'function today(){const n=new Date();'; if (!js.includes(f)) throw new Error('today() cambió'); js = js.replace(f, `function today(){const n=new Date(${JSON.stringify(data.now)});`); }
-  js = js.replace('Store.init(()=>', 'globalThis.APP={dayPlan,applyMode,applyShift,locate,orders,stageOf,rankOf,Store,parse,iso,dayName,fmt,HELL,TESTS,toMin,fromMin,planFor,skipData,dayStatus,missingTasks,okSt,addDays,today,fixCfg,defCfg,counts,taskDone};(()=>{})(()=>');
+  js = js.replace('Store.init(()=>', 'globalThis.APP={dayPlan,applyMode,applyShift,locate,orders,stageOf,rankOf,Store,parse,iso,dayName,fmt,HELL,TESTS,toMin,fromMin,reset:()=>{PLANC={};SK=null;CTX=null},planFor,skipData,dayStatus,missingTasks,okSt,addDays,today,fixCfg,defCfg,counts,taskDone};(()=>{})(()=>');
   const el = { hidden: true, innerHTML: '', textContent: '', contains: () => false };
   const cl = { classList: { toggle() {}, add() {}, remove() {} } };
   globalThis.document = { getElementById: () => el, addEventListener() {}, activeElement: null, querySelector: () => null, hidden: false, documentElement: cl, body: cl };
-  globalThis.window = { addEventListener() {} };
+  globalThis.window = { addEventListener() {}, __NOSKIP: !data };
   globalThis.localStorage = { getItem: () => null, setItem() {} };
   globalThis.sessionStorage = globalThis.localStorage;
   try { globalThis.navigator = globalThis.navigator || {}; } catch (e) {}
@@ -41,6 +41,7 @@ export function ordenDelDia(A, date, { turno = '13', start, place } = {}) {
   const cfg = A.Store.cfg;
   if (start) cfg.start = start;
   if (place) cfg.place = place;
+  A.reset();
   const L = A.locate(date), out = [];
   if (L.before) { const left = Math.round((A.parse(cfg.start) - A.parse(A.iso(date))) / 864e5);
     return { title: 'Antes del inicio', lines: [`La operación empieza el ${A.dayName(A.parse(cfg.start)).toLowerCase()} ${A.fmt(A.parse(cfg.start))}: ${left === 1 ? 'mañana' : `faltan ${left} días`}.`, '', 'Mientras tanto, deja todo listo:',

@@ -616,6 +616,36 @@ const reload = async p => { await p.reload(); await p.waitForTimeout(200); };
   ok(errs.length === 0, 'sin errores: ' + errs.join(' | '));
   await ctx.close(); }
 
+// 28. Corregir días viejos no reescribe la historia; la prueba anotada cuenta; Sí/No del 500 m
+{ console.log('28. Corregir días viejos');
+  const ctx = await browser.newContext({ viewport: { width: 390, height: 1200 } }); const errs = [];
+  const open = async (time) => { const p = await ctx.newPage(); p.on('pageerror', e => errs.push(e.message)); await p.addInitScript(() => { window.__NOSKIP = false; }); await p.clock.install({ time: new Date(time) }); await p.goto(URL); await p.waitForTimeout(300); return p; };
+  const head = p => p.$eval('#app', e => (e.textContent.match(/SEM \d+ · DÍA \d/) || [''])[0]);
+  // 3 semanas cumplidas día a día
+  for (let i = 0; i < 21; i++) { const d = new Date(2026, 9, 6 + i, 9); const p = await open(d.toISOString());
+    const b = p.locator('[data-st="done"]'); if (await b.count()) { await b.scrollIntoViewIfNeeded(); await b.click(); await p.waitForTimeout(150); } await p.close(); }
+  let p = await open('2026-10-27T09:00:00'); const h0 = await head(p);
+  ok(h0 === 'SEM 3 · DÍA 1', 'después de 3 semanas cumplidas: ' + h0);
+  // desmarcar el primer día no hace retroceder el plan semanas
+  for (let i = 0; i < 21; i++) { await p.click('[data-go="-1"]'); await p.waitForTimeout(40); }
+  await p.click('[data-ask="clear"]'); await p.click('[data-clear]'); await p.waitForTimeout(200);
+  await p.click('[data-go="0"]'); await p.waitForTimeout(200);
+  ok(await head(p) === 'SEM 3 · DÍA 1', 'desmarcar un día viejo no reescribe las semanas siguientes: ' + await head(p));
+  await p.close();
+  // la prueba con resultados anotados (sin tocar los círculos) no se repite al día siguiente
+  const ctx2 = await browser.newContext({ viewport: { width: 390, height: 1200 } });
+  const days = {}; for (let i = 0; i < 5; i++) days['2026-10-' + String(6 + i).padStart(2, '0')] = { status: 'done' };
+  await ctx2.addInitScript(([dd]) => { window.__NOSKIP = false; if (!localStorage.getItem('bitacora-buzo-v1')) localStorage.setItem('bitacora-buzo-v1', JSON.stringify({ cfg: { start: '2026-10-06' }, days: dd, pend: {} })); }, [days]);
+  let q = await ctx2.newPage(); q.on('pageerror', e => errs.push(e.message)); await q.clock.install({ time: new Date('2026-10-11T09:00:00') }); await q.goto(URL); await q.waitForTimeout(300);
+  await q.click('[data-tset="sinParar|true"]'); await q.waitForTimeout(150);
+  ok(await q.locator('[data-tset="sinParar|true"]').evaluate(e => e.classList.contains('on')), 'el Sí de «500 m sin parar» queda marcado');
+  await q.fill('#t-barras', '5'); await q.locator('#t-barras').blur(); await q.waitForTimeout(200); await q.close();
+  q = await ctx2.newPage(); q.on('pageerror', e => errs.push(e.message)); await q.clock.install({ time: new Date('2026-10-12T09:00:00') }); await q.goto(URL); await q.waitForTimeout(300);
+  ok(!(await q.$eval('#app', e => e.textContent)).includes('Hoy retomas'), 'una prueba con resultados anotados no se repite');
+  await q.close(); await ctx2.close();
+  ok(errs.length === 0, 'sin errores: ' + errs.join(' | '));
+  await ctx.close(); }
+
 await browser.close();
 console.log(`\n${passes} correctas, ${fails} fallidas`);
 process.exit(fails ? 1 : 0);

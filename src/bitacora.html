@@ -913,7 +913,9 @@ const Store={mode:"local",cfg:defCfg(),days:{},pend:{},ver:{},recent:{},remote:{
   sync(k){if(this.pend[k]&&!this.timers[k]&&!this.flying[k]&&!this.wait.includes(k)&&!this.paused)this.want(k)},
   ready(k){return this.mode==="db"&&(k==="plan"?this.got.plan:this.got.days)},
   day(k){return this.days[k]||(this.days[k]={})},
-  setDay(k,patch){PLANC={},SK=null;CTX=null;
+  setDay(k,patch){
+    if(frozenN(this.days[k])==null&&!("pn" in patch)&&["checks","sets","status","test","sim","mini","runlog","mode"].some(f=>f in patch)){try{const L=locate(parse(k));if(!L.before&&Number.isInteger(L.n))patch=Object.assign({},patch,{pn:L.n})}catch(e){}}
+    PLANC={},SK=null;CTX=null;
     // el día de hoy guarda con qué ajustes se entrenó (lago o piscina, neopreno, agua): cambiar Ajustes después no lo reescribe
     if(k===iso(today())){const c=this.cfg,cx={place:c.place,neo:!!c.neo,temp:tempFor(c,today()),partner:!!c.partner};if(canon(cx)!==canon((this.days[k]||{}).ctx))patch=Object.assign({},patch,{ctx:cx})}
     const d=this.day(k),old={};Object.keys(patch).forEach(f=>{old[f]=d[f]});Object.assign(d,patch);this.addPend(k,patch,old);this.saveLocal();this.queue(k)},
@@ -985,17 +987,21 @@ const Store={mode:"local",cfg:defCfg(),days:{},pend:{},ver:{},recent:{},remote:{
 let SK=null;
 function missedDay(k,d){const p=planFor(d);if(!p||p.kind==="descanso")return false;const dd=Store.days[k]||{};
   if(dd.mode==="enfermo"||dd.mode==="dolor")return true;const s=dayStatus(k,p);return s==="fail"||s===""}
-function skipData(){if(SK)return SK;const st=parse(Store.cfg.start),td=today(),len=Store.cfg.sched.length;
-  SK={list:[],first:[],done:[],nToday:0};let n=0;
-  for(let d=st;diffDays(d,td)<0;d=addDays(d,1)){if(Math.floor(n/7)>=len)break;const k=iso(d);if(SK.first[n]==null)SK.first[n]=k;
-    if(!window.__NOSKIP&&missedDay(k,d))SK.list.push(k);else{SK.done[n]=k;n++}}
-  SK.nToday=n;return SK}
-const skipsBefore=k=>{const L=skipData().list;let c=0;for(const x of L){if(x<k)c++;else break}return c};
+// un día con algo marcado guarda qué día del plan le tocó (pn): corregir un día viejo no reescribe los demás
+const frozenN=dd=>dd&&Number.isInteger(dd.pn)&&dd.pn>=0?dd.pn:null;
+function skipData(){if(SK)return SK;const st=parse(Store.cfg.start),td=today(),len=Store.cfg.sched.length,pre=diffDays(td,st)<0;
+  SK={list:[],first:[],done:[],nOf:{},cur:{n:0,d:pre?st:td},nToday:0};let n=0;
+  for(let d=st;diffDays(d,td)<0;d=addDays(d,1)){const k=iso(d),fz=frozenN(Store.days[k]);if(fz!=null)n=fz;
+    SK.nOf[k]=n;SK.cur={n,d};if(SK.first[n]==null)SK.first[n]=k;
+    if(!window.__NOSKIP&&Math.floor(n/7)<len&&missedDay(k,d))SK.list.push(k);else{SK.done[n]=k;n++}}
+  if(!pre){const k=iso(td),fz=frozenN(Store.days[k]);if(fz!=null)n=fz;SK.nOf[k]=n;if(SK.first[n]==null)SK.first[n]=k}
+  SK.nToday=n;SK.cur={n,d:pre?st:td};return SK}
+function nOfDate(date){const S=skipData(),k=iso(date);if(S.nOf[k]!=null)return S.nOf[k];const fz=frozenN(Store.days[k]);return fz!=null?fz:S.cur.n+diffDays(date,S.cur.d)}
 // primer y último día del calendario en que toca el día n del plan
-function firstOfN(n){const S=skipData();if(n<S.nToday||(n===S.nToday&&S.first[n]!=null&&S.first[n]<iso(today())))return parse(S.first[n]);return addDays(today(),n-S.nToday)}
-function lastOfN(n){const S=skipData();if(n<S.nToday)return parse(S.done[n]);return addDays(today(),n-S.nToday)}
+function firstOfN(n){const S=skipData();return S.first[n]!=null?parse(S.first[n]):addDays(S.cur.d,n-S.cur.n)}
+function lastOfN(n){const S=skipData();return S.done[n]!=null&&n<S.nToday?parse(S.done[n]):addDays(S.cur.d,n-S.cur.n)}
 function locate(date){
-  const n0=diffDays(date,parse(Store.cfg.start));if(n0<0)return {before:true,n:n0};const n=n0-skipsBefore(iso(date));
+  const n0=diffDays(date,parse(Store.cfg.start));if(n0<0)return {before:true,n:n0};const n=nOfDate(date);
   const idx=Math.floor(n/7),dow=n%7,sched=Store.cfg.sched;
   if(idx>=sched.length)return {after:true,n,idx,dow};
   return {n,idx,dow,w:sched[idx]};
@@ -1035,7 +1041,8 @@ function dayStatus(k,plan){if(!plan)return "";const d=Store.days[k],core=plan.ta
   // un descanso que ya pasó cuenta como cumplido, salvo que marques “no pude”
   if(plan.kind==="descanso"&&diffDays(parse(k),today())<0)return "done";
   if(!d)return "";
-  if((d.mode==="dolor"||d.mode==="enfermo")&&core.every(t=>taskDone(d,t)))return "injury";if(core.every(t=>taskDone(d,t)))return "done";return units(d,plan).a?"part":""}
+  if((d.mode==="dolor"||d.mode==="enfermo")&&core.every(t=>taskDone(d,t)))return "injury";if(core.every(t=>taskDone(d,t)))return "done";
+  const anyRes=o=>o&&Object.values(o).some(v=>v!==""&&v!=null&&v!==false);return units(d,plan).a||anyRes(d.test)||anyRes(d.sim)||anyRes(d.mini)?"part":""}
 // lo que falta para cerrar el día
 function missingTasks(dd,plan){return plan.tasks.filter(t=>counts(t)&&!taskDone(dd,t)).map(t=>{const left=t.blocks.filter((b,i)=>!b.opt&&blockDone(dd,t,i)<b.s).map(b=>b.n);return left.length<t.blocks.length&&left.length<=2?`${left.join(" y ")} (${t.t})`:t.t})}
 const okSt=s=>s==="done"||s==="injury";
@@ -1390,7 +1397,7 @@ function viewHoy(){
   if(plan.test)h+=testForm(plan,k,dd,L);
   h+=resultsHTML(plan,k,dd);
   {const tm=addDays(d,1),tp=planFor(tm);if(tp)h+=`<div class="card"><span class="lbl">Mañana · ${dayName(tm)} · ${esc(tp.title)}</span><span>${esc(tp.tasks.filter(t=>t.id!=="noche"&&t.id!=="ducha").map(t=>(t.h?t.h+" ":"")+t.t).join(" · "))}</span>${tp.tasks.some(t=>t.kind==="agua"&&t.m||t.blocks.some(b=>/^Nado [\d.–]+ m$/.test(b.n)&&!b.opt))?`<span class="foot">Deja listo el bolso: traje de baño, gafas, gorra de color${tp.tasks.some(t=>t.blocks.some(b=>/aletas/.test(b.n+" "+b.p)))?", aletas":""}${Store.cfg.neo?", neopreno":""}, toalla y ropa abrigada.</span>`:""}${tp.tasks.some(t=>t.id==="ruck")?`<span class="foot">Deja lista la mochila con el peso.</span>`:""}${tp.test||tp.kind==="prueba"?`<span class="foot">Mañana se mide: piscina con salvavidas avisado, pista, cronómetro y el bolso listo esta noche.</span>`:""}</div>`}
-  if(plan.dow===6){const ws=addDays(d,-6);let ua=0,ub=0,dn=0,sm=[0,0];for(let i=0;i<7;i++){const dx=addDays(ws,i),px=planFor(dx);if(!px)continue;const x=Store.days[iso(dx)];const u=units(x,px);ua+=u.a;ub+=u.b;if(okSt(dayStatus(iso(dx),px)))dn++;px.tasks.forEach(t=>{if(t.m){sm[1]+=t.m;if(taskDone(x,t))sm[0]+=t.m}})}
+  if(plan.dow===6){const L6=locate(d),wsN=L6.n-6;let ua=0,ub=0,dn=0,sm=[0,0];for(let i=0;i<7;i++){const dx=i===6?d:lastOfN(wsN+i),px=planFor(dx);if(!px)continue;const x=Store.days[iso(dx)];const u=units(x,px);ua+=u.a;ub+=u.b;if(okSt(dayStatus(iso(dx),px)))dn++;px.tasks.forEach(t=>{if(t.m){sm[1]+=t.m;if(taskDone(x,t))sm[0]+=t.m}})}
     const pc=ub?Math.round(ua/ub*100):0,nw=locate(addDays(d,1)).w;
     h+=`<div class="card"><span class="lbl">Revisión de la semana ${plan.w}</span><div class="kpis"><div class="kpi"><span class="lbl">Series</span><b>${pc}%</b></div><div class="kpi"><span class="lbl">Días</span><b>${dn}/7</b></div><div class="kpi"><span class="lbl">Nado (m)</span><b>${nf(sm[0])}</b></div></div>
     <span>${pc>=90?"Semana de soldado. Así se llega.":pc>=70?"Bien, pero no completa. La próxima, sin huecos.":"Semana floja. Si fue cansancio o dolor, está bien: recupera. Si fueron ganas, la próxima es la que cuenta."}</span>
@@ -1402,7 +1409,7 @@ function viewHoy(){
    <div class="field"><label class="lbl" for="f-note">Tiempos, qué costó, sensaciones</label><textarea id="f-note" data-f="note">${esc(dd.note)}</textarea></div></details>`;
   {const past=diffDays(d,today())<0,ms=status==="done"||status==="injury"||dd.status?[]:missingTasks(dd,plan);
    if(ms.length&&u.a)h+=`<p class="foot">Te falta: ${esc(ms.slice(0,4).join(" · "))}${ms.length>4?" y "+(ms.length-4)+" más":""}.</p>`;
-   h+=`<div class="row">${status==="done"||status==="injury"||dd.status?"":`<button class="btn main" data-st="done" style="flex:2">Cumplí todo</button>`}${dd.status==="fail"?`<button class="btn sm" data-st="">Quitar “no cumplí”</button>`:dd.status==="part"?`<button class="btn sm" data-st="">Reabrir el día</button>`:status==="done"||status==="injury"?(S.confirm==="clear"?`<button class="btn sm main" data-st="" data-clear="1">Sí, desmarcar</button><button class="btn sm" data-cancel>No</button>`:`<button class="btn sm" data-ask="clear">Desmarcar el día</button>`):`${past&&u.a?`<button class="btn" data-st="part" style="flex:1">Cerrar el día así</button>`:""}<button class="btn" data-st="fail" style="flex:1">${past?"No pude ese día":"Hoy no pude"}</button>`}</div>`}
+   h+=`<div class="row">${status==="done"||status==="injury"||dd.status?"":`<button class="btn main" data-st="done" style="flex:2">Cumplí todo</button>`}${dd.status==="fail"?`<button class="btn sm" data-st="">Quitar “no cumplí”</button>`:dd.status==="part"?`<button class="btn sm" data-st="">Reabrir el día</button>`:status==="done"||status==="injury"?(S.confirm==="clear"?`<button class="btn sm main" data-st="" data-clear="1">Sí, desmarcar</button><button class="btn sm" data-cancel>No</button>`:`<button class="btn sm" data-ask="clear">Desmarcar el día</button>`):`${past&&u.a?`<button class="btn" data-st="part" style="flex:1">Cerrar el día así</button>`:""}${diffDays(d,today())>0?"":`<button class="btn" data-st="fail" style="flex:1">${past?"No pude ese día":"Hoy no pude"}</button>`}`}</div>`}
   return h;
 }
 function testForm(plan,k,dd,L){
@@ -1591,7 +1598,7 @@ function nowLineText(plan){
   const missed=items.filter(x=>x.at<=m&&x!==cur&&x.t.kind!=="rutina"&&!taskDone(dd,x.t)).length;
   // de madrugada: lo que manda es dormir (con turno 16 se llega a las 0:30 y la cama es a la 1:15)
   // volviendo del turno que termina después de medianoche: lo que falta es la noche
-  if(late)return `Vuelves del trabajo: comida liviana, visualización y a la cama a la ${sh.bed}. Mañana despiertas a las ${(SHIFT[(Store.days[iso(now)]||{}).turno||Store.cfg.turno]||sh).wake}.`;
+  if(late)return `Vuelves del trabajo: comida liviana, visualización y a la cama a la ${sh.bed}. Mañana despiertas a las ${((planFor(addDays(today(),1))||{}).shift||sh).wake}.`;
   if(m<300){const ys=SHIFT[(Store.days[iso(addDays(now,-1))]||{}).turno||Store.cfg.turno]||sh,yb=toMin(ys.bed);
     return yb<300&&m<yb?`Vuelves del trabajo: a la cama a la ${ys.bed}. Hoy despiertas a las ${sh.wake}.`:`A dormir. Hoy despiertas a las ${sh.wake}.`}
   const parts=[],bed=sh.bed?toMin(sh.bed)+(toMin(sh.bed)<240?1440:0):null;
@@ -1793,7 +1800,7 @@ document.addEventListener("click",e=>{
   if(D.wk!==undefined){S.selWeek=+D.wk;render();return}
   if(D.timer){startTimer(+D.timer,D.tl||"");return}
   if(D.tstop!==undefined){stopTimer(D.tstop);return}
-  if(D.tset){const [f,v]=D.tset.split("|"),t=Object.assign({},(Store.days[k]||{}).test||{});t[f]=v==="true";Store.setDay(k,{test:t});render();return}
+  if(D.tset){const k=iso(S.date),[f,v]=D.tset.split("|"),t=Object.assign({},(Store.days[k]||{}).test||{});t[f]=v==="true";Store.setDay(k,{test:t});render();return}
   if(D.cset){const [key,v]=D.cset.split("|");Store.setCfg({[key]:v==="true"?true:v==="false"?false:v});render();return}
   if(D.ask){S.confirm=D.ask;render();return}
   if(D.cancel!==undefined){S.confirm=null;S.restore=null;S.copyBackup=false;S.paste=false;render();return}
@@ -1804,7 +1811,7 @@ document.addEventListener("click",e=>{
   if(D.restoreOk!==undefined&&S.restore&&S.restore.data){Store.restore(S.restore.data);S.restore=null;CTX=null;render();toast(Store.mode==="db"?"Copia restaurada. Se está subiendo a tu cuenta: el indicador de arriba dice cuándo termina.":"Copia restaurada.");return}
   if(D.rep){const i=+D.rep,sched=Store.cfg.sched.slice(),w=sched[i];sched.splice(i+1,0,w-4,w-3,w-2,w-1,w);Store.setCfg({sched,repeats:(Store.cfg.repeats||[]).concat([i])});S.confirm=null;render();toast(`Orden recibida: semanas ${w-4}–${w-1} otra vez y la prueba de nuevo.`);return}
   if(D.unrep){const i=+D.unrep,sched=Store.cfg.sched.slice(),w=sched[i];if(sched.slice(i+1,i+6).join()===[w-4,w-3,w-2,w-1,w].join()){sched.splice(i+1,5);Store.setCfg({sched,repeats:(Store.cfg.repeats||[]).filter(x=>x!==i)});render();toast("Repetición quitada: sigues con el plan normal.")}return}
-  if(D.s4!==undefined){Store.setCfg({sched:Store.cfg.sched.concat(Array.from({length:13},(_,i)=>40+i))});S.confirm=null;render();toast("Etapa 4 otra vez: intenta superar tus marcas de la prueba final.");return}
+  if(D.s4!==undefined){const sc=Store.cfg.sched,L=locate(today()),lived=L.after?Math.ceil((L.n+1-sc.length*7)/7):0;Store.setCfg({sched:sc.concat(Array(Math.max(0,lived)).fill(47),Array.from({length:13},(_,i)=>40+i))});S.confirm=null;render();toast("Etapa 4 otra vez: intenta superar tus marcas de la prueba final.");return}
   const k=iso(S.date);
   if(D.open){const p=planFor(S.date),dd=Store.days[k]||{},tk=p&&p.tasks.find(t=>t.id===D.open),cur=S.open[k+D.open]!=null?S.open[k+D.open]:!!(tk&&!taskDone(dd,tk)&&tk.kind!=="rutina");S.open[k+D.open]=!cur;render();return}
   if(D.rstart!==undefined){const p=planFor(S.date);S.run={k,i:firstPending(p,Store.days[k]||{})};render();window.scrollTo(0,0);return}
@@ -1822,7 +1829,7 @@ document.addEventListener("click",e=>{
     const ndd=Store.days[k];let ni=ss.findIndex((x,j)=>j>i&&!stepDone(ndd,x));if(ni<0)ni=firstPending(p,ndd);S.run.i=ni;
     render();window.scrollTo(0,0);if(dayStatus(k,p)==="done"&&before!=="done")toast("Misión cumplida, "+(Store.cfg.name||"recluta")+".");return}
   if(D.turno){Store.setDay(k,{turno:D.turno});render();return}
-  if(D.ydone!==undefined){const y=addDays(today(),-1),p=planFor(y);if(p){markAllDone(iso(y),p);toast("Ayer quedó cumplido: hoy sigues con el día siguiente.")}render();return}
+  if(D.ydone!==undefined){const y=addDays(today(),-1),p=planFor(y),tk=iso(today()),td0=Store.days[tk]||{},tp=planFor(today());if(p){markAllDone(iso(y),p);if(frozenN(td0)!=null&&tp&&!units(td0,tp).a&&!Object.values(td0.checks||{}).some(Boolean)&&!td0.status)Store.setDay(tk,{pn:null});toast("Ayer quedó cumplido: hoy sigues con el día siguiente.")}render();return}
   if(D.nolake!==undefined){const dd=Store.day(k);Store.setDay(k,{nolake:!dd.nolake});render();return}
   if(D.mode){const dd=Store.day(k);Store.setDay(k,{mode:dd.mode===D.mode?"":D.mode});render();return}
   if(D.task||D.set){
@@ -1864,7 +1871,7 @@ document.addEventListener("input",e=>{
   else if(D.c==="peso"){const v=el.value.trim().replace(",",".");if(v&&!okKg(+v)){kgWarn();return}clearTimeout(kgT);Store.setCfg({peso:v});Store.setDay(iso(today()),{peso:v})}
   else if(D.c==="alt")Store.setCfg({alt:el.value.trim()});
   else if(D.c==="why")Store.setCfg({why:el.value});
-  else if(D.c==="maxb"){const v=parseInt(el.value,10);Store.setCfg({maxB:v>0?{v,k:iso(new Date())}:null})}
+  else if(D.c==="maxb"){const v=parseInt(el.value,10);Store.setCfg({maxB:v>0?{v,k:iso(today())}:null})}
   else if(D.c==="trip"){const v=parseInt(el.value,10);Store.setCfg({trip:v>=0&&v<=60?v:15})}
   else if(D.c==="temp")Store.setCfg({temp:el.value.trim().replace(",","."),tempK:iso(today())});
 });
