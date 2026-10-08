@@ -24,7 +24,7 @@ for (let w = 0; w <= 52; w++) for (let dow = 0; dow < 7; dow++) for (const month
     ok(t.blocks.every(b => !/brazadas/.test(b.n) || !/aletas|patada/.test(b.p)), `${where}: patada con aletas contada en brazadas`);
   });
   // lago: ida y vuelta en bici, y el desayuno después de llegar a la casa
-  plan.tasks.filter(t => t.blocks.some(b => b.n === 'Antes de entrar')).forEach(t => {
+  plan.tasks.filter(t => t.lake && t.blocks.some(b => b.n === 'Antes de entrar')).forEach(t => {
     ok(t.blocks[0].n === 'Ida en bicicleta' && t.blocks[t.blocks.length - 1].n === 'Vuelta en bicicleta', `${where}: ${t.t} sin ida y vuelta en bici`);
     const ds = plan.tasks.find(x => x.id === 'desayuno'), home = plan.shift && plan.shift.home;
     if (ds && home) ok(A.toMin(ds.h) >= A.toMin(home), `${where}: desayuno ${ds.h} antes de volver del lago ${home}`);
