@@ -3,15 +3,18 @@ process.env.TZ = 'America/Santiago';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-export function loadApp() {
+// data = {cfg, days} leídos de la nube de la app: así el aviso sabe lo que marcaste (días retomados, turno, modo)
+export function loadApp(data) {
   const here = path.dirname(fileURLToPath(import.meta.url));
   const html = fs.readFileSync(path.join(here, '..', 'src', 'bitacora.html'), 'utf8');
   let js = html.split('<script>')[1].split('</script>')[0];
   // Solo la lógica del plan: la pantalla nunca se dibuja aquí (Store.init no se llama),
   // así los cambios de diseño de la app no pueden romper el aviso diario ni el calendario.
   // sin registros: el aviso y el calendario siguen el plan día a día (los días retomados solo los conoce la app)
-  js = js.replace('let SK=null;', 'let SK={list:[],first:[],done:[],nToday:0};');
-  js = js.replace('Store.init(()=>', 'globalThis.APP={dayPlan,applyMode,applyShift,locate,orders,stageOf,rankOf,Store,parse,iso,dayName,fmt,HELL,TESTS,toMin,fromMin};(()=>{})(()=>');
+  if (!data) js = js.replace('let SK=null;', 'let SK={list:[],first:[],done:[],nToday:0};');
+  // solo para probar: data.now fija la hora actual (la de hoy define qué días ya pasaron)
+  if (data && data.now) { const f = 'function today(){const n=new Date();'; if (!js.includes(f)) throw new Error('today() cambió'); js = js.replace(f, `function today(){const n=new Date(${JSON.stringify(data.now)});`); }
+  js = js.replace('Store.init(()=>', 'globalThis.APP={dayPlan,applyMode,applyShift,locate,orders,stageOf,rankOf,Store,parse,iso,dayName,fmt,HELL,TESTS,toMin,fromMin,planFor,skipData,dayStatus,missingTasks,okSt,addDays,today,fixCfg,defCfg,counts,taskDone};(()=>{})(()=>');
   const el = { hidden: true, innerHTML: '', textContent: '', contains: () => false };
   const cl = { classList: { toggle() {}, add() {}, remove() {} } };
   globalThis.document = { getElementById: () => el, addEventListener() {}, activeElement: null, querySelector: () => null, hidden: false, documentElement: cl, body: cl };
@@ -21,7 +24,17 @@ export function loadApp() {
   try { globalThis.navigator = globalThis.navigator || {}; } catch (e) {}
   globalThis.setInterval = () => 0;
   new Function(js)();
-  return globalThis.APP;
+  const A = globalThis.APP;
+  if (data) { A.Store.cfg = A.fixCfg(Object.assign(A.defCfg(), data.cfg || {})); A.Store.days = data.days || {}; A.real = true; }
+  return A;
+}
+// Lee lo que dejó ArtifactData (out_dir): <dir>/data/users/<id>/plan.json y <dir>/data/users/<id>/plan/days/*.json
+export function readNube(dir) {
+  const users = path.join(dir, 'data', 'users'), id = fs.readdirSync(users).find(u => fs.existsSync(path.join(users, u, 'plan.json')));
+  if (!id) throw new Error('no encontré plan.json en ' + dir);
+  const base = path.join(users, id), dd = path.join(base, 'plan', 'days'), days = {};
+  if (fs.existsSync(dd)) fs.readdirSync(dd).filter(f => /^\d{4}-\d{2}-\d{2}\.json$/.test(f)).forEach(f => { days[f.slice(0, 10)] = JSON.parse(fs.readFileSync(path.join(dd, f), 'utf8')); });
+  return { cfg: JSON.parse(fs.readFileSync(path.join(base, 'plan.json'), 'utf8')), days };
 }
 // Texto de la orden de un día (lo usan el aviso diario y el calendario).
 export function ordenDelDia(A, date, { turno = '13', start, place } = {}) {
@@ -37,7 +50,9 @@ export function ordenDelDia(A, date, { turno = '13', start, place } = {}) {
   // después de la semana 52, la app da una semana de mantención (la 47 con menos carga)
   const base = L.after ? Object.assign(A.dayPlan(47, L.dow, ctx), { w: 52, deload: false, maint: true }) : A.dayPlan(L.w, L.dow, ctx);
   if (L.after) base.title = 'Mantención · ' + base.title;
-  const plan = A.applyShift(A.applyMode(base, ''), turno, null);
+  const plan = A.real ? A.planFor(date) : A.applyShift(A.applyMode(base, ''), turno, null);
+  if (A.real) { turno = (A.Store.days[A.iso(date)] || {}).turno || A.Store.cfg.turno; const y = A.iso(A.addDays(date, -1));
+    if (A.skipData().list.includes(y)) out.push('Hoy retomas el día de ayer: no quedó cumplido, así que el plan se corrió un día.', ''); }
   const st = L.after ? { n: 'Mantención', name: 'Plan terminado' } : A.stageOf(L.w);
   const say = A.orders(plan, A.iso(date), false, {}).filter(([t]) => t === 'say').map(([, x]) => x)[0];
   const skip = /^(Calentamiento|Elongación|Autochequeo|La orden|Al salir|Antes de entrar|Cuando quieras parar|Al terminar|Lee|Tarea|Agua|Levántate|Algo liviano|Desayuno|Agua del día|Comida al llegar|Colación para el trabajo|Almuerzo)$/;
@@ -54,6 +69,6 @@ export function ordenDelDia(A, date, { turno = '13', start, place } = {}) {
   const sh = plan.shift;
   out.push('', `Despiertas ${sh.wake} · entrenas desde ${sh.A}${sh.leave ? ' · sales al trabajo ' + sh.leave : ''} · cama ${sh.bed}`);
   if (turno === '13') { const s16 = A.applyShift(A.applyMode(base, ''), '16', null).shift; out.push(`Si hoy entras a las 16:00: despiertas ${s16.wake} · entrenas desde ${s16.A} · sales ${s16.leave} · cama ${s16.bed} (en la app toca «Entro 16:00»).`); }
-  out.push('Si fallaste un día, repetiste semanas o cambiaste ajustes, manda lo que dice la app: ahí ningún día se pierde.');
+  out.push(A.real ? 'Leído de tu bitácora: va igual que la app.' : 'Si fallaste un día, repetiste semanas o cambiaste ajustes, manda lo que dice la app: ahí ningún día se pierde.');
   return { L: L.after ? null : L, plan, st, shift: sh, title: plan.title, lines: out, rest: plan.kind === 'descanso', test: plan.test };
 }
