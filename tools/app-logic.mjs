@@ -51,6 +51,7 @@ export function ordenDelDia(A, date, { turno = '13', start, place } = {}) {
   // después de la semana 52, la app da una semana de mantención (la 47 con menos carga)
   const base = L.after ? Object.assign(A.dayPlan(47, L.dow, ctx), { w: 52, deload: false, maint: true }) : A.dayPlan(L.w, L.dow, ctx);
   if (L.after) base.title = 'Mantención · ' + base.title;
+  if (!A.real && [0, 1].includes(date.getDay())) turno = 'libre'; // domingo y lunes no trabaja
   const plan = A.real ? A.planFor(date) : A.applyShift(A.applyMode(base, ''), turno, null);
   if (A.real) { turno = (A.Store.days[A.iso(date)] || {}).turno || A.Store.cfg.turno; const y = A.iso(A.addDays(date, -1));
     if (A.skipData().list.includes(y)) out.push('Hoy retomas el día de ayer: no quedó cumplido, así que el plan se corrió un día.', ''); }

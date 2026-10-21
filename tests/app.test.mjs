@@ -72,7 +72,7 @@ const reload = async p => { await p.reload(); await p.waitForTimeout(200); };
 
 // 4. Ajustes: cambian el plan
 { console.log('4. Ajustes');
-  const { p, ctx } = await page('2026-10-15T09:00:00'); // miércoles de la semana 1: natación + piernas
+  const { p, ctx } = await page('2026-10-18T09:00:00'); // día 6 de la semana 1 (lunes del plan): lago + piernas B
   ok((await text(p)).includes('· lago'), 'lago por defecto');
   await p.click('[data-tab="plan"]');
   await p.click('[data-cset="place|piscina"]');
@@ -81,10 +81,10 @@ const reload = async p => { await p.reload(); await p.waitForTimeout(200); };
   const t = await text(p);
   ok(!t.includes('· lago'), 'piscina quita el modo lago');
   ok(!/× \d+ brazadas/.test(t) && t.includes('150 m suave'), 'piscina muestra metros, no brazadas');
-  for (let i = 0; i < 2; i++) await p.click('[data-go="-1"]'); // lunes: fuerza
-  ok((await text(p)).includes('4 × 8'), 'barras = máximo 10 − 2');
+  for (let i = 0; i < 2; i++) await p.click('[data-go="-1"]'); // torso B
+  ok((await text(p)).includes('3 × 8'), 'barras = máximo 10 − 2');
   await reload(p); for (let i = 0; i < 2; i++) await p.click('[data-go="-1"]');
-  ok((await text(p)).includes('4 × 8'), 'el máximo de barras queda guardado');
+  ok((await text(p)).includes('3 × 8'), 'el máximo de barras queda guardado');
   await p.click('[data-tab="plan"]');
   ok(await p.inputValue('#c-peso') === '80', 'el peso queda guardado');
   await p.click('[data-cset="partner|true"]'); await p.click('[data-tab="hoy"]');
@@ -157,7 +157,7 @@ const reload = async p => { await p.reload(); await p.waitForTimeout(200); };
   const { p, ctx } = await page('2027-01-10T09:00:00'); // semana 13, día 6 con inicio 6 oct
   const t = await text(p);
   ok(t.includes('SEM 13 · DÍA 6'), 'semana 13 día 6 (' + (t.match(/SEM \d+ · DÍA \d/) || [''])[0] + ')');
-  for (const [id, v] of [['flex', '30'], ['abd', '40'], ['barras', '4'], ['sent', '50'], ['run', '17:00'], ['swim', '1:40']]) await p.fill('#t-' + id, v);
+  for (const [id, v] of [['flex', '30'], ['barras', '4'], ['salto', '190'], ['abd', '40'], ['run', '17:00'], ['swim', '1:40']]) await p.fill('#t-' + id, v);
   await p.dispatchEvent('#t-run', 'change');
   ok((await text(p)).includes('No llegaste a la meta'), 'evalúa contra la meta');
   await p.click('[data-ask="rep"]'); await p.click('[data-rep]');
@@ -215,20 +215,16 @@ const reload = async p => { await p.reload(); await p.waitForTimeout(200); };
 
 // 13. Registro de adidas Running: ritmo, cumplimiento y guardado
 { console.log('13. Registro de carrera');
-  const { p, ctx, errs } = await page('2026-10-18T09:00:00'); // semana 1, día 6: trote suave 25 min
-  await p.fill('#rl-run2-km', '4,2'); await p.fill('#rl-run2-t', '26:00');
-  const v = await p.$eval('#rlv-run2', e => e.textContent);
+  const { p, ctx, errs } = await page('2026-10-15T09:00:00'); // semana 1, día 3: trote nasal 25 min
+  await p.fill('#rl-run-km', '4,2'); await p.fill('#rl-run-t', '26:00');
+  const v = await p.$eval('#rlv-run', e => e.textContent);
   ok(v.includes('ritmo 6:11 por km') && v.includes('Cumpliste'), 'calcula ritmo y cumplimiento (' + v + ')');
-  await p.fill('#rl-run2-t', '20:00');
-  ok((await p.$eval('#rlv-run2', e => e.textContent)).includes('Te faltaron 5 min'), 'avisa si faltaron minutos');
+  await p.fill('#rl-run-t', '20:00');
+  ok((await p.$eval('#rlv-run', e => e.textContent)).includes('Te faltaron 5 min'), 'avisa si faltaron minutos');
   await reload(p);
-  ok(await p.inputValue('#rl-run2-km') === '4,2', 'el registro queda guardado');
+  ok(await p.inputValue('#rl-run-km') === '4,2', 'el registro queda guardado');
   await p.click('[data-tab="progreso"]');
   ok((await text(p)).includes('4,2') && (await text(p)).includes('km corridos'), 'aparece en Progreso');
-  // intervalos: promedio por repetición
-  await p.click('[data-tab="hoy"]'); for (let i = 0; i < 4; i++) await p.click('[data-go="-1"]'); // día 2: intervalos 4 × 400
-  await p.fill('#rl-run-rep', '2:10');
-  ok((await p.$eval('#rlv-run', e => e.textContent)).includes('más lento'), 'compara el promedio con el ritmo pedido');
   ok(errs.length === 0, 'sin errores: ' + errs.join(' | '));
   await ctx.close(); }
 
@@ -254,21 +250,22 @@ const reload = async p => { await p.reload(); await p.waitForTimeout(200); };
   ok(errs.length === 0, 'sin errores: ' + errs.join(' | '));
   await ctx.close(); }
 
-// 15. Mini-prueba y simulacro: resultados y comparación
-{ console.log('15. Resultados de mini-prueba y simulacro');
-  const { p, ctx } = await page('2027-04-17T09:00:00'); // semana 27, día 5: mini-prueba
-  ok((await text(p)).includes('Tus resultados · mini-prueba'), 'formulario de mini-prueba');
-  await p.fill('#x-mini-flex', '30');
-  ok((await p.$eval('#xv-mini', e => e.textContent)).includes('Primera mini-prueba'), 'primera mini-prueba registrada');
-  for (let i = 0; i < 7; i++) await p.click('[data-go="1"]'); // semana 28, día 5: otra mini-prueba
-  await p.fill('#x-mini-flex', '32');
-  ok((await p.$eval('#xv-mini', e => e.textContent)).includes('Flexiones 32 (+2)'), 'compara con la anterior');
+// 15. Plan híbrido: torso, piernas, velocidad, lago el día libre e inglés todos los días
+{ console.log('15. Plan híbrido');
+  const { p, ctx } = await page('2026-10-13T09:00:00'); // semana 1, día 1: torso A
+  let t = await text(p);
+  ok(t.includes('Torso A') && t.includes('Flexiones con mochila') && t.includes('Rueda abdominal'), 'torso A con lo que hay en casa');
+  ok(t.includes('Inglés · 1 hora'), 'inglés todos los días');
+  await p.click('[data-go="1"]'); t = await text(p);
+  ok(t.includes('Nórdico') && t.includes('Copenhague') && t.includes('5-10-5'), 'velocidad y piernas antilesiones');
+  for (let i = 0; i < 4; i++) await p.click('[data-go="1"]'); t = await text(p);
+  ok(t.includes('· lago') && t.includes('Piernas B'), 'el día libre: lago y piernas B');
   await ctx.close(); }
 
 // 16. Progreso: constancia, gráficos, récords y diario
 { console.log('16. Progreso');
   const { p, ctx, errs } = await page('2026-10-11T09:00:00'); // prueba inicial
-  for (const [id, v] of [['flex', '30'], ['abd', '40'], ['barras', '4'], ['sent', '50'], ['run', '16:40'], ['swim', '1:50']]) await p.fill('#t-' + id, v);
+  for (const [id, v] of [['flex', '30'], ['barras', '4'], ['salto', '195'], ['abd', '40'], ['run', '16:40'], ['swim', '1:50'], ['brazo', '29']]) await p.fill('#t-' + id, v);
   await p.locator('summary', { hasText: 'Notas' }).click(); await p.fill('#f-note', 'la carrera me costó');
   await p.click('[data-tab="progreso"]');
   const t = await text(p);
@@ -386,26 +383,18 @@ const reload = async p => { await p.reload(); await p.waitForTimeout(200); };
     await p.addInitScript(([d, c]) => { if (!sessionStorage.getItem('seeded')) { localStorage.setItem('bitacora-buzo-v1', JSON.stringify({ cfg: Object.assign({ start: '2026-10-06' }, c), days: d })); sessionStorage.setItem('seeded', '1'); } }, [days, cfg]);
     await p.clock.install({ time: new Date(time) }); await p.goto(URL); await p.waitForTimeout(200); return { p, ctx, errs }; };
   // un descanso en medio no corta la cuenta; marcar “Al 100%” la apaga
-  { const { p, ctx, errs } = await seeded('2026-10-22T09:00:00', { '2026-10-17': { mode: 'cansado' }, '2026-10-18': { mode: 'cansado' }, '2026-10-20': { mode: 'dolor' }, '2026-10-21': { mode: 'cansado' } });
+  { const { p, ctx, errs } = await seeded('2026-10-20T09:00:00', { '2026-10-15': { mode: 'cansado' }, '2026-10-16': { mode: 'cansado' }, '2026-10-18': { mode: 'dolor' }, '2026-10-19': { mode: 'cansado' } });
     ok((await text(p)).includes('Llevas 4 días seguidos'), 'el descanso del domingo no corta la racha de fatiga');
     await p.click('[data-mode="ok"]');
     ok(!(await text(p)).includes('días seguidos cansado'), '“Al 100%” hoy apaga la alerta');
     ok(errs.length === 0, 'sin errores: ' + errs.join(' | ')); await ctx.close(); }
-  // mini-prueba con carrera de 1.600 m contra una de 1.200 m: compara ritmo, no tiempo
-  { const { p, ctx, errs } = await seeded('2027-05-29T09:00:00', { '2027-05-22': { mini: { run: '5:40', swim: '4:00', barras: '9', abd: '30' } }, '2027-05-15': { mini: { barras: '' } } });
-    ok((await text(p)).includes('Carrera 1.600 m (mm:ss)'), 'el formulario dice la distancia de la carrera');
-    await p.fill('#x-mini-run', '7:30');
-    const v = await p.$eval('#xv-mini', e => e.textContent);
-    ok(v.includes('ritmo 4:41/km') && v.includes('contra 1.200 m') && !v.includes('+1:50'), 'distancia distinta: compara el ritmo (' + v + ')');
-    await p.fill('#x-mini-abd', '31');
-    ok((await p.$eval('#xv-mini', e => e.textContent)).includes('Abdominales 31 (+1)'), 'salta la mini-prueba vacía y compara con la última con datos');
-    ok(errs.length === 0, 'sin errores: ' + errs.join(' | ')); await ctx.close(); }
   // gráficos: el 0 cuenta y tocar un punto muestra su valor
   { const { p, ctx, errs } = await seeded('2026-10-20T09:00:00', { '2026-10-11': { test: { barras: '0', run: '11:20' } } });
     await p.click('[data-tab="progreso"]');
-    ok(await p.locator('.chartbox').first().locator('.cd').count() === 1, 'una prueba con 0 barras aparece en el gráfico');
-    await p.locator('.chartbox').first().locator('.cd').first().click();
-    const cv = await p.locator('.chartbox').first().locator('.cval').textContent();
+    const box = p.locator('.chartbox', { hasText: 'Barras seguidas' });
+    ok(await box.locator('.cd').count() === 1, 'una prueba con 0 barras aparece en el gráfico');
+    await box.locator('.cd').first().click();
+    const cv = await box.locator('.cval').textContent();
     ok(cv.includes('11 oct') && cv.includes('semana 0') && cv.includes(': 0'), 'tocar un punto muestra fecha, semana y valor (' + cv + ')');
     ok(errs.length === 0, 'sin errores: ' + errs.join(' | ')); await ctx.close(); }
   // anotar un simulacro no cambia el plan de días que ya pasaron
@@ -444,17 +433,17 @@ const reload = async p => { await p.reload(); await p.waitForTimeout(200); };
   ok((await text(p)).includes('Despiertas 9:15'), 'turno 16 cambia la hora de despertar');
   await p.tap('[data-st="done"]'); ok((await text(p)).includes('Racha 1'), 'cumplir el día sube la racha'); await p.close();
   // jueves 8: no abre la app. Viernes 9 (descanso): la racha se cortó y el miércoles sigue cumplido
-  p = await open('2026-10-09T10:00:00');
-  ok((await text(p)).includes('Descanso'), 'el viernes es descanso');
-  await p.tap('[data-go="-1"]'); await p.tap('[data-go="-1"]');
+  p = await open('2026-10-10T10:00:00');
+  ok((await text(p)).includes('Descanso'), 'el día 5 es descanso');
+  await p.tap('[data-go="-1"]'); await p.tap('[data-go="-1"]'); await p.tap('[data-go="-1"]');
   ok((await text(p)).includes('Misión cumplida') || (await text(p)).includes('CUMPLIDO'), 'el miércoles sigue cumplido');
   ok(await p.locator('[data-turno="16"]').evaluate(e => e.classList.contains('on')), 'el miércoles conserva el turno 16');
   await p.close();
   // sábado 10, con turno 13 por defecto: hoy no hereda el turno 16 del miércoles
-  p = await open('2026-10-10T08:00:00');
+  p = await open('2026-10-09T08:00:00');
   ok(await p.locator('[data-turno="13"]').evaluate(e => e.classList.contains('on')), 'el turno de un día no se pega a los demás');
   await tapDots(p, 1); await p.tap('[data-mode="cansado"]'); await p.close();
-  p = await open('2026-10-10T22:50:00');
+  p = await open('2026-10-09T22:50:00');
   ok(await p.locator('[data-mode="cansado"]').evaluate(e => e.classList.contains('on')), 'en la noche sigue “Cansado”');
   ok(await p.locator('.dot.on').count() >= 1, 'en la noche siguen las series de la mañana');
   await p.close();
@@ -536,10 +525,10 @@ const reload = async p => { await p.reload(); await p.waitForTimeout(200); };
 { console.log('24. Lago y ajustes');
   const ctx = await browser.newContext({ viewport: { width: 390, height: 1200 } }); const errs = [];
   const open = async (time) => { const p = await ctx.newPage(); p.on('pageerror', e => errs.push(e.message)); await p.clock.install({ time: new Date(time) }); await p.goto(URL); await p.waitForTimeout(250); return p; };
-  let p = await open('2026-10-15T09:00:00');
+  let p = await open('2026-10-18T09:00:00');
   ok((await text(p)).includes('máximo 5 min'), 'en octubre sin neopreno el lago es de 5 min');
   await p.locator('[data-st="done"]').scrollIntoViewIfNeeded(); await p.click('[data-st="done"]'); await p.close();
-  p = await open('2026-10-16T09:00:00');
+  p = await open('2026-10-19T09:00:00');
   await p.click('[data-tab="plan"]'); await p.click('[data-cset="place|piscina"]'); await p.click('[data-tab="hoy"]');
   await p.waitForTimeout(400); await p.click('[data-go="-1"]');
   ok((await text(p)).includes('CUMPLIDO') && (await text(p)).includes('· lago'), 'pasarse a piscina no cambia el día que ya hiciste en el lago');
@@ -550,7 +539,7 @@ const reload = async p => { await p.reload(); await p.waitForTimeout(200); };
   p = await open('2027-03-09T09:00:00');
   ok((await p.evaluate(() => JSON.parse(localStorage.getItem('bitacora-buzo-v1')).cfg.tempK)) === '2027-03-02', 'la temperatura queda con su fecha');
   await p.close();
-  p = await open('2027-07-15T09:00:00');
+  p = await open('2027-07-18T09:00:00');
   ok((await text(p)).includes('Hoy no entras al lago'), 'en julio la temperatura de marzo ya no vale: no se entra');
   await p.close();
   ok(errs.length === 0, 'sin errores: ' + errs.join(' | '));
@@ -559,7 +548,7 @@ const reload = async p => { await p.reload(); await p.waitForTimeout(200); };
 // 25. Plan B: viento en el lago y día enfermo
 { console.log('25. Plan B: viento y enfermo');
   const ctx = await browser.newContext({ viewport: { width: 390, height: 1200 } }); const errs = [];
-  const p = await ctx.newPage(); p.on('pageerror', e => errs.push(e.message)); await p.clock.install({ time: new Date('2026-10-15T08:00:00') }); await p.goto(URL); await p.waitForTimeout(250);
+  const p = await ctx.newPage(); p.on('pageerror', e => errs.push(e.message)); await p.clock.install({ time: new Date('2026-10-18T08:00:00') }); await p.goto(URL); await p.waitForTimeout(250);
   ok((await text(p)).includes('Ida en bicicleta'), 'día de lago: ida en bici');
   await p.click('[data-nolake]'); await p.waitForTimeout(300);
   let t = await text(p);
@@ -569,7 +558,7 @@ const reload = async p => { await p.reload(); await p.waitForTimeout(200); };
   await p.click('[data-mode="enfermo"]'); await p.waitForTimeout(300);
   t = await text(p);
   ok(t.includes('Regla del cuello') && !t.includes('Ida en bicicleta'), 'enfermo: solo la regla del cuello, sin lago');
-  ok((await p.evaluate(() => JSON.parse(localStorage.getItem('bitacora-buzo-v1')).days['2026-10-15'].mode)) === 'enfermo', 'enfermo queda guardado');
+  ok((await p.evaluate(() => JSON.parse(localStorage.getItem('bitacora-buzo-v1')).days['2026-10-18'].mode)) === 'enfermo', 'enfermo queda guardado');
   ok(errs.length === 0, 'sin errores: ' + errs.join(' | '));
   await ctx.close(); }
 
@@ -580,19 +569,19 @@ const reload = async p => { await p.reload(); await p.waitForTimeout(200); };
   const title = p => p.evaluate(() => document.querySelector('#app').textContent);
   let p = await open('2026-10-06T08:00:00');
   await p.locator('[data-st="done"]').scrollIntoViewIfNeeded(); await p.click('[data-st="done"]'); await p.waitForTimeout(300); await p.close();
-  // el 7 no se marcó: el 8 retoma el día 2 (Reconocimiento)
+  // el 7 no se marcó: el 8 retoma el día 2 (Técnica de piernas)
   p = await open('2026-10-08T08:00:00'); let t = await title(p);
-  ok(t.includes('Hoy retomas el día de ayer') && t.includes('Reconocimiento'), 'un día sin marcar se retoma al día siguiente');
+  ok(t.includes('Hoy retomas el día de ayer') && t.includes('Técnica de piernas'), 'un día sin marcar se retoma al día siguiente');
   await p.click('[data-ydone]'); await p.waitForTimeout(300); t = await title(p);
-  ok(t.includes('Ensayo de técnica') && !t.includes('Hoy retomas'), '«sí lo hice ayer» marca ayer y hoy sigue con el día siguiente');
+  ok(t.includes('Motor aeróbico') && !t.includes('Hoy retomas'), '«sí lo hice ayer» marca ayer y hoy sigue con el día siguiente');
   await p.close();
   // el 9 enfermo: el 10 vuelve a tocar lo mismo del 9
   p = await open('2026-10-09T08:00:00'); t = await title(p);
-  const t9 = t.includes('Hoy retomas') ? 'Ensayo de técnica' : '';
-  ok(t9 === 'Ensayo de técnica', 'el 8 sin marcar: el 9 retoma el Ensayo de técnica');
+  const t9 = t.includes('Hoy retomas') ? 'Motor aeróbico' : '';
+  ok(t9 === 'Motor aeróbico', 'el 8 sin marcar: el 9 retoma el Motor aeróbico');
   await p.click('[data-mode="enfermo"]'); await p.waitForTimeout(300); await p.close();
   p = await open('2026-10-10T08:00:00'); t = await title(p);
-  ok(t.includes('estabas enfermo') && t.includes('Ensayo de técnica'), 'después de un día enfermo se retoma el mismo día');
+  ok(t.includes('estabas enfermo') && t.includes('Motor aeróbico'), 'después de un día enfermo se retoma el mismo día');
   await p.click('[data-tab="plan"]'); t = await title(p);
   ok(t.includes('se retomó al día siguiente'), 'en Plan se ven los días retomados');
   await p.close();
