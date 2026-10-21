@@ -81,9 +81,9 @@ const reload = async p => { await p.reload(); await p.waitForTimeout(200); };
   const t = await text(p);
   ok(!t.includes('· lago'), 'piscina quita el modo lago');
   ok(!/× \d+ brazadas/.test(t) && t.includes('150 m suave'), 'piscina muestra metros, no brazadas');
-  for (let i = 0; i < 2; i++) await p.click('[data-go="-1"]'); // torso B
+  for (let i = 0; i < 3; i++) await p.click('[data-go="-1"]'); // espalda
   ok((await text(p)).includes('3 × 8'), 'barras = máximo 10 − 2');
-  await reload(p); for (let i = 0; i < 2; i++) await p.click('[data-go="-1"]');
+  await reload(p); for (let i = 0; i < 3; i++) await p.click('[data-go="-1"]');
   ok((await text(p)).includes('3 × 8'), 'el máximo de barras queda guardado');
   await p.click('[data-tab="plan"]');
   ok(await p.inputValue('#c-peso') === '80', 'el peso queda guardado');
@@ -215,16 +215,16 @@ const reload = async p => { await p.reload(); await p.waitForTimeout(200); };
 
 // 13. Registro de adidas Running: ritmo, cumplimiento y guardado
 { console.log('13. Registro de carrera');
-  const { p, ctx, errs } = await page('2026-10-15T09:00:00'); // semana 1, día 3: trote nasal 25 min
-  await p.fill('#rl-run-km', '4,2'); await p.fill('#rl-run-t', '26:00');
+  const { p, ctx, errs } = await page('2026-10-26T07:00:00'); // semana 2, día 7: trote nasal 27 min
+  await p.fill('#rl-run-km', '4,4'); await p.fill('#rl-run-t', '27:30');
   const v = await p.$eval('#rlv-run', e => e.textContent);
-  ok(v.includes('ritmo 6:11 por km') && v.includes('Cumpliste'), 'calcula ritmo y cumplimiento (' + v + ')');
-  await p.fill('#rl-run-t', '20:00');
+  ok(v.includes('ritmo 6:15 por km') && v.includes('Cumpliste'), 'calcula ritmo y cumplimiento (' + v + ')');
+  await p.fill('#rl-run-t', '22:00');
   ok((await p.$eval('#rlv-run', e => e.textContent)).includes('Te faltaron 5 min'), 'avisa si faltaron minutos');
   await reload(p);
-  ok(await p.inputValue('#rl-run-km') === '4,2', 'el registro queda guardado');
+  ok(await p.inputValue('#rl-run-km') === '4,4', 'el registro queda guardado');
   await p.click('[data-tab="progreso"]');
-  ok((await text(p)).includes('4,2') && (await text(p)).includes('km corridos'), 'aparece en Progreso');
+  ok((await text(p)).includes('4,4') && (await text(p)).includes('km corridos'), 'aparece en Progreso');
   ok(errs.length === 0, 'sin errores: ' + errs.join(' | '));
   await ctx.close(); }
 
@@ -254,12 +254,12 @@ const reload = async p => { await p.reload(); await p.waitForTimeout(200); };
 { console.log('15. Plan híbrido');
   const { p, ctx } = await page('2026-10-13T09:00:00'); // semana 1, día 1: torso A
   let t = await text(p);
-  ok(t.includes('Torso A') && t.includes('Flexiones con mochila') && t.includes('Rueda abdominal'), 'torso A con lo que hay en casa');
+  ok(t.includes('Pecho + core') && t.includes('Flexiones con mochila') && t.includes('Rueda abdominal'), 'pecho y core con lo que hay en casa');
   ok(t.includes('Inglés · 1 hora'), 'inglés todos los días');
   await p.click('[data-go="1"]'); t = await text(p);
-  ok(t.includes('Velocidad') && t.includes('Piernas A') && t.includes('5-10-5'), 'velocidad y piernas antilesiones');
+  ok(t.includes('Pierna + core') && t.includes('Sentadilla búlgara'), 'pierna y core');
   for (let i = 0; i < 4; i++) await p.click('[data-go="1"]'); t = await text(p);
-  ok(t.includes('· lago') && t.includes('Piernas B'), 'el día libre: lago y piernas B');
+  ok(t.includes('· lago') && t.includes('Estiramiento'), 'el día libre: lago y estiramiento');
   await ctx.close(); }
 { const { p, ctx } = await page('2026-10-13T13:00:00'); // ya pasó la hora del torso y del inglés
   ok(await p.locator('.ses.pend').count() >= 2 && (await text(p)).includes('Pendiente'), 'lo que se pasó de hora queda en amarillo como pendiente');

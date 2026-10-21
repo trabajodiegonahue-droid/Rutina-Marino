@@ -594,6 +594,36 @@ const setsM=w=>{const st=stN(w);return Math.max(2,(st===1?3:st===4?5:4)-(DELOAD.
 const setsA=w=>Math.max(2,(stN(w)===1?2:3)-(DELOAD.includes(w)?1:0));
 const TEMPO="Bajada lenta (3 s), pausa de 1 s abajo, subida con fuerza.";
 const PROG="Cuando llegues al máximo del rango en todas las series, la próxima vez agrega peso (mochila o un disco) o baja más lento.";
+// semana por grupo muscular (cuando Diego mande su rutina, aquí van sus ejercicios)
+function coreShort(w,i){const a=setsA(w),st=stN(w);const C=[[B("Rueda abdominal",`${a} × ${st===1?"6–8 de rodillas":st===2?"8–12 de rodillas":"6–10 de pie o largas"}`,{s:a,r:60})],[B("Plancha",`${a} × ${st===1?45:st===2?60:90} s`,{s:a,r:30,tm:st===1?45:st===2?60:90})],[B("Pallof con banda",`${a} × 10 por lado`,{s:a*2,r:30})],[B("Hollow hold",`${a} × ${st===1?20:st===2?30:45} s`,{s:a,r:30,tm:st===1?20:st===2?30:45})]];return C[i%C.length]}
+function chestDay(w){const m=setsM(w),a=setsA(w);return [CAL,
+  B("Flexiones con mochila",`${m} × ${stN(w)===1?"10–15":"8–15"}`,{s:m,r:90}),
+  B("Press de pecho en el suelo",`${m} × 12–20`,{s:m,r:75}),
+  B("Aperturas con banda",`${a} × 15–20`,{s:a,r:45}),
+  B("Fondos en silla",`${a} × 10–20`,{s:a,r:75}),
+  B("Extensión de tríceps acostado",`${a} × 10–15`,{s:a,r:45}),...coreShort(w,0)]}
+function backDay(w,ctx){const m=setsM(w),a=setsA(w),mx=maxB(ctx);return [CAL,
+  barrasB(m,mx,120,""),
+  B("Remo a una mano con mancuerna",`${m} × 10–15 por lado`,{s:m*2,r:45}),
+  B("Remo con banda",`${a} × 15–20`,{s:a,r:45}),
+  B("Face pull con banda",`${a} × 15–20`,{s:a,r:45}),
+  B("Curl de bíceps",`${a} × 10–15`,{s:a,r:45}),...coreShort(w,1)]}
+function armsDay(w){const m=setsM(w),a=setsA(w);return [CAL,
+  B("Press militar con mancuernas",`${m} × 8–15`,{s:m,r:90}),
+  B("Elevaciones laterales",`${m} × 15–25`,{s:m,r:45}),
+  B("Curl martillo",`${a} × 10–15`,{s:a,r:45}),
+  B("Extensión de tríceps con banda",`${a} × 15–20`,{s:a,r:45}),
+  B("Curl de bíceps",`${a} × 10–15`,{s:a,r:45}),...coreShort(w,2)]}
+function legDay(w){const m=setsM(w),a=setsA(w),st=stN(w);return [
+  B("Calentamiento de carrera","10 min"),
+  B("Saltos largos",`${st===1?3:4} × 3`,{s:st===1?3:4,r:90}),
+  B("Sentadilla búlgara",`${m} × 8–12 por pierna`,{s:m*2,r:60}),
+  B("Peso muerto rumano",`${m} × 10–15`,{s:m,r:90}),
+  B("Sentadilla goblet",`${a} × 12–20`,{s:a,r:90}),
+  B("Nórdico",`${a} × ${st===1?"3–4":st===2?"4–6":"5–8"}`,{s:a,r:120}),
+  B("Copenhague",`${a} × ${st===1?15:st===2?20:30} s por lado`,{s:a*2,r:30,tm:st===1?15:st===2?20:30}),
+  B("Gemelos a una pierna",`${a} × 12–20 por pierna`,{s:a*2,r:30}),...coreShort(w,3)]}
+const STRETCH=()=>[B("Cuádriceps","2 × 30 s por pierna",{s:4,tm:30}),B("Isquiotibiales","2 × 30 s por pierna",{s:4,tm:30}),B("Cadera (paloma)","2 × 45 s por lado",{s:4,tm:45}),B("Aductores (mariposa)","2 × 45 s",{s:2,tm:45}),B("Gemelos en la pared","2 × 30 s por pierna",{s:4,tm:30}),B("Pecho en el marco de la puerta","2 × 30 s por lado",{s:4,tm:30}),B("Espalda (postura del niño)","2 × 45 s",{s:2,tm:45}),B("Hombros cruzados","2 × 30 s por lado",{s:4,tm:30})];
 function upperA(w,ctx){const m=setsM(w),a=setsA(w),st=stN(w);return [CAL,
   B("Flexiones con mochila",`${m} × ${st===1?"10–15":"8–15"}`,{s:m,r:90,note:`${st===1?"Mochila con 5 kg":"Mochila con 10–15 kg"} bien apretada a la espalda; manos un poco más abiertas que los hombros. ${RIR(w)}. ${PROG}`}),
   B("Remo a una mano con mancuerna",`${m} × 10–15 por lado`,{s:m*2,r:45,note:`Mancuerna con todo el peso (hasta 20 kg), rodilla y mano apoyadas en una silla. Tira el codo hacia la cadera y aprieta la espalda 1 s arriba. ${RIR(w)}.`}),
@@ -818,17 +848,19 @@ function dayPlan(w,dow,ctx){
     [title,kind,tasks]=TW[dow];
   } else {
     const early=w<=26,r=early?S12[w]:S34[w];
-    if(dow===0){title="Torso A + core";tasks=[T("fa","Torso A","Músculo que se note: cerca del fallo, cada serie cuenta.","07:00",upperA(w,ctx),{kind:"fuerza"})]}
-    if(dow===1){title="Velocidad + piernas A";tasks=[runT("run","Velocidad","Arranque, frenada y giro: lo que gana los balones divididos.","07:00",{blocks:speedBlocks(w),min:25}),T("legs","Piernas A","Búlgara, rumano, nórdico y Copenhague: piernas fuertes que no se rompen.","08:00",legsA(w),{kind:"fuerza"})]}
-    if(dow===2){const rk=w>=2&&w%2===0&&!deload;title=rk?"Marcha con mochila":"Motor aeróbico";
-      tasks=[rk?ruckT(w):runT("run","Trote nasal",deload?"Descarga: suave.":"El motor que te deja correr todo el partido.","07:00",z2Blocks(deload?Math.max(0,w-8):w)),T("mov","Movilidad","Caderas, tobillos y hombros sueltos: rindes más y te lesionas menos.","08:15",[B("Movilidad","10 min")],{kind:"fuerza"})]}
-    if(dow===3){title="Torso B + core";tasks=[T("fb","Torso B","Espalda ancha y brazos gruesos.","07:00",upperB(w,ctx),{kind:"fuerza"})]}
-    if(dow===4){title="Descanso o partido";kind="descanso";tasks=rest("Descanso","Si juegas un partido hoy, ese es tu entrenamiento: márcalo abajo.",[B("Partido de fútbol","si juegas",{opt:1,note:"Calienta 10 min antes y elonga después."})])}
-    if(dow===5&&INC[w]&&incMin(w)>=120){title=INC[w][0];tasks=[T("inc",INC[w][0],"Tu día libre: la sesión larga de incomodidad. Hoy no hay lago: la cabeza se entrena aquí.","07:00",incBlocks(w),{kind:"fuerza",safe:"Hidrátate y come antes. Dolor agudo: paras."})]}
-    else if(dow===5){title=INC[w]?"Lago + "+INC[w][0]:"Lago + piernas B";kind="agua";
-      tasks=[swimT("swim",w<=13?"Aprender a nadar":"Natación","Tu día libre: agua para aprender y mantener (nadar 50 m sin ayuda abre puertas).","07:00",swimBlocks(r[0],w)),treadT(),
-        INC[w]?T("inc",INC[w][0],"Seguir cuando el cuerpo pide parar. Esto prepara la semana del infierno.","10:00",incBlocks(w),{kind:"fuerza",safe:"Hidrátate y come antes. Dolor agudo: paras."}):T("legs2","Piernas B","Saltos, goblet y core: explosivo y difícil de botar.","10:00",legsB(w),{kind:"fuerza"})]}
-    if(dow===6){title="Intervalos de fútbol + core";tasks=[runT("int","Intervalos","Correr más y repetir sprints: lo que se nota en el minuto 85.","07:00",intervalBlocks(w)),T("core","Core","Abdomen fuerte: protege la espalda y te hace difícil de mover.","08:00",core(w),{kind:"fuerza"})]}
+    // 0 mié pecho · 1 jue pierna · 2 vie espalda · 3 sáb hombros y brazos · 4 dom descanso o partido · 5 lun lago + estiramiento · 6 mar cardio
+    if(dow===0){title="Pecho + core";tasks=[T("fa","Pecho + core","","07:00",chestDay(w),{kind:"fuerza"})]}
+    if(dow===1){title="Pierna + core";tasks=[T("legs","Pierna + core","","07:00",legDay(w),{kind:"fuerza"})]}
+    if(dow===2){title="Espalda + core";tasks=[T("fb","Espalda + core","","07:00",backDay(w,ctx),{kind:"fuerza"})]}
+    if(dow===3){title="Hombros y brazos + core";tasks=[T("arms","Hombros y brazos + core","","07:00",armsDay(w),{kind:"fuerza"})]}
+    if(dow===4){title="Descanso o partido";kind="descanso";tasks=rest("Descanso","",[B("Partido de fútbol","si juegas",{opt:1})])}
+    if(dow===5&&INC[w]&&incMin(w)>=120){title=INC[w][0];tasks=[T("inc",INC[w][0],"","07:00",incBlocks(w),{kind:"fuerza",safe:"Hidrátate y come antes. Dolor agudo: paras."})]}
+    else if(dow===5){title=INC[w]?"Lago + "+INC[w][0]:"Lago + estiramiento";kind="agua";
+      tasks=[swimT("swim",w<=13?"Aprender a nadar":"Natación","","07:00",swimBlocks(r[0],w)),treadT(),
+        INC[w]?T("inc",INC[w][0],"","10:00",incBlocks(w),{kind:"fuerza",safe:"Hidrátate y come antes. Dolor agudo: paras."}):T("stretch","Estiramiento","","10:00",STRETCH(),{kind:"fuerza"})]}
+    if(dow===6){const rk=w>=3&&w%4===2&&!deload,iv=w%2===1;title=rk?"Marcha con mochila":"Cardio + core";
+      tasks=rk?[ruckT(w)]:[iv?runT("int","Intervalos","","07:00",intervalBlocks(w)):runT("run","Trote nasal","","07:00",z2Blocks(deload?Math.max(0,w-8):w)),T("core","Core","","08:00",core(w).slice(0,3),{kind:"fuerza"})]}
+
   }
   if(kind==="prueba"&&!(tasks&&tasks.length))tasks=[T("prueba","Protocolo de la prueba","Siempre en el mismo orden. Máximo 3 min entre ejercicios. Anota cada número abajo.","07:00",testBlocks(),{kind:"fuerza",safe:"Calienta 10 minutos antes. Dolor agudo: paras ese ejercicio y sigues con el siguiente."})];
   tasks=tasks.filter(Boolean).map(t=>lake&&t.kind==="agua"&&t.blocks.some(b=>b.m)?lakeify(t,w,ctx):lake&&t.blocks.some(b=>/^Nado [\d.–]+ m$/.test(b.n))?lakeSprint(t,w,ctx):t);
@@ -836,7 +868,7 @@ function dayPlan(w,dow,ctx){
   if(lake)tasks=tasks.map(t=>t.blocks.some(b=>/^6\. Nado 50 m/.test(b.n))?Object.assign({},t,{blocks:t.blocks.map(b=>/^6\. Nado 50 m/.test(b.n)?Object.assign({},b,{note:(ctx.pool?"En piscina, o en el lago":"En el lago")+": paralelo a la orilla y donde haces pie, con las reglas de siempre. Si el agua está muy fría, queda pendiente."}):b)}):t);
   if(!["descanso","admin","prueba"].includes(kind)&&w!==HELL&&!TESTS.includes(w)&&!deload&&!(INC[w]&&dow===5)&&!(st>=3&&dow===3))tasks.push(tolT(w));
   // descarga de las etapas 3 y 4: la fuerza también baja (en la 51, solo movilidad, como dice el PDF)
-  if(deload&&st>=3)tasks=tasks.map(t=>!t||!["fa","fb","legs","legs2","core","pt"].includes(t.id)?t:w===51?Object.assign({},t,{t:"Movilidad",why:"Descarga fuerte antes de la prueba final.",blocks:[B("Movilidad","20 min",{tm:1200,note:"Círculos de cadera, hombros y tobillos, gato-vaca y sentadilla profunda. Nada de fuerza esta semana."})]}):Object.assign({},t,{why:(t.why?t.why+" ":"")+"Descarga: menos series."}));
+  if(deload&&st>=3)tasks=tasks.map(t=>!t||!["fa","fb","legs","legs2","arms","core","pt"].includes(t.id)?t:w===51?Object.assign({},t,{t:"Movilidad",why:"Descarga fuerte antes de la prueba final.",blocks:[B("Movilidad","20 min",{tm:1200,note:"Círculos de cadera, hombros y tobillos, gato-vaca y sentadilla profunda. Nada de fuerza esta semana."})]}):Object.assign({},t,{why:(t.why?t.why+" ":"")+"Descarga: menos series."}));
   if(w===0&&dow===2)tasks.push(tolT(0));
   if(TESTS.includes(w)&&w>0&&dow===4)tasks.push(T("prep","Preparar la prueba","Que mañana no falte nada.","20:00",[B("Lista","cronómetro, ropa de recambio, agua"),B("Lugar","barra y pista o tramo de 3,2 km",{pool:!lake||!!ctx.pool})],{kind:"prep"}));
   if(w>=1&&kind!=="descanso"&&w!==HELL&&!(INC[w]&&dow===5))tasks.push(T("ducha","Ducha fría "+cold(w),"Adaptación al frío.","11:15",[B("Agua fría",cold(w),{tm:coldSec(w),note:"Al final de la ducha. Respira lento y largo por la nariz."})],{kind:"rutina"}));
@@ -1802,7 +1834,7 @@ function viewGuia(){return `<div class="sec prose"><h2>Guía</h2>
  <tr><td>La máscara de “altura” no simula altura; funciona como entrenador de los músculos respiratorios (<a href="https://jssm.org/15-2-379.p_d_f" target="_blank" rel="noopener">Porcari 2016</a>)</td><td>Tu boquilla nasal: solo en los trotes suaves</td></tr>
  <tr><td>La creatina monohidrato es segura y mejora el rendimiento y las ganancias de músculo (<a href="https://pmc.ncbi.nlm.nih.gov/articles/5469049/" target="_blank" rel="noopener">ISSN 2017</a>)</td><td>Opcional: 3–5 g al día. Coméntalo en tu chequeo médico</td></tr></tbody></table></div>
  <h3>Cómo sube el plan</h3><ul>
- <li><b>Semana:</b> mié torso A · jue velocidad + piernas A · vie trote nasal (o mochila) · sáb torso B · dom descanso o partido · lun lago + piernas B · mar intervalos + core. Todos los días: inglés 1 hora, tolerancia al dolor y ducha fría.</li>
+ <li><b>Semana:</b> mié pecho + core · jue pierna + core · vie espalda + core · sáb hombros y brazos + core · dom descanso o partido · lun lago + estiramiento · mar cardio (intervalos o trote nasal; mochila cada 4 semanas) + core. Todos los días: inglés 1 hora.</li>
  <li><b>Cada 4 semanas, descarga</b> (menos series) para que el cuerpo asimile.</li>
  <li><b>Prueba cada 13 semanas</b> (un lunes): flexiones, barras, salto largo, abdominales, 3.200 m, nado 50 m y medidas. Ahí ves en números el músculo que ganaste.</li>
  <li><b>Lo militar:</b> marcha con mochila cada 2 semanas, sesiones de incomodidad y una semana del infierno adaptada (sem 48), siempre durmiendo 8 h.</li>
