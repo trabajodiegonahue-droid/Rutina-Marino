@@ -7,10 +7,10 @@ X-WR-CALNAME:Bitácora Buzo Táctico
 X-WR-TIMEZONE:America/Santiago
 BEGIN:VEVENT
 UID:bitacora-2026-10-21@rutina-marino
-DTSTAMP:20261021T141008Z
+DTSTAMP:20261021T141038Z
 DTSTART:20261021T110000Z
 DTEND:20261021T150000Z
-SUMMARY:⚓ Sem 0 · Día 1 · Arranque
+SUMMARY:★ Sem 0 · Día 1 · Arranque
 DESCRIPTION:«Diego. Querías saber si puedes. Hoy se sigue respondiendo.
  »\n\n8:00 Trote suave 20 min: Trote 20 min\n10:15 Aprende los ejercicios
   de la prueba: Barras 2 × 3 · Flexiones 2 × 10 · Sentadillas 2 × 15 
@@ -26,21 +26,21 @@ DESCRIPTION:«Diego. Querías saber si puedes. Hoy se sigue respondiendo.
 TRANSP:OPAQUE
 BEGIN:VALARM
 ACTION:DISPLAY
-DESCRIPTION:⚓ Sem 0 · Día 1 · Arranque
+DESCRIPTION:★ Sem 0 · Día 1 · Arranque
 TRIGGER:-PT15M
 END:VALARM
 BEGIN:VALARM
 ACTION:DISPLAY
-DESCRIPTION:⚓ Sem 0 · Día 1 · Arranque
+DESCRIPTION:★ Sem 0 · Día 1 · Arranque
 TRIGGER:PT0M
 END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:bitacora-2026-10-22@rutina-marino
-DTSTAMP:20261021T141008Z
+DTSTAMP:20261021T141038Z
 DTSTART:20261022T110000Z
 DTEND:20261022T150000Z
-SUMMARY:⚓ Sem 0 · Día 2 · Reconocimiento
+SUMMARY:★ Sem 0 · Día 2 · Reconocimiento
 DESCRIPTION:«De pie\, Diego. Esto es lo que haces hoy.»\n\n8:00 Trote su
  ave 30 min: Trote 30 min\n10:15 Conseguir equipo: Mochila y peso libros o
   botellas de agua · Zapatillas de correr en buen estado · Barra para do
@@ -55,21 +55,21 @@ DESCRIPTION:«De pie\, Diego. Esto es lo que haces hoy.»\n\n8:00 Trote su
 TRANSP:OPAQUE
 BEGIN:VALARM
 ACTION:DISPLAY
-DESCRIPTION:⚓ Sem 0 · Día 2 · Reconocimiento
+DESCRIPTION:★ Sem 0 · Día 2 · Reconocimiento
 TRIGGER:-PT15M
 END:VALARM
 BEGIN:VALARM
 ACTION:DISPLAY
-DESCRIPTION:⚓ Sem 0 · Día 2 · Reconocimiento
+DESCRIPTION:★ Sem 0 · Día 2 · Reconocimiento
 TRIGGER:PT0M
 END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:bitacora-2026-10-23@rutina-marino
-DTSTAMP:20261021T141008Z
+DTSTAMP:20261021T141038Z
 DTSTART:20261023T110000Z
 DTEND:20261023T150000Z
-SUMMARY:⚓ Sem 0 · Día 3 · Ensayo de técnica
+SUMMARY:★ Sem 0 · Día 3 · Ensayo de técnica
 DESCRIPTION:«Arriba\, Diego. Nadie lo va a hacer por ti.»\n\n8:00 Fuerza
   de ensayo: Barras 3 × 3 · Flexiones 3 × 10 · Sentadillas 3 × 15 · 
  Abdominales 3 × 15 · Plancha 2 × 30 s\n10:15 Consultar requisitos: Pre
@@ -84,21 +84,21 @@ DESCRIPTION:«Arriba\, Diego. Nadie lo va a hacer por ti.»\n\n8:00 Fuerza
 TRANSP:OPAQUE
 BEGIN:VALARM
 ACTION:DISPLAY
-DESCRIPTION:⚓ Sem 0 · Día 3 · Ensayo de técnica
+DESCRIPTION:★ Sem 0 · Día 3 · Ensayo de técnica
 TRIGGER:-PT15M
 END:VALARM
 BEGIN:VALARM
 ACTION:DISPLAY
-DESCRIPTION:⚓ Sem 0 · Día 3 · Ensayo de técnica
+DESCRIPTION:★ Sem 0 · Día 3 · Ensayo de técnica
 TRIGGER:PT0M
 END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:bitacora-2026-10-24@rutina-marino
-DTSTAMP:20261021T141008Z
+DTSTAMP:20261021T141038Z
 DTSTART:20261024T130000Z
 DTEND:20261024T133000Z
-SUMMARY:⚓ Sem 0 · Día 4 · Descanso
+SUMMARY:★ Sem 0 · Día 4 · Descanso
 DESCRIPTION:«Día libre. Cúmplelo igual de serio.»\n\nDescanso: Movilid
  ad 15 min suaves · Dormir 8–9 h\n22:45 Estudio: Grados del Ejército\n
  \nDespiertas 7:30 · entrenas desde 8:00 · sales al trabajo 12:30 · cam
@@ -110,16 +110,16 @@ DESCRIPTION:«Día libre. Cúmplelo igual de serio.»\n\nDescanso: Movilid
 TRANSP:OPAQUE
 BEGIN:VALARM
 ACTION:DISPLAY
-DESCRIPTION:⚓ Sem 0 · Día 4 · Descanso
+DESCRIPTION:★ Sem 0 · Día 4 · Descanso
 TRIGGER:PT0M
 END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:bitacora-2026-10-25@rutina-marino
-DTSTAMP:20261021T141008Z
+DTSTAMP:20261021T141038Z
 DTSTART:20261025T110000Z
 DTEND:20261025T150000Z
-SUMMARY:⚓ Sem 0 · Día 5 · Activación
+SUMMARY:★ Sem 0 · Día 5 · Activación
 DESCRIPTION:«De pie\, Diego. Esto es lo que haces hoy.»\n\n8:00 Trote su
  ave 20 min: Trote 20 min\n11:40 Preparar la prueba: Lista cronómetro\, r
  opa de recambio\, agua · Lugar barra y pista o tramo de 3\,2 km\n22:45 E
@@ -133,21 +133,21 @@ DESCRIPTION:«De pie\, Diego. Esto es lo que haces hoy.»\n\n8:00 Trote su
 TRANSP:OPAQUE
 BEGIN:VALARM
 ACTION:DISPLAY
-DESCRIPTION:⚓ Sem 0 · Día 5 · Activación
+DESCRIPTION:★ Sem 0 · Día 5 · Activación
 TRIGGER:-PT15M
 END:VALARM
 BEGIN:VALARM
 ACTION:DISPLAY
-DESCRIPTION:⚓ Sem 0 · Día 5 · Activación
+DESCRIPTION:★ Sem 0 · Día 5 · Activación
 TRIGGER:PT0M
 END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:bitacora-2026-10-26@rutina-marino
-DTSTAMP:20261021T141008Z
+DTSTAMP:20261021T141038Z
 DTSTART:20261026T110000Z
 DTEND:20261026T150000Z
-SUMMARY:⚓ Sem 0 · Día 6 · PRUEBA · Prueba inicial
+SUMMARY:★ Sem 0 · Día 6 · PRUEBA · Prueba inicial
 DESCRIPTION:«Diego. Hoy se mide el punto de partida. Que sea verdad\, no 
  bonito.»\n\n8:00 Protocolo de la prueba: 1. Flexiones máximo en 2 min 
  · 2. Abdominales máximo en 2 min · 3. Barras máximo seguidas · 4. Se
@@ -162,21 +162,21 @@ DESCRIPTION:«Diego. Hoy se mide el punto de partida. Que sea verdad\, no
 TRANSP:OPAQUE
 BEGIN:VALARM
 ACTION:DISPLAY
-DESCRIPTION:⚓ Sem 0 · Día 6 · PRUEBA · Prueba inicial
+DESCRIPTION:★ Sem 0 · Día 6 · PRUEBA · Prueba inicial
 TRIGGER:-PT15M
 END:VALARM
 BEGIN:VALARM
 ACTION:DISPLAY
-DESCRIPTION:⚓ Sem 0 · Día 6 · PRUEBA · Prueba inicial
+DESCRIPTION:★ Sem 0 · Día 6 · PRUEBA · Prueba inicial
 TRIGGER:PT0M
 END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:bitacora-2026-10-27@rutina-marino
-DTSTAMP:20261021T141008Z
+DTSTAMP:20261021T141038Z
 DTSTART:20261027T130000Z
 DTEND:20261027T133000Z
-SUMMARY:⚓ Sem 0 · Día 7 · Descanso total
+SUMMARY:★ Sem 0 · Día 7 · Descanso total
 DESCRIPTION:«Día libre. Cúmplelo igual de serio.»\n\nDescanso total: M
  ovilidad 15 min suaves · Dormir 8–9 h\n22:45 Estudio: Valores del mili
  tar\n\nDespiertas 7:30 · entrenas desde 8:00 · sales al trabajo 12:30 
@@ -188,16 +188,16 @@ DESCRIPTION:«Día libre. Cúmplelo igual de serio.»\n\nDescanso total: M
 TRANSP:OPAQUE
 BEGIN:VALARM
 ACTION:DISPLAY
-DESCRIPTION:⚓ Sem 0 · Día 7 · Descanso total
+DESCRIPTION:★ Sem 0 · Día 7 · Descanso total
 TRIGGER:PT0M
 END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:bitacora-2026-10-28@rutina-marino
-DTSTAMP:20261021T141008Z
+DTSTAMP:20261021T141038Z
 DTSTART:20261028T110000Z
 DTEND:20261028T150000Z
-SUMMARY:⚓ Sem 1 · Día 1 · Fuerza + PT
+SUMMARY:★ Sem 1 · Día 1 · Fuerza + PT
 DESCRIPTION:«De pie\, Diego. Esto es lo que haces hoy.»\n\n8:00 Fuerza d
  e tren superior: Barras 4 × 4 · Remo invertido 3 × 10 · Flexiones 4 
  × 12 · Fondos en silla 3 × 10 · Plancha 3 × 45 s\n10:15 PT militar: 
@@ -213,21 +213,21 @@ DESCRIPTION:«De pie\, Diego. Esto es lo que haces hoy.»\n\n8:00 Fuerza d
 TRANSP:OPAQUE
 BEGIN:VALARM
 ACTION:DISPLAY
-DESCRIPTION:⚓ Sem 1 · Día 1 · Fuerza + PT
+DESCRIPTION:★ Sem 1 · Día 1 · Fuerza + PT
 TRIGGER:-PT15M
 END:VALARM
 BEGIN:VALARM
 ACTION:DISPLAY
-DESCRIPTION:⚓ Sem 1 · Día 1 · Fuerza + PT
+DESCRIPTION:★ Sem 1 · Día 1 · Fuerza + PT
 TRIGGER:PT0M
 END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:bitacora-2026-10-29@rutina-marino
-DTSTAMP:20261021T141008Z
+DTSTAMP:20261021T141038Z
 DTSTART:20261029T110000Z
 DTEND:20261029T150000Z
-SUMMARY:⚓ Sem 1 · Día 2 · Intervalos + core
+SUMMARY:★ Sem 1 · Día 2 · Intervalos + core
 DESCRIPTION:«Arriba\, Diego. Nadie lo va a hacer por ti.»\n\n8:00 Interv
  alos 4 × 400 m: 4 × 400 m 2:00 cada uno · Vuelta a la calma 5–10 min
   trote suave\n9:15 Core: Plancha 3 × 45 s · Plancha lateral 2 × 30 s p
@@ -243,21 +243,21 @@ DESCRIPTION:«Arriba\, Diego. Nadie lo va a hacer por ti.»\n\n8:00 Interv
 TRANSP:OPAQUE
 BEGIN:VALARM
 ACTION:DISPLAY
-DESCRIPTION:⚓ Sem 1 · Día 2 · Intervalos + core
+DESCRIPTION:★ Sem 1 · Día 2 · Intervalos + core
 TRIGGER:-PT15M
 END:VALARM
 BEGIN:VALARM
 ACTION:DISPLAY
-DESCRIPTION:⚓ Sem 1 · Día 2 · Intervalos + core
+DESCRIPTION:★ Sem 1 · Día 2 · Intervalos + core
 TRIGGER:PT0M
 END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:bitacora-2026-10-30@rutina-marino
-DTSTAMP:20261021T141008Z
+DTSTAMP:20261021T141038Z
 DTSTART:20261030T110000Z
 DTEND:20261030T150000Z
-SUMMARY:⚓ Sem 1 · Día 3 · Natación + piernas
+SUMMARY:★ Sem 1 · Día 3 · Natación + piernas
 DESCRIPTION:«Al agua. Resistencia sí\, heroísmo no.»\n\n8:00 Aprender 
  a nadar · lago [máximo 5 min en el agua · solo donde haces pie · avis
  a a alguien]: Ida en bicicleta 15 min · ≈3\,8 km · Entrada al agua de
@@ -275,21 +275,21 @@ DESCRIPTION:«Al agua. Resistencia sí\, heroísmo no.»\n\n8:00 Aprender
 TRANSP:OPAQUE
 BEGIN:VALARM
 ACTION:DISPLAY
-DESCRIPTION:⚓ Sem 1 · Día 3 · Natación + piernas
+DESCRIPTION:★ Sem 1 · Día 3 · Natación + piernas
 TRIGGER:-PT15M
 END:VALARM
 BEGIN:VALARM
 ACTION:DISPLAY
-DESCRIPTION:⚓ Sem 1 · Día 3 · Natación + piernas
+DESCRIPTION:★ Sem 1 · Día 3 · Natación + piernas
 TRIGGER:PT0M
 END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:bitacora-2026-10-31@rutina-marino
-DTSTAMP:20261021T141008Z
+DTSTAMP:20261021T141038Z
 DTSTART:20261031T130000Z
 DTEND:20261031T133000Z
-SUMMARY:⚓ Sem 1 · Día 4 · Descanso activo
+SUMMARY:★ Sem 1 · Día 4 · Descanso activo
 DESCRIPTION:«Hoy descansas. Es una orden\, no un premio.»\n\nDescanso ac
  tivo: Movilidad 15 min suaves · Dormir 8–9 h\n22:45 Estudio: La brúju
  la\n\nDespiertas 7:30 · entrenas desde 8:00 · sales al trabajo 12:30 ·
@@ -301,16 +301,16 @@ DESCRIPTION:«Hoy descansas. Es una orden\, no un premio.»\n\nDescanso ac
 TRANSP:OPAQUE
 BEGIN:VALARM
 ACTION:DISPLAY
-DESCRIPTION:⚓ Sem 1 · Día 4 · Descanso activo
+DESCRIPTION:★ Sem 1 · Día 4 · Descanso activo
 TRIGGER:PT0M
 END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:bitacora-2026-11-01@rutina-marino
-DTSTAMP:20261021T141008Z
+DTSTAMP:20261021T141038Z
 DTSTART:20261101T110000Z
 DTEND:20261101T150000Z
-SUMMARY:⚓ Sem 1 · Día 5 · Circuito militar
+SUMMARY:★ Sem 1 · Día 5 · Circuito militar
 DESCRIPTION:«Arriba\, Diego. Nadie lo va a hacer por ti.»\n\n8:00 Circui
  to militar: Circuito 3 vueltas\n11:30 Tolerancia al dolor: Sentadilla iso
  métrica en la pared 0:49 · Colgado de la barra 0:22 · Plancha 1:04\n11
@@ -324,21 +324,21 @@ DESCRIPTION:«Arriba\, Diego. Nadie lo va a hacer por ti.»\n\n8:00 Circui
 TRANSP:OPAQUE
 BEGIN:VALARM
 ACTION:DISPLAY
-DESCRIPTION:⚓ Sem 1 · Día 5 · Circuito militar
+DESCRIPTION:★ Sem 1 · Día 5 · Circuito militar
 TRIGGER:-PT15M
 END:VALARM
 BEGIN:VALARM
 ACTION:DISPLAY
-DESCRIPTION:⚓ Sem 1 · Día 5 · Circuito militar
+DESCRIPTION:★ Sem 1 · Día 5 · Circuito militar
 TRIGGER:PT0M
 END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:bitacora-2026-11-02@rutina-marino
-DTSTAMP:20261021T141008Z
+DTSTAMP:20261021T141038Z
 DTSTART:20261102T110000Z
 DTEND:20261102T150000Z
-SUMMARY:⚓ Sem 1 · Día 6 · Trote suave
+SUMMARY:★ Sem 1 · Día 6 · Trote suave
 DESCRIPTION:«Diego. Querías saber si puedes. Hoy se sigue respondiendo.
  »\n\n8:00 Trote 25 min suave: Trote 25 min\n11:30 Tolerancia al dolor: S
  entadilla isométrica en la pared 0:49 · Colgado de la barra 0:22 · Pla
@@ -352,21 +352,21 @@ DESCRIPTION:«Diego. Querías saber si puedes. Hoy se sigue respondiendo.
 TRANSP:OPAQUE
 BEGIN:VALARM
 ACTION:DISPLAY
-DESCRIPTION:⚓ Sem 1 · Día 6 · Trote suave
+DESCRIPTION:★ Sem 1 · Día 6 · Trote suave
 TRIGGER:-PT15M
 END:VALARM
 BEGIN:VALARM
 ACTION:DISPLAY
-DESCRIPTION:⚓ Sem 1 · Día 6 · Trote suave
+DESCRIPTION:★ Sem 1 · Día 6 · Trote suave
 TRIGGER:PT0M
 END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:bitacora-2026-11-03@rutina-marino
-DTSTAMP:20261021T141008Z
+DTSTAMP:20261021T141038Z
 DTSTART:20261103T130000Z
 DTEND:20261103T133000Z
-SUMMARY:⚓ Sem 1 · Día 7 · Descanso total
+SUMMARY:★ Sem 1 · Día 7 · Descanso total
 DESCRIPTION:«Hoy descansas. Es una orden\, no un premio.»\n\nDescanso to
  tal: Movilidad 15 min suaves · Dormir 8–9 h\n22:45 Estudio: Nudo as de
   guía\n\nDespiertas 7:30 · entrenas desde 8:00 · sales al trabajo 12:3
@@ -378,16 +378,16 @@ DESCRIPTION:«Hoy descansas. Es una orden\, no un premio.»\n\nDescanso to
 TRANSP:OPAQUE
 BEGIN:VALARM
 ACTION:DISPLAY
-DESCRIPTION:⚓ Sem 1 · Día 7 · Descanso total
+DESCRIPTION:★ Sem 1 · Día 7 · Descanso total
 TRIGGER:PT0M
 END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:bitacora-2026-11-04@rutina-marino
-DTSTAMP:20261021T141008Z
+DTSTAMP:20261021T141038Z
 DTSTART:20261104T110000Z
 DTEND:20261104T150000Z
-SUMMARY:⚓ Sem 2 · Día 1 · Fuerza + PT
+SUMMARY:★ Sem 2 · Día 1 · Fuerza + PT
 DESCRIPTION:«Arriba\, Diego. Nadie lo va a hacer por ti.»\n\n8:00 Fuerza
   de tren superior: Barras 4 × 4 · Remo invertido 3 × 10 · Flexiones 4
   × 12 · Fondos en silla 3 × 10 · Plancha 3 × 45 s\n10:15 PT militar:
@@ -403,21 +403,21 @@ DESCRIPTION:«Arriba\, Diego. Nadie lo va a hacer por ti.»\n\n8:00 Fuerza
 TRANSP:OPAQUE
 BEGIN:VALARM
 ACTION:DISPLAY
-DESCRIPTION:⚓ Sem 2 · Día 1 · Fuerza + PT
+DESCRIPTION:★ Sem 2 · Día 1 · Fuerza + PT
 TRIGGER:-PT15M
 END:VALARM
 BEGIN:VALARM
 ACTION:DISPLAY
-DESCRIPTION:⚓ Sem 2 · Día 1 · Fuerza + PT
+DESCRIPTION:★ Sem 2 · Día 1 · Fuerza + PT
 TRIGGER:PT0M
 END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:bitacora-2026-11-05@rutina-marino
-DTSTAMP:20261021T141008Z
+DTSTAMP:20261021T141038Z
 DTSTART:20261105T110000Z
 DTEND:20261105T150000Z
-SUMMARY:⚓ Sem 2 · Día 2 · Intervalos + core
+SUMMARY:★ Sem 2 · Día 2 · Intervalos + core
 DESCRIPTION:«Diego. Querías saber si puedes. Hoy se sigue respondiendo.
  »\n\n8:00 Intervalos 5 × 400 m: 5 × 400 m 2:00 cada uno · Vuelta a la
   calma 5–10 min trote suave\n9:15 Core: Plancha 3 × 45 s · Plancha la
@@ -433,21 +433,21 @@ DESCRIPTION:«Diego. Querías saber si puedes. Hoy se sigue respondiendo.
 TRANSP:OPAQUE
 BEGIN:VALARM
 ACTION:DISPLAY
-DESCRIPTION:⚓ Sem 2 · Día 2 · Intervalos + core
+DESCRIPTION:★ Sem 2 · Día 2 · Intervalos + core
 TRIGGER:-PT15M
 END:VALARM
 BEGIN:VALARM
 ACTION:DISPLAY
-DESCRIPTION:⚓ Sem 2 · Día 2 · Intervalos + core
+DESCRIPTION:★ Sem 2 · Día 2 · Intervalos + core
 TRIGGER:PT0M
 END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:bitacora-2026-11-06@rutina-marino
-DTSTAMP:20261021T141008Z
+DTSTAMP:20261021T141038Z
 DTSTART:20261106T110000Z
 DTEND:20261106T150000Z
-SUMMARY:⚓ Sem 2 · Día 3 · Natación + piernas
+SUMMARY:★ Sem 2 · Día 3 · Natación + piernas
 DESCRIPTION:«Al lago. Vas solo: nadas donde haces pie y sales cuando suen
  a.»\n\n8:00 Aprender a nadar · lago [máximo 8 min en el agua · solo d
  onde haces pie · avisa a alguien]: Ida en bicicleta 15 min · ≈3\,8 km
@@ -465,21 +465,21 @@ DESCRIPTION:«Al lago. Vas solo: nadas donde haces pie y sales cuando suen
 TRANSP:OPAQUE
 BEGIN:VALARM
 ACTION:DISPLAY
-DESCRIPTION:⚓ Sem 2 · Día 3 · Natación + piernas
+DESCRIPTION:★ Sem 2 · Día 3 · Natación + piernas
 TRIGGER:-PT15M
 END:VALARM
 BEGIN:VALARM
 ACTION:DISPLAY
-DESCRIPTION:⚓ Sem 2 · Día 3 · Natación + piernas
+DESCRIPTION:★ Sem 2 · Día 3 · Natación + piernas
 TRIGGER:PT0M
 END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:bitacora-2026-11-07@rutina-marino
-DTSTAMP:20261021T141008Z
+DTSTAMP:20261021T141038Z
 DTSTART:20261107T110000Z
 DTEND:20261107T150000Z
-SUMMARY:⚓ Sem 2 · Día 4 · Marcha con mochila
+SUMMARY:★ Sem 2 · Día 4 · Marcha con mochila
 DESCRIPTION:«Arriba\, Diego. Nadie lo va a hacer por ti.»\n\n8:00 Marcha
   con mochila 4 kg: Marcha rápida 30 min con 4 kg\n11:30 Tolerancia al do
  lor: Sentadilla isométrica en la pared 0:53 · Colgado de la barra 0:24 
@@ -493,21 +493,21 @@ DESCRIPTION:«Arriba\, Diego. Nadie lo va a hacer por ti.»\n\n8:00 Marcha
 TRANSP:OPAQUE
 BEGIN:VALARM
 ACTION:DISPLAY
-DESCRIPTION:⚓ Sem 2 · Día 4 · Marcha con mochila
+DESCRIPTION:★ Sem 2 · Día 4 · Marcha con mochila
 TRIGGER:-PT15M
 END:VALARM
 BEGIN:VALARM
 ACTION:DISPLAY
-DESCRIPTION:⚓ Sem 2 · Día 4 · Marcha con mochila
+DESCRIPTION:★ Sem 2 · Día 4 · Marcha con mochila
 TRIGGER:PT0M
 END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:bitacora-2026-11-08@rutina-marino
-DTSTAMP:20261021T141008Z
+DTSTAMP:20261021T141038Z
 DTSTART:20261108T110000Z
 DTEND:20261108T150000Z
-SUMMARY:⚓ Sem 2 · Día 5 · Circuito militar
+SUMMARY:★ Sem 2 · Día 5 · Circuito militar
 DESCRIPTION:«Diego. Querías saber si puedes. Hoy se sigue respondiendo.
  »\n\n8:00 Circuito militar: Circuito 3 vueltas\n11:30 Tolerancia al dolo
  r: Sentadilla isométrica en la pared 0:53 · Colgado de la barra 0:24 ·
@@ -521,21 +521,21 @@ DESCRIPTION:«Diego. Querías saber si puedes. Hoy se sigue respondiendo.
 TRANSP:OPAQUE
 BEGIN:VALARM
 ACTION:DISPLAY
-DESCRIPTION:⚓ Sem 2 · Día 5 · Circuito militar
+DESCRIPTION:★ Sem 2 · Día 5 · Circuito militar
 TRIGGER:-PT15M
 END:VALARM
 BEGIN:VALARM
 ACTION:DISPLAY
-DESCRIPTION:⚓ Sem 2 · Día 5 · Circuito militar
+DESCRIPTION:★ Sem 2 · Día 5 · Circuito militar
 TRIGGER:PT0M
 END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:bitacora-2026-11-09@rutina-marino
-DTSTAMP:20261021T141008Z
+DTSTAMP:20261021T141038Z
 DTSTART:20261109T110000Z
 DTEND:20261109T150000Z
-SUMMARY:⚓ Sem 2 · Día 6 · Prueba de incomodidad · 20 min
+SUMMARY:★ Sem 2 · Día 6 · Prueba de incomodidad · 20 min
 DESCRIPTION:«De pie\, Diego. Esto es lo que haces hoy.»\n\n8:00 Trote 30
   min suave: Trote 30 min\n10:15 Prueba de incomodidad · 20 min: Trote 10
   min · Flexiones 30 en total · Sentadillas 40 en total · Abdominales 3
@@ -550,21 +550,21 @@ DESCRIPTION:«De pie\, Diego. Esto es lo que haces hoy.»\n\n8:00 Trote 30
 TRANSP:OPAQUE
 BEGIN:VALARM
 ACTION:DISPLAY
-DESCRIPTION:⚓ Sem 2 · Día 6 · Prueba de incomodidad · 20 min
+DESCRIPTION:★ Sem 2 · Día 6 · Prueba de incomodidad · 20 min
 TRIGGER:-PT15M
 END:VALARM
 BEGIN:VALARM
 ACTION:DISPLAY
-DESCRIPTION:⚓ Sem 2 · Día 6 · Prueba de incomodidad · 20 min
+DESCRIPTION:★ Sem 2 · Día 6 · Prueba de incomodidad · 20 min
 TRIGGER:PT0M
 END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:bitacora-2026-11-10@rutina-marino
-DTSTAMP:20261021T141008Z
+DTSTAMP:20261021T141038Z
 DTSTART:20261110T130000Z
 DTEND:20261110T133000Z
-SUMMARY:⚓ Sem 2 · Día 7 · Descanso total
+SUMMARY:★ Sem 2 · Día 7 · Descanso total
 DESCRIPTION:«Descanso. El progreso ocurre cuando descansas.»\n\nDescanso
   total: Movilidad 15 min suaves · Dormir 8–9 h\n22:45 Estudio: Fractur
  as y esguinces\n\nDespiertas 7:30 · entrenas desde 8:00 · sales al trab
@@ -576,16 +576,16 @@ DESCRIPTION:«Descanso. El progreso ocurre cuando descansas.»\n\nDescanso
 TRANSP:OPAQUE
 BEGIN:VALARM
 ACTION:DISPLAY
-DESCRIPTION:⚓ Sem 2 · Día 7 · Descanso total
+DESCRIPTION:★ Sem 2 · Día 7 · Descanso total
 TRIGGER:PT0M
 END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:bitacora-2026-11-11@rutina-marino
-DTSTAMP:20261021T141008Z
+DTSTAMP:20261021T141038Z
 DTSTART:20261111T110000Z
 DTEND:20261111T150000Z
-SUMMARY:⚓ Sem 3 · Día 1 · Fuerza + PT
+SUMMARY:★ Sem 3 · Día 1 · Fuerza + PT
 DESCRIPTION:«Diego. Querías saber si puedes. Hoy se sigue respondiendo.
  »\n\n8:00 Fuerza de tren superior: Barras 4 × 4 · Remo invertido 3 × 
  10 · Flexiones 4 × 12 · Fondos en silla 3 × 10 · Plancha 3 × 45 s\n
@@ -601,21 +601,21 @@ DESCRIPTION:«Diego. Querías saber si puedes. Hoy se sigue respondiendo.
 TRANSP:OPAQUE
 BEGIN:VALARM
 ACTION:DISPLAY
-DESCRIPTION:⚓ Sem 3 · Día 1 · Fuerza + PT
+DESCRIPTION:★ Sem 3 · Día 1 · Fuerza + PT
 TRIGGER:-PT15M
 END:VALARM
 BEGIN:VALARM
 ACTION:DISPLAY
-DESCRIPTION:⚓ Sem 3 · Día 1 · Fuerza + PT
+DESCRIPTION:★ Sem 3 · Día 1 · Fuerza + PT
 TRIGGER:PT0M
 END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:bitacora-2026-11-12@rutina-marino
-DTSTAMP:20261021T141008Z
+DTSTAMP:20261021T141038Z
 DTSTART:20261112T110000Z
 DTEND:20261112T150000Z
-SUMMARY:⚓ Sem 3 · Día 2 · Intervalos + core
+SUMMARY:★ Sem 3 · Día 2 · Intervalos + core
 DESCRIPTION:«De pie\, Diego. Esto es lo que haces hoy.»\n\n8:00 Interval
  os 6 × 400 m: 6 × 400 m 2:00 cada uno · Vuelta a la calma 5–10 min t
  rote suave\n9:15 Core: Plancha 3 × 45 s · Plancha lateral 2 × 30 s por
@@ -632,21 +632,21 @@ DESCRIPTION:«De pie\, Diego. Esto es lo que haces hoy.»\n\n8:00 Interval
 TRANSP:OPAQUE
 BEGIN:VALARM
 ACTION:DISPLAY
-DESCRIPTION:⚓ Sem 3 · Día 2 · Intervalos + core
+DESCRIPTION:★ Sem 3 · Día 2 · Intervalos + core
 TRIGGER:-PT15M
 END:VALARM
 BEGIN:VALARM
 ACTION:DISPLAY
-DESCRIPTION:⚓ Sem 3 · Día 2 · Intervalos + core
+DESCRIPTION:★ Sem 3 · Día 2 · Intervalos + core
 TRIGGER:PT0M
 END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:bitacora-2026-11-13@rutina-marino
-DTSTAMP:20261021T141008Z
+DTSTAMP:20261021T141038Z
 DTSTART:20261113T110000Z
 DTEND:20261113T150000Z
-SUMMARY:⚓ Sem 3 · Día 3 · Natación + piernas
+SUMMARY:★ Sem 3 · Día 3 · Natación + piernas
 DESCRIPTION:«Lago. El frío no perdona al que se confía.»\n\n8:00 Apren
  der a nadar · lago [máximo 8 min en el agua · solo donde haces pie · 
  avisa a alguien]: Ida en bicicleta 15 min · ≈3\,8 km · Entrada al agu
@@ -664,21 +664,21 @@ DESCRIPTION:«Lago. El frío no perdona al que se confía.»\n\n8:00 Apren
 TRANSP:OPAQUE
 BEGIN:VALARM
 ACTION:DISPLAY
-DESCRIPTION:⚓ Sem 3 · Día 3 · Natación + piernas
+DESCRIPTION:★ Sem 3 · Día 3 · Natación + piernas
 TRIGGER:-PT15M
 END:VALARM
 BEGIN:VALARM
 ACTION:DISPLAY
-DESCRIPTION:⚓ Sem 3 · Día 3 · Natación + piernas
+DESCRIPTION:★ Sem 3 · Día 3 · Natación + piernas
 TRIGGER:PT0M
 END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:bitacora-2026-11-14@rutina-marino
-DTSTAMP:20261021T141008Z
+DTSTAMP:20261021T141038Z
 DTSTART:20261114T110000Z
 DTEND:20261114T150000Z
-SUMMARY:⚓ Sem 3 · Día 4 · Marcha con mochila
+SUMMARY:★ Sem 3 · Día 4 · Marcha con mochila
 DESCRIPTION:«Diego. Querías saber si puedes. Hoy se sigue respondiendo.
  »\n\n8:00 Marcha con mochila 4 kg: Marcha rápida 32 min con 4 kg\n11:30
   Tolerancia al dolor: Sentadilla isométrica en la pared 0:57 · Colgado 
@@ -693,21 +693,21 @@ DESCRIPTION:«Diego. Querías saber si puedes. Hoy se sigue respondiendo.
 TRANSP:OPAQUE
 BEGIN:VALARM
 ACTION:DISPLAY
-DESCRIPTION:⚓ Sem 3 · Día 4 · Marcha con mochila
+DESCRIPTION:★ Sem 3 · Día 4 · Marcha con mochila
 TRIGGER:-PT15M
 END:VALARM
 BEGIN:VALARM
 ACTION:DISPLAY
-DESCRIPTION:⚓ Sem 3 · Día 4 · Marcha con mochila
+DESCRIPTION:★ Sem 3 · Día 4 · Marcha con mochila
 TRIGGER:PT0M
 END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:bitacora-2026-11-15@rutina-marino
-DTSTAMP:20261021T141008Z
+DTSTAMP:20261021T141038Z
 DTSTART:20261115T110000Z
 DTEND:20261115T150000Z
-SUMMARY:⚓ Sem 3 · Día 5 · Circuito militar
+SUMMARY:★ Sem 3 · Día 5 · Circuito militar
 DESCRIPTION:«De pie\, Diego. Esto es lo que haces hoy.»\n\n8:00 Circuito
   militar: Circuito 4 vueltas\n11:30 Tolerancia al dolor: Sentadilla isom
  étrica en la pared 0:57 · Colgado de la barra 0:26 · Plancha 1:12\n11:
@@ -721,21 +721,21 @@ DESCRIPTION:«De pie\, Diego. Esto es lo que haces hoy.»\n\n8:00 Circuito
 TRANSP:OPAQUE
 BEGIN:VALARM
 ACTION:DISPLAY
-DESCRIPTION:⚓ Sem 3 · Día 5 · Circuito militar
+DESCRIPTION:★ Sem 3 · Día 5 · Circuito militar
 TRIGGER:-PT15M
 END:VALARM
 BEGIN:VALARM
 ACTION:DISPLAY
-DESCRIPTION:⚓ Sem 3 · Día 5 · Circuito militar
+DESCRIPTION:★ Sem 3 · Día 5 · Circuito militar
 TRIGGER:PT0M
 END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:bitacora-2026-11-16@rutina-marino
-DTSTAMP:20261021T141008Z
+DTSTAMP:20261021T141038Z
 DTSTART:20261116T110000Z
 DTEND:20261116T150000Z
-SUMMARY:⚓ Sem 3 · Día 6 · Trote suave
+SUMMARY:★ Sem 3 · Día 6 · Trote suave
 DESCRIPTION:«Arriba\, Diego. Nadie lo va a hacer por ti.»\n\n8:00 Trote 
  35 min suave: Trote 35 min\n11:30 Tolerancia al dolor: Sentadilla isomét
  rica en la pared 0:57 · Colgado de la barra 0:26 · Plancha 1:12\n11:45 
@@ -749,21 +749,21 @@ DESCRIPTION:«Arriba\, Diego. Nadie lo va a hacer por ti.»\n\n8:00 Trote
 TRANSP:OPAQUE
 BEGIN:VALARM
 ACTION:DISPLAY
-DESCRIPTION:⚓ Sem 3 · Día 6 · Trote suave
+DESCRIPTION:★ Sem 3 · Día 6 · Trote suave
 TRIGGER:-PT15M
 END:VALARM
 BEGIN:VALARM
 ACTION:DISPLAY
-DESCRIPTION:⚓ Sem 3 · Día 6 · Trote suave
+DESCRIPTION:★ Sem 3 · Día 6 · Trote suave
 TRIGGER:PT0M
 END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:bitacora-2026-11-17@rutina-marino
-DTSTAMP:20261021T141008Z
+DTSTAMP:20261021T141038Z
 DTSTART:20261117T130000Z
 DTEND:20261117T133000Z
-SUMMARY:⚓ Sem 3 · Día 7 · Descanso total
+SUMMARY:★ Sem 3 · Día 7 · Descanso total
 DESCRIPTION:«Día libre. Cúmplelo igual de serio.»\n\nDescanso total: M
  ovilidad 15 min suaves · Dormir 8–9 h\n22:45 Estudio: Lesiones del cor
  redor\n\nDespiertas 7:30 · entrenas desde 8:00 · sales al trabajo 12:30
@@ -775,16 +775,16 @@ DESCRIPTION:«Día libre. Cúmplelo igual de serio.»\n\nDescanso total: M
 TRANSP:OPAQUE
 BEGIN:VALARM
 ACTION:DISPLAY
-DESCRIPTION:⚓ Sem 3 · Día 7 · Descanso total
+DESCRIPTION:★ Sem 3 · Día 7 · Descanso total
 TRIGGER:PT0M
 END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:bitacora-2026-11-18@rutina-marino
-DTSTAMP:20261021T141008Z
+DTSTAMP:20261021T141038Z
 DTSTART:20261118T110000Z
 DTEND:20261118T150000Z
-SUMMARY:⚓ Sem 4 · Día 1 · Fuerza + PT
+SUMMARY:★ Sem 4 · Día 1 · Fuerza + PT
 DESCRIPTION:«De pie\, Diego. Esto es lo que haces hoy.»\n\n8:00 Fuerza d
  e tren superior: Barras 3 × 4 · Remo invertido 3 × 10 · Flexiones 3 
  × 13 · Fondos en silla 3 × 10 · Plancha 3 × 45 s\n10:15 PT militar: 
@@ -798,21 +798,21 @@ DESCRIPTION:«De pie\, Diego. Esto es lo que haces hoy.»\n\n8:00 Fuerza d
 TRANSP:OPAQUE
 BEGIN:VALARM
 ACTION:DISPLAY
-DESCRIPTION:⚓ Sem 4 · Día 1 · Fuerza + PT
+DESCRIPTION:★ Sem 4 · Día 1 · Fuerza + PT
 TRIGGER:-PT15M
 END:VALARM
 BEGIN:VALARM
 ACTION:DISPLAY
-DESCRIPTION:⚓ Sem 4 · Día 1 · Fuerza + PT
+DESCRIPTION:★ Sem 4 · Día 1 · Fuerza + PT
 TRIGGER:PT0M
 END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:bitacora-2026-11-19@rutina-marino
-DTSTAMP:20261021T141008Z
+DTSTAMP:20261021T141038Z
 DTSTART:20261119T110000Z
 DTEND:20261119T150000Z
-SUMMARY:⚓ Sem 4 · Día 2 · Carrera suave + core
+SUMMARY:★ Sem 4 · Día 2 · Carrera suave + core
 DESCRIPTION:«Arriba\, Diego. Nadie lo va a hacer por ti.»\n\n8:00 Trote 
  suave 25 min: Trote 25 min\n9:15 Core: Plancha 3 × 45 s · Plancha later
  al 2 × 30 s por lado · Hollow hold 3 × 20 s · Abdominales 3 × 20\n11
@@ -826,21 +826,21 @@ DESCRIPTION:«Arriba\, Diego. Nadie lo va a hacer por ti.»\n\n8:00 Trote
 TRANSP:OPAQUE
 BEGIN:VALARM
 ACTION:DISPLAY
-DESCRIPTION:⚓ Sem 4 · Día 2 · Carrera suave + core
+DESCRIPTION:★ Sem 4 · Día 2 · Carrera suave + core
 TRIGGER:-PT15M
 END:VALARM
 BEGIN:VALARM
 ACTION:DISPLAY
-DESCRIPTION:⚓ Sem 4 · Día 2 · Carrera suave + core
+DESCRIPTION:★ Sem 4 · Día 2 · Carrera suave + core
 TRIGGER:PT0M
 END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:bitacora-2026-11-20@rutina-marino
-DTSTAMP:20261021T141008Z
+DTSTAMP:20261021T141038Z
 DTSTART:20261120T110000Z
 DTEND:20261120T150000Z
-SUMMARY:⚓ Sem 4 · Día 3 · Natación + piernas
+SUMMARY:★ Sem 4 · Día 3 · Natación + piernas
 DESCRIPTION:«Al agua. Resistencia sí\, heroísmo no.»\n\n8:00 Aprender 
  a nadar · lago [máximo 8 min en el agua · solo donde haces pie · avis
  a a alguien]: Ida en bicicleta 15 min · ≈3\,8 km · Entrada al agua de
@@ -857,21 +857,21 @@ DESCRIPTION:«Al agua. Resistencia sí\, heroísmo no.»\n\n8:00 Aprender
 TRANSP:OPAQUE
 BEGIN:VALARM
 ACTION:DISPLAY
-DESCRIPTION:⚓ Sem 4 · Día 3 · Natación + piernas
+DESCRIPTION:★ Sem 4 · Día 3 · Natación + piernas
 TRIGGER:-PT15M
 END:VALARM
 BEGIN:VALARM
 ACTION:DISPLAY
-DESCRIPTION:⚓ Sem 4 · Día 3 · Natación + piernas
+DESCRIPTION:★ Sem 4 · Día 3 · Natación + piernas
 TRIGGER:PT0M
 END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:bitacora-2026-11-21@rutina-marino
-DTSTAMP:20261021T141008Z
+DTSTAMP:20261021T141038Z
 DTSTART:20261121T130000Z
 DTEND:20261121T133000Z
-SUMMARY:⚓ Sem 4 · Día 4 · Descanso activo
+SUMMARY:★ Sem 4 · Día 4 · Descanso activo
 DESCRIPTION:«Hoy descansas. Es una orden\, no un premio.»\n\nDescanso ac
  tivo: Movilidad 15 min suaves · Dormir 8–9 h\n22:45 Estudio: Entrevist
  a: fortalezas y debilidades\n\nDespiertas 7:30 · entrenas desde 8:00 · 
@@ -883,16 +883,16 @@ DESCRIPTION:«Hoy descansas. Es una orden\, no un premio.»\n\nDescanso ac
 TRANSP:OPAQUE
 BEGIN:VALARM
 ACTION:DISPLAY
-DESCRIPTION:⚓ Sem 4 · Día 4 · Descanso activo
+DESCRIPTION:★ Sem 4 · Día 4 · Descanso activo
 TRIGGER:PT0M
 END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:bitacora-2026-11-22@rutina-marino
-DTSTAMP:20261021T141008Z
+DTSTAMP:20261021T141038Z
 DTSTART:20261122T110000Z
 DTEND:20261122T150000Z
-SUMMARY:⚓ Sem 4 · Día 5 · Circuito militar
+SUMMARY:★ Sem 4 · Día 5 · Circuito militar
 DESCRIPTION:«Arriba\, Diego. Nadie lo va a hacer por ti.»\n\n8:00 Circui
  to militar: Circuito 3 vueltas\n11:45 Ducha fría 1 min: Agua fría 1 min
  \n22:45 Estudio: Trabajo en equipo\n\nDespiertas 7:30 · entrenas desde 8
@@ -904,21 +904,21 @@ DESCRIPTION:«Arriba\, Diego. Nadie lo va a hacer por ti.»\n\n8:00 Circui
 TRANSP:OPAQUE
 BEGIN:VALARM
 ACTION:DISPLAY
-DESCRIPTION:⚓ Sem 4 · Día 5 · Circuito militar
+DESCRIPTION:★ Sem 4 · Día 5 · Circuito militar
 TRIGGER:-PT15M
 END:VALARM
 BEGIN:VALARM
 ACTION:DISPLAY
-DESCRIPTION:⚓ Sem 4 · Día 5 · Circuito militar
+DESCRIPTION:★ Sem 4 · Día 5 · Circuito militar
 TRIGGER:PT0M
 END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:bitacora-2026-11-23@rutina-marino
-DTSTAMP:20261021T141008Z
+DTSTAMP:20261021T141038Z
 DTSTART:20261123T110000Z
 DTEND:20261123T150000Z
-SUMMARY:⚓ Sem 4 · Día 6 · Trote suave
+SUMMARY:★ Sem 4 · Día 6 · Trote suave
 DESCRIPTION:«Diego. Querías saber si puedes. Hoy se sigue respondiendo.
  »\n\n8:00 Trote suave 40 min: Trote 40 min\n11:45 Ducha fría 1 min: Agu
  a fría 1 min\n22:45 Estudio: Disciplina\n\nDespiertas 7:30 · entrenas d
@@ -931,21 +931,21 @@ DESCRIPTION:«Diego. Querías saber si puedes. Hoy se sigue respondiendo.
 TRANSP:OPAQUE
 BEGIN:VALARM
 ACTION:DISPLAY
-DESCRIPTION:⚓ Sem 4 · Día 6 · Trote suave
+DESCRIPTION:★ Sem 4 · Día 6 · Trote suave
 TRIGGER:-PT15M
 END:VALARM
 BEGIN:VALARM
 ACTION:DISPLAY
-DESCRIPTION:⚓ Sem 4 · Día 6 · Trote suave
+DESCRIPTION:★ Sem 4 · Día 6 · Trote suave
 TRIGGER:PT0M
 END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:bitacora-2026-11-24@rutina-marino
-DTSTAMP:20261021T141008Z
+DTSTAMP:20261021T141038Z
 DTSTART:20261124T130000Z
 DTEND:20261124T133000Z
-SUMMARY:⚓ Sem 4 · Día 7 · Descanso total
+SUMMARY:★ Sem 4 · Día 7 · Descanso total
 DESCRIPTION:«Hoy descansas. Es una orden\, no un premio.»\n\nDescanso to
  tal: Movilidad 15 min suaves · Dormir 8–9 h\n22:45 Estudio: Preparaci
  ón académica\n\nDespiertas 7:30 · entrenas desde 8:00 · sales al trab
@@ -957,16 +957,16 @@ DESCRIPTION:«Hoy descansas. Es una orden\, no un premio.»\n\nDescanso to
 TRANSP:OPAQUE
 BEGIN:VALARM
 ACTION:DISPLAY
-DESCRIPTION:⚓ Sem 4 · Día 7 · Descanso total
+DESCRIPTION:★ Sem 4 · Día 7 · Descanso total
 TRIGGER:PT0M
 END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:bitacora-2026-11-25@rutina-marino
-DTSTAMP:20261021T141008Z
+DTSTAMP:20261021T141038Z
 DTSTART:20261125T110000Z
 DTEND:20261125T150000Z
-SUMMARY:⚓ Sem 5 · Día 1 · Fuerza + PT
+SUMMARY:★ Sem 5 · Día 1 · Fuerza + PT
 DESCRIPTION:«Arriba\, Diego. Nadie lo va a hacer por ti.»\n\n8:00 Fuerza
   de tren superior: Barras 4 × 4 · Remo invertido 3 × 10 · Flexiones 4
   × 13 · Fondos en silla 3 × 10 · Plancha 3 × 45 s\n10:15 PT militar:
@@ -982,21 +982,21 @@ DESCRIPTION:«Arriba\, Diego. Nadie lo va a hacer por ti.»\n\n8:00 Fuerza
 TRANSP:OPAQUE
 BEGIN:VALARM
 ACTION:DISPLAY
-DESCRIPTION:⚓ Sem 5 · Día 1 · Fuerza + PT
+DESCRIPTION:★ Sem 5 · Día 1 · Fuerza + PT
 TRIGGER:-PT15M
 END:VALARM
 BEGIN:VALARM
 ACTION:DISPLAY
-DESCRIPTION:⚓ Sem 5 · Día 1 · Fuerza + PT
+DESCRIPTION:★ Sem 5 · Día 1 · Fuerza + PT
 TRIGGER:PT0M
 END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:bitacora-2026-11-26@rutina-marino
-DTSTAMP:20261021T141008Z
+DTSTAMP:20261021T141038Z
 DTSTART:20261126T110000Z
 DTEND:20261126T150000Z
-SUMMARY:⚓ Sem 5 · Día 2 · Intervalos + core
+SUMMARY:★ Sem 5 · Día 2 · Intervalos + core
 DESCRIPTION:«Diego. Querías saber si puedes. Hoy se sigue respondiendo.
  »\n\n8:00 Intervalos 4 × 800 m: 4 × 800 m 4:04 cada uno · Vuelta a la
   calma 5–10 min trote suave\n9:15 Core: Plancha 3 × 45 s · Plancha la
@@ -1013,21 +1013,21 @@ DESCRIPTION:«Diego. Querías saber si puedes. Hoy se sigue respondiendo.
 TRANSP:OPAQUE
 BEGIN:VALARM
 ACTION:DISPLAY
-DESCRIPTION:⚓ Sem 5 · Día 2 · Intervalos + core
+DESCRIPTION:★ Sem 5 · Día 2 · Intervalos + core
 TRIGGER:-PT15M
 END:VALARM
 BEGIN:VALARM
 ACTION:DISPLAY
-DESCRIPTION:⚓ Sem 5 · Día 2 · Intervalos + core
+DESCRIPTION:★ Sem 5 · Día 2 · Intervalos + core
 TRIGGER:PT0M
 END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:bitacora-2026-11-27@rutina-marino
-DTSTAMP:20261021T141008Z
+DTSTAMP:20261021T141038Z
 DTSTART:20261127T110000Z
 DTEND:20261127T150000Z
-SUMMARY:⚓ Sem 5 · Día 3 · Natación + piernas
+SUMMARY:★ Sem 5 · Día 3 · Natación + piernas
 DESCRIPTION:«Al lago. Vas solo: nadas donde haces pie y sales cuando suen
  a.»\n\n8:00 Aprender a nadar · lago [máximo 8 min en el agua · solo d
  onde haces pie · avisa a alguien]: Ida en bicicleta 15 min · ≈3\,8 km
@@ -1046,21 +1046,21 @@ DESCRIPTION:«Al lago. Vas solo: nadas donde haces pie y sales cuando suen
 TRANSP:OPAQUE
 BEGIN:VALARM
 ACTION:DISPLAY
-DESCRIPTION:⚓ Sem 5 · Día 3 · Natación + piernas
+DESCRIPTION:★ Sem 5 · Día 3 · Natación + piernas
 TRIGGER:-PT15M
 END:VALARM
 BEGIN:VALARM
 ACTION:DISPLAY
-DESCRIPTION:⚓ Sem 5 · Día 3 · Natación + piernas
+DESCRIPTION:★ Sem 5 · Día 3 · Natación + piernas
 TRIGGER:PT0M
 END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:bitacora-2026-11-28@rutina-marino
-DTSTAMP:20261021T141008Z
+DTSTAMP:20261021T141038Z
 DTSTART:20261128T110000Z
 DTEND:20261128T150000Z
-SUMMARY:⚓ Sem 5 · Día 4 · Marcha con mochila
+SUMMARY:★ Sem 5 · Día 4 · Marcha con mochila
 DESCRIPTION:«Arriba\, Diego. Nadie lo va a hacer por ti.»\n\n8:00 Marcha
   con mochila 5 kg: Marcha rápida 36 min con 5 kg\n11:30 Tolerancia al do
  lor: Sentadilla isométrica en la pared 1:05 · Colgado de la barra 0:30 
@@ -1074,21 +1074,21 @@ DESCRIPTION:«Arriba\, Diego. Nadie lo va a hacer por ti.»\n\n8:00 Marcha
 TRANSP:OPAQUE
 BEGIN:VALARM
 ACTION:DISPLAY
-DESCRIPTION:⚓ Sem 5 · Día 4 · Marcha con mochila
+DESCRIPTION:★ Sem 5 · Día 4 · Marcha con mochila
 TRIGGER:-PT15M
 END:VALARM
 BEGIN:VALARM
 ACTION:DISPLAY
-DESCRIPTION:⚓ Sem 5 · Día 4 · Marcha con mochila
+DESCRIPTION:★ Sem 5 · Día 4 · Marcha con mochila
 TRIGGER:PT0M
 END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:bitacora-2026-11-29@rutina-marino
-DTSTAMP:20261021T141008Z
+DTSTAMP:20261021T141038Z
 DTSTART:20261129T110000Z
 DTEND:20261129T150000Z
-SUMMARY:⚓ Sem 5 · Día 5 · Circuito militar
+SUMMARY:★ Sem 5 · Día 5 · Circuito militar
 DESCRIPTION:«Diego. Querías saber si puedes. Hoy se sigue respondiendo.
  »\n\n8:00 Circuito militar: Circuito 4 vueltas\n11:30 Tolerancia al dolo
  r: Sentadilla isométrica en la pared 1:05 · Colgado de la barra 0:30 ·
@@ -1102,21 +1102,21 @@ DESCRIPTION:«Diego. Querías saber si puedes. Hoy se sigue respondiendo.
 TRANSP:OPAQUE
 BEGIN:VALARM
 ACTION:DISPLAY
-DESCRIPTION:⚓ Sem 5 · Día 5 · Circuito militar
+DESCRIPTION:★ Sem 5 · Día 5 · Circuito militar
 TRIGGER:-PT15M
 END:VALARM
 BEGIN:VALARM
 ACTION:DISPLAY
-DESCRIPTION:⚓ Sem 5 · Día 5 · Circuito militar
+DESCRIPTION:★ Sem 5 · Día 5 · Circuito militar
 TRIGGER:PT0M
 END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:bitacora-2026-11-30@rutina-marino
-DTSTAMP:20261021T141008Z
+DTSTAMP:20261021T141038Z
 DTSTART:20261130T110000Z
 DTEND:20261130T150000Z
-SUMMARY:⚓ Sem 5 · Día 6 · Trote suave
+SUMMARY:★ Sem 5 · Día 6 · Trote suave
 DESCRIPTION:«De pie\, Diego. Esto es lo que haces hoy.»\n\n8:00 Trote 40
   min suave: Trote 40 min\n11:30 Tolerancia al dolor: Sentadilla isométri
  ca en la pared 1:05 · Colgado de la barra 0:30 · Plancha 1:20\n11:45 Du
@@ -1130,21 +1130,21 @@ DESCRIPTION:«De pie\, Diego. Esto es lo que haces hoy.»\n\n8:00 Trote 40
 TRANSP:OPAQUE
 BEGIN:VALARM
 ACTION:DISPLAY
-DESCRIPTION:⚓ Sem 5 · Día 6 · Trote suave
+DESCRIPTION:★ Sem 5 · Día 6 · Trote suave
 TRIGGER:-PT15M
 END:VALARM
 BEGIN:VALARM
 ACTION:DISPLAY
-DESCRIPTION:⚓ Sem 5 · Día 6 · Trote suave
+DESCRIPTION:★ Sem 5 · Día 6 · Trote suave
 TRIGGER:PT0M
 END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:bitacora-2026-12-01@rutina-marino
-DTSTAMP:20261021T141008Z
+DTSTAMP:20261021T141038Z
 DTSTART:20261201T130000Z
 DTEND:20261201T133000Z
-SUMMARY:⚓ Sem 5 · Día 7 · Descanso total
+SUMMARY:★ Sem 5 · Día 7 · Descanso total
 DESCRIPTION:«Día libre. Cúmplelo igual de serio.»\n\nDescanso total: M
  ovilidad 15 min suaves · Dormir 8–9 h\n22:45 Repaso: El saludo militar
  \n\nDespiertas 7:30 · entrenas desde 8:00 · sales al trabajo 12:30 · c
@@ -1156,16 +1156,16 @@ DESCRIPTION:«Día libre. Cúmplelo igual de serio.»\n\nDescanso total: M
 TRANSP:OPAQUE
 BEGIN:VALARM
 ACTION:DISPLAY
-DESCRIPTION:⚓ Sem 5 · Día 7 · Descanso total
+DESCRIPTION:★ Sem 5 · Día 7 · Descanso total
 TRIGGER:PT0M
 END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:bitacora-2026-12-02@rutina-marino
-DTSTAMP:20261021T141008Z
+DTSTAMP:20261021T141038Z
 DTSTART:20261202T110000Z
 DTEND:20261202T150000Z
-SUMMARY:⚓ Sem 6 · Día 1 · Fuerza + PT
+SUMMARY:★ Sem 6 · Día 1 · Fuerza + PT
 DESCRIPTION:«De pie\, Diego. Esto es lo que haces hoy.»\n\n8:00 Fuerza d
  e tren superior: Barras 4 × 4 · Remo invertido 3 × 10 · Flexiones 4 
  × 13 · Fondos en silla 3 × 10 · Plancha 3 × 45 s\n10:15 PT militar: 
@@ -1181,21 +1181,21 @@ DESCRIPTION:«De pie\, Diego. Esto es lo que haces hoy.»\n\n8:00 Fuerza d
 TRANSP:OPAQUE
 BEGIN:VALARM
 ACTION:DISPLAY
-DESCRIPTION:⚓ Sem 6 · Día 1 · Fuerza + PT
+DESCRIPTION:★ Sem 6 · Día 1 · Fuerza + PT
 TRIGGER:-PT15M
 END:VALARM
 BEGIN:VALARM
 ACTION:DISPLAY
-DESCRIPTION:⚓ Sem 6 · Día 1 · Fuerza + PT
+DESCRIPTION:★ Sem 6 · Día 1 · Fuerza + PT
 TRIGGER:PT0M
 END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:bitacora-2026-12-03@rutina-marino
-DTSTAMP:20261021T141008Z
+DTSTAMP:20261021T141038Z
 DTSTART:20261203T110000Z
 DTEND:20261203T150000Z
-SUMMARY:⚓ Sem 6 · Día 2 · Intervalos + core
+SUMMARY:★ Sem 6 · Día 2 · Intervalos + core
 DESCRIPTION:«Arriba\, Diego. Nadie lo va a hacer por ti.»\n\n8:00 Interv
  alos 6 × 400 m rápido: 6 × 400 m 1:57 cada uno · Vuelta a la calma 5
  –10 min trote suave\n9:15 Core: Plancha 3 × 45 s · Plancha lateral 2 
@@ -1212,21 +1212,21 @@ DESCRIPTION:«Arriba\, Diego. Nadie lo va a hacer por ti.»\n\n8:00 Interv
 TRANSP:OPAQUE
 BEGIN:VALARM
 ACTION:DISPLAY
-DESCRIPTION:⚓ Sem 6 · Día 2 · Intervalos + core
+DESCRIPTION:★ Sem 6 · Día 2 · Intervalos + core
 TRIGGER:-PT15M
 END:VALARM
 BEGIN:VALARM
 ACTION:DISPLAY
-DESCRIPTION:⚓ Sem 6 · Día 2 · Intervalos + core
+DESCRIPTION:★ Sem 6 · Día 2 · Intervalos + core
 TRIGGER:PT0M
 END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:bitacora-2026-12-04@rutina-marino
-DTSTAMP:20261021T141008Z
+DTSTAMP:20261021T141038Z
 DTSTART:20261204T110000Z
 DTEND:20261204T150000Z
-SUMMARY:⚓ Sem 6 · Día 3 · Natación + piernas
+SUMMARY:★ Sem 6 · Día 3 · Natación + piernas
 DESCRIPTION:«Al agua. Resistencia sí\, heroísmo no.»\n\n8:00 Aprender 
  a nadar · lago [máximo 15 min en el agua · solo donde haces pie · avi
  sa a alguien]: Ida en bicicleta 15 min · ≈3\,8 km · Entrada al agua d
@@ -1245,21 +1245,21 @@ DESCRIPTION:«Al agua. Resistencia sí\, heroísmo no.»\n\n8:00 Aprender
 TRANSP:OPAQUE
 BEGIN:VALARM
 ACTION:DISPLAY
-DESCRIPTION:⚓ Sem 6 · Día 3 · Natación + piernas
+DESCRIPTION:★ Sem 6 · Día 3 · Natación + piernas
 TRIGGER:-PT15M
 END:VALARM
 BEGIN:VALARM
 ACTION:DISPLAY
-DESCRIPTION:⚓ Sem 6 · Día 3 · Natación + piernas
+DESCRIPTION:★ Sem 6 · Día 3 · Natación + piernas
 TRIGGER:PT0M
 END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:bitacora-2026-12-05@rutina-marino
-DTSTAMP:20261021T141008Z
+DTSTAMP:20261021T141038Z
 DTSTART:20261205T110000Z
 DTEND:20261205T150000Z
-SUMMARY:⚓ Sem 6 · Día 4 · Marcha con mochila
+SUMMARY:★ Sem 6 · Día 4 · Marcha con mochila
 DESCRIPTION:«De pie\, Diego. Esto es lo que haces hoy.»\n\n8:00 Marcha c
  on mochila 5 kg: Marcha rápida 38 min con 5 kg\n11:30 Tolerancia al dolo
  r: Sentadilla isométrica en la pared 1:09 · Colgado de la barra 0:32 ·
@@ -1273,21 +1273,21 @@ DESCRIPTION:«De pie\, Diego. Esto es lo que haces hoy.»\n\n8:00 Marcha c
 TRANSP:OPAQUE
 BEGIN:VALARM
 ACTION:DISPLAY
-DESCRIPTION:⚓ Sem 6 · Día 4 · Marcha con mochila
+DESCRIPTION:★ Sem 6 · Día 4 · Marcha con mochila
 TRIGGER:-PT15M
 END:VALARM
 BEGIN:VALARM
 ACTION:DISPLAY
-DESCRIPTION:⚓ Sem 6 · Día 4 · Marcha con mochila
+DESCRIPTION:★ Sem 6 · Día 4 · Marcha con mochila
 TRIGGER:PT0M
 END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:bitacora-2026-12-06@rutina-marino
-DTSTAMP:20261021T141008Z
+DTSTAMP:20261021T141038Z
 DTSTART:20261206T110000Z
 DTEND:20261206T150000Z
-SUMMARY:⚓ Sem 6 · Día 5 · Circuito militar
+SUMMARY:★ Sem 6 · Día 5 · Circuito militar
 DESCRIPTION:«Arriba\, Diego. Nadie lo va a hacer por ti.»\n\n8:00 Circui
  to militar: Circuito 4 vueltas\n11:30 Tolerancia al dolor: Sentadilla iso
  métrica en la pared 1:09 · Colgado de la barra 0:32 · Plancha 1:24\n11
@@ -1301,21 +1301,21 @@ DESCRIPTION:«Arriba\, Diego. Nadie lo va a hacer por ti.»\n\n8:00 Circui
 TRANSP:OPAQUE
 BEGIN:VALARM
 ACTION:DISPLAY
-DESCRIPTION:⚓ Sem 6 · Día 5 · Circuito militar
+DESCRIPTION:★ Sem 6 · Día 5 · Circuito militar
 TRIGGER:-PT15M
 END:VALARM
 BEGIN:VALARM
 ACTION:DISPLAY
-DESCRIPTION:⚓ Sem 6 · Día 5 · Circuito militar
+DESCRIPTION:★ Sem 6 · Día 5 · Circuito militar
 TRIGGER:PT0M
 END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:bitacora-2026-12-07@rutina-marino
-DTSTAMP:20261021T141008Z
+DTSTAMP:20261021T141038Z
 DTSTART:20261207T110000Z
 DTEND:20261207T150000Z
-SUMMARY:⚓ Sem 6 · Día 6 · Prueba de incomodidad · 40 min
+SUMMARY:★ Sem 6 · Día 6 · Prueba de incomodidad · 40 min
 DESCRIPTION:«Diego. Querías saber si puedes. Hoy se sigue respondiendo.
  »\n\n8:00 Trote 40 min suave: Trote 40 min\n10:15 Prueba de incomodidad 
  · 40 min: Trote 20 min · Flexiones 60 en total · Sentadillas 60 en tot
@@ -1330,21 +1330,21 @@ DESCRIPTION:«Diego. Querías saber si puedes. Hoy se sigue respondiendo.
 TRANSP:OPAQUE
 BEGIN:VALARM
 ACTION:DISPLAY
-DESCRIPTION:⚓ Sem 6 · Día 6 · Prueba de incomodidad · 40 min
+DESCRIPTION:★ Sem 6 · Día 6 · Prueba de incomodidad · 40 min
 TRIGGER:-PT15M
 END:VALARM
 BEGIN:VALARM
 ACTION:DISPLAY
-DESCRIPTION:⚓ Sem 6 · Día 6 · Prueba de incomodidad · 40 min
+DESCRIPTION:★ Sem 6 · Día 6 · Prueba de incomodidad · 40 min
 TRIGGER:PT0M
 END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:bitacora-2026-12-08@rutina-marino
-DTSTAMP:20261021T141008Z
+DTSTAMP:20261021T141038Z
 DTSTART:20261208T130000Z
 DTEND:20261208T133000Z
-SUMMARY:⚓ Sem 6 · Día 7 · Descanso total
+SUMMARY:★ Sem 6 · Día 7 · Descanso total
 DESCRIPTION:«Hoy descansas. Es una orden\, no un premio.»\n\nDescanso to
  tal: Movilidad 15 min suaves · Dormir 8–9 h\n22:45 Repaso: Orientarse 
  sin brújula\n\nDespiertas 7:30 · entrenas desde 8:00 · sales al trabaj
@@ -1356,16 +1356,16 @@ DESCRIPTION:«Hoy descansas. Es una orden\, no un premio.»\n\nDescanso to
 TRANSP:OPAQUE
 BEGIN:VALARM
 ACTION:DISPLAY
-DESCRIPTION:⚓ Sem 6 · Día 7 · Descanso total
+DESCRIPTION:★ Sem 6 · Día 7 · Descanso total
 TRIGGER:PT0M
 END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:bitacora-2026-12-09@rutina-marino
-DTSTAMP:20261021T141008Z
+DTSTAMP:20261021T141038Z
 DTSTART:20261209T110000Z
 DTEND:20261209T150000Z
-SUMMARY:⚓ Sem 7 · Día 1 · Fuerza + PT
+SUMMARY:★ Sem 7 · Día 1 · Fuerza + PT
 DESCRIPTION:«Arriba\, Diego. Nadie lo va a hacer por ti.»\n\n8:00 Fuerza
   de tren superior: Barras 4 × 4 · Remo invertido 3 × 10 · Flexiones 4
   × 13 · Fondos en silla 3 × 10 · Plancha 3 × 45 s\n10:15 PT militar:
@@ -1381,21 +1381,21 @@ DESCRIPTION:«Arriba\, Diego. Nadie lo va a hacer por ti.»\n\n8:00 Fuerza
 TRANSP:OPAQUE
 BEGIN:VALARM
 ACTION:DISPLAY
-DESCRIPTION:⚓ Sem 7 · Día 1 · Fuerza + PT
+DESCRIPTION:★ Sem 7 · Día 1 · Fuerza + PT
 TRIGGER:-PT15M
 END:VALARM
 BEGIN:VALARM
 ACTION:DISPLAY
-DESCRIPTION:⚓ Sem 7 · Día 1 · Fuerza + PT
+DESCRIPTION:★ Sem 7 · Día 1 · Fuerza + PT
 TRIGGER:PT0M
 END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:bitacora-2026-12-10@rutina-marino
-DTSTAMP:20261021T141008Z
+DTSTAMP:20261021T141038Z
 DTSTART:20261210T110000Z
 DTEND:20261210T150000Z
-SUMMARY:⚓ Sem 7 · Día 2 · Intervalos + core
+SUMMARY:★ Sem 7 · Día 2 · Intervalos + core
 DESCRIPTION:«Diego. Querías saber si puedes. Hoy se sigue respondiendo.
  »\n\n8:00 Intervalos 5 × 800 m: 5 × 800 m 4:04 cada uno · Vuelta a la
   calma 5–10 min trote suave\n9:15 Core: Plancha 3 × 45 s · Plancha la
@@ -1412,21 +1412,21 @@ DESCRIPTION:«Diego. Querías saber si puedes. Hoy se sigue respondiendo.
 TRANSP:OPAQUE
 BEGIN:VALARM
 ACTION:DISPLAY
-DESCRIPTION:⚓ Sem 7 · Día 2 · Intervalos + core
+DESCRIPTION:★ Sem 7 · Día 2 · Intervalos + core
 TRIGGER:-PT15M
 END:VALARM
 BEGIN:VALARM
 ACTION:DISPLAY
-DESCRIPTION:⚓ Sem 7 · Día 2 · Intervalos + core
+DESCRIPTION:★ Sem 7 · Día 2 · Intervalos + core
 TRIGGER:PT0M
 END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:bitacora-2026-12-11@rutina-marino
-DTSTAMP:20261021T141008Z
+DTSTAMP:20261021T141038Z
 DTSTART:20261211T110000Z
 DTEND:20261211T150000Z
-SUMMARY:⚓ Sem 7 · Día 3 · Natación + piernas
+SUMMARY:★ Sem 7 · Día 3 · Natación + piernas
 DESCRIPTION:«Al lago. Vas solo: nadas donde haces pie y sales cuando suen
  a.»\n\n8:00 Aprender a nadar · lago [máximo 15 min en el agua · solo 
  donde haces pie · avisa a alguien]: Ida en bicicleta 15 min · ≈3\,8 k
@@ -1445,21 +1445,21 @@ DESCRIPTION:«Al lago. Vas solo: nadas donde haces pie y sales cuando suen
 TRANSP:OPAQUE
 BEGIN:VALARM
 ACTION:DISPLAY
-DESCRIPTION:⚓ Sem 7 · Día 3 · Natación + piernas
+DESCRIPTION:★ Sem 7 · Día 3 · Natación + piernas
 TRIGGER:-PT15M
 END:VALARM
 BEGIN:VALARM
 ACTION:DISPLAY
-DESCRIPTION:⚓ Sem 7 · Día 3 · Natación + piernas
+DESCRIPTION:★ Sem 7 · Día 3 · Natación + piernas
 TRIGGER:PT0M
 END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:bitacora-2026-12-12@rutina-marino
-DTSTAMP:20261021T141008Z
+DTSTAMP:20261021T141038Z
 DTSTART:20261212T110000Z
 DTEND:20261212T150000Z
-SUMMARY:⚓ Sem 7 · Día 4 · Marcha con mochila
+SUMMARY:★ Sem 7 · Día 4 · Marcha con mochila
 DESCRIPTION:«Arriba\, Diego. Nadie lo va a hacer por ti.»\n\n8:00 Marcha
   con mochila 5 kg: Marcha rápida 40 min con 5 kg\n11:30 Tolerancia al do
  lor: Sentadilla isométrica en la pared 1:13 · Colgado de la barra 0:34 
@@ -1473,21 +1473,21 @@ DESCRIPTION:«Arriba\, Diego. Nadie lo va a hacer por ti.»\n\n8:00 Marcha
 TRANSP:OPAQUE
 BEGIN:VALARM
 ACTION:DISPLAY
-DESCRIPTION:⚓ Sem 7 · Día 4 · Marcha con mochila
+DESCRIPTION:★ Sem 7 · Día 4 · Marcha con mochila
 TRIGGER:-PT15M
 END:VALARM
 BEGIN:VALARM
 ACTION:DISPLAY
-DESCRIPTION:⚓ Sem 7 · Día 4 · Marcha con mochila
+DESCRIPTION:★ Sem 7 · Día 4 · Marcha con mochila
 TRIGGER:PT0M
 END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:bitacora-2026-12-13@rutina-marino
-DTSTAMP:20261021T141008Z
+DTSTAMP:20261021T141038Z
 DTSTART:20261213T110000Z
 DTEND:20261213T150000Z
-SUMMARY:⚓ Sem 7 · Día 5 · Circuito militar
+SUMMARY:★ Sem 7 · Día 5 · Circuito militar
 DESCRIPTION:«Diego. Querías saber si puedes. Hoy se sigue respondiendo.
  »\n\n8:00 Circuito militar: Circuito 5 vueltas\n11:30 Tolerancia al dolo
  r: Sentadilla isométrica en la pared 1:13 · Colgado de la barra 0:34 ·
@@ -1501,21 +1501,21 @@ DESCRIPTION:«Diego. Querías saber si puedes. Hoy se sigue respondiendo.
 TRANSP:OPAQUE
 BEGIN:VALARM
 ACTION:DISPLAY
-DESCRIPTION:⚓ Sem 7 · Día 5 · Circuito militar
+DESCRIPTION:★ Sem 7 · Día 5 · Circuito militar
 TRIGGER:-PT15M
 END:VALARM
 BEGIN:VALARM
 ACTION:DISPLAY
-DESCRIPTION:⚓ Sem 7 · Día 5 · Circuito militar
+DESCRIPTION:★ Sem 7 · Día 5 · Circuito militar
 TRIGGER:PT0M
 END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:bitacora-2026-12-14@rutina-marino
-DTSTAMP:20261021T141008Z
+DTSTAMP:20261021T141038Z
 DTSTART:20261214T110000Z
 DTEND:20261214T150000Z
-SUMMARY:⚓ Sem 7 · Día 6 · Trote suave
+SUMMARY:★ Sem 7 · Día 6 · Trote suave
 DESCRIPTION:«De pie\, Diego. Esto es lo que haces hoy.»\n\n8:00 Trote 45
   min suave: Trote 45 min\n11:30 Tolerancia al dolor: Sentadilla isométri
  ca en la pared 1:13 · Colgado de la barra 0:34 · Plancha 1:28\n11:45 Du
@@ -1529,21 +1529,21 @@ DESCRIPTION:«De pie\, Diego. Esto es lo que haces hoy.»\n\n8:00 Trote 45
 TRANSP:OPAQUE
 BEGIN:VALARM
 ACTION:DISPLAY
-DESCRIPTION:⚓ Sem 7 · Día 6 · Trote suave
+DESCRIPTION:★ Sem 7 · Día 6 · Trote suave
 TRIGGER:-PT15M
 END:VALARM
 BEGIN:VALARM
 ACTION:DISPLAY
-DESCRIPTION:⚓ Sem 7 · Día 6 · Trote suave
+DESCRIPTION:★ Sem 7 · Día 6 · Trote suave
 TRIGGER:PT0M
 END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:bitacora-2026-12-15@rutina-marino
-DTSTAMP:20261021T141008Z
+DTSTAMP:20261021T141038Z
 DTSTART:20261215T130000Z
 DTEND:20261215T133000Z
-SUMMARY:⚓ Sem 7 · Día 7 · Descanso total
+SUMMARY:★ Sem 7 · Día 7 · Descanso total
 DESCRIPTION:«Descanso. El progreso ocurre cuando descansas.»\n\nDescanso
   total: Movilidad 15 min suaves · Dormir 8–9 h\n22:45 Repaso: Hemorrag
  ias\n\nDespiertas 7:30 · entrenas desde 8:00 · sales al trabajo 12:30 
@@ -1555,7 +1555,7 @@ DESCRIPTION:«Descanso. El progreso ocurre cuando descansas.»\n\nDescanso
 TRANSP:OPAQUE
 BEGIN:VALARM
 ACTION:DISPLAY
-DESCRIPTION:⚓ Sem 7 · Día 7 · Descanso total
+DESCRIPTION:★ Sem 7 · Día 7 · Descanso total
 TRIGGER:PT0M
 END:VALARM
 END:VEVENT

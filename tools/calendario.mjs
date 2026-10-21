@@ -19,7 +19,7 @@ for (let i = 0; i < days; i++) {
   const [sh, sm] = (o.rest ? '10:00' : o.shift.A).split(':').map(Number);
   const [eh, em] = (o.rest ? '10:30' : o.shift.lunch).split(':').map(Number);
   const start = new Date(d.getFullYear(), d.getMonth(), d.getDate(), sh, sm), end = new Date(d.getFullYear(), d.getMonth(), d.getDate(), eh, em);
-  const summary = `⚓ Sem ${o.L.w} · Día ${o.L.dow + 1} · ${o.test ? 'PRUEBA · ' : ''}${o.title}`;
+  const summary = `★ Sem ${o.L.w} · Día ${o.L.dow + 1} · ${o.test ? 'PRUEBA · ' : ''}${o.title}`;
   L.push('BEGIN:VEVENT', `UID:bitacora-${A.iso(d)}@rutina-marino`, `DTSTAMP:${utc(new Date())}`, `DTSTART:${utc(start)}`, `DTEND:${utc(end)}`,
     fold('SUMMARY:' + esc(summary)), fold('DESCRIPTION:' + esc(o.lines.join('\n') + '\n\nÓrdenes paso a paso: ' + LINK)), 'TRANSP:OPAQUE');
   if (!o.rest) L.push('BEGIN:VALARM', 'ACTION:DISPLAY', 'DESCRIPTION:' + esc(summary), 'TRIGGER:-PT15M', 'END:VALARM');
