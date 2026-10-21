@@ -257,9 +257,16 @@ const reload = async p => { await p.reload(); await p.waitForTimeout(200); };
   ok(t.includes('Torso A') && t.includes('Flexiones con mochila') && t.includes('Rueda abdominal'), 'torso A con lo que hay en casa');
   ok(t.includes('Inglés · 1 hora'), 'inglés todos los días');
   await p.click('[data-go="1"]'); t = await text(p);
-  ok(t.includes('Nórdico') && t.includes('Copenhague') && t.includes('5-10-5'), 'velocidad y piernas antilesiones');
+  ok(t.includes('Velocidad') && t.includes('Piernas A') && t.includes('5-10-5'), 'velocidad y piernas antilesiones');
   for (let i = 0; i < 4; i++) await p.click('[data-go="1"]'); t = await text(p);
   ok(t.includes('· lago') && t.includes('Piernas B'), 'el día libre: lago y piernas B');
+  await ctx.close(); }
+{ const { p, ctx } = await page('2026-10-13T13:00:00'); // ya pasó la hora del torso y del inglés
+  ok(await p.locator('.ses.pend').count() >= 2 && (await text(p)).includes('Pendiente'), 'lo que se pasó de hora queda en amarillo como pendiente');
+  await p.locator('.pendlink').first().click(); await p.waitForTimeout(100);
+  ok(await p.locator('.ses.pend .sb').count() >= 1, 'tocar el pendiente lo abre');
+  await p.locator('.ses.pend [data-task]').first().click(); await p.waitForTimeout(100);
+  ok(await p.locator('.ses.pend').count() >= 1 && !(await p.$eval('.ses', e => e.parentElement.innerHTML)).includes('pend"><div class="sh"><button class="chk" data-task="fa"'), 'al marcarlo deja de estar pendiente');
   await ctx.close(); }
 
 // 16. Progreso: constancia, gráficos, récords y diario
@@ -445,7 +452,7 @@ const reload = async p => { await p.reload(); await p.waitForTimeout(200); };
   await tapDots(p, 1); await p.tap('[data-mode="cansado"]'); await p.close();
   p = await open('2026-10-09T22:50:00');
   ok(await p.locator('[data-mode="cansado"]').evaluate(e => e.classList.contains('on')), 'en la noche sigue “Cansado”');
-  ok(await p.locator('.dot.on').count() >= 1, 'en la noche siguen las series de la mañana');
+  ok(await p.evaluate(() => Object.values((JSON.parse(localStorage.getItem('bitacora-buzo-v1')).days['2026-10-09'] || {}).sets || {}).some(v => v > 0)), 'en la noche siguen las series de la mañana');
   await p.close();
   // domingo 11: prueba inicial; anota resultados, cierra y vuelve
   p = await open('2026-10-11T08:00:00');
