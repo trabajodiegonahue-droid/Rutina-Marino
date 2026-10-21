@@ -1,6 +1,6 @@
-# Bitácora Buzo Táctico
+# Bitácora Militar
 
-App de una sola página para seguir, día por día, la rutina de preparación para Buzos Tácticos de la Armada de Chile (semana 0 + 52 semanas en 4 etapas).
+App de una sola página para seguir, día por día, una preparación militar en casa (estilo fuerzas especiales, en tierra, con natación una vez por semana): semana 0 + 52 semanas en 4 etapas.
 
 - **Hoy**: botón «Empezar la orden» que guía paso a paso (una orden a la vez, serie por serie, con descanso automático); la orden del día, cómo amaneciste (al 100%, cansado o con dolor) y cada sesión con series, repeticiones, metros, ritmos y descansos con temporizador.
 - **Plan**: las 53 semanas por etapa (semana del infierno adaptada en la 48), la semana elegida día por día y los ajustes.

@@ -14,7 +14,7 @@ const fold = line => { const out = []; let s = line; while (Buffer.byteLength(s)
 const L = ['BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//Bitacora Buzo Tactico//ES', 'CALSCALE:GREGORIAN', 'METHOD:PUBLISH', 'X-WR-CALNAME:Bitácora Buzo Táctico', 'X-WR-TIMEZONE:America/Santiago'];
 for (let i = 0; i < days; i++) {
   const d = new Date(from); d.setDate(d.getDate() + i);
-  const o = ordenDelDia(A, d, { turno, start: opt('inicio', '2026-10-19') });
+  const o = ordenDelDia(A, d, { turno, start: opt('inicio', '2026-10-21') });
   if (!o.L) continue;
   const [sh, sm] = (o.rest ? '10:00' : o.shift.A).split(':').map(Number);
   const [eh, em] = (o.rest ? '10:30' : o.shift.lunch).split(':').map(Number);

@@ -1,4 +1,4 @@
-<title>Bitácora Buzo Táctico</title>
+<title>Bitácora Militar</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Saira+Stencil+One&family=Barlow:wght@400;500;600;700&family=Barlow+Condensed:wght@500;600;700&family=JetBrains+Mono:wght@400;600&display=swap">
@@ -252,65 +252,67 @@ const DIAS=["Lunes","Martes","Miércoles","Jueves","Viernes","Sábado","Domingo"
 const TESTS=[0,13,26,39,52];
 const DELOAD=[4,8,12,17,21,25,30,34,38,43,47,51];
 const HELL=48;
+// Semanas 1–26: [natación (1 vez por semana), trote largo del sábado, intervalos del martes, circuito militar, extra]
 const S12={
-1:["600 m: drills con tabla, tramos de 25 m","30 min suave","Intervalos 4 × 400 m","Fuerza B 3 vueltas","Ducha fría 30 s"],
-2:["700 m: drills + 6 × 25 m crol","30 min suave","Intervalos 5 × 400 m","Fuerza B 3 vueltas","Apnea en seco"],
+1:["600 m: drills con tabla, tramos de 25 m","25 min suave","Intervalos 4 × 400 m","Fuerza B 3 vueltas","Ducha fría 30 s"],
+2:["700 m: drills + 6 × 25 m crol","30 min suave","Intervalos 5 × 400 m","Fuerza B 3 vueltas",""],
 3:["800 m: 8 × 25 m crol, 2 × 50 m","35 min suave","Intervalos 6 × 400 m","Fuerza B 4 vueltas","Ducha fría 1 min"],
 4:["Descarga: 600 m solo técnica","30 min suave","","Fuerza B 3 vueltas","Dormir más"],
-5:["900 m: 6 × 50 m crol","35 min suave","Intervalos 4 × 800 m","Fuerza B 4 vueltas, barras 6","Apnea piscina: 10–15 m"],
+5:["900 m: 6 × 50 m crol","40 min suave","Intervalos 4 × 800 m","Fuerza B 4 vueltas, barras 6",""],
 6:["1.000 m: 4 × 75 m, 4 × 50 m","40 min suave","Intervalos 6 × 400 m rápido","Fuerza B 4 vueltas, flexiones 18","Ducha fría 1:30"],
-7:["1.100 m: 3 × 100 m crol","40 min suave","Intervalos 5 × 800 m","Fuerza B 5 vueltas","Apnea piscina: 15 m"],
-8:["Descarga: 700 m técnica","30 min suave","","Fuerza B 3 vueltas",""],
-9:["1.200 m: 4 × 100 m, 200 m continuo","45 min suave","Intervalos 3 × 1.200 m","Fuerza B 5 vueltas, barras 7","Ducha fría 2 min"],
-10:["1.300 m: 2 × 200 m, drills","45 min suave","Intervalos 6 × 400 m","Fuerza B 5 vueltas, sentadillas 25","Apnea piscina: 15–20 m"],
-11:["1.400 m: 300 m continuo + 4 × 100 m","45 min suave","Intervalos 4 × 800 m","Fuerza B 5 vueltas, abdominales 25","Ducha fría 2 min"],
-12:["Descarga: 1.000 m suave; prueba 400 m continuo","30 min suave","","Fuerza B 3 vueltas","Dormir más"],
-14:["1.500 m: 6 × 100 m + 300 m","45 min","Intervalos 6 × 400 m","Fuerza B 4 vueltas","Primer nado en lago 10 min, acompañado, cerca de la orilla"],
-15:["1.600 m: 2 × 300 m + 4 × 100 m","50 min","Intervalos 4 × 800 m","Fuerza B 4 vueltas + cuerda","Apnea 20 m"],
-16:["1.700 m: 500 m continuo + 6 × 50 m rápido","50 min","Intervalos 3 × 1.200 m","Fuerza B 5 vueltas","Lago 15 min"],
-17:["Descarga: 1.200 m suave","35 min suave","","Fuerza B 3 vueltas",""],
-18:["1.800 m: 8 × 100 m","55 min","Intervalos 6 × 400 m rápido","Fuerza B 5 vueltas, barras 7","Lago 20 min"],
-19:["1.900 m: 600 m continuo + 4 × 100 m","55 min","Intervalos 5 × 800 m","Fuerza B 5 vueltas, cuerda 4","Apnea 20–25 m"],
-20:["2.000 m: 3 × 400 m","60 min","","Fuerza B 5 vueltas, flexiones 22","Lago 25 min"],
-21:["Descarga: 1.400 m","35 min suave","","Fuerza B 3 vueltas","Dormir más"],
-22:["2.000 m: 10 × 100 m a ritmo de 500 m","60 min","Intervalos 3 × 1.600 m","Fuerza B 6 vueltas","Lago 30 min"],
-23:["2.200 m: 800 m continuo + 6 × 100 m","60 min","Intervalos 6 × 400 m","Fuerza B 6 vueltas, barras 8","Apnea 25 m"],
-24:["2.200 m: 2 × 500 m cronometrado","50 min","4 × 200 m rápido","Fuerza B 6 vueltas, cuerda 5","Lago 30–35 min"],
-25:["Descarga: 1.500 m; ensayo 500 m","35 min suave","","Fuerza B 3 vueltas",""]
+7:["1.100 m: 3 × 100 m crol","45 min suave","Intervalos 5 × 800 m","Fuerza B 5 vueltas",""],
+8:["Descarga: 700 m técnica","35 min suave","","Fuerza B 3 vueltas",""],
+9:["1.200 m: 4 × 100 m, 200 m continuo","50 min suave","Intervalos 3 × 1.200 m","Fuerza B 5 vueltas, barras 7","Ducha fría 2 min"],
+10:["1.300 m: 2 × 200 m, drills","50 min suave","Intervalos 6 × 400 m","Fuerza B 5 vueltas, sentadillas 25",""],
+11:["1.400 m: 300 m continuo + 4 × 100 m","55 min suave","Intervalos 4 × 800 m","Fuerza B 5 vueltas, abdominales 25","Ducha fría 2 min"],
+12:["Descarga: 1.000 m suave; prueba 400 m continuo","35 min suave","","Fuerza B 3 vueltas","Dormir más"],
+14:["1.200 m: 6 × 100 m + 300 m","55 min","Intervalos 6 × 400 m","Fuerza B 4 vueltas",""],
+15:["1.200 m: 2 × 300 m + 4 × 100 m","60 min","Intervalos 4 × 800 m","Fuerza B 4 vueltas + cuerda",""],
+16:["1.300 m: 500 m continuo + 6 × 50 m rápido","60 min","Intervalos 3 × 1.200 m","Fuerza B 5 vueltas",""],
+17:["Descarga: 800 m suave","40 min suave","","Fuerza B 3 vueltas",""],
+18:["1.300 m: 8 × 100 m","65 min","Intervalos 6 × 400 m rápido","Fuerza B 5 vueltas, barras 7",""],
+19:["1.400 m: 600 m continuo + 4 × 100 m","65 min","Intervalos 5 × 800 m","Fuerza B 5 vueltas, cuerda 4",""],
+20:["1.400 m: 3 × 400 m","70 min","","Fuerza B 5 vueltas, flexiones 22",""],
+21:["Descarga: 1.000 m","40 min suave","","Fuerza B 3 vueltas","Dormir más"],
+22:["1.500 m: 10 × 100 m a ritmo de 500 m","70 min","Intervalos 3 × 1.600 m","Fuerza B 6 vueltas",""],
+23:["1.500 m: 800 m continuo + 6 × 50 m","75 min","Intervalos 6 × 400 m","Fuerza B 6 vueltas, barras 8",""],
+24:["1.500 m: 2 × 500 m cronometrado","60 min","4 × 200 m rápido","Fuerza B 6 vueltas, cuerda 5",""],
+25:["Descarga: 1.000 m; ensayo 500 m","40 min suave","","Fuerza B 3 vueltas",""]
 };
+// Semanas 27–51: [natación, carrera del martes, viernes, extra]
 const S34={
-27:["2.200 m: 10 × 50 m rápido + 800 m","6 × 400 m a ritmo 2.400","Mini-prueba 200 m / 1.200 m","Lago 20 min (agua más fría)"],
-28:["2.300 m: 5 × 200 m","4 × 800 m","Mini-prueba + cuerda 5","Apnea 30 m"],
-29:["2.400 m: 500 m cronometrado + series","3 × 1.200 m","Mini-prueba 300 m","Lago 20 min"],
-30:["Descarga: 1.500 m","30 min suave","Fuerza B suave","Dormir más"],
-31:["2.400 m: 12 × 50 m rápido","8 × 400 m","Mini-prueba, barras con pausa arriba","Lago 15–20 min"],
-32:["2.500 m: 4 × 250 m","5 × 800 m","Mini-prueba + cuerda 6","Apnea 30–35 m"],
-33:["2.500 m: 2 × 500 m (el 2.º más rápido)","2 × 1.600 m","Mini-prueba con 1.600 m","Lago 15 min"],
-34:["Descarga: 1.600 m","30 min suave","Fuerza B suave",""],
-35:["2.600 m: 10 × 100 m a ritmo meta","6 × 400 m rápido","Mini-prueba completa","Ducha fría 3 min"],
-36:["2.700 m: 1.000 m continuo + 6 × 50 m","4 × 800 m","Mini-prueba + cuerda 6","Apnea 35 m"],
-37:["2.500 m: 500 m cronometrado","2.400 m cronometrado","Mini-prueba","Lago 10–15 min"],
-38:["Descarga: 1.500 m","30 min suave","Fuerza B suave","Dormir más"],
-40:["2.600 m: 12 × 50 m rápido","6 × 400 m","Mini-prueba","Ducha fría 3 min"],
-41:["2.700 m: 5 × 200 m ritmo meta","4 × 800 m","Simulacro completo","Apnea 40 m"],
-42:["2.800 m: 1.200 m continuo","3 × 1.200 m","Mini-prueba + cuerda 8","Lago 10 min (invierno)"],
-43:["Descarga: 1.800 m","30 min suave","Fuerza B suave","Dormir más"],
-44:["2.800 m: 10 × 100 m","8 × 400 m","Simulacro completo","Sesión de incomodidad"],
-45:["3.000 m: 2 × 500 m rápido","5 × 800 m","Mini-prueba + barras con mochila 5 kg","Apnea 40–45 m"],
-46:["3.000 m: 1.500 m continuo con aletas","Trote largo 75 min","Simulacro completo","Lago 10 min"],
-47:["Descarga: 1.800 m","30 min suave","Fuerza B suave",""],
-48:["3.000 m: 16 × 50 m rápido","6 × 400 m rápido","Simulacro completo","Sesión de incomodidad"],
-49:["2.800 m: 500 m a ritmo meta × 2","2.400 m cronometrado","Mini-prueba","Apnea 45–50 m"],
-50:["2.500 m: series cortas","4 × 400 m","Simulacro completo","Ducha fría 3 min"],
-51:["Descarga fuerte: 1.500 m suave","25 min suave","Solo movilidad","Dormir 9 h"]
+27:["1.500 m: 10 × 50 m rápido + 600 m","6 × 400 m a ritmo 3.200","Mini-prueba / 1.600 m",""],
+28:["1.500 m: 5 × 200 m","4 × 800 m","Mini-prueba + cuerda 5",""],
+29:["1.500 m: 500 m cronometrado + series","3 × 1.200 m","Mini-prueba / 1.600 m",""],
+30:["Descarga: 1.000 m","30 min suave","Fuerza B suave","Dormir más"],
+31:["1.500 m: 12 × 50 m rápido","8 × 400 m","Mini-prueba, barras con pausa arriba",""],
+32:["1.600 m: 4 × 250 m","5 × 800 m","Mini-prueba + cuerda 6",""],
+33:["1.600 m: 2 × 500 m (el 2.º más rápido)","2 × 1.600 m","Mini-prueba con 1.600 m",""],
+34:["Descarga: 1.000 m","30 min suave","Fuerza B suave",""],
+35:["1.600 m: 10 × 100 m a ritmo meta","6 × 400 m rápido","Mini-prueba completa","Ducha fría 3 min"],
+36:["1.700 m: 1.000 m continuo + 6 × 50 m","4 × 800 m","Mini-prueba + cuerda 6",""],
+37:["1.500 m: 500 m cronometrado","3.200 m cronometrado","Mini-prueba",""],
+38:["Descarga: 1.000 m","30 min suave","Fuerza B suave","Dormir más"],
+40:["1.600 m: 12 × 50 m rápido","6 × 400 m","Mini-prueba","Ducha fría 3 min"],
+41:["1.700 m: 5 × 200 m ritmo meta","4 × 800 m","Simulacro completo",""],
+42:["1.800 m: 1.200 m continuo","3 × 1.200 m","Mini-prueba + cuerda 8",""],
+43:["Descarga: 1.000 m","30 min suave","Fuerza B suave","Dormir más"],
+44:["1.800 m: 10 × 100 m","8 × 400 m","Simulacro completo","Sesión de incomodidad"],
+45:["1.800 m: 2 × 500 m rápido","5 × 800 m","Mini-prueba + barras con mochila 5 kg",""],
+46:["1.800 m: 1.500 m continuo","Trote largo 75 min","Simulacro completo",""],
+47:["Descarga: 1.000 m","30 min suave","Fuerza B suave",""],
+48:["1.500 m: 16 × 50 m rápido","6 × 400 m rápido","Simulacro completo","Sesión de incomodidad"],
+49:["1.600 m: 500 m a ritmo meta × 2","3.200 m cronometrado","Mini-prueba",""],
+50:["1.500 m: series cortas","4 × 400 m","Simulacro completo","Ducha fría 3 min"],
+51:["Descarga fuerte: 800 m suave","25 min suave","Solo movilidad","Dormir 9 h"]
 };
 
 const STAGES=[
  {n:"Semana 0",name:"Chequeo y prueba inicial",from:0,to:0},
- {n:"Etapa 1",name:"Aprender a nadar crol",from:1,to:13},
- {n:"Etapa 2",name:"Resistencia",from:14,to:26},
+ {n:"Etapa 1",name:"Base: técnica, trote y primeros 50 m nadando",from:1,to:13},
+ {n:"Etapa 2",name:"Resistencia y mochila",from:14,to:26},
  {n:"Etapa 3",name:"Intensidad y formato continuo",from:27,to:39},
- {n:"Etapa 4",name:"Específica, infierno y simulacros",from:40,to:52}
+ {n:"Etapa 4",name:"Específica: semana del infierno y simulacros",from:40,to:52}
 ];
 const stageOf=w=>STAGES.find(s=>w>=s.from&&w<=s.to)||STAGES[4];
 const stN=w=>w<=13?1:w<=26?2:w<=39?3:4;
@@ -360,16 +362,18 @@ const CAL=B("Calentamiento","8 min",{note:"Círculos de hombros y caderas, 20 ju
 const ELONG=B("Elongación","5 min",{note:"Cuádriceps, isquios, gemelos, pecho y dorsales: 30 s cada uno."});
 
 /* ---- carrera ---- */
-const runGoal=w=>w<=13?630:w<=26?600:w<=39?570:540;
+// meta de la carrera de la prueba (3.200 m): 16:00 → 13:30 a lo largo del año
+const RUN_D=3200,RUN_LAPS=RUN_D/400;
+const runGoal=w=>w<=13?960:w<=26?900:w<=39?840:810;
 const swimGoal=w=>w<=39?660:570;
-function runPace(w,d,fast){const p4=runGoal(w)/6-(fast?3:0),k=d/400;return p4*k+(k>1?(k-1)*4:0)-(d<400?2:0)}
+function runPace(w,d,fast){const p4=runGoal(w)/RUN_LAPS-(fast?3:0),k=d/400;return p4*k+(k>1?(k-1)*4:0)-(d<400?2:0)}
 const runRest=d=>d<=200?60:d<=400?90:d<=800?120:d<=1200?150:180;
 function runBlocks(spec,w){
   spec=spec.replace(/^Intervalos:?\s*/i,"").trim();let m;
   if((m=spec.match(/(\d+)\s*×\s*([\d.]+)\s*m(.*)/))){
     const n=+m[1],d=num(m[2]),fast=/rápido/i.test(m[3]),pace=runPace(w,d,fast);
     return {blocks:[B("Calentamiento","10 min trote suave",{note:"Más 4 aceleraciones de 80 m."}),
-      B(`${n} × ${m[2]} m`,`${fmtT(pace)} cada uno`,{s:n,r:runRest(d),note:`Ritmo ${fmtT(runGoal(w)/6-(fast?3:0))} por vuelta de 400 m. Entre cada uno, ${fmtT(runRest(d))} trotando muy suave o caminando.`}),
+      B(`${n} × ${m[2]} m`,`${fmtT(pace)} cada uno`,{s:n,r:runRest(d),note:`Ritmo ${fmtT(runGoal(w)/RUN_LAPS-(fast?3:0))} por vuelta de 400 m. Entre cada uno, ${fmtT(runRest(d))} trotando muy suave o caminando.`}),
       B("Vuelta a la calma","5–10 min trote suave"),ELONG],min:20+n*(pace+runRest(d))/60,goal:{type:"int",rep:Math.round(pace),d,n}};
   }
   if((m=spec.match(/([\d.]+)\s*m\s*cronometrado/)))return {blocks:[B("Calentamiento","10 min trote suave"),B(m[1]+" m a tope","Anota el tiempo",{note:"Meta de la próxima prueba: "+fmtT(runGoal(w))}),B("Vuelta a la calma","10 min suave"),ELONG],min:35,goal:{type:"crono",d:num(m[1]),time:runGoal(w)}};
@@ -435,18 +439,18 @@ function finsBlocks(w,fins){const st=stN(w||14);
 }
 function longSwim(w){const d=w<=39?1500:2000;return {blocks:[B("Entrada en calor","200 m suave",{m:200}),B(nf(d)+" m","crol continuo",{m:d,note:"Cada 500 m revisa que la brazada siga larga."}),B("Vuelta a la calma","100 m suave",{m:100})],m:d+300}}
 // Pataleo vertical (control en el agua): de 4 × 30 s a 10 min con las manos fuera.
-const FLOT=(min,sets)=>B("Flotación de supervivencia",sets?`${sets} × ${min} min`:`${min} min`,{s:sets||1,r:sets?60:0,tm:min*60,c:`En lo hondo, cerca del borde: flota boca abajo y relajado, sube la cabeza solo para respirar cada 5 a 10 segundos y vuelve a relajarte. Aguanta ${min} minutos gastando lo mínimo. Es la base del nado de emergencia del curso.`});
+const FLOT=(min,sets)=>B("Flotación de supervivencia",sets?`${sets} × ${min} min`:`${min} min`,{s:sets||1,r:sets?60:0,tm:min*60,c:`En lo hondo, cerca del borde: flota boca abajo y relajado, sube la cabeza solo para respirar cada 5 a 10 segundos y vuelve a relajarte. Aguanta ${min} minutos gastando lo mínimo. Es lo que te salva si te cansas en lo hondo.`});
 const OBJ=n=>B("Recuperar objeto del fondo",`${n} veces`,{s:n,r:60,c:"Lanza a lo hondo un objeto que se hunda (una botella llena de agua). Baja, tómalo y súbelo. Compensa los oídos al bajar. Respira normal 1 minuto entre cada bajada; nunca respires rápido antes."});
 function treadBlocks(w){const st=stN(w),t=treadBlock(w);
   if(st===1)return [t];
   if(st===2)return [t,FLOT(2,2)];
   if(st===3)return [t,FLOT(5),OBJ(5)];
-  return [t,FLOT(10),B("Nado con ropa","200 m con polera y short",{m:200,c:"Si la piscina lo permite, nada 200 m con polera y short: así se siente el agua en el curso. Si no lo permiten, nada 200 m a brazada lenta sin parar."}),OBJ(5)];
+  return [t,FLOT(10),B("Nado con ropa","200 m con polera y short",{m:200,c:"Si la piscina lo permite, nada 200 m con polera y short: así se siente nadar con ropa, como con uniforme. Si no lo permiten, nada 200 m a brazada lenta sin parar."}),OBJ(5)];
 }
 function treadBlock(w){const st=stN(w);
   if(st===1)return B("Pataleo vertical",`4 × ${30+Math.min(60,Math.max(0,w-1)*5)} s`,{s:4,r:45,tm:30+Math.min(60,Math.max(0,w-1)*5),note:"En lo hondo, cerca del borde. Patada de “batidora” (eggbeater), manos ayudando."});
   if(st===2)return B("Pataleo vertical",`5 × ${Math.min(3,1+Math.floor((w-14)/5))} min`,{s:5,r:60,tm:Math.min(3,1+Math.floor((w-14)/5))*60,note:"Cerca del borde, en lo hondo."});
-  if(st===3)return B("Pataleo vertical","3 × 3 min con manos fuera",{s:3,r:60,tm:180,note:"Manos fuera del agua: es lo que te van a pedir en el curso."});
+  if(st===3)return B("Pataleo vertical","3 × 3 min con manos fuera",{s:3,r:60,tm:180,note:"Manos fuera del agua: el control que da seguridad en lo hondo."});
   return B("Pataleo vertical","10 min continuo",{tm:600,note:"Últimos 2 min con las manos fuera."});
 }
 
@@ -468,14 +472,14 @@ function bVals(w){const s2=w>=14,v=s2?{barras:6,flex:20,sent:25,abd:25}:{barras:
     if((m=c.match(/barras (\d+)/)))v.barras=+m[1];if((m=c.match(/flexiones (\d+)/)))v.flex=+m[1];if((m=c.match(/sentadillas (\d+)/)))v.sent=+m[1];if((m=c.match(/abdominales (\d+)/)))v.abd=+m[1]}
   return v}
 const circuit=(v,vu,rest)=>[CAL,B("Circuito",`${vu} vueltas`,{s:vu,r:rest,note:`Cada vuelta, sin pausa: barras ${v.barras} → flexiones ${v.flex} → sentadillas ${v.sent} → abdominales ${v.abd}. ${rest} s entre vueltas.`})];
-// PT de cubierta: la gimnasia de volumen del curso, para que no te tome por sorpresa.
-function cubiertaT(w){const st=stN(w),dl=DELOAD.includes(w)?2:0,[r,a,b]=st===2?[3,15,0]:st===3?[5,20,0]:[5,25,3],rr=Math.max(2,r-dl);
-  return T("pt","PT de cubierta","La gimnasia diaria del curso: mucho volumen, sin pausa.","09:00",[B("Ronda de cubierta",`${rr} × ${a}`,{s:rr,r:60,c:`Ronda sin parar: ${a} flexiones → ${a} abdominales → ${a} sentadillas${b?` → ${b} barras`:""}. Después descansa 1:00.`})],{kind:"fuerza"})}
-const sprintT=()=>T("sprint","Velocidad: 100 m y salto","Dos pruebas de la admisión a la Armada: 100 m y salto vertical.","08:00",[
+// PT militar: la gimnasia de volumen de cada mañana en un regimiento, para que no te tome por sorpresa.
+function cubiertaT(w){const st=stN(w),dl=DELOAD.includes(w)?2:0,[r,a,b]=st===1?[3,10,0]:st===2?[3,15,0]:st===3?[5,20,0]:[5,25,3],rr=Math.max(2,r-dl);
+  return T("pt","PT militar","La gimnasia de cada mañana en el servicio: mucho volumen, sin pausa.","10:00",[B("Ronda de PT",`${rr} × ${a}`,{s:rr,r:60,c:`Ronda sin parar: ${a} flexiones → ${a} abdominales → ${a} sentadillas → ${Math.round(a/2)} burpees${b?` → ${b} barras`:""}. Después descansa 1:00.`})],{kind:"fuerza"})}
+const sprintT=()=>T("sprint","Velocidad: 100 m y salto","Velocidad y potencia: sirven para la pista de obstáculos y las pruebas de admisión.","08:00",[
   B("Sprint 100 m","4 al 95%",{s:4,r:120,c:"Corre 100 m casi a tope (95%): brazos fuertes, rodillas arriba, mirada al frente. Vuelve caminando y descansa 2:00."}),
   B("Salto vertical","3 × 5 saltos",{s:3,r:90,c:"Junto a una pared: bajas rápido a media sentadilla y saltas lo más alto que puedas, tocando la pared con la mano estirada. 5 saltos y descansa 1:30. Marca con tiza tu mejor altura."})],{kind:"carrera"});
 function piernas(w){const st=stN(w),dl=DELOAD.includes(w)?1:0;
-  if(st===1)return [B("Sentadillas",`${4-dl} × 20`,{s:4-dl,r:60,note:"Muslos paralelos al suelo, talones apoyados."}),B("Zancadas","3 × 10 por pierna",{s:3,r:60}),B("Puente de glúteo","3 × 15",{s:3,r:45}),B("Gemelos","3 × 20",{s:3,r:30,note:"En un escalón, subiendo en puntas. Cuida los tobillos para la carrera y las aletas."})];
+  if(st===1)return [B("Sentadillas",`${4-dl} × 20`,{s:4-dl,r:60,note:"Muslos paralelos al suelo, talones apoyados."}),B("Zancadas","3 × 10 por pierna",{s:3,r:60}),B("Puente de glúteo","3 × 15",{s:3,r:45}),B("Gemelos","3 × 20",{s:3,r:30,note:"En un escalón, subiendo en puntas. Cuida los tobillos para la carrera y la marcha."})];
   if(st===2)return [B("Sentadillas",`${5-dl} × 25`,{s:5-dl,r:60}),B("Zancadas","3 × 15 por pierna",{s:3,r:60}),B("Sentadilla con salto","3 × 10",{s:3,r:60}),B("Gemelos","3 × 25",{s:3,r:30})];
   return [B("Sentadillas","100 en 4 series",{s:4,r:45}),B("Zancadas caminando","3 × 20",{s:3,r:60}),B("Sentadilla búlgara","3 × 10 por pierna",{s:3,r:60,note:"Pie de atrás sobre una silla."}),B("Saltos al cajón o escalón","4 × 8",{s:4,r:60})];
 }
@@ -491,10 +495,13 @@ function apneaBlocks(meta){
   return [B("Respiración de caja","2 min en la orilla",{tm:120,note:"4 s inhalar, 4 sostener, 4 exhalar, 4 sostener. Nunca respirar rápido."}),B(`${prep} m bajo el agua`,"4 veces",{s:4,r:120}),B(`${meta} bajo el agua`,"2 veces: la meta de la semana",{s:2,r:180})];
 }
 const ASECO=()=>[B("Apnea en seco","8 × 1:00",{s:8,tm:60,note:"Acostado en casa. Descansos: 2:00 · 1:45 · 1:30 · 1:15 · 1:00 · 0:45 · 0:30 · 0:15. Nunca en el agua ni en la tina."})];
-function ruck(w){if(w<=39){const mi=40+(w-27)*2,kg=6+Math.floor((w-27)/3);return {mi,kg}}return {mi:Math.min(90,60+(w-40)*3),kg:Math.min(12,10+Math.floor((w-40)/5))}}
-function testBlocks(){return [B("1. Apnea dinámica","metros, una respiración",{note:"Sin aletas, sin hiperventilar."}),B("2. 500 m libre","tiempo"),B("3. Barras","máximo seguidas",{note:"Agarre prono, brazos extendidos, mentón sobre la barra."}),B("4. Sentadillas","máximo en 2 min",{tm:120}),B("5. Flexiones","máximo en 2 min",{tm:120}),B("6. Abdominales","máximo en 2 min",{tm:120}),B("7. 2.400 m","tiempo",{note:"6 vueltas de pista."})]}
-function miniBlocks(spec,ctx){const sw=/300 m/.test(spec)?"300 m":/200 m/.test(spec)?"200 m":"200–300 m",run=/1\.600/.test(spec)?"1.600 m":"1.200 m",b=Math.max(1,Math.round(maxB(ctx)*0.7));
-  return [B("Nado "+sw,"rápido",{note:"Sales y te cambias rápido."}),B("Barras",""+b,{note:`70% de tu máximo (${maxB(ctx)})`+(/pausa/.test(spec)?". Con pausa de 1 s arriba.":"")+(/mochila/.test(spec)?". Con mochila de 5 kg.":"")}),B("Sentadillas","1 min a tope",{tm:60}),B("Flexiones","1 min a tope",{tm:60}),B("Abdominales","1 min a tope",{tm:60}),B("Carrera",run,{note:"Sin pausa desde el último ejercicio."})]}
+// marcha con mochila: lo más militar del plan. Sube de a poco el peso y el tiempo (unos 6 km/h)
+function ruck(w){if(w<=13)return {mi:30+Math.max(0,w-2)*2,kg:4+Math.floor(w/4)};if(w<=26)return {mi:50+(w-14)*2,kg:8+Math.floor((w-14)/4)};
+  if(w<=39)return {mi:60+(w-27)*2,kg:10+Math.floor((w-27)/4)};return {mi:Math.min(120,75+(w-40)*4),kg:Math.min(15,12+Math.floor((w-40)/4))}}
+function ruckT(w){const rk=ruck(w);return T("ruck",`Marcha con mochila ${rk.kg} kg`,"En el servicio se camina lejos con peso: espalda, pies y cabeza.","07:00",[B("Marcha rápida",`${rk.mi} min con ${rk.kg} kg`,{tm:rk.mi*60,note:"Mochila ajustada alta, pegada a la espalda. Paso rápido, sin trotar. Calcetines secos."}),ELONG],{kind:"carrera",goal:{type:"ruck",min:rk.mi}})}
+function testBlocks(){return [B("1. Flexiones","máximo en 2 min",{tm:120,note:"Pecho a un puño del suelo, cuerpo recto."}),B("2. Abdominales","máximo en 2 min",{tm:120,note:"Codos a los muslos, omóplatos al suelo."}),B("3. Barras","máximo seguidas",{note:"Agarre prono, brazos extendidos, mentón sobre la barra."}),B("4. Sentadillas","máximo en 2 min",{tm:120}),B("5. Carrera 3.200 m","tiempo",{note:"8 vueltas de 400 m, o 3,2 km medidos con adidas Running."}),B("6. Nado 50 m","si puedes",{opt:1,note:"En la Escuela Militar se exige nadar 50 m libre sin ayuda. Si hoy no tienes dónde, anótalo después de tu próximo nado."})]}
+function miniBlocks(spec,ctx){const run=/1\.600/.test(spec)?"1.600 m":"1.200 m",b=Math.max(1,Math.round(maxB(ctx)*0.7));
+  return [B("Barras",""+b,{note:`70% de tu máximo (${maxB(ctx)})`+(/pausa/.test(spec)?". Con pausa de 1 s arriba.":"")+(/mochila/.test(spec)?". Con mochila de 5 kg.":"")}),B("Flexiones","1 min a tope",{tm:60}),B("Abdominales","1 min a tope",{tm:60}),B("Sentadillas","1 min a tope",{tm:60}),B("Burpees","1 min a tope",{tm:60}),B("Carrera",run,{note:"Sin pausa desde el último ejercicio."})]}
 function incBlocks(w){const [, tr,fl,se,ab,ba,kg]=INC[w];const bl=[B("Trote"+(kg?` con mochila ${kg} kg`:""),tr+" min",{tm:tr*60})];
   if(ba)bl.push(B("Barras",ba+" en total",{note:"Repartidas en las series que necesites."}));
   bl.push(B("Flexiones",fl+" en total"),B("Sentadillas",se+" en total"),B("Abdominales",ab+" en total"),B("Ducha fría","3 min",{tm:180}),B("Cuando quieras parar","respiración de caja",{note:"“Hasta la próxima serie.” No pienses en el total."}));
@@ -503,7 +510,7 @@ function hellDay(dow,ctx){
   const mx=maxB(ctx),lake=ctx.place!=="piscina",SEG="Lleva 1,5 L de agua y algo para comer a mitad (plátano o pan con mantequilla de maní); toma unos sorbos cada 20 min. Dolor agudo: paras. Esta semana duerme mínimo 8 h.";
   const H=[
    ["Infierno 1 · Arranque",[B("Marcha-trote con mochila 10 kg","8 km",{note:"Alterna 5 min trotando y 5 caminando rápido. Grábala con adidas Running."}),B("Barras",`${mx*5} en total`,{note:"Repartidas."}),B("Flexiones","300 en total"),B("Sentadillas","300 en total"),B("Ducha fría","3 min",{tm:180})],{goal:{type:"ruck",min:60}}],
-   ["Infierno 2 · Agua",[B("Circuito",`5 vueltas`,{s:5,r:60,note:"Barras 8 · flexiones 25 · sentadillas 30 · abdominales 30."}),lake?B("Patada en seco","3 × 3 min",{s:3,r:60,tm:180,note:"Boca abajo en el suelo o en una banca, brazos adelante: patada de crol corta y rápida desde la cadera. El pataleo vertical va solo en piscina con salvavidas."}):B("Pataleo vertical","10 min, manos fuera los últimos 3",{tm:600,note:"Solo en piscina con salvavidas."})],{swim:1}],
+   ["Infierno 2 · Barro y arrastre",[B("Circuito",`5 vueltas`,{s:5,r:60,note:"Barras 8 · flexiones 25 · sentadillas 30 · abdominales 30."}),B("Arrastre y gateo","6 × 30 m",{s:6,r:60,c:"En pasto o arena: 30 m gateando como oso (manos y pies, rodillas sin tocar el suelo) y vuelves caminando. Cuida las manos con guantes."}),B("Zancadas caminando","4 × 30 m",{s:4,r:60}),B("Ducha fría","3 min",{tm:180})]],
    ["Infierno 3 · La vuelta al mundo",[B("6 rondas sin parar","20 min trote + 10 min circuito",{s:6,note:"Circuito: 10 barras, 30 flexiones, 30 sentadillas, 30 abdominales. 3 horas en total."}),B("Ducha fría","3 min",{tm:180})],{goal:{type:"cont",min:120,max:120}}],
    ["Infierno 4 · Frío y cabeza",[...testBlocks(),B("Frío + circuito","3 rondas",{s:3,note:"Ducha fría 3 min → 10 min de circuito → respiración de caja 2 min."})]],
    ["Infierno 5 · Mochila",[B("Marcha con mochila 12 kg","15 km",{note:"Unas 3 h. Calcetines secos de repuesto; revisa los pies a mitad de camino."}),B("Flexiones","100 al llegar")],{goal:{type:"cont",min:150,max:180}}],
@@ -511,7 +518,7 @@ function hellDay(dow,ctx){
    ["Descanso total",[B("Duerme todo lo que puedas"),B("Come bien","")]]
   ];
   const [t,bl,o]=H[dow];
-  const pre=o&&o.swim?[T("swim","Nado 3.000 m","Volumen en el agua, cansado.","07:00",[B("6 × 500 m","crol, 1 min de descanso",{s:6,r:60,m:3000})],{kind:"agua",m:3000})]:[];
+  const pre=[];
   return {title:t,kind:dow===6?"descanso":"infierno",tasks:[...pre,T(dow===6?"rest":"hell",t,dow===6?"Te lo ganaste.":"Semana del infierno adaptada: volumen enorme, pero con 8 h de sueño como mínimo.",pre.length?"09:30":"07:00",bl,{kind:dow===6?"descanso":"fuerza",goal:o&&o.goal,safe:dow===6?"":SEG+(bl.some(b=>/^1\. Apnea/.test(b.n))?" Simulacro: apnea solo con salvavidas o compañero, sin hiperventilar.":"")})]};
 }
 
@@ -593,42 +600,42 @@ function mapH(h,sh){if(!h)return h;const m=toMin(h),A=toMin(sh.A),B2=toMin(sh.B)
   if(m<9*60)return fromMin(A+(m-420));if(m<11*60)return fromMin(B2+Math.max(0,m-600));if(m<12*60)return fromMin(C+(m-660));if(m<19*60)return fromMin(C+20);if(m<21*60)return fromMin(C+10);return fromMin(toMin(sh.bed)-20)}
 /* ---- estudio diario: una tarjeta por día, en orden; al terminar la lista se repasa ---- */
 const STUDY=[
- ["La Armada y tu camino","Para llegar al curso de Buzo Táctico primero tienes que ser parte de la Armada. Hay dos entradas: la Escuela Naval “Arturo Prat” (forma oficiales) y la Escuela de Grumetes “Alejandro Navarrete Cisterna” (forma gente de mar). El curso se postula ya siendo personal naval, antes de los 30 años, y dura 48 semanas en la Escuela de Fuerzas Especiales.","Entra a admisionarmada.cl y anota en tu cuaderno los requisitos de las dos escuelas: edad, estudios, examen médico y fechas. Decide a cuál apuntas."],
- ["La prueba de ingreso al curso","Es una prueba continua, con descanso mínimo entre ejercicios: apnea dinámica, 500 m de natación, barras, sentadillas, flexiones, abdominales y 2.400 m de carrera. Lo que más elimina es el agua. Quien llega justo a las mínimas sufre más y abandona antes.","Escribe en tu cuaderno los 7 ejercicios en orden, de memoria, y deja espacio al lado para tu marca de la prueba inicial (la anotas después de rendirla)."],
- ["Combate Naval de Iquique","El 21 de mayo de 1879, en la Guerra del Pacífico, la corbeta Esmeralda, vieja y en desventaja, enfrentó al blindado peruano Huáscar frente a Iquique. El capitán Arturo Prat saltó al abordaje y murió en la cubierta enemiga. La Esmeralda se hundió con su bandera izada. Es el ejemplo central de la Armada: cumplir el deber hasta el final.","Escribe en 3 líneas qué significa para ti “no rendirse” y relaciónalo con tu entrenamiento."],
- ["Presión bajo el agua","Al nivel del mar soportas 1 atmósfera. Cada 10 m de agua de mar suman 1 atmósfera más: a 10 m estás a 2 atmósferas, a 20 m a 3, a 30 m a 4. El cambio más brusco ocurre en los primeros 10 m: ahí la presión se duplica.","Calcula y anota la presión a 5, 15 y 40 m. (Respuestas: 1,5; 2,5 y 5 atmósferas.)"],
- ["Ley de Boyle","Si la temperatura no cambia, el volumen de un gas es inversamente proporcional a la presión. El aire de tus pulmones a 10 m ocupa la mitad que en superficie, y a 30 m, un cuarto. Por eso, con equipo de buceo, nunca se aguanta la respiración al subir: el aire se expande y puede romper el pulmón (embolia).","Explica en voz alta, como si le enseñaras a alguien, por qué no se aguanta la respiración al subir con equipo."],
- ["Compensar los oídos","Al bajar, la presión empuja el tímpano hacia adentro. Para igualarla se hace la maniobra de Valsalva: tapas la nariz y soplas suave por ella con la boca cerrada. Se compensa antes de sentir dolor, cada metro al principio. Nunca se fuerza: si duele, subes un poco y lo intentas de nuevo. Resfriado o congestión = no se bucea.","Practica 5 veces en seco la Valsalva suave hasta sentir que los oídos “hacen clic”. Sin soplar fuerte."],
- ["Barotrauma","Es la lesión por diferencia de presión en un espacio con aire: oídos (el más común), senos paranasales, máscara (ojos rojos por no exhalar en ella) y pulmones. Señales: dolor, sangrado por la nariz, mareo, oído tapado después de bucear. Por eso el examen médico revisa oídos y senos.","Anota las 4 zonas de barotrauma y una señal de cada una."],
- ["Apagón en apnea","Las ganas de respirar las provoca el CO₂, no la falta de oxígeno. Si hiperventilas, bajas el CO₂ y apagas la alarma: el oxígeno se acaba antes de sentir las ganas y te desmayas sin aviso, muchas veces cerca de la superficie. Por eso: nunca hiperventilar, nunca apnea solo, y el compañero te mira hasta 30 segundos después de salir.","Escribe las 3 reglas de la apnea segura y pégalas donde las veas antes de entrenar."],
- ["Shock de frío: regla 1-10-1","Al caer al agua fría: 1 minuto para controlar la respiración (el jadeo pasa si no entras en pánico), 10 minutos de movimiento útil antes de que los músculos fallen, y alrededor de 1 hora antes de perder la conciencia por hipotermia. Lo que mata primero no es la hipotermia, es el pánico y el agotamiento de los primeros minutos.","Memoriza la regla 1-10-1 y explícala en voz alta."],
- ["Hipotermia","Leve: temblor fuerte, piel fría, manos torpes. Moderada: el temblor para, confusión, habla lenta. Grave: inconsciencia. Qué hacer: sacar del agua y del viento, quitar ropa mojada, secar, abrigar (sobre todo tronco y cabeza) y dar bebida tibia solo si está consciente. No frotar brazos ni piernas, ni meter de golpe en agua caliente.","Anota las 3 etapas y los 5 pasos de ayuda en tu cuaderno."],
- ["RCP: reanimación","Si alguien no responde y no respira normal: pide ayuda y llama al 131 (SAMU). Pon las manos al centro del pecho y comprime fuerte y rápido: 5–6 cm de profundidad, 100 a 120 por minuto, dejando que el pecho vuelva. Ciclos de 30 compresiones y 2 ventilaciones. En un ahogado se empieza con 5 ventilaciones de rescate.","Practica el ritmo sobre un cojín: 30 compresiones al ritmo de “Stayin’ Alive”. Inscríbete en un curso de primeros auxilios cuando puedas."],
- ["Posición lateral de seguridad","Para alguien inconsciente que sí respira: lo pones de costado, con la pierna de arriba doblada y la mano bajo la mejilla, la cabeza un poco hacia atrás. Así no se ahoga con vómito o con su lengua. Lo revisas cada minuto hasta que llegue ayuda.","Practícala con alguien de tu casa, 3 veces."],
- ["Rescate: lanzar, no ir","La mayoría de los que se meten a rescatar sin entrenamiento también se ahogan. Orden: 1) hablar y dar instrucciones desde la orilla, 2) alcanzar con un palo o una rama, 3) lanzar algo que flote (botella, salvavidas, cuerda), 4) ir en bote. Nadar hacia la víctima es lo último y solo con entrenamiento.","Anota las 4 opciones en orden. Mira qué tienes a mano en el lugar donde nadas."],
- ["Corrientes de retorno","En el mar, el agua que entra con las olas vuelve por canales angostos que te llevan hacia adentro. Si te agarra: no nades contra ella. Nada paralelo a la playa hasta salir del canal y después vuelves. Se reconocen como franjas sin olas y con agua más oscura o con espuma.","Explica en voz alta qué harías si te agarra una corriente de retorno."],
+ ["El Ejército y tu camino","Hay dos caminos para empezar: el Servicio Militar (te inscribes en el cantón de reclutamiento; dura alrededor de un año y es la forma más directa de conocer la vida militar) y las escuelas de formación: la Escuela Militar “Libertador Bernardo O’Higgins” forma oficiales y la Escuela de Suboficiales forma suboficiales. Cada una tiene requisitos de edad, estudios, salud y pruebas físicas, que cambian: siempre confírmalos en la fuente oficial.","Busca «Servicio Militar DGMN» y «admisión Escuela Militar» y anota en tu cuaderno: requisitos, fechas y dónde está tu cantón de reclutamiento más cercano."],
+ ["Las pruebas físicas","Las pruebas de ingreso miden resistencia cardiovascular (correr), fuerza y resistencia del tronco y los brazos (flexiones, abdominales, barras) y, en la Escuela Militar, nadar 50 m libre sin ayuda, que es excluyente. Las metas de esta app son propias del plan: sirven para avanzar, pero las mínimas oficiales las confirmas al postular. Quien llega justo a las mínimas sufre más y abandona antes.","Escribe en tu cuaderno los ejercicios de tu prueba en orden, de memoria, y deja espacio al lado para tu marca de la prueba inicial."],
+ ["Combate de La Concepción","El 9 y 10 de julio de 1882, en la Guerra del Pacífico, 77 soldados chilenos al mando del capitán Ignacio Carrera Pinto resistieron en el pueblo de La Concepción (Perú) contra una fuerza muchísimo mayor. No se rindieron y murieron todos, entre ellos cuatro subtenientes muy jóvenes. Es uno de los ejemplos centrales del Ejército: cumplir el deber hasta el final.","Escribe en 3 líneas qué significa para ti “no rendirse” y relaciónalo con tu entrenamiento."],
+ ["Grados del Ejército","Los oficiales, de menor a mayor: subteniente, teniente, capitán, mayor, teniente coronel, coronel y los generales (de brigada, de división y de Ejército). Bajo ellos está el cuadro permanente, de los cabos a los suboficiales, que es la columna vertebral de cada unidad. El soldado conscripto es quien hace el Servicio Militar. Conocer los grados es lo primero que te piden: a quién saludas y a quién te diriges.","Escribe los grados de oficiales en orden, de memoria, 3 veces."],
+ ["Orden cerrado: firmes y descanso","Firmes: talones juntos, puntas de los pies separadas en V, piernas estiradas, brazos pegados al cuerpo con los dedos juntos, mentón recogido y mirada al frente, sin moverte. Descanso: separas el pie izquierdo al ancho de los hombros y llevas las manos a la espalda. Giros: a la derecha, a la izquierda y media vuelta, siempre sobre los talones y las puntas, en dos tiempos.","Frente al espejo: 10 veces firmes → descanso → firmes, y 10 giros de cada tipo. Quieto 2 minutos en firmes sin mover nada."],
+ ["El saludo militar","Se hace con la mano derecha, dedos juntos y estirados, palma hacia abajo, llevando la punta de los dedos al borde de la ceja derecha (o a la visera). El brazo queda horizontal, firme y sin exagerar. Se saluda a los superiores, a la bandera y al himno. El saludo es respeto, no sumisión: se hace bien o no se hace.","Practica el saludo frente al espejo 20 veces hasta que salga igual cada vez."],
+ ["Valores del militar","Honor, disciplina, lealtad, valor, espíritu de cuerpo y abnegación (poner a los demás y a la misión antes que tu comodidad). En el servicio no se mide solo cuánto corres: se mide si cumples cuando nadie te mira, si ayudas al que se queda atrás y si dices la verdad aunque te perjudique.","Escribe un ejemplo de tu vida para 3 de esos valores."],
+ ["La vida en el cuartel","El día empieza temprano con la diana, la cama se hace perfecta, el uniforme limpio, y todo tiene hora: formación, instrucción, comidas, aseo y silencio. Lo que más cuesta a los que llegan es la puntualidad, el orden y obedecer sin discutir. Esta app ya te entrena eso: levantarte a la hora y cumplir la orden del día.","Mañana haz la cama apenas te levantes, perfecta, y ordena tu pieza en 10 minutos con cronómetro."],
+ ["Hora militar y comunicación","En el Ejército se usa la hora de 24 horas (las 10 de la noche son las 22:00, “veintidós cero cero”). Las órdenes se repiten para confirmar que se entendieron, y se habla corto y claro: qué, dónde, cuándo.","Durante el día de hoy, di todas las horas en formato de 24 horas."],
+ ["Alfabeto fonético","Por radio, las letras se dicen con palabras para no confundirlas: Alfa, Bravo, Charlie, Delta, Echo, Foxtrot, Golf, Hotel, India, Juliet, Kilo, Lima, Mike, November, Oscar, Papa, Quebec, Romeo, Sierra, Tango, Uniform, Victor, Whiskey, X-ray, Yankee, Zulu.","Deletrea tu nombre completo y tu RUT con el alfabeto fonético, en voz alta, 3 veces."],
+ ["La brújula","La aguja apunta al norte magnético. Los rumbos se dan en grados de 0 a 360, en el sentido del reloj: 0° norte, 90° este, 180° sur y 270° oeste. Para seguir un rumbo eliges un punto lejano en esa dirección y caminas hacia él.","Con la brújula del celular, párate en tu casa y anota hacia cuántos grados está la puerta, la ventana y el lago."],
+ ["Leer un mapa","La escala te dice cuánto mide en la realidad un centímetro del mapa (1:50.000: 1 cm son 500 m). Las curvas de nivel unen puntos de la misma altura: juntas son pendiente fuerte, separadas es terreno plano. El norte está arriba. Para ubicarte, compara lo que ves (cerros, ríos, caminos) con lo que muestra el mapa.","Abre un mapa de Puerto Varas en el celular y calcula con la escala la distancia de tu casa al lago."],
+ ["Orientarse sin brújula","El sol sale por el este y se pone por el oeste; al mediodía, en Chile, queda hacia el norte. De noche, la Cruz del Sur ayuda a encontrar el sur: prolonga el eje largo de la cruz unas 4 veces y medio hacia abajo, y ese punto está sobre el sur. Una vara clavada al sol: marca la punta de la sombra, espera 15 minutos y marca otra; la línea va de oeste a este.","Esta semana, a mediodía, mira hacia dónde cae el sol desde tu casa y anota los cuatro puntos cardinales."],
  ["Nudo as de guía","Hace un lazo fijo que no se corre ni se aprieta: sirve para rescatar a alguien o amarrar un bote. Truco: haces un ojito en la cuerda (el pozo), el chicote (el conejo) sale del pozo, da la vuelta al árbol (la parte larga) y vuelve a entrar al pozo.","Con un cordón o cinturón, hazlo 10 veces. Después 3 veces con los ojos cerrados."],
  ["Nudo ballestrinque","Sirve para amarrar una cuerda a un poste o una baranda. Das una vuelta al poste, cruzas por encima, das otra vuelta y pasas el chicote por debajo del último cruce. Se hace rápido y se suelta fácil.","Practícalo 10 veces en la pata de una silla."],
  ["Nudo llano","Une dos cuerdas del mismo grosor: derecha sobre izquierda, y después izquierda sobre derecha. Si lo haces dos veces igual queda un nudo “de vieja” que se suelta. También sirve para vendajes.","Hazlo 10 veces y comprueba que quedó simétrico."],
  ["Nudo ocho","Es un nudo de tope: evita que la cuerda se salga de una argolla. Haces una vuelta, pasas el chicote por detrás y lo metes por el ojo: queda con forma de 8. Es la base de muchos nudos de seguridad.","Hazlo 10 veces. Después repasa los 4 nudos seguidos: as de guía, ballestrinque, llano y ocho."],
- ["La brújula","La aguja apunta al norte magnético. Los rumbos se dan en grados de 0 a 360, en el sentido del reloj: 0° norte, 90° este, 180° sur y 270° oeste. Para seguir un rumbo eliges un punto lejano en esa dirección y caminas hacia él.","Con la brújula del celular, párate en tu casa y anota hacia cuántos grados está la puerta, la ventana y el lago."],
- ["Cartas y millas náuticas","Las cartas náuticas usan latitud (norte-sur) y longitud (este-oeste). Un minuto de latitud equivale a 1 milla náutica: 1.852 metros. La velocidad en el mar se mide en nudos: 1 nudo = 1 milla náutica por hora.","Calcula: un bote a 10 nudos durante 30 minutos, ¿cuántos km recorre? (5 millas = 9,26 km.)"],
- ["Mareas","En gran parte de la costa de Chile hay dos mareas altas (pleamar) y dos bajas (bajamar) al día, con unas 6 horas entre una y otra. Las tablas de mareas del SHOA dicen la hora y la altura de cada una. En el sur la diferencia entre alta y baja es mucho mayor que en el norte.","Busca la tabla de mareas de Puerto Montt para mañana y anota las horas de pleamar y bajamar."],
- ["Viento y mar: Beaufort","La escala de Beaufort mide el viento de 0 (calma) a 12 (huracán). Con fuerza 4 (unos 20–28 km/h) ya hay olas pequeñas con espuma; con 6 o más, el mar es peligroso para botes chicos y para nadar. En el lago aplica igual: viento = oleaje.","Antes de tu próxima sesión de lago, mira el viento en un pronóstico y estima su fuerza Beaufort."],
- ["Alfabeto fonético","Por radio, las letras se dicen con palabras para no confundirlas: Alfa, Bravo, Charlie, Delta, Echo, Foxtrot, Golf, Hotel, India, Juliet, Kilo, Lima, Mike, November, Oscar, Papa, Quebec, Romeo, Sierra, Tango, Uniform, Victor, Whiskey, X-ray, Yankee, Zulu.","Deletrea tu nombre completo y tu RUT con el alfabeto fonético, en voz alta, 3 veces."],
- ["Hora militar y comunicación","En la Armada se usa la hora de 24 horas (las 10 de la noche son las 22:00, “veintidós cero cero”). Las órdenes se repiten para confirmar que se entendieron, y se habla corto y claro: qué, dónde, cuándo.","Durante el día de hoy, di todas las horas en formato de 24 horas."],
- ["Equipo básico de buceo","Máscara (vidrio templado, se ajusta sin apretar), snorkel, aletas, traje de neopreno (abriga, pero flota: por eso se usa un cinturón con lastre) y, en buceo con aire, el regulador, el chaleco compensador y el cilindro. En apnea se usa solo máscara, aletas, traje y lastre.","Anota para qué sirve cada pieza del equipo."],
- ["Nitrógeno y descompresión","Respirando aire bajo presión, el cuerpo absorbe nitrógeno. Si subes rápido, ese nitrógeno forma burbujas (enfermedad de descompresión): dolor en articulaciones, hormigueo, mareo. Por eso se sube lento y se hacen paradas de seguridad. A más de unos 30 m, el nitrógeno también produce narcosis: la cabeza piensa como si estuviera ebria.","Explica en tu cuaderno por qué se sube lento al bucear con aire."],
+ ["RCP: reanimación","Si alguien no responde y no respira normal: pide ayuda y llama al 131 (SAMU). Pon las manos al centro del pecho y comprime fuerte y rápido: 5–6 cm de profundidad, 100 a 120 por minuto, dejando que el pecho vuelva. Ciclos de 30 compresiones y 2 ventilaciones. En un ahogado se empieza con 5 ventilaciones de rescate.","Practica el ritmo sobre un cojín: 30 compresiones al ritmo de “Stayin’ Alive”. Inscríbete en un curso de primeros auxilios cuando puedas."],
+ ["Posición lateral de seguridad","Para alguien inconsciente que sí respira: lo pones de costado, con la pierna de arriba doblada y la mano bajo la mejilla, la cabeza un poco hacia atrás. Así no se ahoga con vómito o con su lengua. Lo revisas cada minuto hasta que llegue ayuda.","Practícala con alguien de tu casa, 3 veces."],
+ ["Hemorragias","Lo primero es presión directa fuerte sobre la herida con un paño limpio, y no la sueltas. Si un brazo o una pierna sangra a chorro y la presión no basta, va un torniquete 5–7 cm sobre la herida (nunca sobre una articulación), apretado hasta que pare, y se anota la hora. Llama al 131 (SAMU).","Practica con una correa o un cinturón cómo pondrías un torniquete en tu propio muslo (sin apretar)."],
+ ["Fracturas y esguinces","Si hay deformidad, dolor fuerte en un punto del hueso o no puedes apoyar: se inmoviliza como está (con tablillas, cartón o la otra pierna), sin intentar enderezar, y se busca ayuda. Un esguince de tobillo: reposo, frío 15 minutos cada 2 horas, vendaje firme y pie en alto. Volver a correr antes de tiempo es la causa de la mayoría de las lesiones repetidas.","Escribe los pasos para inmovilizar un brazo con lo que tengas en tu casa."],
+ ["Hipotermia","Leve: temblor fuerte, piel fría, manos torpes. Moderada: el temblor para, confusión, habla lenta. Grave: inconsciencia. Qué hacer: sacar del agua y del viento, quitar ropa mojada, secar, abrigar (sobre todo tronco y cabeza) y dar bebida tibia solo si está consciente. No frotar brazos ni piernas, ni meter de golpe en agua caliente.","Anota las 3 etapas y los 5 pasos de ayuda en tu cuaderno."],
+ ["Golpe de calor e hidratación","Con calor y esfuerzo, el cuerpo puede dejar de enfriarse: piel caliente, dolor de cabeza, mareo, náuseas y confusión. Qué hacer: parar, sombra, sacar ropa, mojar y abanicar, y agua en sorbos si está consciente; si está confundido, al 131. Se previene tomando agua antes de tener sed y entrenando temprano en verano.","Anota cuánta agua tomas mañana durante el día y compárala con tu meta."],
+ ["Cuidado de los pies","En el servicio los pies son tu herramienta: con ampollas no marchas. Uñas cortas y rectas, pies secos, calcetines sin costuras y de recambio, zapatos ya usados (nunca nuevos para una marcha larga). Si sientes un roce, para y protégelo antes de que salga la ampolla. Una ampolla grande se vacía con aguja limpia por el borde, sin sacar la piel, y se cubre.","Revisa tus pies después de la próxima marcha y anota dónde roza la zapatilla."],
+ ["Armar la mochila","Lo pesado va pegado a la espalda y a la altura de los omóplatos; lo liviano, abajo y afuera. Correas de hombros ajustadas para que no se mueva, y si tiene cinturón, que cargue en la cadera. Todo dentro de una bolsa plástica por si llueve. Una mochila que se balancea cansa el doble.","Arma tu mochila de la próxima marcha según esta regla y camina 5 minutos para probarla."],
+ ["Shock de frío: regla 1-10-1","Al caer al agua fría: 1 minuto para controlar la respiración (el jadeo pasa si no entras en pánico), 10 minutos de movimiento útil antes de que los músculos fallen, y alrededor de 1 hora antes de perder la conciencia por hipotermia. Lo que mata primero no es la hipotermia, es el pánico y el agotamiento de los primeros minutos.","Memoriza la regla 1-10-1 y explícala en voz alta."],
+ ["Rescate: lanzar, no ir","La mayoría de los que se meten a rescatar sin entrenamiento también se ahogan. Orden: 1) hablar y dar instrucciones desde la orilla, 2) alcanzar con un palo o una rama, 3) lanzar algo que flote (botella, salvavidas, cuerda), 4) ir en bote. Nadar hacia la víctima es lo último y solo con entrenamiento.","Anota las 4 opciones en orden. Mira qué tienes a mano en el lugar donde nadas."],
  ["Lesiones del corredor","Las más comunes: dolor en la cara interna de la canilla (periostitis), dolor bajo la rodilla y tendinitis del Aquiles. Casi siempre vienen de subir la carga muy rápido o de zapatillas gastadas. Prevención: no más de 10% de aumento por semana, gemelos y glúteos fuertes, y cambiar las zapatillas cada 600–800 km.","Revisa tus zapatillas: si la suela está lisa o torcida, anótalo como prioridad."],
- ["Hombro del nadador","Es dolor en el frente o el costado del hombro por repetir mal la brazada. Se previene con buena técnica (la mano entra adelante del hombro, no cruzada), respirando por los dos lados y fortaleciendo la espalda con remo y barras.","Fíjate hoy en tu brazada: ¿la mano entra cruzada al centro? Anótalo para corregirlo."],
  ["Comer para entrenar","Proteína: repara el músculo (huevo, pollo, pescado, legumbres, lácteos). Carbohidratos: son la bencina del entrenamiento (arroz, papas, avena, pan, fideos). Grasas buenas: palta, aceite de oliva, maní. Después de entrenar fuerte, en la hora siguiente, come proteína y carbohidratos juntos.","Revisa lo que comiste ayer y marca qué comida no tuvo proteína."],
  ["Dormir es entrenar","Mientras duermes se libera hormona de crecimiento y se reparan los músculos. Con menos de 7 horas bajan la fuerza, la memoria y las defensas, y suben las lesiones. El cuerpo no se acostumbra a dormir poco: el rendimiento sigue bajando aunque no lo sientas.","Anota cuántas horas dormiste cada día de esta semana."],
  ["Entrevista: tu por qué","En la postulación te van a preguntar por qué quieres entrar. Una buena respuesta es concreta y honesta: qué te mueve, qué has hecho para prepararte (este plan) y qué aportarías. No respondas con lo que crees que quieren oír.","Escribe tu respuesta de 1 minuto y dila en voz alta frente al espejo 3 veces."],
  ["Entrevista: fortalezas y debilidades","Te pueden preguntar por tus fortalezas y debilidades. Para la debilidad, di una real y qué estás haciendo para mejorarla. Por ejemplo: “nadaba poco y mal; llevo X semanas entrenando 3 veces por semana”.","Escribe 2 fortalezas con un ejemplo cada una, y 1 debilidad con lo que haces para mejorarla."],
- ["Trabajo en equipo","En el curso nadie aprueba solo: se carga el bote entre todos, se nada en pareja y se responde como grupo. El que solo piensa en sí mismo se nota rápido. Ayudar a otro cuando tú también estás reventado es lo que más se valora.","Escribe una situación en que ayudaste a alguien estando tú cansado, o cómo lo harías."],
+ ["Trabajo en equipo","En el servicio nadie aprueba solo: se marcha al ritmo del grupo, se carga lo del que no puede y se responde como sección. El que solo piensa en sí mismo se nota rápido. Ayudar a otro cuando tú también estás reventado es lo que más se valora.","Escribe una situación en que ayudaste a alguien estando tú cansado, o cómo lo harías."],
  ["Disciplina","La disciplina es hacer lo que toca cuando no tienes ganas, igual que cuando sí. Las ganas suben y bajan; el hábito no. Por eso esta app te da órdenes: para que no tengas que decidir cada día si entrenas.","Anota los días de esta semana en que no tenías ganas y aun así cumpliste."],
- ["Preparación académica","Según la escuela a la que postules, te van a pedir notas de enseñanza media y pruebas de conocimientos (en la Escuela Naval, la PAES). Repasar 20 minutos al día durante meses rinde más que estudiar todo una semana antes.","Repasa 20 minutos de matemáticas: fracciones, porcentajes y ecuaciones de primer grado. Usa los ejercicios gratuitos de DEMRE."],
- ["Comprensión lectora","Leer rápido y entender instrucciones es clave en el examen y en el curso, donde las órdenes vienen por escrito y apuradas. Se entrena leyendo todos los días y resumiendo lo leído.","Lee un artículo de noticias completo y escribe un resumen de 3 líneas."]
+ ["Preparación académica","Según la escuela a la que postules, te van a pedir notas de enseñanza media y pruebas de conocimientos (en la Escuela Militar, la PAES). Repasar 20 minutos al día durante meses rinde más que estudiar todo una semana antes.","Repasa 20 minutos de matemáticas: fracciones, porcentajes y ecuaciones de primer grado. Usa los ejercicios gratuitos de DEMRE."],
+ ["Comprensión lectora","Leer rápido y entender instrucciones es clave en el examen y en el servicio, donde las órdenes vienen por escrito y apuradas. Se entrena leyendo todos los días y resumiendo lo leído.","Lee un artículo de noticias completo y escribe un resumen de 3 líneas."]
 ];
 function studyT(plan){
   const n=plan.w*7+plan.dow,card=STUDY[n%STUDY.length],rep=n>=STUDY.length;
@@ -714,82 +721,72 @@ function dayPlan(w,dow,ctx){
   const rest=(t,why,extra)=>[T("rest",t,why,"",[B("Movilidad","15 min suaves",{note:"Caderas, hombros, tobillos, espalda."}),B("Dormir","8–9 h")].concat(extra||[]),{kind:"descanso"})];
   const apneaT=(meta,h)=>partner&&!lake?T("apnea","Apnea supervisada"+(meta?" · meta "+meta:""),"Distancia bajo el agua, una respiración, sin aletas.",h,apneaBlocks(meta),{kind:"agua",safe:SEG_APNEA}):null;
   const asecoT=h=>T("aseco","Apnea en seco","En casa, acostado.",h||"18:00",ASECO(),{kind:"apnea"});
-  const treadT=()=>lake?null:T("control","Control en el agua","Lo que más se pide en el curso: estar cómodo en lo hondo.","08:00",treadBlocks(w),{kind:"agua",safe:"Solo en piscina con salvavidas avisado. Nunca solo."});
+  const treadT=()=>lake?null:T("control","Control en el agua","Estar cómodo en lo hondo: la base para no tenerle miedo al agua.","08:00",treadBlocks(w),{kind:"agua",safe:"Solo en piscina con salvavidas avisado. Nunca solo."});
   if(w===HELL){const H=hellDay(dow,ctx);title=H.title;kind=H.kind;tasks=H.tasks}
   else if(w===0){
     const W0=[
      ["Arranque","tierra",[runT("run","Trote suave 20 min","Primer día: soltar las piernas y ver cómo estás.","07:00",runBlocks("20 min suave",1)),
        T("tec","Aprende los ejercicios de la prueba","Hoy aprendes la técnica de cada uno. Sin llegar al fallo: en 5 días (día 6 de esta semana) es la prueba inicial.","10:00",[CAL,B("Barras","2 × 3",{s:2,r:120}),B("Flexiones","2 × 10",{s:2,r:90}),B("Sentadillas","2 × 15",{s:2,r:60}),B("Abdominales","2 × 15",{s:2,r:60}),B("Plancha","2 × 30 s",{s:2,r:45,tm:30})],{kind:"fuerza"}),
-       T("med","Pedir hora al médico","Sin chequeo no hay plan.","09:00",[B("Pedir","examen general",{note:"Electrocardiograma, oídos y senos paranasales, espirometría y control dental. Cuenta cualquier lesión antigua."})],{kind:"admin"}),
-       T("porque","Escribir tu “por qué”","Escríbelo también en Plan → Ajustes: el comandante te lo recuerda en los días duros.","20:00",[B("Una hoja","por qué quieres ser buzo táctico"),B("2–3 frases","para cuando cueste",{note:"Cambia “no puedo más” por “esto es lo que vine a entrenar”."})],{kind:"admin"})]],
+       T("med","Pedir hora al médico","Sin chequeo no hay plan.","09:00",[B("Pedir","examen general",{note:"Electrocardiograma, presión, vista, oídos y control dental. Cuenta cualquier lesión antigua."})],{kind:"admin"}),
+       T("porque","Escribir tu “por qué”","Escríbelo también en Plan → Ajustes: el comandante te lo recuerda en los días duros.","20:00",[B("Una hoja","por qué quieres ser militar"),B("2–3 frases","para cuando cueste",{note:"Cambia “no puedo más” por “esto es lo que vine a entrenar”."})],{kind:"admin"})]],
      ["Reconocimiento","tierra",[runT("run","Trote suave 30 min","Soltar las piernas.","07:00",runBlocks("30 min suave",1)),
-       T("equipo","Conseguir equipo","Para el agua.","10:00",[B("Gafas y gorra de color",""),B("Neopreno 3–5 mm","si puedes",{opt:1,note:"Bajo 14 °C es lo que te deja nadar más de unos minutos."}),B("Barra para dominadas","en casa o en una plaza")],{kind:"admin"})]],
+       T("equipo","Conseguir equipo","Lo básico para entrenar en casa.","10:00",[B("Mochila y peso","libros o botellas de agua"),B("Zapatillas de correr","en buen estado"),B("Barra para dominadas","en casa o en una plaza"),B("Gafas y gorra de natación","para el día de agua",{opt:1})],{kind:"admin"})]],
      ["Ensayo de técnica","tierra",[T("fa","Fuerza de ensayo","Aprende los ejercicios. Sin llegar al fallo.","07:00",[CAL,B("Barras","3 × 3",{s:3,r:120}),B("Flexiones","3 × 10",{s:3,r:90}),B("Sentadillas","3 × 15",{s:3,r:60}),B("Abdominales","3 × 15",{s:3,r:60}),B("Plancha","2 × 30 s",{s:2,r:45,tm:30})],{kind:"fuerza"}),
-       T("naval","Consultar a la Armada","Quinta Zona Naval (Puerto Montt) o sitio de admisión.","10:00",[B("Preguntar","requisitos y fechas",{note:"Escuela de Grumetes o Escuela Naval, y el formato actual de la prueba de buzo táctico."})],{kind:"admin"})]],
+       T("naval","Consultar requisitos","Servicio Militar y Escuela Militar.","10:00",[B("Preguntar","requisitos y fechas",{note:"Servicio Militar (Dirección General de Movilización Nacional) y Escuela Militar o Escuela de Suboficiales: edad, salud y pruebas físicas."})],{kind:"admin"})]],
      ["Descanso","descanso",rest("Descanso","El cuerpo se adapta mientras descansa.")],
      ["Activación","tierra",[runT("run","Trote suave 20 min","Prepara el cuerpo para la prueba.","07:00",runBlocks("20 min suave",1)),
-       T("prep","Preparar la prueba","Que mañana no falte nada.","20:00",[B("Lista","cronómetro, toalla, ropa de recambio"),B("Lugar","piscina con salvavidas para la apnea y el 500 m; pista para el 2.400 m",{pool:!lake||!!ctx.pool})],{kind:"admin"})]],
+       T("prep","Preparar la prueba","Que mañana no falte nada.","20:00",[B("Lista","cronómetro, ropa de recambio, agua"),B("Lugar","barra y pista o tramo de 3,2 km",{pool:!lake||!!ctx.pool})],{kind:"admin"})]],
      ["Prueba inicial","prueba",null],
      ["Descanso total","descanso",rest("Descanso total","Recuperación y sueño.")]
     ];
     [title,kind,tasks]=W0[dow];
   } else if(TESTS.includes(w)){
     const TW=[
-     ["Nado suave","agua",[swimT("swim","Nado suave","Solo técnica.","07:00",swimBlocks("800 m: técnica",w))]],
      ["Trote suave","tierra",[runT("run","Trote suave 25 min","Ritmo conversación.","07:00",runBlocks("25 min suave",w))]],
      ["Movilidad","tierra",[T("mov","Movilidad y core suave","Sin carga.","07:00",[B("Movilidad","15 min"),...core(w).slice(0,2)],{kind:"fuerza"})]],
+     ["Nado suave","agua",[swimT("swim","Nado suave","Solo técnica. Si puedes, intenta 50 m sin parar: anótalo en la prueba.","07:00",swimBlocks("800 m: técnica",w))]],
      ["Descanso","descanso",rest("Descanso","Duerme 8–9 h.")],
      ["Activación","tierra",[runT("run","Activación 15 min","Trote suave y 3 aceleraciones.","07:00",{blocks:[B("Trote","12 min suave"),B("Aceleraciones","3 × 60 m",{s:3,r:60})],min:15})]],
      [w===52?"Prueba final":"Prueba de evaluación","prueba",null],
      ["Descanso total","descanso",rest("Descanso total","Recuperación y sueño.")]
     ];
     [title,kind,tasks]=TW[dow];
-  } else if(w<=26){
-    const r=S12[w],s2=w>=14,apT=apneaTarget(w),vu=+(r[3].match(/(\d+) vueltas/)||[0,3])[1];
-    if(dow===0){title="Agua + tirón";kind="agua";tasks=[swimT("swim",s2?"Natación series":"Natación técnica",s2?"Las series enseñan a mantener el ritmo.":"Hoy se aprende, no se sufre.","07:00",swimBlocks(r[0],w)),T("fa","Fuerza de tren superior","Barras y flexiones: dos pruebas del ingreso.","10:00",calA(w,ctx),{kind:"fuerza"})]}
-    if(dow===1){title="Carrera + core";tasks=[runT("run",(s2?"Carrera continua ":"Carrera suave ")+r[1].replace(/\s*suave/,""),s2?"El curso tiene trotes largos.":"Base aeróbica con poco riesgo de lesión.","07:00",runBlocks(r[1],w)),T("core","Core","Abdominales fuertes protegen la espalda y suben tu nota.","08:15",core(w),{kind:"fuerza"}),s2?cubiertaT(w):null]}
-    if(dow===2){title="Agua + piernas";kind="agua";
-      tasks=[s2?swimT("swim",ctx.fins?"Natación con aletas":"Natación + patada","Piernas y tobillos para el buceo.","07:00",finsBlocks(w,ctx.fins)):swimT("swim","Natación técnica","Repetir fija el movimiento.","07:00",swimBlocks(r[0],w)),treadT(),s2?(apneaT(apT,"07:50")||asecoT()):null,T("legs","Piernas","Sentadillas y carrera dependen de esto.","10:00",piernas(w),{kind:"fuerza"})]}
-    if(dow===3){title="Descanso activo";kind="descanso";tasks=rest("Descanso activo","El cuerpo se adapta mientras descansa.");if(w>=2)tasks.push(asecoT());
-      if(w===12)tasks.push(T("curso1","Inscribirte en primeros auxilios","RCP y primeros auxilios: te sirve para el curso y para la vida.","10:00",[B("Buscar","curso con RCP",{c:"Busca un curso de primeros auxilios con RCP (Cruz Roja Chilena, mutuales de seguridad o centros de capacitación) e inscríbete en el próximo que puedas tomar."})],{kind:"admin"}));
-      if(w===20)tasks.push(T("curso2","Inscribirte en buceo Open Water","Aprender el equipo, compensar y bucear seguro antes del curso.","10:00",[B("Buscar","Open Water",{c:"Pregunta en Puerto Varas Diving (u otro centro) por el curso de buceo recreativo Open Water y sus fechas. Pregunta también por salidas de nado acompañado en el lago."})],{kind:"admin"}))}
-    if(dow===4){title="Circuito + intervalos";tasks=[T("fb",`Circuito de prueba`,"Encadenar ejercicios cansado, como en la prueba de ingreso.","07:00",circuit(bVals(w),vu,s2?60:90),{kind:"fuerza"}),
-      r[2]?runT("int","Intervalos "+r[2].replace(/^Intervalos\s*/,""),"Velocidad para el 2.400 m.","10:00",runBlocks(r[2],w)):runT("int","Trote suave 15 min",deload?"Semana de descarga: sin intervalos.":"Esta semana el trote largo reemplaza los intervalos.","10:00",runBlocks("15 min suave",w))];
-      if(s2){const c=r[3].match(/cuerda\s*(\d+)?/i);tasks.push(T("cuerda","Cuerda","Agarre: en el curso es diario.","10:45",[cuerda(c&&c[1]?+c[1]:0)],{kind:"fuerza"}))}
-      if(w>=2&&!s2)tasks.push(asecoT())}
-    if(dow===5&&incMin(w)>=120){title=INC[w][0];tasks=[T("inc",INC[w][0],"Entrenar la cabeza: seguir cuando el cuerpo pide parar. Empieza temprano: tiene que caber antes del trabajo.","07:00",incBlocks(w),{kind:"fuerza",safe:"Hidrátate y come antes. Dolor agudo: paras."})]}
-    else if(dow===5){title="Agua larga";kind="agua";tasks=[swimT("swim",s2?"Nado largo":"Distancia continua","Resistencia y cabeza en el agua.","07:00",swimBlocks(r[0],w,true)),s2?null:apneaT(apT,"07:50")];
-      if(!s2&&!(partner&&!lake)&&w>=2&&!INC[w])tasks.push(asecoT());
-      if(INC[w])tasks.push(T("inc",INC[w][0],"Entrenar la cabeza: seguir cuando el cuerpo pide parar.","09:30",incBlocks(w),{kind:"fuerza",safe:"Hidrátate. Dolor agudo: paras."}))}
-    if(dow===6){title="Descanso total";kind="descanso";tasks=rest("Descanso total","Es una orden.")}
   } else {
-    const r=S34[w],apT=apneaTarget(w),f=r[2],rk=ruck(w);
-    if(dow===0){title="Velocidad en el agua + tirón";kind="agua";tasks=[swimT("swim","Natación velocidad","El 500 m se baja con tramos cortos y rápidos.","07:00",swimBlocks(r[0],w)),T("fa","Fuerza de tren superior","","10:00",calA(w,ctx),{kind:"fuerza"})]}
-    if(dow===1){const lr=/^Trote/.test(r[1]);title=deload?"Carrera suave + core":lr?"Trote largo + core":"Intervalos + core";tasks=[runT("run",lr?r[1]:(deload?"Carrera ":"Intervalos ")+r[1],deload?"Descarga.":lr?"Fondo para los trotes largos del curso.":"Bajar el tiempo de 2.400 m.","07:00",runBlocks(r[1],w)),T("core","Core","","08:15",core(w),{kind:"fuerza"}),deload||lr?null:sprintT(),cubiertaT(w)]}
-    if(dow===2){title="Agua + piernas";kind="agua";tasks=[swimT("swim",ctx.fins?"Natación con aletas":"Natación + patada","Comodidad bajo el agua.","07:00",finsBlocks(w,ctx.fins)),treadT(),apneaT(apT,"07:50")||asecoT(),T("legs","Piernas","","10:00",piernas(w),{kind:"fuerza"})]}
-    if(dow===3){const rec=deload||w%2===0||TESTS.includes(w+1)||w+1===HELL;title=rec?"Recuperación":"Marcha con mochila";tasks=[rec?runT("run","Trote suave 30 min","Recuperación activa.","07:00",runBlocks("30 min suave",w)):T("ruck",`Marcha con mochila ${rk.kg} kg`,"En el curso se carga peso: espalda, pies y cabeza.","07:00",[B("Marcha rápida",`${rk.mi} min con ${rk.kg} kg`,{tm:rk.mi*60,note:"Mochila ajustada alta, paso rápido sin trotar."+(w>=44?" Si tienes botas, úsalas.":"")}),ELONG],{kind:"carrera",min:rk.mi,goal:{type:"ruck",min:rk.mi}}),asecoT()]}
-    if(dow===4){title=/simulacro/i.test(f)?"Simulacro completo":/mini/i.test(f)?"Mini-prueba":f;
-      if(/simulacro/i.test(f)){kind="prueba";tasks=[T("fri","Simulacro completo","La prueba entera. Lo que más te cueste recibe una sesión extra la semana siguiente.","07:00",testBlocks(),{kind:"fuerza",safe:"Apnea solo con salvavidas o compañero."})]}
-      else if(/mini/i.test(f))tasks=[T("fri","Mini-prueba continua","Sin pausas, solo el tiempo de cambiarte.","07:00",miniBlocks(f,ctx),{kind:"fuerza"})];
-      else if(/movilidad/i.test(f))tasks=[T("fri","Solo movilidad","Descarga antes de la prueba final.","07:00",[B("Movilidad","25 min")],{kind:"fuerza"})];
-      else tasks=[T("fri","Circuito suave","Descarga: sin apurar.","07:00",circuit({barras:6,flex:20,sent:25,abd:25},3,90),{kind:"fuerza"})];
-      const c=f.match(/cuerda\s*(\d+)/i);if(c)tasks.push(T("cuerda","Cuerda","","10:30",[cuerda(+c[1])],{kind:"fuerza"}))}
-    if(dow===5){title=INC[w]?INC[w][0]:deload?"Nado y trote suaves":"Nado largo + trote largo";kind=INC[w]&&incMin(w)>=120?"tierra":"agua";
-      tasks=INC[w]&&incMin(w)>=120?[]:[deload?swimT("swim","Nado suave","","07:00",swimBlocks("1.000 m: técnica",w)):swimT("swim","Nado largo","Volumen y cabeza.","07:00",longSwim(w))];
-      if(INC[w])tasks.push(T("inc",INC[w][0],"Seguir cuando el cuerpo pide parar. Esto prepara la semana del infierno."+(incMin(w)>=120?" Empieza temprano: tiene que caber antes del trabajo.":""),incMin(w)>=120?"07:00":"09:00",incBlocks(w),{kind:"fuerza",safe:"Hidrátate y come antes. Dolor agudo: paras."}));
-      else{const lg=w>=40?"75–90 min":"60–75 min";tasks.push(runT("run2",deload?"Trote suave 40 min":"Trote largo "+lg,w>=44&&!deload?"Si tienes botas, los últimos 20 minutos con botas: en el curso se corre con botas mojadas.":"El curso tiene trotes largos: que este sea normal para ti.","09:30",runBlocks(deload?"40 min suave":lg,w)))}}
+    const early=w<=26,r=early?S12[w]:S34[w],s2=w>=14,f=early?"":r[2];
+    const vu=early?+(r[3].match(/(\d+) vueltas/)||[0,3])[1]:3;
+    if(dow===0){title="Fuerza + PT";tasks=[T("fa","Fuerza de tren superior","Barras y flexiones: lo primero que te miden.","07:00",calA(w,ctx),{kind:"fuerza"}),cubiertaT(w)]}
+    if(dow===1){const spec=early?(r[2]||"25 min suave"):r[1],lr=/^Trote/.test(spec),iv=/×/.test(spec)||/cronometrado/.test(spec);
+      title=iv?"Intervalos + core":lr?"Trote largo + core":"Carrera suave + core";
+      tasks=[runT("run",iv?(/cronometrado/.test(spec)?spec.replace(/^(.*) cronometrado$/,"$1 cronometrados"):"Intervalos "+spec.replace(/^Intervalos\s*/,"")):lr?spec:"Trote suave "+spec.replace(/\s*suave/,""),iv?"Velocidad para la carrera de 3.200 m.":deload?"Descarga.":"Base aeróbica.","07:00",runBlocks(spec,w)),
+        T("core","Core","Abdominales fuertes protegen la espalda bajo la mochila.","08:15",core(w),{kind:"fuerza"}),!early&&!deload&&iv?sprintT():null]}
+    if(dow===2){title="Natación + piernas";kind="agua";tasks=[swimT("swim",s2?"Natación":"Aprender a nadar","La Escuela Militar exige nadar 50 m sin ayuda: una vez por semana se aprende y se mantiene.","07:00",swimBlocks(r[0],w)),treadT(),T("legs","Piernas","Sentadillas, marcha y carrera dependen de esto.","10:00",piernas(w),{kind:"fuerza"})]}
+    if(dow===3){const rec=w<2||deload||TESTS.includes(w+1)||w+1===HELL;title=rec?"Descanso activo":"Marcha con mochila";if(rec&&(deload||w<2))kind="descanso";
+      tasks=rec?(deload||w<2?rest("Descanso activo","El cuerpo se adapta mientras descansa."):[runT("run","Trote suave 30 min","Recuperación activa antes de una semana importante.","07:00",runBlocks("30 min suave",w))]):[ruckT(w)];
+      if(w===12)tasks.push(T("curso1","Inscribirte en primeros auxilios","RCP y primeros auxilios: te sirve en el servicio y en la vida.","10:00",[B("Buscar","curso con RCP",{c:"Busca un curso de primeros auxilios con RCP (Cruz Roja Chilena, mutuales de seguridad o centros de capacitación) e inscríbete en el próximo que puedas tomar."})],{kind:"admin"}))}
+    if(dow===4){
+      if(early){title="Circuito militar";tasks=[T("fb","Circuito militar","Encadenar ejercicios cansado, como en las pruebas.","07:00",circuit(bVals(w),vu,s2?60:90),{kind:"fuerza"})];
+        if(s2){const c=r[3].match(/cuerda\s*(\d+)?/i);tasks.push(T("cuerda","Cuerda","Agarre: para la pista de obstáculos.","10:45",[cuerda(c&&c[1]?+c[1]:0)],{kind:"fuerza"}))}}
+      else{title=/simulacro/i.test(f)?"Simulacro completo":/mini/i.test(f)?"Mini-prueba":f;
+        if(/simulacro/i.test(f)){kind="prueba";tasks=[T("fri","Simulacro completo","La prueba entera. Lo que más te cueste recibe una sesión extra la semana siguiente.","07:00",testBlocks(),{kind:"fuerza"})]}
+        else if(/mini/i.test(f))tasks=[T("fri","Mini-prueba continua","Sin pausas entre ejercicios.","07:00",miniBlocks(f,ctx),{kind:"fuerza"})];
+        else if(/movilidad/i.test(f))tasks=[T("fri","Solo movilidad","Descarga antes de la prueba final.","07:00",[B("Movilidad","25 min")],{kind:"fuerza"})];
+        else tasks=[T("fri","Circuito suave","Descarga: sin apurar.","07:00",circuit({barras:6,flex:20,sent:25,abd:25},3,90),{kind:"fuerza"})];
+        const c=f.match(/cuerda\s*(\d+)/i);if(c)tasks.push(T("cuerda","Cuerda","","10:30",[cuerda(+c[1])],{kind:"fuerza"}))}}
+    if(dow===5){const longI=INC[w]&&incMin(w)>=120;title=INC[w]?INC[w][0]:"Trote largo";if(!INC[w]&&(deload||/suave/.test(early?r[1]:"")))title="Trote suave";
+      const lg=early?r[1]:(w>=40?"75–90 min":"60–75 min");
+      tasks=longI?[]:[runT("run2",deload?"Trote suave 40 min":(/suave/.test(lg)?"Trote "+lg:"Trote largo "+lg),w>=44&&!deload?"Si tienes botas, los últimos 20 minutos con botas: en el servicio se corre con botas.":"Los trotes largos del servicio: que este sea normal para ti.","07:00",runBlocks(deload?"40 min suave":lg,w))];
+      if(INC[w])tasks.push(T("inc",INC[w][0],"Seguir cuando el cuerpo pide parar. Esto prepara la semana del infierno."+(longI?" Empieza temprano: tiene que caber antes del trabajo.":""),longI?"07:00":"09:30",incBlocks(w),{kind:"fuerza",safe:"Hidrátate y come antes. Dolor agudo: paras."}))}
     if(dow===6){title="Descanso total";kind="descanso";tasks=rest("Descanso total","Es una orden.")}
   }
-  if(kind==="prueba"&&!(tasks&&tasks.length))tasks=[T("prueba","Protocolo de la prueba","Siempre en el mismo orden. Máximo 3 min entre ejercicios. Anota cada número abajo.","07:00",testBlocks(),{kind:"fuerza",safe:"Apnea solo con salvavidas o compañero. Sin hiperventilar."})];
+  if(kind==="prueba"&&!(tasks&&tasks.length))tasks=[T("prueba","Protocolo de la prueba","Siempre en el mismo orden. Máximo 3 min entre ejercicios. Anota cada número abajo.","07:00",testBlocks(),{kind:"fuerza",safe:"Calienta 10 minutos antes. Dolor agudo: paras ese ejercicio y sigues con el siguiente."})];
   tasks=tasks.filter(Boolean).map(t=>lake&&t.kind==="agua"&&t.blocks.some(b=>b.m)?lakeify(t,w,ctx):lake&&t.blocks.some(b=>/^Nado [\d.–]+ m$/.test(b.n))?lakeSprint(t,w,ctx):t);
-  // sin piscina: la apnea y el 500 m quedan pendientes (la apnea nunca en el lago; el 500 m no cabe en el tope del lago)
-  if(lake&&!ctx.pool)tasks=tasks.map(t=>t.blocks.some(b=>/^1\. Apnea/.test(b.n))?Object.assign({},t,{blocks:t.blocks.map(b=>/^1\. Apnea/.test(b.n)?Object.assign({},b,{opt:1,p:"pendiente: sin piscina",note:"Todavía no tienes piscina: la apnea queda pendiente. Nunca se hace en el lago ni solo. Cuando tengas piscina con salvavidas, marca «Sí» en Plan → Ajustes → Piscina y la haces ahí."}):/^2\. 500/.test(b.n)?Object.assign({},b,{opt:1,p:"pendiente: sin piscina",note:"Todavía no tienes piscina: el 500 m queda pendiente. En el lago no cabe en tu tope de minutos y la distancia no es exacta. Empiezas la prueba directo en las barras."}):/^3\. Barras/.test(b.n)?Object.assign({},b,{note:(b.note?b.note+" ":"")+"Hoy empiezas aquí: antes, calienta 8 minutos (trote suave, círculos de hombros y cadera, 2 × 5 flexiones suaves y colgarte 3 veces 10 s)."}):b)}):t);
-  else if(lake)tasks=tasks.map(t=>t.blocks.some(b=>/^1\. Apnea/.test(b.n))?Object.assign({},t,{blocks:t.blocks.map(b=>/^1\. Apnea/.test(b.n)?Object.assign({},b,{note:"Solo en piscina con salvavidas avisado. Si no hay, queda pendiente."}):/^2\. 500/.test(b.n)?Object.assign({},b,{note:"Mídelo en piscina: en el lago la distancia no es exacta."}):b)}):t);
+  // nado de la prueba en el lago: con las reglas y el tope de siempre
+  if(lake)tasks=tasks.map(t=>t.blocks.some(b=>/^6\. Nado 50 m/.test(b.n))?Object.assign({},t,{blocks:t.blocks.map(b=>/^6\. Nado 50 m/.test(b.n)?Object.assign({},b,{note:(ctx.pool?"En piscina, o en el lago":"En el lago")+": paralelo a la orilla y donde haces pie, con las reglas de siempre. Si el agua está muy fría, queda pendiente."}):b)}):t);
   if(!["descanso","admin","prueba"].includes(kind)&&w!==HELL&&!TESTS.includes(w)&&!deload&&!(INC[w]&&dow===5)&&!(st>=3&&dow===3))tasks.push(tolT(w));
   // descarga de las etapas 3 y 4: la fuerza también baja (en la 51, solo movilidad, como dice el PDF)
   if(deload&&st>=3)tasks=tasks.map(t=>!t||!["fa","legs","core","pt"].includes(t.id)?t:w===51?Object.assign({},t,{t:"Movilidad",why:"Descarga fuerte antes de la prueba final.",blocks:[B("Movilidad","20 min",{tm:1200,note:"Círculos de cadera, hombros y tobillos, gato-vaca y sentadilla profunda. Nada de fuerza esta semana."})]}):Object.assign({},t,{why:(t.why?t.why+" ":"")+"Descarga: menos series.",blocks:t.blocks.map(b=>softBlock(b,""))}));
   if(w===0&&dow===2)tasks.push(tolT(0));
-  if(TESTS.includes(w)&&w>0&&dow===4)tasks.push(T("prep","Preparar la prueba","Que mañana no falte nada.","20:00",[B("Lista","cronómetro, toalla, ropa de recambio, agua"),B("Lugar","piscina con salvavidas avisado para la apnea y el 500 m; pista para el 2.400 m",{pool:!lake||!!ctx.pool})],{kind:"prep"}));
+  if(TESTS.includes(w)&&w>0&&dow===4)tasks.push(T("prep","Preparar la prueba","Que mañana no falte nada.","20:00",[B("Lista","cronómetro, ropa de recambio, agua"),B("Lugar","barra y pista o tramo de 3,2 km",{pool:!lake||!!ctx.pool})],{kind:"prep"}));
   if(w>=1&&kind!=="descanso"&&w!==HELL&&!(INC[w]&&dow===5))tasks.push(T("ducha","Ducha fría "+cold(w),"Adaptación al frío.","11:15",[B("Agua fría",cold(w),{tm:coldSec(w),note:"Al final de la ducha. Respira lento y largo por la nariz."})],{kind:"rutina"}));
   tasks.push(T("noche","Noche","Sin pantalla los últimos 30 min.","22:00",[B("Visualización","5 min",{tm:300,note:"La prueba completa, con el cansancio incluido. Te ves terminando."}),B("A la cama","8 h")],{kind:"rutina"}));
   return {w,dow,title,kind,deload,stage:stageOf(w),tasks,test:kind==="prueba"&&TESTS.includes(w)&&dow===5,lake};
@@ -827,14 +824,14 @@ function applyMode(plan,mode){
 }
 
 /* =================== METAS Y PRUEBAS =================== */
-const GOALS={13:{apnea:15,sinParar:1,barras:10,sent:70,flex:50,abd:55,run:"10:30"},26:{apnea:25,crol:1,sinParar:1,barras:13,sent:80,flex:65,abd:65,run:"10:00"},39:{apnea:35,swim:"11:00",barras:15,sent:90,flex:75,abd:75,run:"9:30"},52:{apnea:50,swim:"9:30",barras:18,sent:100,flex:85,abd:85,run:"9:00"}};
+// metas propias del plan (no son las oficiales: confírmalas en tu postulación). Nado 50 m: primero sin parar, después crol, después con tiempo.
+const GOALS={13:{sinParar:1,barras:5,sent:55,flex:35,abd:45,run:"16:00"},26:{crol:1,sinParar:1,barras:8,sent:65,flex:45,abd:55,run:"15:00"},39:{swim:"1:15",barras:10,sent:75,flex:55,abd:65,run:"14:00"},52:{swim:"1:00",barras:12,sent:80,flex:60,abd:70,run:"13:30"}};
 const cnt=v=>{const x=String(v==null?"":v).trim().replace(/\s*(m|mts?|metros|reps?|rep\.?|barras|veces)$/i,"").replace(",",".");return /^\d+(\.\d+)?$/.test(x)?+x:NaN};
 function evalTest(w,t){
   const g=GOALS[w];if(!g||!t)return null;const n=k=>cnt(t[k]),rows=[];
-  rows.push(["Apnea dinámica",(t.apnea||"—")+" m","≥ "+g.apnea+" m",n("apnea")>=g.apnea]);
-  if(g.swim)rows.push(["500 m libre",t.swim||"—","< "+g.swim,toSec(t.swim)<toSec(g.swim)]);
-  else rows.push(["500 m libre",t.swim||"—",g.crol?"crol sin parar":"sin parar",!!t.sinParar&&(!g.crol||!!t.crol)]);
-  rows.push(["Barras",t.barras||"—","≥ "+g.barras,n("barras")>=g.barras],["Sentadillas 2 min",t.sent||"—","≥ "+g.sent,n("sent")>=g.sent],["Flexiones 2 min",t.flex||"—","≥ "+g.flex,n("flex")>=g.flex],["Abdominales 2 min",t.abd||"—","≥ "+g.abd,n("abd")>=g.abd],["2.400 m",t.run||"—","< "+g.run,toSec(t.run)<toSec(g.run)]);
+  rows.push(["Flexiones 2 min",t.flex||"—","≥ "+g.flex,n("flex")>=g.flex],["Abdominales 2 min",t.abd||"—","≥ "+g.abd,n("abd")>=g.abd],["Barras",t.barras||"—","≥ "+g.barras,n("barras")>=g.barras],["Sentadillas 2 min",t.sent||"—","≥ "+g.sent,n("sent")>=g.sent],["Carrera 3.200 m",t.run||"—","< "+g.run,toSec(t.run)<toSec(g.run)]);
+  if(g.swim)rows.push(["Nado 50 m",t.swim||"—","< "+g.swim,toSec(t.swim)<toSec(g.swim)]);
+  else rows.push(["Nado 50 m",t.swim||"—",g.crol?"crol sin parar":"sin parar",!!t.sinParar&&(!g.crol||!!t.crol)]);
   return {rows,pass:rows.every(r=>r[3]),fails:rows.filter(r=>!r[3]).map(r=>r[0])};
 }
 
@@ -1070,19 +1067,19 @@ function compliance(){const td=today();let tot=0,ok=0;for(let d=parse(Store.cfg.
 function orders(plan,k,isToday,dd){
   const N=Store.cfg.name||"recluta",out=[];
   if(isToday){const fr=fatigueRun(today());if(fr>=3)out.push(["alert",`Llevas ${fr} días seguidos cansado o con dolor. Hoy versión suave o descanso: solo técnica o movilidad. Si es dolor y no mejora, al médico.`])}
-  if(isToday){const yd=addDays(today(),-1),yp=planFor(yd);if(yp&&!okSt(dayStatus(iso(yd),yp))&&!skipData().list.includes(iso(yd))){const ys=dayStatus(iso(yd),yp),yx=Store.days[iso(yd)]||{};if(ys==="fail")out.push(["alert","Ayer fallaste. Un día no te saca del curso; dos seguidos empiezan a hacerlo."]);
+  if(isToday){const yd=addDays(today(),-1),yp=planFor(yd);if(yp&&!okSt(dayStatus(iso(yd),yp))&&!skipData().list.includes(iso(yd))){const ys=dayStatus(iso(yd),yp),yx=Store.days[iso(yd)]||{};if(ys==="fail")out.push(["alert","Ayer fallaste. Un día no te saca del camino; dos seguidos empiezan a hacerlo. Hoy retomas."]);
       else if(!yx.status){const ms=missingTasks(yx,yp);out.push(["alert",units(yx,yp).a?`Ayer quedó a medias${ms.length?" (faltó: "+ms.slice(0,3).join(", ")+")":""}. Si lo hiciste, márcalo con ◀; si no, ciérralo ahí con «Cerrar el día así».`:"Ayer no registraste nada. Si entrenaste, márcalo con ◀; si no, toca «No pude ese día» ahí."])}}}
   if(plan.maint)out.push(["say",plan.kind==="descanso"?"Descanso. La mantención también descansa.":`Mantención, ${N}. Lo que ganaste en 52 semanas se cuida igual.`]);
   else if(plan.w===HELL&&plan.kind!=="descanso")out.push(["say",pick([`${N}. Semana del infierno. Aquí se ve para qué fueron 47 semanas.`,`Infierno, día ${plan.dow+1}. No pienses en el último día: piensa en la próxima serie.`],k)]);
   else if(plan.test)out.push(["say",plan.w===0?`${N}. Hoy se mide el punto de partida. Que sea verdad, no bonito.`:plan.w===52?`Prueba final, ${N}. 52 semanas para esto.`:`Día de prueba, ${N}. Aquí se ve quién entrenó.`]);
   else if(plan.kind==="descanso")out.push(["say",pick(["Hoy descansas. Es una orden, no un premio.","Descanso. El progreso ocurre cuando descansas.","Día libre. Cúmplelo igual de serio."],k)]);
   else if(plan.kind==="prueba")out.push(["say","Simulacro. La prueba entera, cansado, sin regalos."]);
-  else if(plan.kind==="admin")out.push(["say",`${N}. Antes de mojarte, se prepara el terreno.`]);
+  else if(plan.kind==="admin")out.push(["say",`${N}. Antes de marchar, se prepara el terreno.`]);
   else if(plan.kind==="agua"&&plan.tasks.some(t=>/ · en seco$/.test(t.t)))out.push(["say","Hoy el agua está demasiado fría para entrar solo. Técnica en seco y lo demás igual."]);
-  else if(plan.kind==="agua")out.push(["say",plan.lake?pick(["Al lago. Vas solo: nadas donde haces pie y sales cuando suena.","Lago. El frío no perdona al que se confía.","Al agua. Resistencia sí, heroísmo no."],k):pick([`Al agua a las ${plan.shift?plan.shift.A:"8:00"}. Es tu punto débil: ahí vas a vivir.`,"Piscina. No le regales metros al agua.","Al agua. Cada largo de hoy es uno que en el curso no te hunde."],k)]);
+  else if(plan.kind==="agua")out.push(["say",plan.lake?pick(["Al lago. Vas solo: nadas donde haces pie y sales cuando suena.","Lago. El frío no perdona al que se confía.","Al agua. Resistencia sí, heroísmo no."],k):pick([`Al agua a las ${plan.shift?plan.shift.A:"8:00"}. Nadar 50 m sin ayuda es requisito: hoy se aprende.`,"Piscina. No le regales metros al agua.","Al agua. Un soldado que no nada es un soldado con un límite."],k)]);
   else out.push(["say",pick([`De pie, ${N}. Esto es lo que haces hoy.`,`Arriba, ${N}. Nadie lo va a hacer por ti.`,`${N}. Querías saber si puedes. Hoy se sigue respondiendo.`],k)]);
   if(dd.mode==="enfermo"){out.splice(out.findIndex(x=>x[0]==="say"),1,["say",`${N}, hoy se descansa para sanar. Mañana se vuelve más fuerte.`])}
-  if(dd.mode==="dolor"){out.splice(out.findIndex(x=>x[0]==="say"),1,["say",`${N}, hoy se recupera. El que se lesiona no llega al curso.`])}
+  if(dd.mode==="dolor"){out.splice(out.findIndex(x=>x[0]==="say"),1,["say",`${N}, hoy se recupera. El que se lesiona no llega al servicio.`])}
   else{if(plan.deload&&plan.kind!=="descanso")out.push(["p","Semana de descarga: la carga baja a propósito. No te la saltes por orgullo."]);
     if(INC[plan.w]&&plan.dow===5&&dd.mode!=="cansado")out.push(["p","Hoy hay sesión larga de incomodidad. Come bien antes y lleva agua."])}
   const why=(Store.cfg.why||"").trim(),hard=dd.mode==="cansado"||(INC[plan.w]&&plan.dow===5)||(plan.w===HELL&&plan.kind!=="descanso")||plan.test||plan.kind==="prueba";
@@ -1127,13 +1124,13 @@ const HOW={
  "Barras en pirámide":"Haz 1 barra, descansa unos segundos, 2 barras, descansa, 3... hasta la cima, y después bajas igual. Descansa lo justo para que cada escalón salga con buena técnica.",
  "Flexiones en pirámide":"5 flexiones, descanso corto, 10, 15, 20, y bajas 15, 10, 5. Si una serie no sale entera, termínala con las rodillas apoyadas.",
  "Barras cada minuto":"Inicia un temporizador de 10 minutos. Al comenzar cada minuto haces las barras indicadas y descansas lo que sobre del minuto. Cuando se ponga difícil, es justo el entrenamiento.",
- "Trote":"Corre relajado: hombros sueltos, brazos a 90°, pasos cortos. Ritmo conversación significa que podrías hablar en frases completas. Si te ahogas, baja el ritmo. Dónde: la vereda de la costanera o la arena firme y mojada junto al agua, siempre con zapatillas: descalzo no, porque la arena tiene piedras (cortes y tobillos torcidos). Los trotes suaves pueden ir por la arena (cansa más, fortalece tobillos); los intervalos, el 2.400 m y la carrera de la mini-prueba, en piso firme y plano, para que el tiempo sirva.",
+ "Trote":"Corre relajado: hombros sueltos, brazos a 90°, pasos cortos. Ritmo conversación significa que podrías hablar en frases completas. Si te ahogas, baja el ritmo. Dónde: la vereda de la costanera o la arena firme y mojada junto al agua, siempre con zapatillas: descalzo no, porque la arena tiene piedras (cortes y tobillos torcidos). Los trotes suaves pueden ir por la arena (cansa más, fortalece tobillos); los intervalos, los 3.200 m y la carrera de la mini-prueba, en piso firme y plano, para que el tiempo sirva.",
  "Marcha rápida":"Mochila con el peso bien abajo y pegado a la espalda (libros o botellas de agua envueltas en una toalla), correas ajustadas. Camina rápido con paso largo, sin trotar. Usa zapatillas cómodas y calcetines secos.",
  "Calentamiento":"Todo suave, sin cansarte: es para subir la temperatura del cuerpo y que las articulaciones se muevan antes del esfuerzo.",
  "Elongación":"Cuádriceps: de pie, tómate un pie por detrás y llévalo a la cola. Parte de atrás del muslo: pierna estirada sobre un escalón, inclínate adelante con la espalda recta. Gemelos: manos en la pared, una pierna atrás estirada con el talón en el suelo. Pecho: brazo apoyado en un marco de puerta, gira el cuerpo hacia afuera. Espalda: abrázate y redondea la espalda. 30 segundos cada uno, sin rebotar.",
  "Apnea en seco":"Acostado de espaldas en tu cama, relajado. Respira normal 2 minutos. Toma una bocanada normal (nunca respires rápido antes) y aguanta con la boca cerrada. Cuando vengan las ganas de respirar, relaja los hombros y la cara: esa incomodidad es lo que entrenas. Si te mareas, para.",
  "Agua fría":"Los primeros segundos te va a cortar la respiración: es normal. Exhala largo por la boca, después respira lento por la nariz. Pon el agua primero en los pies, luego el pecho, la nuca y la cara.",
- "Visualización":"Con los ojos cerrados, ve la prueba en primera persona: el agua, la barra, el cronómetro, el cansancio en los brazos. Imagina el momento en que quieres parar y te ves siguiendo. Termina viéndote cruzar la meta del 2.400.",
+ "Visualización":"Con los ojos cerrados, ve la prueba en primera persona: la barra, el suelo en las flexiones, el cronómetro, el cansancio en los brazos y las piernas. Imagina el momento en que quieres parar y te ves siguiendo. Termina viéndote cruzar la meta de los 3.200 m.",
  "Respiración de caja":"Inhala por la nariz contando 4, aguanta 4, exhala por la boca contando 4, aguanta 4. Repite. Baja el pulso y aclara la cabeza.",
  "Sentadilla isométrica en la pared":"Espalda pegada a la pared, baja hasta que los muslos queden paralelos al suelo y las rodillas en 90°, sobre los tobillos. Brazos cruzados al pecho. Cuando queme, no te pares: respira lento y cuenta respiraciones.",
  "Colgado de la barra":"Cuélgate con brazos estirados y hombros activos (un poco hacia abajo, lejos de las orejas). Aprieta fuerte la barra. Cuando las manos ardan, cuenta respiraciones lentas.",
@@ -1142,6 +1139,7 @@ const HOW={
  "Ronda de cubierta":"Técnica limpia aunque estés cansado: flexiones con el pecho a un puño del suelo, abdominales hasta tocar los muslos con los codos y sentadillas con los muslos paralelos. Así se cuentan en el curso.",
  "Sprint 100 m":"Calienta antes (el trote del día). Arranca de pie, primeros 20 m acelerando, después mantén. Brazos de adelante hacia atrás, no cruzados.",
  "Salto vertical":"Brazos atrás al bajar y lanzados hacia arriba al saltar. Cae suave sobre la punta de los pies con las rodillas dobladas.",
+ "Burpees":"De pie, bajas a cuclillas con las manos en el suelo, saltas los pies atrás hasta quedar en plancha, haces una flexión, recoges los pies de un salto y saltas hacia arriba con los brazos estirados. Eso es 1. Ritmo parejo: mejor 15 limpios que 25 mal hechos.",
  "Movilidad":"Círculos grandes de cadera, de hombros y de tobillos; gato-vaca (en cuatro apoyos, arquea y redondea la espalda); y 1 minuto sentado en cuclillas profundas con los talones apoyados. Suave, sin dolor."
 };
 const HOW_SWIM="Crol: cuerpo horizontal, mirando al fondo. Exhala todo el aire bajo el agua por la nariz y la boca; para respirar gira la cabeza junto con el cuerpo, sin levantarla. La mano entra lejos adelante, tira hasta el muslo y sale por el aire. Patada corta y rápida desde la cadera, con las piernas casi estiradas.";
@@ -1175,7 +1173,7 @@ function cmdFor(st,plan){
   const restTxt=b.r&&k&&k<b.s?` Después descansa ${fmtT(b.r)}.`:"";
   if(b.c)return b.c;
   let m;
-  if(n==="Antes de entrar")return `Antes de entrar al lago: ${LAKE_RULES} ${b.boya?"Boya amarrada a la cintura, siempre: te ven desde la orilla y si necesitas descansar te afirmas de ella.":"Todavía sin boya: cómprala (junto con las aletas). Hasta que la tengas, gorra de color fuerte siempre y nunca más lejos que donde haces pie."} Inicia el temporizador de ${p.replace("máximo ","")} al entrar: ningún otro lo borra.${/no aplica/.test(b.note)?" Hoy no cabe todo el plan: haces lo que alcances y el resto no aplica.":""}`;
+  if(n==="Antes de entrar")return `Antes de entrar al lago: ${LAKE_RULES} ${b.boya?"Boya amarrada a la cintura, siempre: te ven desde la orilla y si necesitas descansar te afirmas de ella.":"Todavía sin boya: cómprala cuando puedas. Hasta que la tengas, gorra de color fuerte siempre y nunca más lejos que donde haces pie."} Inicia el temporizador de ${p.replace("máximo ","")} al entrar: ningún otro lo borra.${/no aplica/.test(b.note)?" Hoy no cabe todo el plan: haces lo que alcances y el resto no aplica.":""}`;
   if(n==="Hoy no entras al lago")return b.note;
   if(n==="Ida en bicicleta"){const h0=t.h?toMin(t.h):null,at=x=>fromMin(h0+x);
     return `${h0!==null?`Sal de la casa a las ${t.h} en bicicleta`:"Sal en bicicleta"}: ${b.trip} minutos pedaleando suave hasta la costanera (unos ${tripKm(b.trip)} km). Es tu calentamiento: llegas con el cuerpo tibio, justo lo que necesitas antes del agua fría.
@@ -1222,16 +1220,15 @@ Horario: llegas ${at(b.trip)}, entras ${at(b.trip+5)}, sales del agua a más tar
   if(/isométrica/.test(n))return `Apoya la espalda en la pared, baja hasta que los muslos queden paralelos al suelo y aguanta ${p}. Cuando queme, cuenta respiraciones lentas.`;
   if(/^Colgado/.test(n))return `Cuélgate de la barra con los brazos estirados y aguanta ${p}. Si te sueltas antes, vuelves a colgarte hasta completar el tiempo.`;
   if(n==="Plancha"&&!k)return `Plancha sobre los antebrazos, cuerpo recto, y aguanta ${p}. Si caes, vuelves a subir hasta que suene.`;
-  if(n==="Visualización")return "Acostado y con los ojos cerrados, 5 minutos: imagina la prueba completa en orden (apnea, 500 m, barras, sentadillas, flexiones, abdominales, 2.400 m), con el cansancio, y te ves terminando.";
-  const TESTC={"1. Apnea dinámica":"Apnea dinámica: con el salvavidas o tu compañero avisado, respira normal 2 minutos, toma aire (sin respirar rápido antes) y nada bajo el agua sin aletas lo más lejos que puedas. Anota los metros.",
-    "2. 500 m libre":`Nada 500 m${plan.lake?"":" (20 largos)"} lo más rápido que puedas${w===0?"; hoy vale cualquier estilo":""}. Anota el tiempo y marca si fue sin parar y todo en crol.`,
+  if(n==="Visualización")return "Acostado y con los ojos cerrados, 5 minutos: imagina la prueba completa en orden (flexiones, abdominales, barras, sentadillas y 3.200 m), con el cansancio, y te ves terminando.";
+  const TESTC={"1. Flexiones":"Haz el máximo de flexiones en 2 minutos, pecho a un puño del suelo y cuerpo recto. Inicia el temporizador. Anota el número.",
+    "2. Abdominales":"Haz el máximo de abdominales en 2 minutos: codos a los muslos, omóplatos al suelo. Inicia el temporizador. Anota el número.",
     "3. Barras":"Haz el máximo de barras seguidas: brazos estirados abajo, mentón sobre la barra arriba, sin balanceo. Anota el número.",
     "4. Sentadillas":"Haz el máximo de sentadillas en 2 minutos, muslos paralelos al suelo. Inicia el temporizador. Anota el número.",
-    "5. Flexiones":"Haz el máximo de flexiones en 2 minutos, pecho a un puño del suelo. Inicia el temporizador. Anota el número.",
-    "6. Abdominales":"Haz el máximo de abdominales en 2 minutos. Inicia el temporizador. Anota el número.",
-    "7. 2.400 m":"Corre 2.400 m (6 vueltas de pista) lo más rápido que puedas. Anota el tiempo."};
+    "5. Carrera 3.200 m":"Corre 3.200 m (8 vueltas de pista, o 3,2 km medidos con adidas Running) lo más rápido que puedas. Anota el tiempo.",
+    "6. Nado 50 m":`Si puedes ir al agua: nada 50 m${plan.lake?" (en el lago, unas 40 brazadas, paralelo a la orilla y donde haces pie, con el tope de minutos y las reglas de siempre)":" (2 largos)"} sin parar y sin apoyarte${w===0?"; hoy vale cualquier estilo":""}. Anota el tiempo y marca si fue sin parar y todo en crol. Si hoy no puedes, anótalo después de tu próximo nado.`};
   if(TESTC[n]&&b.opt&&/pendiente/.test(p))return b.note;
-  if(TESTC[n])return TESTC[n]+(t.kind==="admin"||n==="7. 2.400 m"?"":n==="6. Abdominales"?" Después vas a la pista: solo el tiempo de llegar.":" Máximo 3 minutos y pasas al siguiente.");
+  if(TESTC[n])return TESTC[n]+(t.kind==="admin"||/^[56]\./.test(n)?"":n==="4. Sentadillas"?" Después vas a correr: solo el tiempo de llegar.":" Máximo 3 minutos y pasas al siguiente.");
   if(/ en total$/.test(p))return `Haz ${p.replace(" en total","")} ${low(n)} en total, repartidas en las series que necesites. No pienses en el total: serie por serie.`;
   if(/1 min a tope/.test(p))return `${n.replace(" 1 min","")}: el máximo que puedas en 1 minuto. Inicia el temporizador y pasa directo al siguiente.`;
   if(/^Nado [\d.–]+ m/.test(n)&&!b.opt&&/^En el lago/.test(b.note||""))return `Entra caminando de a poco, como siempre (rodillas, cintura, respira, hombros). Después nada ${n.replace("Nado ","")} lo más rápido que puedas, paralelo a la orilla y donde haces pie, y sales. ${b.note.split(". Sales y")[0].replace(/\. ?$/,"")}.`;
@@ -1247,17 +1244,17 @@ Horario: llegas ${at(b.trip)}, entras ${at(b.trip+5)}, sales del agua a más tar
   if(n==="La orden")return "Hoy la orden es nadar los tramos largos sin parar. Piensa solo en llegar al otro borde.";
   if(n==="Al terminar")return "Anota en Notas en qué momento quisiste parar. Con las semanas, ese momento va a llegar más tarde.";
   const ONE={
-    "Una hoja":"Esta noche, en una hoja de tu cuaderno y a mano, escribe por qué quieres ser buzo táctico. Mínimo 10 líneas, respondiendo: 1) ¿qué te hizo querer esto?, 2) ¿quién quieres ser en 2 años?, 3) ¿qué pierdes si abandonas? Sácale una foto y guárdala en el celular.",
+    "Una hoja":"Esta noche, en una hoja de tu cuaderno y a mano, escribe por qué quieres ser militar. Mínimo 10 líneas, respondiendo: 1) ¿qué te hizo querer esto?, 2) ¿quién quieres ser en 2 años?, 3) ¿qué pierdes si abandonas? Sácale una foto y guárdala en el celular.",
     "2–3 frases":"Debajo, escribe 2 o 3 frases cortas para leerte cuando quieras parar. Por ejemplo: «Esto es lo que vine a entrenar», «Una serie más y después decido», «El frío pasa en un minuto». Cópialas en Plan → Ajustes, donde dice tu por qué: el comandante te las recuerda en los días duros.",
-    "Preguntar":"Entra a admisionarmada.cl (o llama a la Quinta Zona Naval, en Puerto Montt) y anota en tu cuaderno: 1) requisitos de la Escuela de Grumetes y de la Escuela Naval: edad, estudios, examen médico; 2) fechas de postulación de este año; 3) cómo es hoy la prueba física de buzo táctico y sus mínimas. Lo que no encuentres, escríbelo como pregunta para hacerla por teléfono.",
-    "Lista":"Esta noche deja la mochila lista junto a la puerta: celular cargado (es tu cronómetro), traje de baño, gafas, gorra, toalla, ropa de recambio, zapatillas de correr, botella de agua de 1 L y 1 plátano para después. En un papel, los 7 ejercicios en orden con tu marca anterior al lado.",
-    "Lugar":"Hoy confirma dónde la haces: la apnea y el 500 m van en piscina con salvavidas (llama, pregunta el horario y avisa que vas a hacer apnea); el 2.400 m en una pista o en un tramo plano que hayas medido con adidas Running. Decide cómo llegas rápido de una a otra.",
+    "Preguntar":"Busca en internet «Servicio Militar DGMN» (Dirección General de Movilización Nacional) y «admisión Escuela Militar» (y si te interesa, «Escuela de Suboficiales del Ejército»). Anota en tu cuaderno: 1) cómo se postula al Servicio Militar voluntario y dónde está el cantón de reclutamiento más cercano (Puerto Varas o Puerto Montt); 2) requisitos de la Escuela Militar: edad, estudios, salud, y las pruebas físicas y su mínimo (incluye nadar 50 m); 3) fechas de postulación de este año. Lo que no encuentres, escríbelo como pregunta para hacerla por teléfono o en persona.",
+    "Lista":"Esta noche deja todo listo junto a la puerta: celular cargado (es tu cronómetro), ropa de entrenamiento, zapatillas de correr, botella de agua de 1 L y 1 plátano para después. Si vas a nadar: traje de baño, gafas, gorra y toalla. En un papel, los ejercicios en orden con tu marca anterior al lado.",
+    "Lugar":"Hoy confirma dónde la haces: flexiones, abdominales, barras y sentadillas en tu barra de siempre; los 3.200 m en una pista (8 vueltas) o en un tramo plano medido con adidas Running, cerca de la barra. El nado de 50 m, en piscina si tienes.",
     "Marcha-trote con mochila 10 kg":"Ponte la mochila con 10 kg bien ajustada y haz 8 km: 5 minutos trotando, 5 caminando rápido, y repites hasta completar (más o menos 1 h 15 min). Grábala con adidas Running para saber cuándo llegas a 8 km. Lleva agua.",
     "Marcha con mochila 12 kg":"Ponte la mochila con 12 kg bien ajustada y camina rápido 15 km, unas 3 horas. Lleva 1,5 L de agua, 1 plátano y un puñado de maní, y un par de calcetines secos. En el km 7 u 8 para 5 minutos: sácate las zapatillas, revisa si hay ampollas y cámbiate los calcetines. Grábala con adidas Running.",
-    "Lo lograste":"Esta noche, en tu cuaderno, una hoja: 1) el peor momento de la semana, 2) qué te hizo seguir, 3) qué harías distinto. Guárdala: es para leerla antes del curso.",
+    "Lo lograste":"Esta noche, en tu cuaderno, una hoja: 1) el peor momento de la semana, 2) qué te hizo seguir, 3) qué harías distinto. Guárdala: es para leerla antes de entrar al servicio.",
     "Duerme todo lo que puedas":"Hoy no entrenas. Duerme hasta despertar solo si tu turno lo permite, y si puedes, una siesta de 20 a 30 minutos después de almorzar (no más, o no duermes en la noche).",
     "Come bien":"Haz las 4 comidas de siempre (desayuno, almuerzo, colación y comida al llegar), con proteína en cada una: huevos, pollo, atún, legumbres o yogur. Toma el agua del día. Hoy el cuerpo repara lo de la semana."};
-  if(n==="Lugar"&&!b.pool)return "Hoy confirma dónde la haces. Sin piscina todavía: la apnea y el 500 m quedan pendientes, y empiezas por las barras. Barras, sentadillas, flexiones y abdominales en tu barra de siempre, cerca de la casa; el 2.400 m en piso firme y plano (la vereda de la costanera) medido con adidas Running.";
+  if(n==="Lugar"&&!b.pool)return "Hoy confirma dónde la haces: flexiones, abdominales, barras y sentadillas en tu barra de siempre, cerca de la casa; los 3.200 m en piso firme y plano (la vereda de la costanera) medidos con adidas Running. El nado de 50 m: el día que vayas al agua (lago donde haces pie, con las reglas de siempre), o pendiente.";
   if(ONE[n])return ONE[n];
   if(n==="Flexiones"&&p==="100 al llegar")return "Apenas llegues, antes de sacarte la mochila: 100 flexiones en total, en las series que necesites. Serie por serie.";
   if(n==="Aceleraciones"&&k)return `Aceleración ${k} de ${b.s}: corre unos 60 m (media cuadra) empezando suave y acelerando hasta casi tu máximo al final. Vuelve caminando.${restTxt}`;
@@ -1301,7 +1298,7 @@ function viewRun(){
   return h;
 }
 // en el paso a paso de una prueba o simulacro, el resultado se anota en el mismo paso
-const TFIELD={"1. Apnea dinámica":["apnea","Metros","15","numeric"],"2. 500 m libre":["swim","Tiempo (mm:ss)","12:40","text"],"3. Barras":["barras","Barras seguidas","8","numeric"],"4. Sentadillas":["sent","Sentadillas","65","numeric"],"5. Flexiones":["flex","Flexiones","45","numeric"],"6. Abdominales":["abd","Abdominales","50","numeric"],"7. 2.400 m":["run","Tiempo (mm:ss)","10:45","text"]};
+const TFIELD={"1. Flexiones":["flex","Flexiones","35","numeric"],"2. Abdominales":["abd","Abdominales","45","numeric"],"3. Barras":["barras","Barras seguidas","5","numeric"],"4. Sentadillas":["sent","Sentadillas","55","numeric"],"5. Carrera 3.200 m":["run","Tiempo (mm:ss)","16:00","text"],"6. Nado 50 m":["swim","Tiempo (mm:ss)","1:20","text"]}
 function runResultField(st,plan,dd){const f=TFIELD[st.b.n];if(!f)return "";const kind=plan.test?"test":resultsKind(plan)==="sim"?"sim":null;if(!kind)return "";
   const r=dd[kind]||{},id=kind==="test"?"t-"+f[0]:"x-sim-"+f[0],attr=kind==="test"?`data-t="${f[0]}"`:`data-x="sim|${f[0]}"`;
   let h=`<div class="field"><label class="lbl" for="${id}">Anótalo aquí · ${f[1]}</label><input id="${id}" ${attr} inputmode="${f[3]}" value="${esc(r[f[0]]||"")}" placeholder="${f[2]}"></div>`;
@@ -1366,11 +1363,11 @@ function sesHTML(t,dd,open){
    ${open?`<div class="sb">${t.why?`<p class="why">${esc(t.why)}</p>`:""}${t.safe?`<p class="safe">${esc(t.safe)}</p>`:""}${t.blocks.map((b,i)=>exHTML(t,b,i,dd,all)).join("")}${(t.kind==="carrera"||t.goal)&&t.id!=="sprint"?runLogHTML(t,dd):""}</div>`:""}</div>`;
 }
 const EMBLEM=`<svg viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="24" r="22" fill="none" stroke="#D6AA4C" stroke-width="2"/><circle cx="24" cy="24" r="18.5" fill="none" stroke="#D6AA4C" stroke-width=".8" stroke-dasharray="2 2.4"/><g stroke="#E7EEF5" stroke-width="2.2" fill="none" stroke-linecap="round"><circle cx="24" cy="11.5" r="2.6"/><path d="M24 14v22"/><path d="M18 19h12"/><path d="M13 29c1.5 5 6 8 11 8s9.5-3 11-8"/><path d="M13 29l-1.8 2.6M35 29l1.8 2.6"/></g><g stroke="#D6AA4C" stroke-width="1.8" fill="none" stroke-linecap="round"><path d="M14.5 12v8.5c0 2.4 2 4 4.6 4"/><path d="M33.5 12v8.5c0 2.4-2 4-4.6 4"/><path d="M14.5 12l-1.4 2M14.5 12l1.4 2M33.5 12l-1.4 2M33.5 12l1.4 2"/></g></svg>`;
-const RANKS=[[0,"Recluta",1],[1,"Aspirante",1],[14,"Aspirante de 2.ª",2],[27,"Candidato",3],[40,"Candidato avanzado",3],[48,"Infierno",4],[52,"Listo para el curso",5]];
+const RANKS=[[0,"Recluta",1],[1,"Recluta en instrucción",1],[14,"Soldado",2],[27,"Soldado antiguo",3],[40,"Dragoneante",3],[48,"Infierno",4],[52,"Listo para el servicio",5]];
 function rankOf(w){let r=RANKS[0];RANKS.forEach(x=>{if(w!=null&&w>=x[0])r=x});return r}
 const MES3=["ENE","FEB","MAR","ABR","MAY","JUN","JUL","AGO","SEP","OCT","NOV","DIC"];
 function dtg(d){const n=new Date();return pad(d.getDate())+pad(n.getHours())+pad(n.getMinutes())+" "+MES3[d.getMonth()]+" "+String(d.getFullYear()).slice(2)}
-function hqHTML(w,st){const r=rankOf(w);return `<div class="hq">${EMBLEM}<div><div class="t">Bitácora · Buzo Táctico</div><div class="rk"><span class="chev">${"<i></i>".repeat(r[2])}</span>${r[1]}</div></div><div class="streak">Racha <b>${st}</b><span id="savechip" class="savechip"></span></div></div>`}
+function hqHTML(w,st){const r=rankOf(w);return `<div class="hq">${EMBLEM}<div><div class="t">Bitácora · Preparación militar</div><div class="rk"><span class="chev">${"<i></i>".repeat(r[2])}</span>${r[1]}</div></div><div class="streak">Racha <b>${st}</b><span id="savechip" class="savechip"></span></div></div>`}
 function paintSave(){const el=document.getElementById("savechip");if(!el)return;const st=Store.saveState();el.className="savechip "+st.cls;el.textContent=(st.cls==="ok"||st.cls==="local"?"✓ ":st.cls==="err"?"⚠ ":"")+st.txt;el.title=st.long;el.setAttribute("aria-label",st.long)}
 function dayHead(d,L){
   const isT=diffDays(d,today())===0;
@@ -1430,28 +1427,28 @@ function viewHoy(){
 function testForm(plan,k,dd,L){
   const t=dd.test||{},w=plan.w;
   const f=(id,lab,ph,mode)=>`<div class="field"><label class="lbl" for="t-${id}">${lab}</label><input id="t-${id}" data-t="${id}" inputmode="${mode||"numeric"}" value="${esc(t[id])}" placeholder="${ph}"></div>`;
-  let h=`<div class="card"><span class="lbl">Tus resultados · semana ${w}</span><div class="testform">${f("apnea","Apnea (m)","15")}${f("swim","500 m (mm:ss)","12:40","text")}${f("barras","Barras","8")}${f("sent","Sentadillas","65")}${f("flex","Flexiones","45")}${f("abd","Abdominales","50")}${f("run","2.400 m (mm:ss)","10:45","text")}</div>
-   <div class="row">${[["sinParar","¿500 m sin parar?"],["crol","¿Todo en crol?"]].map(([f,l])=>`<div class="field"><span class="lbl">${l}</span><div class="segs"><button class="seg ${t[f]===true?"on":""}" data-tset="${f}|true">Sí</button><button class="seg ${t[f]===false?"on":""}" data-tset="${f}|false">No</button></div></div>`).join("")}</div>`;
+  let h=`<div class="card"><span class="lbl">Tus resultados · semana ${w}</span><div class="testform">${f("flex","Flexiones 2 min","35")}${f("abd","Abdominales 2 min","45")}${f("barras","Barras","5")}${f("sent","Sentadillas 2 min","55")}${f("run","3.200 m (mm:ss)","16:00","text")}${f("swim","Nado 50 m (mm:ss)","1:20","text")}</div>
+   <div class="row">${[["sinParar","¿50 m sin parar?"],["crol","¿Todo en crol?"]].map(([f,l])=>`<div class="field"><span class="lbl">${l}</span><div class="segs"><button class="seg ${t[f]===true?"on":""}" data-tset="${f}|true">Sí</button><button class="seg ${t[f]===false?"on":""}" data-tset="${f}|false">No</button></div></div>`).join("")}</div>`;
   return h+`<div id="verdict">${verdictHTML(plan,dd,L)}</div></div>`;
 }
 function verdictHTML(plan,dd,L){
   const t=dd.test||{},w=plan.w;let h="";
-  const badT=[["swim","500 m"],["run","2.400 m"]].filter(([f])=>t[f]&&isNaN(toSec(t[f]))).map(x=>x[1]);
+  const badT=[["swim","50 m"],["run","3.200 m"]].filter(([f])=>t[f]&&isNaN(toSec(t[f]))).map(x=>x[1]);
   if(badT.length)h+=`<p class="alert">No entendí el tiempo de ${badT.join(" y ")}. Escríbelo así: 10:45.</p>`;
-  const badN=[["apnea","apnea"],["barras","barras"],["sent","sentadillas"],["flex","flexiones"],["abd","abdominales"]].filter(([f])=>t[f]&&isNaN(cnt(t[f]))).map(x=>x[1]);
+  const badN=[["barras","barras"],["sent","sentadillas"],["flex","flexiones"],["abd","abdominales"]].filter(([f])=>t[f]&&isNaN(cnt(t[f]))).map(x=>x[1]);
   if(badN.length)h+=`<p class="alert">No entendí el número de ${badN.join(", ")}. Escribe solo el número (por ejemplo 12).</p>`;
-  if(t.swim&&w>0&&!(GOALS[w]||{}).swim&&(t.sinParar===undefined||((GOALS[w]||{}).crol&&t.crol===undefined)))h+=`<p class="foot">Responde abajo si nadaste los 500 m sin parar${(GOALS[w]||{}).crol?" y todo en crol":""}: sin eso no se puede evaluar el nado.</p>`;
+  if(t.swim&&w>0&&!(GOALS[w]||{}).swim&&(t.sinParar===undefined||((GOALS[w]||{}).crol&&t.crol===undefined)))h+=`<p class="foot">Responde abajo si nadaste los 50 m sin parar${(GOALS[w]||{}).crol?" y todo en crol":""}: sin eso no se puede evaluar el nado.</p>`;
   if(w===0)return h+`<p class="foot">Punto de partida: no hay meta. Tus barras de hoy ajustan las series de todo el plan.</p>`;
   const ev=evalTest(w,t);if(!ev)return h;
-  // se evalúa lo que anotaste: una apnea pendiente (sin salvavidas) no deja la prueba sin veredicto
-  const g0=GOALS[w]||{},F=["apnea","swim","barras","sent","flex","abd","run"],has=i=>F[i]==="swim"?(g0.swim?!!t.swim&&!isNaN(toSec(t.swim)):t.sinParar!==undefined&&(!g0.crol||t.crol!==undefined)):!!t[F[i]]&&!(F[i]==="run"?isNaN(toSec(t[F[i]])):isNaN(cnt(t[F[i]])));
+  // se evalúa lo que anotaste: el nado pendiente (sin piscina) no deja la prueba sin veredicto
+  const g0=GOALS[w]||{},F=["flex","abd","barras","sent","run","swim"],has=i=>F[i]==="swim"?(g0.swim?!!t.swim&&!isNaN(toSec(t.swim)):t.sinParar!==undefined&&(!g0.crol||t.crol!==undefined)):!!t[F[i]]&&!(F[i]==="run"?isNaN(toSec(t[F[i]])):isNaN(cnt(t[F[i]])));
   const rows=ev.rows.map((r,i)=>({r,i,has:has(i)})),filled=rows.filter(x=>x.has),miss=rows.filter(x=>!x.has).map(x=>x.r[0]),fails=filled.filter(x=>!x.r[3]).map(x=>x.r[0]);
   if(!filled.length)return h;
   const reps=Store.cfg.repeats||[],already=reps.includes(L.idx);
   // la repetición se puede quitar mientras esas semanas no hayan empezado
   const canUndo=already&&(locate(today()).idx||0)<=L.idx;
   if(!fails.length){
-    h+=miss.length?`<div class="verdict"><b>Vas bien: ${filled.length} de ${rows.length}</b><span>Cumples todo lo que anotaste. Falta: ${esc(miss.join(", "))}${miss.includes("Apnea dinámica")?" (solo en piscina con salvavidas)":""}.</span></div>`
+    h+=miss.length?`<div class="verdict"><b>Vas bien: ${filled.length} de ${rows.length}</b><span>Cumples todo lo que anotaste. Falta: ${esc(miss.join(", "))}${miss.includes("Nado 50 m")?" (el nado, cuando tengas dónde)":""}.</span></div>`
       :`<div class="verdict good"><b>Meta cumplida</b><span>${w===52?"Compara con la semana 0 en Progreso. Ya sabes si puedes.":"Avanzas. La siguiente etapa es más dura."}</span></div>`;
     if(canUndo)h+=`<div class="row"><span class="foot" style="flex:1">Programaste repetir semanas, pero ya cumpliste.</span><button class="btn sm" data-unrep="${L.idx}">Quitar la repetición</button></div>`;
     return h}
@@ -1482,10 +1479,10 @@ function viewPlan(){
   const c=Store.cfg,sg=(key,v,l)=>`<button class="seg ${String(c[key])===String(v)?"on":""}" data-cset="${key}|${v}">${l}</button>`;
   h+=`<div class="card"><span class="lbl">Ajustes</span>
    <div class="row"><div class="field" style="flex:1;min-width:140px"><label class="lbl" for="c-name">Tu nombre</label><input id="c-name" data-c="name" value="${esc(c.name)}"></div><div class="field" style="flex:1;min-width:150px"><label class="lbl" for="c-start">Día 1 de la semana 0</label><input id="c-start" type="date" min="2025-01-01" max="2030-12-31" data-c="start" value="${esc(c.start)}"></div></div>
-   <div class="row"><div class="field"><span class="lbl">Dónde nadas</span><div class="segs">${sg("place","lago","Lago")}${sg("place","piscina","Piscina")}</div></div><div class="field"><span class="lbl">Neopreno</span><div class="segs">${sg("neo",false,"No")}${sg("neo",true,"Sí")}</div></div><div class="field"><span class="lbl">Turno habitual</span><div class="segs">${sg("turno","13","Entro 13:00")}${sg("turno","16","Entro 16:00")}</div></div><div class="field"><span class="lbl">Aletas</span><div class="segs">${sg("fins",false,"No tengo")}${sg("fins",true,"Sí")}</div></div><div class="field"><span class="lbl">Piscina con salvavidas</span><div class="segs">${sg("pool",false,"No tengo")}${sg("pool",true,"Sí")}</div></div><div class="field"><span class="lbl">Boya de natación</span><div class="segs">${sg("boya",false,"No tengo")}${sg("boya",true,"Sí")}</div></div><div class="field"><span class="lbl">Compañero de agua</span><div class="segs">${sg("partner",false,"No")}${sg("partner",true,"Sí")}</div></div></div>
+   <div class="row"><div class="field"><span class="lbl">Dónde nadas</span><div class="segs">${sg("place","lago","Lago")}${sg("place","piscina","Piscina")}</div></div><div class="field"><span class="lbl">Neopreno</span><div class="segs">${sg("neo",false,"No")}${sg("neo",true,"Sí")}</div></div><div class="field"><span class="lbl">Turno habitual</span><div class="segs">${sg("turno","13","Entro 13:00")}${sg("turno","16","Entro 16:00")}</div></div><div class="field"><span class="lbl">Piscina con salvavidas</span><div class="segs">${sg("pool",false,"No tengo")}${sg("pool",true,"Sí")}</div></div><div class="field"><span class="lbl">Boya de natación</span><div class="segs">${sg("boya",false,"No tengo")}${sg("boya",true,"Sí")}</div></div><div class="field"><span class="lbl">Compañero de agua</span><div class="segs">${sg("partner",false,"No")}${sg("partner",true,"Sí")}</div></div></div>
    <div class="row"><div class="field" style="max-width:140px"><label class="lbl" for="c-peso">Peso en ayunas (kg)</label><input id="c-peso" inputmode="decimal" data-c="peso" value="${esc(bodyWeight()?nf(bodyWeight()):"")}" placeholder="70"></div><div class="field" style="max-width:140px"><label class="lbl" for="c-alt">Estatura (cm)</label><input id="c-alt" inputmode="numeric" data-c="alt" value="${esc(c.alt||"")}" placeholder="175"></div><p class="foot" style="flex:1;min-width:150px">Con tu peso calculo la proteína, las porciones y el agua de cada día. Pésate en ayunas el primer día de cada semana.</p></div>
    <div class="row"><div class="field" style="max-width:170px"><label class="lbl" for="c-maxb">Máximo de barras hoy</label><input id="c-maxb" inputmode="numeric" data-c="maxb" value="${esc((c.maxB&&c.maxB.v)||"")}" placeholder="${esc(lastTest().barras||6)}"></div><p class="foot" style="flex:1;min-width:160px">Mídete cada 3–4 semanas: las series de barras se ajustan solas.</p></div>
-   <div class="field"><label class="lbl" for="c-why">Tu por qué</label><textarea id="c-why" data-c="why" placeholder="Por qué quieres ser buzo táctico. El comandante te lo recuerda en los días duros.">${esc(c.why||"")}</textarea></div>
+   <div class="field"><label class="lbl" for="c-why">Tu por qué</label><textarea id="c-why" data-c="why" placeholder="Por qué quieres ser militar. El comandante te lo recuerda en los días duros.">${esc(c.why||"")}</textarea></div>
    <div class="row"><div class="field" style="max-width:170px"><label class="lbl" for="c-trip">Casa → lago en bici (min)</label><input id="c-trip" inputmode="numeric" data-c="trip" value="${esc(c.trip===undefined?15:c.trip)}" placeholder="15"></div><p class="foot" style="flex:1;min-width:150px">Con esto calculo a qué hora sales, entras al agua y vuelves. Pon 0 si vas en auto o vives al lado.</p></div>
    <div class="field" style="max-width:170px"><label class="lbl" for="c-temp">Agua del lago (°C)</label><input id="c-temp" inputmode="decimal" data-c="temp" value="${esc(tempFor(c,td))}" placeholder="${TEMP_MES[td.getMonth()]} estimado"><span class="foot">${tempFor(c,td)?`Medida el ${fmtS(parse(c.tempK))}: vale 10 días.`:c.temp?`La de ${fmtS(parse(c.tempK||c.start))} venció: mide de nuevo.`:"Vale 10 días; después se usa la estimada."}</span></div>
    ${L.after?(S.confirm==="s4"?`<div class="row"><button class="btn main sm" data-s4>Confirmar</button><button class="btn sm" data-cancel>Cancelar</button></div>`:`<button class="btn sm" data-ask="s4">Repetir etapa 4</button>`):""}
@@ -1497,10 +1494,10 @@ function viewPlan(){
 /* =================== PROGRESO: resultados, gráficos, constancia, récords, diario =================== */
 const nextGoalWeek=w=>[13,26,39,52].find(g=>g>=w)||52;
 const RES_FIELDS={
-  sim:[["apnea","Apnea (m)","15","numeric"],["swim","500 m (mm:ss)","12:40","text"],["barras","Barras","8","numeric"],["sent","Sentadillas 2 min","65","numeric"],["flex","Flexiones 2 min","45","numeric"],["abd","Abdominales 2 min","50","numeric"],["run","2.400 m (mm:ss)","10:45","text"]],
-  mini:[["swim","Nado (mm:ss)","5:30","text"],["barras","Barras hechas","6","numeric"],["sent","Sentadillas 1 min","35","numeric"],["flex","Flexiones 1 min","30","numeric"],["abd","Abdominales 1 min","30","numeric"],["run","Carrera (mm:ss)","5:40","text"]]};
-const RES_NAMES={apnea:"Apnea",swim:"Nado",barras:"Barras",sent:"Sentadillas",flex:"Flexiones",abd:"Abdominales",run:"Carrera"};
-function resultsKind(plan){if(plan.test)return null;if(plan.kind==="prueba"||plan.tasks.some(t=>t.blocks.some(b=>b.n==="Simulacro completo"||/^1\. Apnea/.test(b.n))))return "sim";if(plan.tasks.some(t=>t.id==="fri"&&/^Mini-prueba/.test(t.t)))return "mini";return null}
+  sim:[["flex","Flexiones 2 min","35","numeric"],["abd","Abdominales 2 min","45","numeric"],["barras","Barras","5","numeric"],["sent","Sentadillas 2 min","55","numeric"],["run","3.200 m (mm:ss)","16:00","text"],["swim","Nado 50 m (mm:ss)","1:20","text"]],
+  mini:[["barras","Barras hechas","4","numeric"],["flex","Flexiones 1 min","25","numeric"],["abd","Abdominales 1 min","30","numeric"],["sent","Sentadillas 1 min","35","numeric"],["burp","Burpees 1 min","15","numeric"],["run","Carrera (mm:ss)","7:30","text"]]};
+const RES_NAMES={apnea:"Apnea",burp:"Burpees",swim:"Nado",barras:"Barras",sent:"Sentadillas",flex:"Flexiones",abd:"Abdominales",run:"Carrera"};
+function resultsKind(plan){if(plan.test)return null;if(plan.kind==="prueba"||plan.tasks.some(t=>t.blocks.some(b=>b.n==="Simulacro completo"||/^1\. Flexiones/.test(b.n))))return "sim";if(plan.tasks.some(t=>t.id==="fri"&&/^Mini-prueba/.test(t.t)))return "mini";return null}
 // distancias que pidió la mini-prueba de ese día (nado 200/300 m, carrera 1.200/1.600 m)
 function miniDist(plan){const t=plan&&plan.tasks.find(x=>x.id==="fri"),o={swim:null,run:null};if(!t)return o;
   t.blocks.forEach(b=>{let m=/^Nado (\d+) m$/.exec(b.n);if(m)o.swim=+m[1];if(b.n==="Carrera"){m=/^(\d)\.?(\d{3}) m$/.exec(b.p);if(m)o.run=+(m[1]+m[2])}});return o}
@@ -1512,13 +1509,13 @@ function resultsHTML(plan,k,dd){
 }
 function resultsVerdict(kind,plan,k,r){
   if(!Object.values(r).some(Boolean))return kind==="sim"?"Anota cada número: quedan en tus gráficos y récords.":"Anota tus números para comparar con la mini-prueba anterior.";
-  if(kind==="sim"){const g=nextGoalWeek(plan.w),ev=evalTest(g,Object.assign({sinParar:1,crol:1},r)),filled=ev.rows.filter((x,i)=>{const f=["apnea","swim","barras","sent","flex","abd","run"][i];return r[f]&&(f==="swim"||f==="run"?!isNaN(toSec(r[f])):!isNaN(cnt(r[f])))});
+  if(kind==="sim"){const g=nextGoalWeek(plan.w),ev=evalTest(g,Object.assign({sinParar:1,crol:1},r)),filled=ev.rows.filter((x,i)=>{const f=["flex","abd","barras","sent","run","swim"][i];return r[f]&&(f==="swim"||f==="run"?!isNaN(toSec(r[f])):!isNaN(cnt(r[f])))});
     const okN=filled.filter(x=>x[3]).length,miss=filled.filter(x=>!x[3]).map(x=>x[0]);
     return `Contra la meta de la semana ${g}: cumples ${okN} de ${filled.length}.${miss.length?" Te falta: "+miss.join(", ")+".":" Vas sobre la meta."}`}
-  const has=x=>x&&["barras","sent","flex","abd","swim","run"].some(f=>x[f]);
+  const has=x=>x&&["barras","sent","flex","abd","burp","swim","run"].some(f=>x[f]);
   const prev=Object.keys(Store.days).filter(x=>x<k&&has(Store.days[x].mini)).sort().pop();if(!prev)return "Primera mini-prueba registrada: la próxima se compara con esta.";
   const p=Store.days[prev].mini,out=[],dA=miniDist(plan),dB=miniDist(planFor(parse(prev)));
-  ["sent","flex","abd"].forEach(f=>{const a=cnt(r[f]),b=cnt(p[f]);if(isFinite(a)&&isFinite(b)){const d=Math.round((a-b)*10)/10;out.push(`${RES_NAMES[f]} ${r[f]} (${d>=0?"+":""}${d})`)}});
+  ["flex","abd","sent","burp"].forEach(f=>{const a=cnt(r[f]),b=cnt(p[f]);if(isFinite(a)&&isFinite(b)){const d=Math.round((a-b)*10)/10;out.push(`${RES_NAMES[f]} ${r[f]} (${d>=0?"+":""}${d})`)}});
   // mismo tramo: compara el tiempo; tramo distinto: compara el ritmo (por 100 m nadando, por km corriendo)
   [["swim",+(r.swimM||dA.swim)||0,+(p.swimM||dB.swim)||0,100,"/100 m"],["run",dA.run,dB.run,1000,"/km"]].forEach(([f,ma,mb,u,ul])=>{const a=toSec(r[f]),b=toSec(p[f]);if(!(a&&b))return;
     const sg=d=>d<=0?"−"+fmtT(-d):"+"+fmtT(d);
@@ -1531,14 +1528,14 @@ function updateResults(kind){const el=document.getElementById("xv-"+kind);if(!el
 // series para los gráficos: pruebas + simulacros (+ peso)
 function seriesData(){
   // x = semana del plan (si repites semanas, la prueba queda junto a su meta); el peso va por semana de calendario
-  const st=parse(Store.cfg.start),pts={barras:[],run:[],swim:[],apnea:[],flex:[],peso:[]};
+  const st=parse(Store.cfg.start),pts={barras:[],run:[],swim:[],abd:[],flex:[],peso:[]};
   Object.keys(Store.days).sort().forEach(k=>{const d=Store.days[k],cx=diffDays(parse(k),st)/7;if(cx<0)return;const L=locate(parse(k)),x=L.w!=null?L.w+L.dow/7:cx,w=L.w;
-    [d.test,d.sim].forEach(t=>{if(!t)return;["barras","apnea","flex"].forEach(f=>{const raw=t[f];if(raw===""||raw==null||raw===true)return;const v=cnt(raw);if(v>=0&&!isNaN(v))pts[f].push({x,v,k,w})});["run","swim"].forEach(f=>{const v=toSec(t[f]);if(v>0)pts[f].push({x,v,k,w})})});
+    [d.test,d.sim].forEach(t=>{if(!t)return;["barras","abd","flex"].forEach(f=>{const raw=t[f];if(raw===""||raw==null||raw===true)return;const v=cnt(raw);if(v>=0&&!isNaN(v))pts[f].push({x,v,k,w})});["run","swim"].forEach(f=>{const v=toSec(t[f]);if(v>0)pts[f].push({x,v,k,w})})});
     const pw=parseFloat(String(d.peso||"").replace(",","."));if(pw>30)pts.peso.push({x:cx,v:pw,k})});
   Object.values(pts).forEach(a=>a.sort((p,q)=>p.x-q.x||(p.k<q.k?-1:1)));
   return pts;
 }
-const CHARTS=[["barras","Barras seguidas","más es mejor",w=>GOALS[w].barras,0],["run","2.400 m","menos tiempo es mejor",w=>toSec(GOALS[w].run),1],["swim","500 m libre","menos tiempo es mejor",w=>GOALS[w].swim?toSec(GOALS[w].swim):null,1],["apnea","Apnea dinámica (m)","más es mejor",w=>GOALS[w].apnea,0],["flex","Flexiones en 2 min","más es mejor",w=>GOALS[w].flex,0],["peso","Peso en ayunas (kg)","",null,0]];
+const CHARTS=[["barras","Barras seguidas","más es mejor",w=>GOALS[w].barras,0],["run","Carrera 3.200 m","menos tiempo es mejor",w=>toSec(GOALS[w].run),1],["flex","Flexiones en 2 min","más es mejor",w=>GOALS[w].flex,0],["abd","Abdominales en 2 min","más es mejor",w=>GOALS[w].abd,0],["swim","Nado 50 m","menos tiempo es mejor",w=>GOALS[w].swim?toSec(GOALS[w].swim):null,1],["peso","Peso en ayunas (kg)","",null,0]];
 function lineChart(pts,goalFn,isTime){
   const W=320,H=150,L=40,R=14,T=14,B=24,fx=v=>isTime?fmtT(v):(Math.round(v*100)/100).toLocaleString("es-CL",{maximumFractionDigits:2});
   const goals=goalFn?[13,26,39,52].map(g=>({x:g,v:goalFn(g)})).filter(g=>g.v!=null):[];
@@ -1581,9 +1578,9 @@ function constancyHTML(){
 function recordsHTML(){
   const best={},set=(key,v,k,better,fmtv)=>{if(!(v>0))return;const b=best[key];if(!b||(better==="up"?v>b.v:v<b.v))best[key]={v,k,f:fmtv(v)}};
   Object.keys(Store.days).sort().forEach(k=>{const d=Store.days[k];
-    [d.test,d.sim].forEach(t=>{if(!t)return;set("barras",cnt(t.barras),k,"up",v=>v);set("apnea",cnt(t.apnea),k,"up",v=>v+" m");set("flex",cnt(t.flex),k,"up",v=>v);set("abd",cnt(t.abd),k,"up",v=>v);set("sent",Number(t.sent),k,"up",v=>v);set("run",toSec(t.run),k,"down",fmtT);set("swim",toSec(t.swim),k,"down",fmtT)});
+    [d.test,d.sim].forEach(t=>{if(!t)return;set("barras",cnt(t.barras),k,"up",v=>v);set("flex",cnt(t.flex),k,"up",v=>v);set("abd",cnt(t.abd),k,"up",v=>v);set("sent",cnt(t.sent),k,"up",v=>v);set("run",toSec(t.run),k,"down",fmtT);set("swim",toSec(t.swim),k,"down",fmtT)});
     Object.values(d.runlog||{}).forEach(r=>{const km=parseFloat(String(r.km||"").replace(",",".")),t=parseDur(r.t);if(km>0&&t>0){set("long",km,k,"up",v=>String(v).replace(".",",")+" km");if(km>=3)set("pace",t/km,k,"down",v=>fmtT(v)+"/km")}})});
-  const R=[["barras","Barras seguidas"],["run","2.400 m"],["swim","500 m libre"],["apnea","Apnea"],["flex","Flexiones 2 min"],["abd","Abdominales 2 min"],["sent","Sentadillas 2 min"],["long","Carrera más larga"],["pace","Mejor ritmo (3 km o más)"]];
+  const R=[["barras","Barras seguidas"],["run","Carrera 3.200 m"],["swim","Nado 50 m"],["flex","Flexiones 2 min"],["abd","Abdominales 2 min"],["sent","Sentadillas 2 min"],["long","Carrera más larga"],["pace","Mejor ritmo (3 km o más)"]];
   const cards=R.filter(([key])=>best[key]).map(([key,n])=>`<div class="kpi"><span class="lbl">${n}</span><b>${esc(String(best[key].f))}</b><span class="foot">${fmtS(parse(best[key].k))}</span></div>`).join("");
   const hist=[];Object.keys(Store.days).sort().reverse().forEach(k=>{const d=Store.days[k];[["test","Prueba"],["sim","Simulacro"],["mini","Mini-prueba"]].forEach(([key,n])=>{const t=d[key];if(t&&Object.values(t).some(v=>v&&v!==true))hist.push({k,n,t})})});
   return `<div class="sec"><h3>Récords</h3>${cards?`<div class="kpis rec">${cards}</div>`:`<p class="muted" style="margin:0">Aparecen con tu primera prueba y tus carreras registradas.</p>`}
@@ -1694,7 +1691,7 @@ function viewProgreso(){
     h+=`<div class="card"><div class="row" style="justify-content:space-between"><span class="lbl">Esta semana</span><span class="mono">${ub?Math.round(ua/ub*100):0}%</span></div><div class="bar"><i style="width:${ub?ua/ub*100:0}%"></i></div><span>${ua} de ${ub} series · ${nf(sm[0])} de ${nf(sm[1])} m de nado · ${kmw.toLocaleString("es-CL",{maximumFractionDigits:1})} km corridos</span></div>`}
   {const runs=[];Object.keys(Store.days).sort().reverse().forEach(k=>{const rl=Store.days[k].runlog||{};const p=Object.keys(rl).length?planFor(parse(k)):null;Object.keys(rl).forEach(tid=>{const r=rl[tid],km=parseFloat(String(r.km||"").replace(",",".")),t=parseDur(r.t);if(km>0&&t>0){const tk=p&&p.tasks.find(x=>x.id===tid);runs.push({k,name:tk?tk.t:"Carrera",km,t,lvl:tk?runVerdict(tk.goal,r).lvl:""})}})});
    h+=`<div class="sec"><h3>Tus carreras</h3>${runs.length?`<div class="tbl"><table><thead><tr><th>Día</th><th>Sesión</th><th>Km</th><th>Tiempo</th><th>Ritmo</th></tr></thead><tbody>${runs.slice(0,12).map(r=>`<tr><td class="mono">${fmtS(parse(r.k))}</td><td>${esc(r.name)}</td><td class="mono">${String(r.km).replace(".",",")}</td><td class="mono">${fmtDur(r.t)}</td><td class="mono ${r.lvl==="ok"?"pass":r.lvl==="bad"?"miss":""}">${fmtT(r.t/r.km)}/km</td></tr>`).join("")}</tbody></table></div>`:`<p class="muted" style="margin:0">Todavía no hay carreras registradas. Graba tus trotes con adidas Running y copia los km y el tiempo en la sesión de carrera del día.</p>`}</div>`}
-  const R=[["Apnea dinámica","apnea"," m"],["500 m libre","swim",""],["Barras","barras",""],["Sentadillas 2 min","sent",""],["Flexiones 2 min","flex",""],["Abdominales 2 min","abd",""],["2.400 m","run",""]];
+  const R=[["Flexiones 2 min","flex",""],["Abdominales 2 min","abd",""],["Barras","barras",""],["Sentadillas 2 min","sent",""],["Carrera 3.200 m","run",""],["Nado 50 m","swim",""]];
   h+=constancyHTML()+chartsHTML()+recordsHTML();
   h+=`<div class="sec"><h3>Tus pruebas</h3>`;
   if(res.length){h+=`<div class="tbl"><table><thead><tr><th>Prueba</th>${res.map(r=>`<th>Sem ${r.w}</th>`).join("")}</tr></thead><tbody>`;
@@ -1702,7 +1699,7 @@ function viewProgreso(){
     h+=`</tbody></table></div>`}
   else h+=`<p class="muted" style="margin:0">Todavía no hay resultados. La prueba inicial es el día 6 de la semana 0.</p>`;
   h+=`</div><div class="sec"><h3>Metas</h3><div class="tbl"><table><thead><tr><th>Prueba</th><th>Sem 13</th><th>Sem 26</th><th>Sem 39</th><th>Sem 52</th></tr></thead><tbody>
-  <tr><td>Apnea dinámica</td><td>15 m</td><td>25 m</td><td>35 m</td><td>50 m</td></tr><tr><td>500 m libre</td><td>sin parar</td><td>crol sin parar</td><td>&lt; 11:00</td><td>&lt; 9:30</td></tr><tr><td>Barras</td><td>10</td><td>13</td><td>15</td><td>18+</td></tr><tr><td>Sentadillas 2 min</td><td>70</td><td>80</td><td>90</td><td>100</td></tr><tr><td>Flexiones 2 min</td><td>50</td><td>65</td><td>75</td><td>85+</td></tr><tr><td>Abdominales 2 min</td><td>55</td><td>65</td><td>75</td><td>85+</td></tr><tr><td>2.400 m</td><td>&lt; 10:30</td><td>&lt; 10:00</td><td>&lt; 9:30</td><td>&lt; 9:00</td></tr></tbody></table></div>
+  <tr><td>Flexiones 2 min</td><td>35</td><td>45</td><td>55</td><td>60+</td></tr><tr><td>Abdominales 2 min</td><td>45</td><td>55</td><td>65</td><td>70+</td></tr><tr><td>Barras</td><td>5</td><td>8</td><td>10</td><td>12+</td></tr><tr><td>Sentadillas 2 min</td><td>55</td><td>65</td><td>75</td><td>80+</td></tr><tr><td>Carrera 3.200 m</td><td>&lt; 16:00</td><td>&lt; 15:00</td><td>&lt; 14:00</td><td>&lt; 13:30</td></tr><tr><td>Nado 50 m</td><td>sin parar</td><td>crol sin parar</td><td>&lt; 1:15</td><td>&lt; 1:00</td></tr></tbody></table></div>
   <p class="foot">Metas propuestas para superar la mínima con holgura; no son las mínimas oficiales.</p></div>`+diaryHTML();
   return h;
 }
@@ -1714,31 +1711,29 @@ function viewGuia(){return `<div class="sec prose"><h2>Guía</h2>
  <li><b>El cuadrado</b> de una sesión la marca entera. Con todas marcadas, el día queda cumplido.</li>
  <li><b>Las barras</b> salen de tus pruebas: anota bien la prueba inicial. <b>Los ritmos</b> de carrera y de nado son la meta de cada etapa: al principio te van a costar, y es a propósito.</li>
  <li><b>Carreras:</b> grábalas con adidas Running (gratis, usa el GPS del celular). Al terminar, copia los km y el tiempo en el registro de la sesión de carrera; en intervalos, también el promedio por repetición (la app muestra el tiempo de cada vuelta). La bitácora te dice tu ritmo y si cumpliste.</li></ul>
- <h3>El curso real</h3><ul>
- <li>El curso de Buzo Táctico de la Escuela de Fuerzas Especiales de la Armada dura <b>48 semanas</b> y lo termina <b>menos del 10%</b>. (<a href="https://www.infodefensa.com/texto-diario/mostrar/3110970/buzos-tacticos-guerreros-botas-mojadas-armada-chile" target="_blank" rel="noopener">Infodefensa</a>)</li>
- <li>Para personal naval menor de 30 años, la prueba es <b>continua</b>, con descanso mínimo: apnea, 500 m, barras, sentadillas, flexiones, abdominales y 2.400 m. Es la que entrenas aquí.</li>
- <li>Una de las pruebas más duras es el <b>nado de emergencia</b>: sobrevivir en el agua atado de pies y manos, con capucha. Por eso entrenas pataleo vertical y comodidad en lo hondo. Eso se aprende en el curso con instructores: nunca lo practiques por tu cuenta.</li>
- <li>No hay detalle público de una “semana del infierno” chilena. La referencia más conocida es la Hell Week de los SEAL de EE. UU.: casi 6 días mojado y con frío, más de 20 h diarias de actividad, unas 4 h de sueño en total, botes y troncos. (<a href="https://www.military.com/military-fitness/navy-special-operations/navy-seal---hell-week-revisited" target="_blank" rel="noopener">Military.com</a>)</li>
- <li>Confirma siempre el formato vigente en <a href="https://www.admisionarmada.cl/" target="_blank" rel="noopener">admisionarmada.cl</a> o en la Quinta Zona Naval.</li></ul>
+ <h3>Hacia dónde vas</h3><ul>
+ <li>Este plan te prepara en casa para el <b>Servicio Militar</b> o una escuela de formación (Escuela Militar, Escuela de Suboficiales), para no llegar desde cero. Es un entrenamiento estilo fuerzas especiales, pero en tierra.</li>
+ <li>Las pruebas de ingreso miden carrera, flexiones, abdominales y barras. En la Escuela Militar, además, <b>nadar 50 m libre sin ayuda es excluyente</b>: por eso tienes un día de natación a la semana.</li>
+ <li>Las metas de la app son propias del plan, para llegar con holgura. Las mínimas oficiales y las fechas cambian: confírmalas en el sitio del Servicio Militar (DGMN) o de la escuela a la que postules, o en tu cantón de reclutamiento.</li>
+ <li>La “semana del infierno” se inspira en la Hell Week de los SEAL de EE. UU. Aquí es una versión adaptada y segura: mucho volumen, pero durmiendo 8 h.</li></ul>
  <h3>Lo que te van a pedir y cómo lo cubre el plan</h3>
  <div class="tbl"><table><thead><tr><th>Te van a pedir</th><th>En tu plan</th></tr></thead><tbody>
- <tr><td>Admisión Armada: 100 m, Cooper 2.414 m, 50 m libre, salto vertical, barras</td><td>Sprints de 100 m y salto vertical (etapas 3–4), intervalos y 2.400 m cronometrado, natación de velocidad, barras toda la semana</td></tr>
- <tr><td>Prueba continua del curso: apnea, 500 m, barras, sentadillas, flexiones, abdominales, 2.400 m</td><td>Prueba cada 13 semanas, mini-pruebas y simulacros en las etapas 3–4, con metas sobre la mínima</td></tr>
- <tr><td>Nados largos con aletas en el mar</td><td>Aletas cada semana: de 1,3 km a 3 km continuos</td></tr>
- <tr><td>Nado de emergencia y comodidad en lo hondo</td><td>Pataleo vertical hasta 10 min, flotación de supervivencia, recuperar objetos, nado con ropa (piscina con salvavidas)</td></tr>
- <tr><td>Gimnasia diaria de alto volumen</td><td>PT de cubierta: de 3 × 15 a 5 × 25 + barras, 2 veces por semana</td></tr>
- <tr><td>Trotes largos, con botas y carga</td><td>Trote largo hasta 90 min, botas desde la semana 44, marchas con mochila de 6 a 12 kg</td></tr>
- <tr><td>Frío y estar mojado</td><td>Ducha fría diaria hasta 3 min, lago según temperatura</td></tr>
- <tr><td>Aguantar cuando ya no se puede</td><td>Tolerancia al dolor diaria, incomodidad desde la semana 2, mañanas y día del infierno, semana del infierno adaptada</td></tr>
- <tr><td>Conocimientos: buceo, primeros auxilios, nudos, navegación</td><td>Estudio diario, curso de primeros auxilios (sem 12) y Open Water (sem 20)</td></tr>
+ <tr><td>Prueba física: flexiones, abdominales, barras, carrera</td><td>Prueba cada 13 semanas, mini-pruebas y simulacros en las etapas 3–4, con metas sobre la mínima</td></tr>
+ <tr><td>Nadar 50 m sin ayuda</td><td>Natación 1 vez por semana: de aprender crol a 1,5 km; los 50 m se miden en cada prueba</td></tr>
+ <tr><td>Marchas largas con carga</td><td>Marcha con mochila cada semana: de 30 min con 4 kg a 2 h con 15 kg</td></tr>
+ <tr><td>Gimnasia diaria de alto volumen</td><td>PT militar cada lunes: de 3 × 10 a 5 × 25 con burpees y barras</td></tr>
+ <tr><td>Trotes largos, con botas</td><td>Trote largo cada sábado hasta 90 min, botas desde la semana 44</td></tr>
+ <tr><td>Pista de obstáculos</td><td>Barras, cuerda, sprints de 100 m, saltos, gateo y arrastre</td></tr>
+ <tr><td>Frío, cansancio y aguantar</td><td>Ducha fría diaria, tolerancia al dolor, sesiones de incomodidad y semana del infierno adaptada</td></tr>
+ <tr><td>Disciplina y vida de cuartel</td><td>Horario fijo, orden del día, cama hecha y estudio diario: grados, orden cerrado, primeros auxilios, mapas, nudos</td></tr>
  <tr><td>Falta de sueño</td><td>No se entrena: llegas descansado y con la cabeza entrenada para seguir cansado</td></tr></tbody></table></div>
- <p class="foot">La idea: que cuando empiece el curso, lo que te pidan ya sea parte de tu semana.</p>
+ <p class="foot">La idea: que cuando entres, lo que te pidan ya sea parte de tu semana.</p>
  <h3>Cómo sube el plan</h3><ul>
- <li><b>Cada semana tienes:</b> 3 sesiones de agua, 2 de carrera (una suave, una de intervalos), 2 de fuerza de tren superior y circuito, piernas, core, apnea en seco, ducha fría y visualización.</li>
+ <li><b>Cada semana tienes:</b> fuerza + PT (lunes), carrera de intervalos + core (martes), natación + piernas (miércoles), marcha con mochila (jueves), circuito o prueba (viernes), trote largo (sábado) y descanso (domingo). Además, cada día: tolerancia al dolor, ducha fría, estudio y visualización.</li>
  <li><b>Cada 4 semanas, una de descarga</b> (menos carga) para que el cuerpo asimile.</li>
- <li><b>Incomodidad que crece:</b> 60 min (sem 10) → 90 min (18) → 2 h (23) → mañanas del infierno de 2 h 30 a 3 h 30 (31, 36, 41) → día del infierno de 4 h (44).</li>
- <li><b>Mochila desde la etapa 3:</b> marcha de 40 min con 6 kg que sube a 90 min con 12 kg.</li>
- <li><b>Semana 48, semana del infierno adaptada:</b> 6 días seguidos de 3 a 4 horas cada mañana, con mochila, nado, circuitos y frío. Duermes 8 h como mínimo: privarte de sueño a propósito te lesiona y no te prepara mejor. La falta de sueño la pone el curso.</li></ul>
+ <li><b>Incomodidad que crece:</b> 20 min (sem 2) → 60 min (10) → 90 min (18) → 2 h (23) → mañanas del infierno de 2 h 30 a 3 h 30 (31, 36, 41) → día del infierno de 4 h (44).</li>
+ <li><b>Mochila:</b> de 30 min con 4 kg (etapa 1) a 2 h con 15 kg (etapa 4), a paso rápido.</li>
+ <li><b>Semana 48, semana del infierno adaptada:</b> 6 días seguidos de 3 a 4 horas cada mañana, con mochila, circuitos, gateo y frío. Duermes 8 h como mínimo: privarte de sueño a propósito te lesiona y no te prepara mejor.</li></ul>
  <h3>Técnica</h3><ul>
  <li><b>Barras:</b> agarre prono, desde brazos estirados hasta el mentón sobre la barra, sin balanceo. Si no sale: negativas, bajando en 5 s.</li>
  <li><b>Flexiones:</b> cuerpo recto, codos a 45°, pecho a un puño del suelo.</li>
@@ -1748,17 +1743,16 @@ function viewGuia(){return `<div class="sec prose"><h2>Guía</h2>
  <li><b>Cuerda:</b> agarras alto, subes rodillas, pisas la cuerda entre los empeines y te paras. Baja mano bajo mano.</li>
  <li><b>Crol:</b> cuerpo horizontal, exhalas todo bajo el agua, giras para respirar, patada corta desde la cadera, mano entra lejos adelante.</li>
  <li><b>Drills:</b> patada con tabla; patada lateral (de costado, un brazo adelante); nado a un brazo; “pillar” (una mano espera a la otra adelante); respirar cada 3 brazadas.</li>
- <li><b>Pataleo vertical:</b> en lo hondo, piernas como batidora (cada pierna gira hacia adentro alternada), espalda recta.</li>
  <li><b>Intervalos:</b> cada repetición al tiempo indicado, ni más rápido ni más lento. Pista: 1 vuelta = 400 m.</li></ul>
  <h3>Lago sin compañero</h3><ul>
  <li>Es lo más riesgoso del plan. El shock de frío de los primeros 1–2 min hace jadear y tragar agua: entra caminando y espera.</li>
  <li>Solo donde haces pie, paralelo a la orilla, con gorra de color, cerca de gente, sin viento ni oleaje. Avisa a alguien.</li>
  <li>Los minutos máximos dependen del agua y del neopreno. Por ejemplo, a 10–12 °C son 12 min con neopreno y 5 sin él. Cuando suena, sales.</li>
- <li>Nunca apnea en el lago. Las pruebas de 500 m y apnea se miden en piscina.</li>
+ <li>Nunca apnea en el lago. Los 50 m de la prueba, si los haces en el lago, van paralelos a la orilla y donde haces pie.</li>
  <li><b>Cómo entrar:</b> rodillas 30 s → cintura y te mojas manos, cara y nuca → respiras hasta que se calme (≈1 min) → hombros 20–30 s → nadas donde el agua te llega al pecho. Las primeras semanas, si quieres, con la cabeza afuera.</li>
  <li><b>Cómo salir:</b> cuando suena, sales aunque te sientas bien. Sécate, ropa abrigada y gorro, algo caliente y camina. Es normal temblar unos minutos.</li></ul>
  <h3>Reglas que no se rompen</h3><ul>
- <li>Nunca apnea solo; nunca hiperventilar antes de una apnea.</li>
+ <li>Nunca nades solo donde no haces pie; nunca aguantes la respiración bajo el agua.</li>
  <li>No más de 10% de aumento semanal por tu cuenta.</li>
  <li>Dolor agudo, localizado o que empeora = parar y consultar.</li>
  <li>1 día de descanso total por semana y las descargas, sin excepción.</li></ul>
@@ -1769,7 +1763,7 @@ function viewGuia(){return `<div class="sec prose"><h2>Guía</h2>
  <li>Al llegar del trabajo: comida liviana con proteína, ducha y a dormir. Nada de pantallas en la cama.</li></ul>
  <h3>Dormir poco: por qué no se entrena</h3><ul>
  <li>El cuerpo no se acostumbra a dormir poco. Con restricción de sueño, el rendimiento sigue bajando día tras día aunque sientas que te adaptaste, y suben las lesiones.</li>
- <li>En el curso la falta de sueño la ponen ellos. Llega mejor quien llega descansado y con la cabeza entrenada para seguir cansado.</li>
+ <li>En el servicio la falta de sueño la ponen ellos. Llega mejor quien llega descansado y con la cabeza entrenada para seguir cansado.</li>
  <li>Lo que sí entrenas: sesiones largas cuando ya estás cansado, dobles sesiones, frío e incomodidad. Esa es la sensación del infierno, sin destruirte.</li>
  <li>Duerme 8 h. Con tus turnos se puede: solo corre la hora de dormir.</li></ul>
  <h3>Acostumbrarte al dolor</h3><ul>
@@ -1777,7 +1771,7 @@ function viewGuia(){return `<div class="sec prose"><h2>Guía</h2>
  <li><b>Incomodidad desde la semana 2:</b> 20 min (sem 2) → 40 min (6) → 60 min (10) y sigue subiendo hasta el día del infierno.</li>
  <li><b>Frío todos los días:</b> la ducha fría sube de 30 s a 3 min.</li>
  <li><b>Lo que se aguanta:</b> ardor muscular, temblor, frío, falta de aire, cansancio, aburrimiento.</li>
- <li><b>Lo que no se aguanta:</b> dolor punzante, en una articulación, en un punto del hueso, o que empeora con cada repetición. Eso es lesión: paras. Un buzo lesionado no llega al curso.</li>
+ <li><b>Lo que no se aguanta:</b> dolor punzante, en una articulación, en un punto del hueso, o que empeora con cada repetición. Eso es lesión: paras. Un soldado lesionado no llega al servicio.</li>
  <li>Cuando quieras parar: respiración de caja y “hasta la próxima repetición”. Después anota en qué momento quisiste parar: con las semanas ese momento llega más tarde.</li></ul>
  <h3>Comida</h3><ul>
  <li>4 comidas reales, proteína en cada una (unos 1,6 g por kilo al día), carbohidratos en días largos, 2,5–3 L de agua, sin alcohol ni bebidas energéticas.</li></ul></div>`}

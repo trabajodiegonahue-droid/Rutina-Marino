@@ -72,7 +72,7 @@ const reload = async p => { await p.reload(); await p.waitForTimeout(200); };
 
 // 4. Ajustes: cambian el plan
 { console.log('4. Ajustes');
-  const { p, ctx } = await page('2026-10-13T09:00:00');
+  const { p, ctx } = await page('2026-10-15T09:00:00'); // miércoles de la semana 1: natación + piernas
   ok((await text(p)).includes('· lago'), 'lago por defecto');
   await p.click('[data-tab="plan"]');
   await p.click('[data-cset="place|piscina"]');
@@ -81,16 +81,14 @@ const reload = async p => { await p.reload(); await p.waitForTimeout(200); };
   const t = await text(p);
   ok(!t.includes('· lago'), 'piscina quita el modo lago');
   ok(!/× \d+ brazadas/.test(t) && t.includes('150 m suave'), 'piscina muestra metros, no brazadas');
-  ok(t.includes('4 × 8'), 'barras = máximo 10 − 2');
-  await reload(p);
+  for (let i = 0; i < 2; i++) await p.click('[data-go="-1"]'); // lunes: fuerza
+  ok((await text(p)).includes('4 × 8'), 'barras = máximo 10 − 2');
+  await reload(p); for (let i = 0; i < 2; i++) await p.click('[data-go="-1"]');
   ok((await text(p)).includes('4 × 8'), 'el máximo de barras queda guardado');
   await p.click('[data-tab="plan"]');
   ok(await p.inputValue('#c-peso') === '80', 'el peso queda guardado');
   await p.click('[data-cset="partner|true"]'); await p.click('[data-tab="hoy"]');
-  for (let i = 0; i < 5; i++) await p.click('[data-go="1"]'); // día 6: nado largo + apnea
-  ok((await text(p)).includes('Apnea supervisada'), 'con compañero y piscina aparece la apnea supervisada');
-  await p.click('[data-tab="plan"]'); await p.click('[data-cset="partner|false"]'); await p.click('[data-tab="hoy"]');
-  ok(!(await text(p)).includes('Apnea supervisada'), 'sin compañero no hay apnea en el agua');
+  ok(!(await text(p)).includes('Apnea'), 'el plan militar no tiene apnea');
   await ctx.close(); }
 
 // 5. Fecha de inicio: mover el inicio mueve las semanas
@@ -159,7 +157,7 @@ const reload = async p => { await p.reload(); await p.waitForTimeout(200); };
   const { p, ctx } = await page('2027-01-10T09:00:00'); // semana 13, día 6 con inicio 6 oct
   const t = await text(p);
   ok(t.includes('SEM 13 · DÍA 6'), 'semana 13 día 6 (' + (t.match(/SEM \d+ · DÍA \d/) || [''])[0] + ')');
-  for (const [id, v] of [['apnea', '10'], ['swim', '14:00'], ['barras', '7'], ['sent', '60'], ['flex', '40'], ['abd', '45'], ['run', '11:00']]) await p.fill('#t-' + id, v);
+  for (const [id, v] of [['flex', '30'], ['abd', '40'], ['barras', '4'], ['sent', '50'], ['run', '17:00'], ['swim', '1:40']]) await p.fill('#t-' + id, v);
   await p.dispatchEvent('#t-run', 'change');
   ok((await text(p)).includes('No llegaste a la meta'), 'evalúa contra la meta');
   await p.click('[data-ask="rep"]'); await p.click('[data-rep]');
@@ -217,20 +215,20 @@ const reload = async p => { await p.reload(); await p.waitForTimeout(200); };
 
 // 13. Registro de adidas Running: ritmo, cumplimiento y guardado
 { console.log('13. Registro de carrera');
-  const { p, ctx, errs } = await page('2026-10-14T09:00:00'); // semana 1, día 2: carrera suave 30 min
-  await p.fill('#rl-run-km', '5,1'); await p.fill('#rl-run-t', '31:30');
-  const v = await p.$eval('#rlv-run', e => e.textContent);
+  const { p, ctx, errs } = await page('2026-10-18T09:00:00'); // semana 1, día 6: trote suave 25 min
+  await p.fill('#rl-run2-km', '4,2'); await p.fill('#rl-run2-t', '26:00');
+  const v = await p.$eval('#rlv-run2', e => e.textContent);
   ok(v.includes('ritmo 6:11 por km') && v.includes('Cumpliste'), 'calcula ritmo y cumplimiento (' + v + ')');
-  await p.fill('#rl-run-t', '25:00');
-  ok((await p.$eval('#rlv-run', e => e.textContent)).includes('Te faltaron 5 min'), 'avisa si faltaron minutos');
+  await p.fill('#rl-run2-t', '20:00');
+  ok((await p.$eval('#rlv-run2', e => e.textContent)).includes('Te faltaron 5 min'), 'avisa si faltaron minutos');
   await reload(p);
-  ok(await p.inputValue('#rl-run-km') === '5,1', 'el registro queda guardado');
+  ok(await p.inputValue('#rl-run2-km') === '4,2', 'el registro queda guardado');
   await p.click('[data-tab="progreso"]');
-  ok((await text(p)).includes('5,1') && (await text(p)).includes('km corridos'), 'aparece en Progreso');
+  ok((await text(p)).includes('4,2') && (await text(p)).includes('km corridos'), 'aparece en Progreso');
   // intervalos: promedio por repetición
-  await p.click('[data-tab="hoy"]'); for (let i = 0; i < 3; i++) await p.click('[data-go="1"]'); // día 5: intervalos 4 × 400
-  await p.fill('#rl-int-rep', '1:52');
-  ok((await p.$eval('#rlv-int', e => e.textContent)).includes('más lento'), 'compara el promedio con el ritmo pedido');
+  await p.click('[data-tab="hoy"]'); for (let i = 0; i < 4; i++) await p.click('[data-go="-1"]'); // día 2: intervalos 4 × 400
+  await p.fill('#rl-run-rep', '2:10');
+  ok((await p.$eval('#rlv-run', e => e.textContent)).includes('más lento'), 'compara el promedio con el ritmo pedido');
   ok(errs.length === 0, 'sin errores: ' + errs.join(' | '));
   await ctx.close(); }
 
@@ -270,14 +268,14 @@ const reload = async p => { await p.reload(); await p.waitForTimeout(200); };
 // 16. Progreso: constancia, gráficos, récords y diario
 { console.log('16. Progreso');
   const { p, ctx, errs } = await page('2026-10-11T09:00:00'); // prueba inicial
-  for (const [id, v] of [['apnea', '8'], ['swim', '15:30'], ['barras', '7'], ['sent', '50'], ['flex', '35'], ['abd', '40'], ['run', '11:20']]) await p.fill('#t-' + id, v);
-  await p.locator('summary', { hasText: 'Notas' }).click(); await p.fill('#f-note', 'la apnea me costó');
+  for (const [id, v] of [['flex', '30'], ['abd', '40'], ['barras', '4'], ['sent', '50'], ['run', '16:40'], ['swim', '1:50']]) await p.fill('#t-' + id, v);
+  await p.locator('summary', { hasText: 'Notas' }).click(); await p.fill('#f-note', 'la carrera me costó');
   await p.click('[data-tab="progreso"]');
   const t = await text(p);
   ok(t.includes('Constancia') && (await p.locator('.hc').count()) >= 371, 'mapa con todos los días (' + (await p.locator('.hc').count()) + ')');
   ok((await p.locator('svg.chart').count()) >= 4, 'gráficos de evolución');
-  ok(t.includes('Récords') && t.includes('11:20'), 'récords con el 2.400');
-  ok(t.includes('la apnea me costó'), 'el diario muestra las notas');
+  ok(t.includes('Récords') && t.includes('16:40'), 'récords con los 3.200 m');
+  ok(t.includes('la carrera me costó'), 'el diario muestra las notas');
   await p.locator('.hc.missed').first().click();
   ok((await text(p)).includes('SEM 0'), 'tocar un día del mapa lo abre');
   ok(errs.length === 0, 'sin errores: ' + errs.join(' | '));
@@ -538,10 +536,10 @@ const reload = async p => { await p.reload(); await p.waitForTimeout(200); };
 { console.log('24. Lago y ajustes');
   const ctx = await browser.newContext({ viewport: { width: 390, height: 1200 } }); const errs = [];
   const open = async (time) => { const p = await ctx.newPage(); p.on('pageerror', e => errs.push(e.message)); await p.clock.install({ time: new Date(time) }); await p.goto(URL); await p.waitForTimeout(250); return p; };
-  let p = await open('2026-10-13T09:00:00');
+  let p = await open('2026-10-15T09:00:00');
   ok((await text(p)).includes('máximo 5 min'), 'en octubre sin neopreno el lago es de 5 min');
   await p.locator('[data-st="done"]').scrollIntoViewIfNeeded(); await p.click('[data-st="done"]'); await p.close();
-  p = await open('2026-10-14T09:00:00');
+  p = await open('2026-10-16T09:00:00');
   await p.click('[data-tab="plan"]'); await p.click('[data-cset="place|piscina"]'); await p.click('[data-tab="hoy"]');
   await p.waitForTimeout(400); await p.click('[data-go="-1"]');
   ok((await text(p)).includes('CUMPLIDO') && (await text(p)).includes('· lago'), 'pasarse a piscina no cambia el día que ya hiciste en el lago');
@@ -552,7 +550,7 @@ const reload = async p => { await p.reload(); await p.waitForTimeout(200); };
   p = await open('2027-03-09T09:00:00');
   ok((await p.evaluate(() => JSON.parse(localStorage.getItem('bitacora-buzo-v1')).cfg.tempK)) === '2027-03-02', 'la temperatura queda con su fecha');
   await p.close();
-  p = await open('2027-07-13T09:00:00');
+  p = await open('2027-07-15T09:00:00');
   ok((await text(p)).includes('Hoy no entras al lago'), 'en julio la temperatura de marzo ya no vale: no se entra');
   await p.close();
   ok(errs.length === 0, 'sin errores: ' + errs.join(' | '));
@@ -561,7 +559,7 @@ const reload = async p => { await p.reload(); await p.waitForTimeout(200); };
 // 25. Plan B: viento en el lago y día enfermo
 { console.log('25. Plan B: viento y enfermo');
   const ctx = await browser.newContext({ viewport: { width: 390, height: 1200 } }); const errs = [];
-  const p = await ctx.newPage(); p.on('pageerror', e => errs.push(e.message)); await p.clock.install({ time: new Date('2026-10-13T08:00:00') }); await p.goto(URL); await p.waitForTimeout(250);
+  const p = await ctx.newPage(); p.on('pageerror', e => errs.push(e.message)); await p.clock.install({ time: new Date('2026-10-15T08:00:00') }); await p.goto(URL); await p.waitForTimeout(250);
   ok((await text(p)).includes('Ida en bicicleta'), 'día de lago: ida en bici');
   await p.click('[data-nolake]'); await p.waitForTimeout(300);
   let t = await text(p);
@@ -571,7 +569,7 @@ const reload = async p => { await p.reload(); await p.waitForTimeout(200); };
   await p.click('[data-mode="enfermo"]'); await p.waitForTimeout(300);
   t = await text(p);
   ok(t.includes('Regla del cuello') && !t.includes('Ida en bicicleta'), 'enfermo: solo la regla del cuello, sin lago');
-  ok((await p.evaluate(() => JSON.parse(localStorage.getItem('bitacora-buzo-v1')).days['2026-10-13'].mode)) === 'enfermo', 'enfermo queda guardado');
+  ok((await p.evaluate(() => JSON.parse(localStorage.getItem('bitacora-buzo-v1')).days['2026-10-15'].mode)) === 'enfermo', 'enfermo queda guardado');
   ok(errs.length === 0, 'sin errores: ' + errs.join(' | '));
   await ctx.close(); }
 
