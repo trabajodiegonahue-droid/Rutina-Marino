@@ -1,7 +1,7 @@
 {
   "name": "rutina-marino",
   "private": true,
-  "description": "Bitácora diaria para la preparación de Buzos Tácticos (52 semanas).",
+  "description": "Plan diario de atleta híbrido: fuerza, fútbol, resistencia e inglés (52 semanas).",
   "scripts": {
     "test": "node tools/orden-del-dia.mjs 2026-10-14 > /dev/null && node tests/plan.test.mjs && node tests/app.test.mjs"
   },

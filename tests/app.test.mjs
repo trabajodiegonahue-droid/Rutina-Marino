@@ -643,6 +643,42 @@ const reload = async p => { await p.reload(); await p.waitForTimeout(200); };
   ok(errs.length === 0, 'sin errores: ' + errs.join(' | '));
   await ctx.close(); }
 
+// 29. Registro: comidas, sueño, partido, inglés, ahorro, repeticiones y resumen
+{ const { p, ctx, errs } = await page('2026-10-20T08:00:00');
+  const hoy0 = await text(p);
+  ok(await p.locator('[data-tab="registro"]').count() === 1, 'hay pestaña Registro');
+  // repeticiones por serie en el día de pecho
+  const rp = p.locator('[data-rp^="Flexiones con mochila|"]');
+  ok(await rp.count() >= 2, 'casillas de repeticiones en la fuerza: ' + await rp.count());
+  await rp.nth(0).fill('12'); await rp.nth(1).fill('10'); await p.waitForTimeout(200);
+  await reload(p);
+  ok(await p.locator('[data-rp="Flexiones con mochila|0"]').inputValue() === '12', 'las repeticiones quedan guardadas');
+  // registro del día
+  await p.click('[data-tab="registro"]'); await p.waitForTimeout(150);
+  ok((await text(p)).includes('Comidas'), 'Registro muestra comidas');
+  await p.click('[data-meal="col"]'); await p.waitForTimeout(100);
+  ok(await p.locator('[data-meal="col"]').getAttribute('aria-pressed') === 'true', 'marcar una comida');
+  await p.fill('#sl-bed', '01:30'); await p.fill('#sl-wake', '07:30'); await p.waitForTimeout(100);
+  ok((await p.$eval('#sl-out', e => e.textContent)).includes('6 h'), 'calcula horas de sueño: ' + await p.$eval('#sl-out', e => e.textContent));
+  await p.fill('#ah-v', '150'); await p.click('[data-ahadd="1"]'); await p.waitForTimeout(100);
+  ok((await text(p)).includes('150 de 5.000 AUD'), 'ahorro sumado');
+  await p.fill('#eng-s', '52'); await p.click('[data-engadd]'); await p.waitForTimeout(100);
+  ok((await text(p)).includes('B2'), 'puntaje EF SET da nivel B2');
+  await p.locator('details[data-keep="reg:match"] summary').click(); await p.fill('#mt-min', '70'); await p.fill('#mt-goles', '2'); await p.click('[data-sens="4"]'); await p.waitForTimeout(100);
+  ok((await text(p)).includes('1 jugados · 2 goles'), 'partido registrado');
+  // en Hoy: poco sueño sugiere Cansado; la comida es la misma marca
+  await p.click('[data-tab="hoy"]'); await p.waitForTimeout(150);
+  ok((await text(p)).includes('marca «Cansado»'), 'menos de 7 h sugiere Cansado');
+  await reload(p); await p.click('[data-tab="progreso"]'); await p.waitForTimeout(150);
+  const pr = await text(p);
+  ok(pr.includes('Resumen') && pr.includes('Partidos'), 'Progreso tiene el resumen');
+  // la semana siguiente muestra lo de la anterior
+  const q = await ctx.newPage(); await q.clock.install({ time: new Date('2026-10-27T08:00:00') }); await q.goto(URL); await q.waitForTimeout(200);
+  const ph = await q.locator('[data-rp="Flexiones con mochila|0"]').getAttribute('placeholder').catch(() => null);
+  ok(ph === '12', 'la semana siguiente muestra las repeticiones anteriores: ' + ph);
+  ok(errs.length === 0, 'sin errores: ' + errs.join(' | '));
+  await ctx.close(); }
+
 await browser.close();
 console.log(`\n${passes} correctas, ${fails} fallidas`);
 process.exit(fails ? 1 : 0);
