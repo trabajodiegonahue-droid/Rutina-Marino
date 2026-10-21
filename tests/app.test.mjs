@@ -60,7 +60,7 @@ const reload = async p => { await p.reload(); await p.waitForTimeout(200); };
 // 3. Turno: cambian las horas y queda guardado
 { console.log('3. Turno de trabajo');
   const { p, ctx } = await page('2026-10-13T09:00:00');
-  ok((await text(p)).includes('Despiertas 7:30'), 'turno 13 por defecto');
+  ok((await text(p)).includes('Despiertas 8:30'), 'turno de las 14:00 por defecto');
   await p.click('[data-turno="16"]');
   ok((await text(p)).includes('Despiertas 9:15'), 'turno 16 cambia la hora');
   await reload(p);
@@ -146,7 +146,7 @@ const reload = async p => { await p.reload(); await p.waitForTimeout(200); };
 { console.log('8. Medianoche');
   const { p, ctx } = await page('2026-10-13T23:50:00');
   ok((await text(p)).includes('13 oct'), 'muestra el 13');
-  await p.clock.runFor(15 * 60 * 1000);
+  await p.clock.runFor((4 * 60 + 20) * 60 * 1000); // con el turno de las 14:00 te acuestas a las 0:30: el día cambia a las 4:00
   await p.evaluate(() => document.dispatchEvent(new Event('visibilitychange')));
   await p.waitForTimeout(50);
   ok((await text(p)).includes('14 oct'), 'al pasar la medianoche cambia solo al 14');
@@ -290,7 +290,7 @@ const reload = async p => { await p.reload(); await p.waitForTimeout(200); };
 { console.log('18. Diseño útil');
   const { p, ctx } = await page('2026-10-14T10:00:00');
   const nl = await p.$eval('#now-line', e => e.textContent);
-  ok(nl.includes('Sales al trabajo en 2 h 30 min'), 'cuenta regresiva (' + nl + ')');
+  ok(nl.includes('Sales al trabajo en 3 h 30 min'), 'cuenta regresiva (' + nl + ')');
   await p.click('[data-rstart]'); await p.locator('.btn', { hasText: 'Iniciar' }).first().click().catch(() => {});
   ok(await p.evaluate(() => document.body.classList.contains('guided')), 'paso a paso activa el temporizador gigante');
   await p.click('[data-rexit]'); await p.click('[data-tab="plan"]'); await p.click('[data-cset="bigText|true"]');
@@ -460,7 +460,7 @@ const reload = async p => { await p.reload(); await p.waitForTimeout(200); };
   // la línea de “ahora” dice la verdad en el trabajo y de madrugada después del turno 16
   p = await open('2026-10-06T18:30:00');
   let nl = await p.$eval('#now-line', e => e.textContent);
-  ok(nl.includes('En el trabajo hasta las 22:30') && !nl.includes('Almuerzo'), 'en el trabajo no manda a almorzar (' + nl + ')'); await p.close();
+  ok(nl.includes('En el trabajo hasta las 23:30') && !nl.includes('Almuerzo'), 'en el trabajo no manda a almorzar (' + nl + ')'); await p.close();
   p = await open('2026-10-08T00:45:00');
   nl = await p.$eval('#now-line', e => e.textContent);
   ok(nl.includes('a la cama a la 1:15'), 'al volver del turno 16 manda a dormir (' + nl + ')'); await p.close();

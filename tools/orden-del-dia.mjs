@@ -10,5 +10,5 @@ const dateArg = args.find((a, i) => /^\d{4}-\d{2}-\d{2}$/.test(a) && args[i - 1]
 const A = loadApp(datos);
 const date = dateArg ? A.parse(dateArg) : A.today();
 const o = ordenDelDia(A, date, { turno: opt('turno', A.Store.cfg.turno || '13'), start: datos ? undefined : opt('inicio', '2026-10-21'), place: opt('lugar') });
-const head = o.L ? `ORDEN DEL DÍA · Semana ${o.L.w} · Día ${o.L.dow + 1} · ${A.dayName(date)} ${A.fmt(date)}\n${o.st.n} · ${o.st.name}${o.L.w === A.HELL ? ' · SEMANA DEL INFIERNO' : ''} · ${o.title}` : `ORDEN DEL DÍA · ${A.dayName(date)} ${A.fmt(date)}`;
+const head = o.L ? `PLAN DE HOY · Semana ${o.L.w} · Día ${o.L.dow + 1} · ${A.dayName(date)} ${A.fmt(date)}\n${o.st.n} · ${o.st.name}${o.L.w === A.HELL ? ' · SEMANA DEL INFIERNO' : ''} · ${o.title}` : `PLAN DE HOY · ${A.dayName(date)} ${A.fmt(date)}`;
 console.log(head + '\n' + o.lines.join('\n'));

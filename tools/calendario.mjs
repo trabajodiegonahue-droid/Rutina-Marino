@@ -11,7 +11,7 @@ const LINK = 'https://claude.ai/artifact/Y7MgtsGPPBnXAaGzJpKC7H';
 const utc = d => d.toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, '');
 const esc = s => s.replace(/\\/g, '\\\\').replace(/;/g, '\;').replace(/,/g, '\\,').replace(/\n/g, '\\n');
 const fold = line => { const out = []; let s = line; while (Buffer.byteLength(s) > 74) { let n = 74; while (Buffer.byteLength(s.slice(0, n)) > 74) n--; out.push(s.slice(0, n)); s = ' ' + s.slice(n); } out.push(s); return out.join('\r\n'); };
-const L = ['BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//Bitacora Buzo Tactico//ES', 'CALSCALE:GREGORIAN', 'METHOD:PUBLISH', 'X-WR-CALNAME:Bitácora Buzo Táctico', 'X-WR-TIMEZONE:America/Santiago'];
+const L = ['BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//Atleta Hibrido//ES', 'CALSCALE:GREGORIAN', 'METHOD:PUBLISH', 'X-WR-CALNAME:Atleta Híbrido', 'X-WR-TIMEZONE:America/Santiago'];
 for (let i = 0; i < days; i++) {
   const d = new Date(from); d.setDate(d.getDate() + i);
   const o = ordenDelDia(A, d, { turno, start: opt('inicio', '2026-10-21') });

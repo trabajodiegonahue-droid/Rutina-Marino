@@ -1,17 +1,17 @@
 <!doctype html>
 <html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"></head><body>
-<title>Bitácora del Atleta</title>
+<title>Atleta Híbrido</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Saira+Stencil+One&family=Barlow:wght@400;500;600;700&family=Barlow+Condensed:wght@500;600;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@400;500;600;700&family=Barlow+Condensed:wght@500;600;700&family=JetBrains+Mono:wght@400;600&display=swap">
 <style>
 /* Layout: una columna para el celular. Arriba el día, después la orden, cómo amaneciste y las sesiones plegables; navegación fija abajo. */
 :root{
-  /* Mundo único: puente de mando de noche. Azul marino profundo, latón de insignia y rojo de señal. */
-  --bg:#06111D; --paper:#0C1D31; --paper2:#10263F; --ink:#E7EEF5; --muted:#8DA3BA; --line:#1D3954;
-  --accent:#D6AA4C; --accent-ink:#1A1204; --ok:#45B377; --warn:#E5A33C; --bad:#E2553E; --chip:#132B47;
-  --grid:rgba(141,163,186,.06);
-  --f-display:"Saira Stencil One","Impact","Arial Narrow",sans-serif;
+  /* Mundo único: gimnasio de noche y cancha con focos. Grafito, verde lima de energía y rojo de esfuerzo. */
+  --bg:#0D0F12; --paper:#16191E; --paper2:#1C2027; --ink:#F1F3F5; --muted:#9BA3AE; --line:#2A2F38;
+  --accent:#C6F135; --accent-ink:#141A04; --ok:#3DDC84; --warn:#FFB020; --bad:#FF5A4E; --chip:#222730;
+  --grid:rgba(155,163,174,.05);
+  --f-display:"Bebas Neue","Impact","Arial Narrow",sans-serif;
   --f-body:"Barlow",system-ui,-apple-system,"Segoe UI",sans-serif;
   --f-label:"Barlow Condensed","Arial Narrow",system-ui,sans-serif;
   --f-mono:"JetBrains Mono",ui-monospace,"SFMono-Regular",Menlo,monospace;
@@ -20,7 +20,7 @@
 *{box-sizing:border-box}
 [hidden]{display:none!important}
 html,body{background:var(--bg);color:var(--ink)}
-body{background-color:var(--bg);background-image:radial-gradient(120% 60% at 50% -10%,rgba(214,170,76,.10),transparent 60%),linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);background-size:auto,36px 36px,36px 36px;background-attachment:fixed}
+body{background-color:var(--bg);background-image:radial-gradient(120% 60% at 50% -10%,rgba(198,241,53,.08),transparent 60%),linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);background-size:auto,36px 36px,36px 36px;background-attachment:fixed}
 body{font-family:var(--f-body);font-size:16px;line-height:1.45;padding:0 16px calc(150px + env(safe-area-inset-bottom,0px))}
 .wrap{max-width:640px;margin:0 auto;padding-block:14px 24px;display:flex;flex-direction:column;gap:14px}
 h1,h2,h3{margin:0;text-wrap:balance}
@@ -38,8 +38,9 @@ button:focus-visible,input:focus-visible,textarea:focus-visible,summary:focus-vi
 .hq .streak{flex:none}
 .hq .t{font-family:var(--f-label);font-weight:700;letter-spacing:.1em;font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--accent);text-transform:uppercase}
 .hq .rk{display:flex;align-items:center;gap:8px;font-family:var(--f-label);font-weight:700;text-transform:uppercase;letter-spacing:.06em;font-size:16px}
-.hq .rk .chev{display:inline-flex;flex-direction:column;gap:2px}
-.hq .rk .chev i{display:block;width:16px;height:5px;background:var(--accent);clip-path:polygon(0 100%,50% 0,100% 100%,82% 100%,50% 36%,18% 100%)}
+.hq .rk .chev{display:inline-flex;align-items:flex-end;gap:2px;height:16px}
+.hq .rk .chev i{display:block;width:4px;background:var(--accent);border-radius:1px}
+.hq .rk .chev i:nth-child(1){height:6px}.hq .rk .chev i:nth-child(2){height:9px}.hq .rk .chev i:nth-child(3){height:12px}.hq .rk .chev i:nth-child(4){height:14px}.hq .rk .chev i:nth-child(5){height:16px}
 .hq .streak{margin-left:auto;text-align:right;font-family:var(--f-label);text-transform:uppercase;letter-spacing:.06em;font-size:12px;color:var(--muted)}
 .hq .streak b{display:block;font-family:var(--f-display);font-size:26px;color:var(--ink);line-height:1;font-weight:400}
 /* cabecera del día */
@@ -240,7 +241,7 @@ nav.tabs svg{width:22px;height:22px}
 @media (prefers-reduced-motion:no-preference){.order{animation:in .3s ease-out both}@keyframes in{from{transform:translateY(4px);opacity:.6}to{transform:none;opacity:1}}}
 </style>
 
-<div class="wrap" id="app"><div class="order"><p class="say">Cargando la orden del día…</p></div></div>
+<div class="wrap" id="app"><div class="order"><p class="say">Cargando el plan de hoy…</p></div></div>
 <div id="timerbar" class="timerbar" hidden role="timer" aria-live="polite"></div>
 <div id="toast" class="toast" hidden role="status"></div>
 <input type="file" id="restore-file" accept=".json,.txt,application/json,text/plain" hidden>
@@ -648,7 +649,7 @@ function tolT(w){
 }
 /* ---- turnos de trabajo: todo antes de entrar ---- */
 const SHIFT={
-  "13":{lbl:"Entro 13:00",wake:"7:30",A:"8:00",B:"10:15",C:"11:30",lunch:"12:00",leave:"12:30",bed:"23:30",back:"22:30"},
+  "13":{lbl:"Entro 14:00",wake:"8:30",A:"9:00",B:"11:15",C:"12:30",lunch:"13:00",leave:"13:30",bed:"0:30",back:"23:30"},
   "16":{lbl:"Entro 16:00",wake:"9:15",A:"9:45",B:"12:15",C:"13:45",lunch:"14:15",leave:"15:15",bed:"1:15",back:"0:30"},
   "libre":{lbl:"Libre",wake:"7:00",A:"7:30",B:"10:00",C:"11:15",lunch:"12:30",leave:"",bed:"22:30",back:""}
 };
@@ -761,7 +762,7 @@ function applyShift(plan,turno,kg,o){
     if(t.id==="noche")x=Object.assign(x,{why:sh.back?`Llegas ${sh.back}. Despiertas ${sh.wake}.`:`Despiertas ${sh.wake}.`,blocks:[sh.back?B("Comida al llegar","liviana con proteína",{c:N.night}):B("Cena","liviana con proteína",{c:N.night.replace("Al llegar del trabajo come","En la cena come")})].concat(t.blocks.map(b=>b.n==="A la cama"?Object.assign({},b,{p:`${sh.bed} · alarma ${alarm}`,c:`Apaga la luz a las ${sh.bed} y deja la alarma a las ${alarm}: son ${slpT}.${o.next&&o.next!==turno?` Mañana ${o.next==="libre"?"estás libre":"entras a las "+o.next+":00"}.`:""} El celular lejos de la cama, pieza oscura y fresca. Si no te duermes en 20 minutos, respira en caja (4-4-4-4) sin mirar la pantalla.`}):b))});
     return x});
   tasks.push(T("despertar","Despertar",sh.late?`Ayer te acostaste a la ${sh.late}: hoy despiertas ${sh.wake} para dormir 8 h. La mañana es más corta: haz primero lo principal.`:`Alarma a las ${sh.wake}, sin posponer.`,sh.wake,[
-    B("Levántate",sh.wake,{c:`Levántate a las ${sh.wake} apenas suene la alarma. Sin posponer: es la primera orden del día. ${plan.dow===0?"Hoy es el primer día de la semana: pésate en ayunas, después de ir al baño y antes de tomar agua, y anótalo en Notas y peso.":""}`}),
+    B("Levántate",sh.wake,{c:`Levántate a las ${sh.wake} apenas suene la alarma. Sin posponer: es lo primero del día. ${plan.dow===0?"Hoy es el primer día de la semana: pésate en ayunas, después de ir al baño y antes de tomar agua, y anótalo en Notas y peso.":""}`}),
     B("Agua","500 ml",{c:"Toma un vaso grande de agua (500 ml) antes de cualquier otra cosa: llevas 8 horas sin tomar."}),
     B("Agua del día",N.water.match(/[\d,.]+ litros/)[0],{c:N.water}),
     longInc?B("Desayuno","antes de salir",{c:N.breakfast+"\nHoy la sesión es larga: lleva agua y una colación (plátano, pan con mantequilla de maní) para la mitad."}):B(rest?"Desayuno":"Algo liviano",rest?"tranquilo":"antes de entrenar",{c:rest?N.restBreak:N.pre})],{kind:"rutina"}));
@@ -791,7 +792,7 @@ function dayPlan(w,dow,ctx){
      ["Arranque","tierra",[runT("run","Trote suave 20 min","Primer día: soltar las piernas y ver cómo estás.","07:00",runBlocks("20 min suave",1)),
        T("tec","Aprende los ejercicios de torso","Hoy aprendes la técnica. Sin llegar al fallo: el lunes es la prueba inicial.","08:00",[CAL,B("Flexiones","2 × 10",{s:2,r:90}),B("Remo a una mano con mancuerna","2 × 10 por lado",{s:4,r:45}),B("Press militar con mancuernas","2 × 10",{s:2,r:60}),B("Barras","2 × 3",{s:2,r:120}),B("Rueda abdominal","2 × 5 de rodillas",{s:2,r:60})],{kind:"fuerza"}),
        T("med","Pedir hora al médico","Chequeo antes de cargar fuerte.","09:00",[B("Pedir","examen general",{note:"Electrocardiograma, presión, vista y control dental. Cuenta cualquier lesión antigua."})],{kind:"admin"}),
-       T("porque","Escribir tu “por qué”","Escríbelo también en Plan → Ajustes: el comandante te lo recuerda en los días duros.","20:00",[B("Una hoja","por qué quieres cambiar tu físico"),B("2–3 frases","para cuando cueste",{note:"Cambia “no puedo más” por “esto es lo que vine a entrenar”."})],{kind:"admin"})]],
+       T("porque","Escribir tu “por qué”","Escríbelo también en Plan → Ajustes: la app te lo recuerda en los días duros.","20:00",[B("Una hoja","por qué quieres cambiar tu físico"),B("2–3 frases","para cuando cueste",{note:"Cambia “no puedo más” por “esto es lo que vine a entrenar”."})],{kind:"admin"})]],
      ["Técnica de piernas","tierra",[T("tec2","Aprende los ejercicios de piernas","Técnica primero: el peso viene después.","07:00",[B("Calentamiento de carrera","10 min"),B("Sentadilla búlgara","2 × 8 por pierna",{s:4,r:60}),B("Peso muerto rumano","2 × 10",{s:2,r:90}),B("Nórdico","2 × 3",{s:2,r:120}),B("Copenhague","2 × 15 s por lado",{s:4,r:30,tm:15}),B("Sentadilla goblet","2 × 12",{s:2,r:90})],{kind:"fuerza"}),
        T("equipo","Ordenar tu equipo","Lo que tienes alcanza para empezar.","10:00",[B("Mochila y peso","libros o botellas de agua"),B("Mancuernas, bandas, colchoneta y rueda","en un rincón listo"),B("Barra para dominadas","en la plaza"),B("Gafas y gorra de natación","para el lunes",{opt:1})],{kind:"admin"})]],
      ["Motor aeróbico","tierra",[runT("run","Trote nasal 20 min","Solo por la nariz: aprende el ritmo del motor aeróbico.","07:00",z2Blocks(0)),
@@ -1021,7 +1022,7 @@ const Store={mode:"local",cfg:defCfg(),days:{},pend:{},ver:{},recent:{},remote:{
   saveState(){
     const n=Object.keys(this.pend).length;
     if(this.mode!=="db"){if(this.localErr)return {cls:"err",txt:"No se guarda",long:"Este navegador no deja guardar: descarga una copia en Ajustes › Respaldo"};
-      if(this.noCloud)return {cls:"err",txt:"Sin nube",long:"La nube no cargó: todo queda en este teléfono y se sube la próxima vez que abras la bitácora con señal"};
+      if(this.noCloud)return {cls:"err",txt:"Sin nube",long:"La nube no cargó: todo queda en este teléfono y se sube la próxima vez que abras la app con señal"};
       return {cls:"local",txt:"En este teléfono",long:"Guardado en este teléfono"}}
     if(this.hardErr)return {cls:"err",txt:"No se sube",long:"La nube no acepta los cambios ("+this.hardErr+"). Siguen en este teléfono: descarga una copia en Ajustes › Respaldo"};
     if(!this.got.plan||!this.got.days)return {cls:"busy",txt:"Conectando…",long:"Cargando tu cuenta. Lo que marques ahora se junta con lo que ya tienes guardado."};
@@ -1109,14 +1110,14 @@ function dayStatus(k,plan){if(!plan)return "";const d=Store.days[k],core=plan.ta
 function missingTasks(dd,plan){return plan.tasks.filter(t=>counts(t)&&!taskDone(dd,t)).map(t=>{const left=t.blocks.filter((b,i)=>!b.opt&&blockDone(dd,t,i)<b.s).map(b=>b.n);return left.length<t.blocks.length&&left.length<=2?`${left.join(" y ")} (${t.t})`:t.t})}
 const okSt=s=>s==="done"||s==="injury";
 // “hoy” para la bitácora: si ayer saliste del trabajo después de medianoche (turno 16), hasta las 4:00 sigue siendo ayer
-function today(){const n=new Date();if(n.getHours()<4){const y=addDays(n,-1),ys=SHIFT[turnoOf(y)];if(ys&&ys.back&&toMin(ys.back)<300)return y}return n}
+function today(){const n=new Date();if(n.getHours()<4){const y=addDays(n,-1),ys=SHIFT[turnoOf(y)];if(ys&&ys.back&&toMin(ys.bed)<300)return y}return n}
 function streak(){let d=today(),n=0;const s0=dayStatus(iso(d),planFor(d));if(s0==="fail")return 0;if(!okSt(s0))d=addDays(d,-1);
   for(let i=0;i<800;i++){if(locate(d).before)break;if(okSt(dayStatus(iso(d),planFor(d)))){n++;d=addDays(d,-1)}else break}return n}
 function compliance(){const td=today();let tot=0,ok=0;for(let d=parse(Store.cfg.start);diffDays(d,td)<0;d=addDays(d,1)){const p=planFor(d);if(!p)break;tot++;if(okSt(dayStatus(iso(d),p)))ok++}return tot?Math.round(ok/tot*100):null}
 
 /* =================== VOZ DEL COMANDANTE =================== */
 function orders(plan,k,isToday,dd){
-  const N=Store.cfg.name||"recluta",out=[];
+  const N=Store.cfg.name||"crack",out=[];
   if(isToday){const fr=fatigueRun(today());if(fr>=3)out.push(["alert",`Llevas ${fr} días seguidos cansado o con dolor. Hoy versión suave o descanso: solo técnica o movilidad. Si es dolor y no mejora, al médico.`])}
   if(isToday){const yd=addDays(today(),-1),yp=planFor(yd);if(yp&&!okSt(dayStatus(iso(yd),yp))&&!skipData().list.includes(iso(yd))){const ys=dayStatus(iso(yd),yp),yx=Store.days[iso(yd)]||{};if(ys==="fail")out.push(["alert","Ayer fallaste. Un día no te saca del camino; dos seguidos empiezan a hacerlo. Hoy retomas."]);
       else if(!yx.status){const ms=missingTasks(yx,yp);out.push(["alert",units(yx,yp).a?`Ayer quedó a medias${ms.length?" (faltó: "+ms.slice(0,3).join(", ")+")":""}. Si lo hiciste, márcalo con ◀; si no, ciérralo ahí con «Cerrar el día así».`:"Ayer no registraste nada. Si entrenaste, márcalo con ◀; si no, toca «No pude ese día» ahí."])}}}
@@ -1229,7 +1230,7 @@ function cmdFor(st,plan){
   if(n==="Ida en bicicleta"){const h0=t.h?toMin(t.h):null,at=x=>fromMin(h0+x);
     return `${h0!==null?`Sal de la casa a las ${t.h} en bicicleta`:"Sal en bicicleta"}: ${b.trip} minutos pedaleando suave hasta la costanera (unos ${tripKm(b.trip)} km). Es tu calentamiento: llegas con el cuerpo tibio, justo lo que necesitas antes del agua fría.
 En la calle: casco, luz blanca adelante y roja atrás encendidas también de día, y ropa de color fuerte (cortaviento amarillo o naranjo, o chaleco reflectante). Por la ciclovía cuando haya; en la calle con autos, pegado a la derecha, y antes de doblar estira el brazo hacia ese lado. En los cruces, aunque tengas preferencia, mira a los autos.
-En la mochila: toalla grande, polerón, pantalón de buzo, gorro de lana, cortaviento, calcetines secos, un termo con té o leche caliente y el celular en una bolsa plástica. El traje de baño, puesto debajo de la ropa.
+En la mochila: toalla grande, polerón, pantalón largo de deporte, gorro de lana, cortaviento, calcetines secos, un termo con té o leche caliente y el celular en una bolsa plástica. El traje de baño, puesto debajo de la ropa.
 Al llegar: amarra la bici a la vista, deja la mochila arriba de ella (no en el suelo mojado) y entra dentro de 5 minutos: si esperas parado, se te va el calor del pedaleo.${h0!==null?`
 Horario: llegas ${at(b.trip)}, entras ${at(b.trip+5)}, sales del agua a más tardar ${at(b.trip+5+b.cap)}, partes de vuelta ${at(b.trip+15+b.cap)} y estás en la casa ${at(tripTotal(b))}.`:""}`}
   if(n==="Vuelta en bicicleta"&&b.mini)return `Hoy la vuelta es parte de la mini-prueba: la bici es tu cambio entre el nado y lo demás. Antes de subirte: seco, abrigado y medio termo. Prueba los frenos apretando fuerte 3 veces: si las manos no responden, camina con la bici 5 minutos y vuelve a probar. Pedalea a ritmo normal ${b.trip} minutos, sin apurarte en los cruces: luces encendidas, frena antes y para a mirar donde hay autos. Al llegar no te sientes: te sacas la ropa de abrigo y vas directo a la barra donde haces tus barras de siempre.`;
@@ -1296,7 +1297,7 @@ Horario: llegas ${at(b.trip)}, entras ${at(b.trip+5)}, sales del agua a más tar
   if(n==="Al terminar")return "Anota en Notas en qué momento quisiste parar. Con las semanas, ese momento va a llegar más tarde.";
   const ONE={
     "Una hoja":"Esta noche, en una hoja de tu cuaderno y a mano, escribe por qué quieres ser militar. Mínimo 10 líneas, respondiendo: 1) ¿qué te hizo querer esto?, 2) ¿quién quieres ser en 2 años?, 3) ¿qué pierdes si abandonas? Sácale una foto y guárdala en el celular.",
-    "2–3 frases":"Debajo, escribe 2 o 3 frases cortas para leerte cuando quieras parar. Por ejemplo: «Esto es lo que vine a entrenar», «Una serie más y después decido», «El frío pasa en un minuto». Cópialas en Plan → Ajustes, donde dice tu por qué: el comandante te las recuerda en los días duros.",
+    "2–3 frases":"Debajo, escribe 2 o 3 frases cortas para leerte cuando quieras parar. Por ejemplo: «Esto es lo que vine a entrenar», «Una serie más y después decido», «El frío pasa en un minuto». Cópialas en Plan → Ajustes, donde dice tu por qué: la app te las recuerda en los días duros.",
     "Preguntar":"Busca en internet «Servicio Militar DGMN» (Dirección General de Movilización Nacional) y «admisión Escuela Militar» (y si te interesa, «Escuela de Suboficiales del Ejército»). Anota en tu cuaderno: 1) cómo se postula al Servicio Militar voluntario y dónde está el cantón de reclutamiento más cercano (Puerto Varas o Puerto Montt); 2) requisitos de la Escuela Militar: edad, estudios, salud, y las pruebas físicas y su mínimo (incluye nadar 50 m); 3) fechas de postulación de este año. Lo que no encuentres, escríbelo como pregunta para hacerla por teléfono o en persona.",
     "Lista":"Esta noche deja todo listo junto a la puerta: celular cargado (es tu cronómetro), ropa de entrenamiento, zapatillas de correr, botella de agua de 1 L y 1 plátano para después. Si vas a nadar: traje de baño, gafas, gorra y toalla. En un papel, los ejercicios en orden con tu marca anterior al lado.",
     "Lugar":"Hoy confirma dónde la haces: flexiones, abdominales, barras y sentadillas en tu barra de siempre; los 3.200 m en una pista (8 vueltas) o en un tramo plano medido con adidas Running, cerca de la barra. El nado de 50 m, en piscina si tienes.",
@@ -1343,8 +1344,8 @@ function viewRun(){
   const d=S.date,k=iso(d),plan=planFor(d),dd=Store.days[k]||{},ss=steps(plan),N=ss.length;
   let i=Math.max(0,Math.min(S.run.i,N));
   if(i>=N&&firstPending(plan,dd)<N){const fp=firstPending(plan,dd),left=ss.filter(x=>!stepDone(dd,x)).length;
-    return `<div class="run"><div class="rhead"><span class="lbl">Orden del día</span><button class="nb" data-rexit>Salir</button></div><div class="rbody"><p class="rbig">Te ${left===1?"queda 1 paso":"quedan "+left+" pasos"} sin marcar</p><p class="rwhat">Llegaste al final, pero no está todo hecho. Vuelve al primero que falta o sal y márcalo en Hoy.</p><button class="btn main" data-rto="${fp}">Ir al paso ${fp+1}</button></div></div>`}
-  if(i>=N)return `<div class="run"><div class="rhead"><span class="lbl">Orden del día</span><button class="nb" data-rexit>Salir</button></div><div class="rbody"><p class="rbig" style="color:var(--ok)">Misión cumplida</p><p class="rwhat">Todo lo de hoy está hecho, ${esc(Store.cfg.name||"recluta")}. Come, recupera y mañana a la misma hora.</p><button class="btn main" data-rexit>Volver a Hoy</button></div></div>`;
+    return `<div class="run"><div class="rhead"><span class="lbl">Plan de hoy</span><button class="nb" data-rexit>Salir</button></div><div class="rbody"><p class="rbig">Te ${left===1?"queda 1 paso":"quedan "+left+" pasos"} sin marcar</p><p class="rwhat">Llegaste al final, pero no está todo hecho. Vuelve al primero que falta o sal y márcalo en Hoy.</p><button class="btn main" data-rto="${fp}">Ir al paso ${fp+1}</button></div></div>`}
+  if(i>=N)return `<div class="run"><div class="rhead"><span class="lbl">Plan de hoy</span><button class="nb" data-rexit>Salir</button></div><div class="rbody"><p class="rbig" style="color:var(--ok)">Día ganado</p><p class="rwhat">Todo lo de hoy está hecho, ${esc(Store.cfg.name||"crack")}. Come, recupera y mañana a la misma hora.</p><button class="btn main" data-rexit>Volver a Hoy</button></div></div>`;
   const st=ss[i],T2=stepTitle(st),nx=ss.slice(i+1).find(x=>!stepDone(dd,x)),firstOfTask=!ss[i-1]||ss[i-1].t.id!==st.t.id;
   const ord=ORD[st.ti]||((st.ti+1)+"º");
   const done=stepDone(dd,st);
@@ -1428,8 +1429,8 @@ function sesHTML(t,dd,open){
   return `<div class="ses ${all?"done":""}"><div class="sh"><button class="chk" data-task="${t.id}" aria-pressed="${all}" aria-label="Marcar ${esc(t.t)} completa"></button><button class="tog" data-open="${t.id}" aria-expanded="${open}"><span class="t">${esc(t.t)}</span>${meta?`<span class="m">${esc(meta)}</span>`:""}</button><button class="chev" data-open="${t.id}" aria-label="${open?"Cerrar":"Abrir"}">${open?"▴":"▾"}</button></div>
    ${open?`<div class="sb">${t.why?`<p class="why">${esc(t.why)}</p>`:""}${t.safe?`<p class="safe">${esc(t.safe)}</p>`:""}${t.blocks.map((b,i)=>exHTML(t,b,i,dd,all)).join("")}${(t.kind==="carrera"||t.goal)&&t.id!=="sprint"?runLogHTML(t,dd):""}</div>`:""}</div>`;
 }
-const EMBLEM=`<svg viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="24" r="22" fill="none" stroke="#D6AA4C" stroke-width="2"/><circle cx="24" cy="24" r="18.5" fill="none" stroke="#D6AA4C" stroke-width=".8" stroke-dasharray="2 2.4"/><path d="M24.0 10.0L26.2 15.9L32.6 16.2L27.6 20.2L29.3 26.3L24.0 22.8L18.7 26.3L20.4 20.2L15.4 16.2L21.8 15.9Z" fill="none" stroke="#E7EEF5" stroke-width="2" stroke-linejoin="round"/><g stroke="#D6AA4C" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M15 30l9 4 9-4"/><path d="M15 35l9 4 9-4"/></g></svg>`;
-const RANKS=[[0,"Recluta",1],[1,"Recluta en instrucción",1],[14,"Soldado",2],[27,"Soldado antiguo",3],[40,"Dragoneante",3],[48,"Infierno",4],[52,"Listo para el servicio",5]];
+const EMBLEM=`<svg viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="24" r="22" fill="none" stroke="#C6F135" stroke-width="2"/><circle cx="24" cy="24" r="18.5" fill="none" stroke="#C6F135" stroke-width=".8" stroke-dasharray="2 2.4" opacity=".6"/><path d="M25.3 9.4L12.3 26.8L22.4 26.8L19.5 38.4L35.5 19.5L25.3 19.5L28.2 9.4Z" fill="#C6F135" stroke="#F1F3F5" stroke-width="1.2" stroke-linejoin="round"/></svg>`;
+const RANKS=[[0,"Punto de partida",1],[1,"Novato",1],[14,"En construcción",2],[27,"Atleta",3],[40,"Bestia",4],[48,"Infierno",4],[52,"Monstruo",5]];
 function rankOf(w){let r=RANKS[0];RANKS.forEach(x=>{if(w!=null&&w>=x[0])r=x});return r}
 const MES3=["ENE","FEB","MAR","ABR","MAY","JUN","JUL","AGO","SEP","OCT","NOV","DIC"];
 function dtg(d){const n=new Date();return pad(d.getDate())+pad(n.getHours())+pad(n.getMinutes())+" "+MES3[d.getMonth()]+" "+String(d.getFullYear()).slice(2)}
@@ -1453,13 +1454,13 @@ function viewHoy(){
   // ayer no se cumplió: hoy se retoma el mismo día del plan
   if(isToday){const y=addDays(d,-1),yk=iso(y);if(skipData().list.includes(yk)){const yd=Store.days[yk]||{},why=yd.mode==="enfermo"?"estabas enfermo":yd.mode==="dolor"?"estabas con dolor":yd.status==="fail"?"marcaste que no pudiste":"quedó sin marcar";
     h+=`<div class="card"><span class="lbl">Hoy retomas el día de ayer</span><p style="margin:0">Ayer ${why}, así que hoy toca lo mismo: ${esc(plan.title)}. Ningún día se pierde: el plan entero se corre un día.</p>${why==="quedó sin marcar"?`<button class="btn sm" data-ydone>Sí lo hice ayer: marcarlo cumplido</button>`:""}</div>`}}
-  h+=`<div class="order"><div class="msg-h"><span>De: Comandante · Para: ${esc(Store.cfg.name||"Recluta")}</span><span>DTG ${dtg(d)}</span></div>${orders(plan,k,isToday,dd).map(([t,x])=>t==="alert"?`<p class="alert">${esc(x)}</p>`:t==="say"?`<p class="say">${esc(x)}</p>`:t==="why"?`<p class="why-q">Tu por qué: “${esc(x)}”</p>`:`<p>${esc(x)}</p>`).join("")}</div>`;
+  h+=`<div class="order"><div class="msg-h"><span>Tu preparador · Para: ${esc(Store.cfg.name||"crack")}</span><span>${esc(dayName(d).slice(0,3))} ${fmtS(d)}</span></div>${orders(plan,k,isToday,dd).map(([t,x])=>t==="alert"?`<p class="alert">${esc(x)}</p>`:t==="say"?`<p class="say">${esc(x)}</p>`:t==="why"?`<p class="why-q">Tu por qué: “${esc(x)}”</p>`:`<p>${esc(x)}</p>`).join("")}</div>`;
   {const cur=turnoOf(d),sh=plan.shift;
-   h+=`<div class="sec"><div class="row" style="justify-content:space-between;align-items:center"><span class="lbl">Hoy trabajo</span><div class="segs">${Object.keys(SHIFT).map(t=>`<button class="seg ${cur===t?"on":""}" data-turno="${t}">${t==="libre"?"Libre":"Entro "+t+":00"}</button>`).join("")}</div></div>
+   h+=`<div class="sec"><div class="row" style="justify-content:space-between;align-items:center"><span class="lbl">Hoy trabajo</span><div class="segs">${Object.keys(SHIFT).map(t=>`<button class="seg ${cur===t?"on":""}" data-turno="${t}">${SHIFT[t].lbl}</button>`).join("")}</div></div>
    <p class="foot">Despiertas ${sh.wake}${sh.late?` (ayer te acostaste a la ${sh.late}: 8 h de sueño)`:""} · entrenas desde ${sh.A}${sh.leave?` · sales al trabajo ${sh.leave}`:""} · cama ${sh.bed}</p></div>`}
   if(plan.kind!=="descanso"){
     const M=[["ok","Al 100%"],["cansado","Cansado"],["dolor","Con dolor"],["enfermo","Enfermo"]];
-    const txt={ok:"Ejecuta la orden completa.",cansado:"Versión suave: menos series, sin sesión larga. Si dura 3 días, toma 2 días suaves.",dolor:"Hoy solo recuperación. Cansancio general es normal; dolor agudo, localizado o que empeora, no.",enfermo:"Resfrío, fiebre o malestar: hoy no se entrena. Sigue la regla del cuello."}[dd.mode]||"Antes de empezar: ¿cómo amaneciste?";
+    const txt={ok:"Haz el plan completo.",cansado:"Versión suave: menos series, sin sesión larga. Si dura 3 días, toma 2 días suaves.",dolor:"Hoy solo recuperación. Cansancio general es normal; dolor agudo, localizado o que empeora, no.",enfermo:"Resfrío, fiebre o malestar: hoy no se entrena. Sigue la regla del cuello."}[dd.mode]||"Antes de empezar: ¿cómo amaneciste?";
     h+=`<div class="sec"><div class="mode">${M.map(([v,l])=>`<button class="m-${v} ${dd.mode===v?"on":""}" data-mode="${v}">${l}</button>`).join("")}</div><p class="modetxt">${esc(txt)}</p></div>`;
     if(dd.nolake||plan.tasks.some(t=>t.blocks.some(b=>b.n==="Ida en bicicleta")))h+=`<div class="sec"><button class="btn ${dd.nolake?"main":""}" data-nolake>${dd.nolake?"✓ Hoy no entro al lago (toca para deshacer)":"Hay viento, olas o tormenta: hoy no entro al lago"}</button><p class="foot">${dd.nolake?"La sesión de agua cambió a técnica en seco en la casa.":"Míralo por la ventana o en el pronóstico antes de salir. Si hay viento con olas, lluvia fuerte, truenos o neblina, tócalo: te doy el plan B."}</p></div>`;
   }
@@ -1467,7 +1468,7 @@ function viewHoy(){
   const pct=u.b?Math.round(u.a/u.b*100):0;
   h+=`<div class="prog"><div class="row"><span class="lbl">${esc(plan.title)} · ${u.a}/${u.b} series</span><span class="mono">${pct}%</span></div><div class="bar"><i style="width:${pct}%"></i></div></div>`;
   {const N=steps(plan).length,fp=firstPending(plan,dd);
-   if(fp<N)h+=`<button class="btn main start" data-rstart>${fp===0?"▶ Empezar la orden":"▶ Continuar · paso "+(fp+1)+" de "+N}</button><p class="foot" style="margin-top:-6px">Te digo qué hacer, en orden, un paso a la vez.</p>`}
+   if(fp<N)h+=`<button class="btn main start" data-rstart>${fp===0?"▶ Empezar el entrenamiento":"▶ Continuar · paso "+(fp+1)+" de "+N}</button><p class="foot" style="margin-top:-6px">Te digo qué hacer, en orden, un paso a la vez.</p>`}
   const firstOpen=null,defOpen=t=>!taskDone(dd,t)&&t.kind!=="rutina";
   {const lines=plan.tasks.filter(t=>t.kind!=="rutina").map(t=>`<li><b>${esc(t.h||"")}</b> ${esc(t.t)}${t.blocks.length&&t.kind!=="estudio"?": "+esc(t.blocks.filter(b=>!/^(Calentamiento|Elongación|Autochequeo|La orden|Al salir|Antes de entrar|Cuando quieras parar|Al terminar|Lee|Tarea)$/.test(b.n)).map(b=>b.n+(b.p&&b.p!==b.n?" "+b.p:"")).join(" · ")):""}</li>`).join("");
    if(lines)h+=`<details class="card" data-keep="glance" ${S.keep.glance===false?"":"open"}><summary>Tu día de un vistazo</summary><ul class="glance">${lines}</ul></details>`}
@@ -1481,7 +1482,7 @@ function viewHoy(){
     <span>${pc>=90?"Semana de soldado. Así se llega.":pc>=70?"Bien, pero no completa. La próxima, sin huecos.":"Semana floja. Si fue cansancio o dolor, está bien: recupera. Si fueron ganas, la próxima es la que cuenta."}</span>
     ${(()=>{const lb=Store.cfg.lastBackup;return !lb||diffDays(new Date(),parse(lb))>=6?`<div class="row"><span style="flex:1">Guarda la semana: descarga tu copia de seguridad.</span><button class="btn sm" data-backup>Descargar copia</button></div>`:""})()}
     ${nw!=null?`<span class="foot">Próxima: semana ${nw}${TESTS.includes(nw)?" · semana de prueba":nw===HELL?" · SEMANA DEL INFIERNO":DELOAD.includes(nw)?" · descarga":INC[nw]?" · "+INC[nw][0]:""}.</span>`:""}</div>`}
-  if(status==="done")h+=`<div class="order done"><span class="stamp">CUMPLIDO</span><p class="say" style="color:var(--ok)">${esc(pick(["Misión cumplida. Mañana a la misma hora.","Cumplido. Un día más que el que se rinde no tiene.","Bien. Eso es lo que se espera de ti."],k))}</p></div>`;
+  if(status==="done")h+=`<div class="order done"><span class="stamp">CUMPLIDO</span><p class="say" style="color:var(--ok)">${esc(pick(["Día ganado. Mañana a la misma hora.","Cumplido. Un día más que el que se rinde no tiene.","Bien. Eso es lo que se espera de ti."],k))}</p></div>`;
   h+=`<details class="card" data-keep="notes:${k}" ${S.keep["notes:"+k]?"open":""}><summary>Notas${plan.dow===0||plan.test?" y peso":""}</summary>
    ${plan.dow===0||plan.test?`<div class="field" style="max-width:140px"><label class="lbl" for="f-peso">Peso (kg)</label><input id="f-peso" inputmode="decimal" data-f="peso" value="${esc(String(dd.peso||"").replace(".",","))}" placeholder="70"></div>`:""}
    <div class="field"><label class="lbl" for="f-note">Tiempos, qué costó, sensaciones</label><textarea id="f-note" data-f="note">${esc(dd.note)}</textarea></div></details>`;
@@ -1545,10 +1546,10 @@ function viewPlan(){
   const c=Store.cfg,sg=(key,v,l)=>`<button class="seg ${String(c[key])===String(v)?"on":""}" data-cset="${key}|${v}">${l}</button>`;
   h+=`<div class="card"><span class="lbl">Ajustes</span>
    <div class="row"><div class="field" style="flex:1;min-width:140px"><label class="lbl" for="c-name">Tu nombre</label><input id="c-name" data-c="name" value="${esc(c.name)}"></div><div class="field" style="flex:1;min-width:150px"><label class="lbl" for="c-start">Día 1 de la semana 0</label><input id="c-start" type="date" min="2025-01-01" max="2030-12-31" data-c="start" value="${esc(c.start)}"></div></div>
-   <div class="row"><div class="field"><span class="lbl">Dónde nadas</span><div class="segs">${sg("place","lago","Lago")}${sg("place","piscina","Piscina")}</div></div><div class="field"><span class="lbl">Neopreno</span><div class="segs">${sg("neo",false,"No")}${sg("neo",true,"Sí")}</div></div><div class="field"><span class="lbl">Turno habitual</span><div class="segs">${sg("turno","13","Entro 13:00")}${sg("turno","16","Entro 16:00")}</div></div><div class="field"><span class="lbl">Piscina con salvavidas</span><div class="segs">${sg("pool",false,"No tengo")}${sg("pool",true,"Sí")}</div></div><div class="field"><span class="lbl">Boya de natación</span><div class="segs">${sg("boya",false,"No tengo")}${sg("boya",true,"Sí")}</div></div><div class="field"><span class="lbl">Compañero de agua</span><div class="segs">${sg("partner",false,"No")}${sg("partner",true,"Sí")}</div></div></div>
+   <div class="row"><div class="field"><span class="lbl">Dónde nadas</span><div class="segs">${sg("place","lago","Lago")}${sg("place","piscina","Piscina")}</div></div><div class="field"><span class="lbl">Neopreno</span><div class="segs">${sg("neo",false,"No")}${sg("neo",true,"Sí")}</div></div><div class="field"><span class="lbl">Turno habitual</span><div class="segs">${sg("turno","13","Entro 14:00")}${sg("turno","16","Entro 16:00")}</div></div><div class="field"><span class="lbl">Piscina con salvavidas</span><div class="segs">${sg("pool",false,"No tengo")}${sg("pool",true,"Sí")}</div></div><div class="field"><span class="lbl">Boya de natación</span><div class="segs">${sg("boya",false,"No tengo")}${sg("boya",true,"Sí")}</div></div><div class="field"><span class="lbl">Compañero de agua</span><div class="segs">${sg("partner",false,"No")}${sg("partner",true,"Sí")}</div></div></div>
    <div class="row"><div class="field" style="max-width:140px"><label class="lbl" for="c-peso">Peso en ayunas (kg)</label><input id="c-peso" inputmode="decimal" data-c="peso" value="${esc(bodyWeight()?nf(bodyWeight()):"")}" placeholder="70"></div><div class="field" style="max-width:140px"><label class="lbl" for="c-alt">Estatura (cm)</label><input id="c-alt" inputmode="numeric" data-c="alt" value="${esc(c.alt||"")}" placeholder="175"></div><p class="foot" style="flex:1;min-width:150px">Con tu peso calculo la proteína, las porciones y el agua de cada día. Pésate en ayunas el primer día de cada semana.</p></div>
    <div class="row"><div class="field" style="max-width:170px"><label class="lbl" for="c-maxb">Máximo de barras hoy</label><input id="c-maxb" inputmode="numeric" data-c="maxb" value="${esc((c.maxB&&c.maxB.v)||"")}" placeholder="${esc(lastTest().barras||6)}"></div><p class="foot" style="flex:1;min-width:160px">Mídete cada 3–4 semanas: las series de barras se ajustan solas.</p></div>
-   <div class="field"><label class="lbl" for="c-why">Tu por qué</label><textarea id="c-why" data-c="why" placeholder="Por qué quieres cambiar tu físico. El comandante te lo recuerda en los días duros.">${esc(c.why||"")}</textarea></div>
+   <div class="field"><label class="lbl" for="c-why">Tu por qué</label><textarea id="c-why" data-c="why" placeholder="Por qué quieres cambiar tu físico. La app te lo recuerda en los días duros.">${esc(c.why||"")}</textarea></div>
    <div class="row"><div class="field" style="max-width:170px"><label class="lbl" for="c-trip">Casa → lago en bici (min)</label><input id="c-trip" inputmode="numeric" data-c="trip" value="${esc(c.trip===undefined?15:c.trip)}" placeholder="15"></div><p class="foot" style="flex:1;min-width:150px">Con esto calculo a qué hora sales, entras al agua y vuelves. Pon 0 si vas en auto o vives al lado.</p></div>
    <div class="field" style="max-width:170px"><label class="lbl" for="c-temp">Agua del lago (°C)</label><input id="c-temp" inputmode="decimal" data-c="temp" value="${esc(tempFor(c,td))}" placeholder="${TEMP_MES[td.getMonth()]} estimado"><span class="foot">${tempFor(c,td)?`Medida el ${fmtS(parse(c.tempK))}: vale 10 días.`:c.temp?`La de ${fmtS(parse(c.tempK||c.start))} venció: mide de nuevo.`:"Vale 10 días; después se usa la estimada."}</span></div>
    ${L.after?(S.confirm==="s4"?`<div class="row"><button class="btn main sm" data-s4>Confirmar</button><button class="btn sm" data-cancel>Cancelar</button></div>`:`<button class="btn sm" data-ask="s4">Repetir etapa 4</button>`):""}
@@ -1707,7 +1708,7 @@ function backupHTML(){
   return h+`</div>`;
 }
 async function exportBackup(){
-  const json=backupData(),filename=`bitacora-buzo-${iso(new Date())}.json`;
+  const json=backupData(),filename=`atleta-hibrido-copia-${iso(new Date())}.json`;
   const saved=()=>{Store.setCfg({lastBackup:iso(new Date())});S.copyBackup=false;render();toast("Copia guardada: "+filename)};
   if(window.claude&&window.claude.use){
     let dl=null;try{dl=await window.claude.use("downloads")}catch(e){}
@@ -1729,12 +1730,12 @@ const isISO=x=>typeof x==="string"&&/^\d{4}-\d{2}-\d{2}$/.test(x)&&!isNaN(parse(
 // revisa que el texto sea una copia sana antes de ofrecer restaurarla
 function checkBackup(text){
   try{let d;const tx=String(text||"").replace(/[“”]/g,'"'),a=tx.indexOf("{"),z=tx.lastIndexOf("}");try{d=JSON.parse(a>=0&&z>a?tx.slice(a,z+1):tx)}catch(e){throw new Error("no se puede leer")}
-    if(!d||d.app!=="bitacora-buzo-tactico"||!isObj(d.days)||!isObj(d.cfg))throw new Error("no es una copia de la bitácora");
+    if(!d||d.app!=="bitacora-buzo-tactico"||!isObj(d.days)||!isObj(d.cfg))throw new Error("no es una copia de tus datos");
     const bad=Object.keys(d.days).find(k=>!isISO(k)||!isObj(d.days[k]));if(bad!==undefined)throw new Error("hay un día dañado: "+String(bad).slice(0,20));
     const c=d.cfg;if(c.start!=null&&!isISO(c.start))throw new Error("la fecha de inicio está dañada");
     if(c.sched!=null&&(!Array.isArray(c.sched)||!c.sched.length||!c.sched.every(w=>Number.isInteger(w)&&w>=0&&w<=52)))throw new Error("el orden de las semanas está dañado");
     S.restore={data:d,n:Object.keys(d.days).length,when:d.exportedAt&&!isNaN(new Date(d.exportedAt))?fmt(new Date(d.exportedAt)):"fecha desconocida"}}
-  catch(e){S.restore={err:"El archivo no es una copia válida de la bitácora ("+e.message+")."}}
+  catch(e){S.restore={err:"El archivo no es una copia válida de tus datos ("+e.message+")."}}
   S.paste=false;render();const el=document.getElementById("respaldo");if(el)el.scrollIntoView({block:"center"});
 }
 function readBackup(file){
@@ -1822,7 +1823,8 @@ function viewGuia(){return `<div class="sec prose"><h2>Guía</h2>
  <li>Dolor agudo, localizado o que empeora = parar y consultar.</li>
  <li>1 día de descanso total por semana y las descargas, sin excepción.</li></ul>
  <h3>Tus turnos</h3><ul>
- <li><b>Entras 13:00 (sales 22:30):</b> cama 23:30 · despiertas 7:30 · sesión principal 8:00 · desayuno · segunda parte 10:15 · tolerancia y ducha fría 11:00–11:45 · almuerzo 12:00 · sales 12:30.</li>
+ <li><b>Entras 14:00 (sales 23:30), de martes a sábado:</b> cama 0:30 · despiertas 8:30 · entrenas 9:00 · desayuno y batido · inglés 11:15 · tolerancia y ducha fría 12:30 · almuerzo 13:00 · sales 13:30.</li>
+ <li><b>Domingo y lunes (libres):</b> despiertas 7:00 · entrenas 7:30 · inglés y estudio después de almorzar · cama 22:30.</li>
  <li><b>Entras 16:00 (sales 0:30):</b> cama 1:15 · despiertas 9:15 · sesión principal 9:45 · segunda parte 12:15 · ducha fría 13:45 · almuerzo 14:15 · sales 15:15.</li>
  <li>Cada día eliges el turno arriba en Hoy y los horarios se ajustan solos. Las sesiones largas (hasta 4 h) caben antes del trabajo en los dos turnos.</li>
  <li>Al llegar del trabajo: comida liviana con proteína, ducha y a dormir. Nada de pantallas en la cama.</li></ul>
@@ -1842,7 +1844,7 @@ function viewGuia(){return `<div class="sec prose"><h2>Guía</h2>
  <li>4 comidas reales, proteína en cada una (unos 1,6 g por kilo al día), carbohidratos en días largos, 2,5–3 L de agua, sin alcohol ni bebidas energéticas.</li></ul></div>`}
 
 const TABS=[["hoy","Hoy"],["plan","Plan"],["progreso","Progreso"],["guia","Guía"]];
-const ICON={hoy:'<path d="M12.0 3.0L14.2 8.9L20.6 9.2L15.6 13.2L17.3 19.3L12.0 15.8L6.7 19.3L8.4 13.2L3.4 9.2L9.8 8.9Z"/>',plan:'<path d="M3 6l6-2 6 2 6-2v14l-6 2-6-2-6 2z"/><path d="M9 4v14M15 6v14"/>',progreso:'<path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/>',guia:'<path d="M4 4h7a3 3 0 013 3v13a2 2 0 00-2-2H4zM20 4h-5a3 3 0 00-3 3"/><path d="M20 4v14h-6"/>'};
+const ICON={hoy:'<path d="M13.0 2.0L4.0 14.0L11.0 14.0L9.0 22.0L20.0 9.0L13.0 9.0L15.0 2.0Z"/>',plan:'<path d="M3 6l6-2 6 2 6-2v14l-6 2-6-2-6 2z"/><path d="M9 4v14M15 6v14"/>',progreso:'<path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/>',guia:'<path d="M4 4h7a3 3 0 013 3v13a2 2 0 00-2-2H4zM20 4h-5a3 3 0 00-3 3"/><path d="M20 4v14h-6"/>'};
 function render(){
   CTX=null;PLANC={},SK=null;if(S.follow&&!S.run&&diffDays(S.date,today())!==0){S.date=today()}
   // conservar el foco y el cursor si una actualización llega mientras escribes
@@ -1903,7 +1905,7 @@ document.addEventListener("click",e=>{
     if(st.b.n==="Antes de entrar"&&st.b.tm&&!TS)startTimer(st.b.tm,st.b.n);
     if(st.set&&st.set<st.b.s&&want>cur){if(st.b.n==="Apnea en seco")startTimer(toSec(RESTS_ASECO[st.set-1]||"1:00"),"Respira normal · apnea "+(st.set+1));else if(st.b.r)startTimer(st.b.r,"Descanso · "+st.b.n)}
     const ndd=Store.days[k];let ni=ss.findIndex((x,j)=>j>i&&!stepDone(ndd,x));if(ni<0)ni=firstPending(p,ndd);S.run.i=ni;
-    render();window.scrollTo(0,0);if(dayStatus(k,p)==="done"&&before!=="done")toast("Misión cumplida, "+(Store.cfg.name||"recluta")+".");return}
+    render();window.scrollTo(0,0);if(dayStatus(k,p)==="done"&&before!=="done")toast("Día ganado, "+(Store.cfg.name||"crack")+".");return}
   if(D.turno){Store.setDay(k,{turno:D.turno});render();return}
   if(D.ydone!==undefined){const y=addDays(today(),-1),p=planFor(y),tk=iso(today()),td0=Store.days[tk]||{},tp=planFor(today());if(p){markAllDone(iso(y),p);if(frozenN(td0)!=null&&tp&&!units(td0,tp).a&&!Object.values(td0.checks||{}).some(Boolean)&&!td0.status)Store.setDay(tk,{pn:null});toast("Ayer quedó cumplido: hoy sigues con el día siguiente.")}render();return}
   if(D.nolake!==undefined){const dd=Store.day(k);Store.setDay(k,{nolake:!dd.nolake});render();return}
@@ -1924,10 +1926,10 @@ document.addEventListener("click",e=>{
     const patch=Object.assign({checks:c,sets},patchX);if(dd.status==="fail")patch.status="";
     Store.setDay(k,patch);
     const after=dayStatus(k,p);render();
-    if(after==="done"&&before!=="done")toast("Misión cumplida, "+(Store.cfg.name||"recluta")+".");
+    if(after==="done"&&before!=="done")toast("Día ganado, "+(Store.cfg.name||"crack")+".");
     return}
   if(D.st!==undefined){const p=planFor(S.date);
-    if(D.st==="done"&&p){markAllDone(k,p);toast("Misión cumplida.")}
+    if(D.st==="done"&&p){markAllDone(k,p);toast("Día ganado.")}
     // desmarcar vuelve a lo que tenías antes de “Cumplí todo” (no a cero)
     else if(D.clear){S.confirm=null;const dd=Store.day(k),u0=dd.undo||{checks:{},sets:{}},back=(cur,old,v)=>Object.keys(Object.assign({},cur,old)).reduce((a,x)=>(a[x]=old&&old[x]!=null?old[x]:v,a),{});Store.setDay(k,{checks:back(dd.checks,u0.checks,false),sets:back(dd.sets,u0.sets,0),status:"",undo:null})}
     else Store.setDay(k,{status:D.st});
@@ -1943,7 +1945,7 @@ document.addEventListener("input",e=>{
   else if(D.x){const [kind,f]=D.x.split("|"),dd=Store.day(k),r=Object.assign({},dd[kind]||{});r[f]=el.value.trim();Store.setDay(k,{[kind]:r});updateResults(kind)}
   else if(D.rl){const [tid,f]=D.rl.split("|"),dd=Store.day(k),rl=Object.assign({},dd.runlog||{});rl[tid]=Object.assign({},rl[tid]||{},{[f]:el.value.trim()});Store.setDay(k,{runlog:rl});updateRunVerdict(tid)}
   else if(D.tc){const t=Object.assign({},(Store.days[k]||{}).test||{});t[D.tc]=el.checked;Store.setDay(k,{test:t});updateVerdict()}
-  else if(D.c==="name")Store.setCfg({name:el.value.trim()||"Recluta"});
+  else if(D.c==="name")Store.setCfg({name:el.value.trim()||"crack"});
   else if(D.c==="peso"){const v=el.value.trim().replace(",",".");if(v&&!okKg(+v)){kgWarn();return}clearTimeout(kgT);Store.setCfg({peso:v});Store.setDay(iso(today()),{peso:v})}
   else if(D.c==="alt")Store.setCfg({alt:el.value.trim()});
   else if(D.c==="why")Store.setCfg({why:el.value});

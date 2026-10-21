@@ -71,6 +71,6 @@ export function ordenDelDia(A, date, { turno = '13', start, place } = {}) {
   const sh = plan.shift;
   out.push('', `Despiertas ${sh.wake} · entrenas desde ${sh.A}${sh.leave ? ' · sales al trabajo ' + sh.leave : ''} · cama ${sh.bed}`);
   if (turno === '13') { const s16 = A.applyShift(A.applyMode(base, ''), '16', null).shift; out.push(`Si hoy entras a las 16:00: despiertas ${s16.wake} · entrenas desde ${s16.A} · sales ${s16.leave} · cama ${s16.bed} (en la app toca «Entro 16:00»).`); }
-  out.push(A.real ? 'Leído de tu bitácora: va igual que la app.' : 'Si fallaste un día, repetiste semanas o cambiaste ajustes, manda lo que dice la app: ahí ningún día se pierde.');
+  out.push(A.real ? 'Leído de tu app: va igual que lo que marcaste.' : 'Si fallaste un día, repetiste semanas o cambiaste ajustes, manda lo que dice la app: ahí ningún día se pierde.');
   return { L: L.after ? null : L, plan, st, shift: sh, title: plan.title, lines: out, rest: plan.kind === 'descanso', test: plan.test };
 }
