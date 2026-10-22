@@ -7,7 +7,7 @@ X-WR-CALNAME:Atleta Híbrido
 X-WR-TIMEZONE:America/Santiago
 BEGIN:VEVENT
 UID:bitacora-2026-10-21@rutina-marino
-DTSTAMP:20261021T165908Z
+DTSTAMP:20261022T124151Z
 DTSTART:20261021T120000Z
 DTEND:20261021T160000Z
 SUMMARY:★ Sem 0 · Día 1 · Arranque
@@ -38,7 +38,7 @@ END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:bitacora-2026-10-22@rutina-marino
-DTSTAMP:20261021T165908Z
+DTSTAMP:20261022T124151Z
 DTSTART:20261022T120000Z
 DTEND:20261022T160000Z
 SUMMARY:★ Sem 0 · Día 2 · Técnica de piernas
@@ -69,7 +69,7 @@ END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:bitacora-2026-10-23@rutina-marino
-DTSTAMP:20261021T165908Z
+DTSTAMP:20261022T124151Z
 DTSTART:20261023T120000Z
 DTEND:20261023T160000Z
 SUMMARY:★ Sem 0 · Día 3 · Motor aeróbico
@@ -98,7 +98,7 @@ END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:bitacora-2026-10-24@rutina-marino
-DTSTAMP:20261021T165908Z
+DTSTAMP:20261022T124151Z
 DTSTART:20261024T120000Z
 DTEND:20261024T160000Z
 SUMMARY:★ Sem 0 · Día 4 · Activación
@@ -124,7 +124,7 @@ END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:bitacora-2026-10-25@rutina-marino
-DTSTAMP:20261021T165908Z
+DTSTAMP:20261022T124151Z
 DTSTART:20261025T130000Z
 DTEND:20261025T133000Z
 SUMMARY:★ Sem 0 · Día 5 · Descanso
@@ -145,7 +145,7 @@ END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:bitacora-2026-10-26@rutina-marino
-DTSTAMP:20261021T165908Z
+DTSTAMP:20261022T124151Z
 DTSTART:20261026T103000Z
 DTEND:20261026T153000Z
 SUMMARY:★ Sem 0 · Día 6 · PRUEBA · Prueba inicial
@@ -173,7 +173,7 @@ END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:bitacora-2026-10-27@rutina-marino
-DTSTAMP:20261021T165908Z
+DTSTAMP:20261022T124151Z
 DTSTART:20261027T130000Z
 DTEND:20261027T133000Z
 SUMMARY:★ Sem 0 · Día 7 · Descanso activo
@@ -194,23 +194,24 @@ END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:bitacora-2026-10-28@rutina-marino
-DTSTAMP:20261021T165908Z
+DTSTAMP:20261022T124151Z
 DTSTART:20261028T120000Z
 DTEND:20261028T160000Z
 SUMMARY:★ Sem 1 · Día 1 · Pecho + core
 DESCRIPTION:«“Flaquito” se borra serie por serie\, Diego. Hoy toca ot
- ra.»\n\n9:00 Pecho + core: Flexiones con mochila 3 × 10–15 · Press d
- e pecho en el suelo 3 × 12–20 · Aperturas con banda 2 × 15–20 · F
- ondos en silla 2 × 10–20 · Extensión de tríceps acostado 2 × 10–
- 15 · Rueda abdominal 2 × 6–8 de rodillas\n11:15 Inglés · 1 hora\n12
- :30 Tolerancia al dolor: Sentadilla isométrica en la pared 0:49 · Colga
- do de la barra 0:22 · Plancha 1:04\n12:45 Ducha fría 30 s: Agua fría 3
- 0 s\n\nDespiertas 8:30 · entrenas desde 9:00 · sales al trabajo 13:30 
- · cama 0:30\nSi hoy entras a las 16:00: despiertas 9:15 · entrenas desd
- e 9:45 · sales 15:15 · cama 1:15 (en la app toca «Entro 16:00»).\nSi 
- fallaste un día\, repetiste semanas o cambiaste ajustes\, manda lo que d
- ice la app: ahí ningún día se pierde.\n\nÓrdenes paso a paso: https:/
- /claude.ai/artifact/Y7MgtsGPPBnXAaGzJpKC7H
+ ra.»\n\n9:00 Pecho + core: Press de pecho en el suelo con mancuernas 4 
+ × 8–12 · Flexiones de brazos 3 × 8–15 · Press con mancuernas agar
+ re neutro 3 × 10–12 · Aperturas con banda 3 × 12–20 · Flexiones c
+ on mochila 2 × 8–12 · Rueda abdominal 3 × 6–12 · Plancha frontal 
+ 3 × 30 s · Dead bug 2 × 10 por lado\n11:15 Inglés · 1 hora\n12:30 To
+ lerancia al dolor: Sentadilla isométrica en la pared 0:49 · Colgado de 
+ la barra 0:22 · Plancha 1:04\n12:45 Ducha fría 30 s: Agua fría 30 s\n\
+ nDespiertas 8:30 · entrenas desde 9:00 · sales al trabajo 13:30 · cama
+  0:30\nSi hoy entras a las 16:00: despiertas 9:15 · entrenas desde 9:45 
+ · sales 15:15 · cama 1:15 (en la app toca «Entro 16:00»).\nSi fallast
+ e un día\, repetiste semanas o cambiaste ajustes\, manda lo que dice la 
+ app: ahí ningún día se pierde.\n\nÓrdenes paso a paso: https://claude
+ .ai/artifact/Y7MgtsGPPBnXAaGzJpKC7H
 TRANSP:OPAQUE
 BEGIN:VALARM
 ACTION:DISPLAY
@@ -225,24 +226,24 @@ END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:bitacora-2026-10-29@rutina-marino
-DTSTAMP:20261021T165908Z
+DTSTAMP:20261022T124151Z
 DTSTART:20261029T120000Z
 DTEND:20261029T160000Z
 SUMMARY:★ Sem 1 · Día 2 · Pierna + core
 DESCRIPTION:«Diego: el músculo se gana entrenando\, comiendo y durmiendo
- . Las tres\, hoy.»\n\n9:00 Pierna + core: Calentamiento de carrera 10 mi
- n · Saltos largos 3 × 3 · Sentadilla búlgara 3 × 8–12 por pierna 
- · Peso muerto rumano 3 × 10–15 · Sentadilla goblet 2 × 12–20 · N
- órdico 2 × 3–4 · Copenhague 2 × 15 s por lado · Gemelos a una pier
- na 2 × 12–20 por pierna · Hollow hold 2 × 20 s\n11:15 Inglés · 1 h
- ora\n12:30 Tolerancia al dolor: Sentadilla isométrica en la pared 0:49 
- · Colgado de la barra 0:22 · Plancha 1:04\n12:45 Ducha fría 30 s: Agua
-  fría 30 s\n\nDespiertas 8:30 · entrenas desde 9:00 · sales al trabajo
-  13:30 · cama 0:30\nSi hoy entras a las 16:00: despiertas 9:15 · entren
- as desde 9:45 · sales 15:15 · cama 1:15 (en la app toca «Entro 16:00»
- ).\nSi fallaste un día\, repetiste semanas o cambiaste ajustes\, manda l
- o que dice la app: ahí ningún día se pierde.\n\nÓrdenes paso a paso: 
- https://claude.ai/artifact/Y7MgtsGPPBnXAaGzJpKC7H
+ . Las tres\, hoy.»\n\n9:00 Pierna + core: Sentadilla goblet 4 × 10–15
+  · Peso muerto rumano con mancuernas 4 × 8–12 · Sentadilla búlgara 
+ 3 × 8–12 por pierna · Hip thrust con mancuerna 3 × 12–15 · Elevac
+ iones de gemelos 3 × 15–25 · Rueda abdominal 3 × 6–10 · Plancha l
+ ateral 2 × 30 s por lado · Elevaciones de rodillas acostado 3 × 12–1
+ 5\n11:15 Inglés · 1 hora\n12:30 Tolerancia al dolor: Sentadilla isomét
+ rica en la pared 0:49 · Colgado de la barra 0:22 · Plancha 1:04\n12:45 
+ Ducha fría 30 s: Agua fría 30 s\n\nDespiertas 8:30 · entrenas desde 9:
+ 00 · sales al trabajo 13:30 · cama 0:30\nSi hoy entras a las 16:00: des
+ piertas 9:15 · entrenas desde 9:45 · sales 15:15 · cama 1:15 (en la ap
+ p toca «Entro 16:00»).\nSi fallaste un día\, repetiste semanas o cambi
+ aste ajustes\, manda lo que dice la app: ahí ningún día se pierde.\n\n
+ Órdenes paso a paso: https://claude.ai/artifact/Y7MgtsGPPBnXAaGzJpKC7H
 TRANSP:OPAQUE
 BEGIN:VALARM
 ACTION:DISPLAY
@@ -257,22 +258,24 @@ END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:bitacora-2026-10-30@rutina-marino
-DTSTAMP:20261021T165908Z
+DTSTAMP:20261022T124151Z
 DTSTART:20261030T120000Z
 DTEND:20261030T160000Z
 SUMMARY:★ Sem 1 · Día 3 · Espalda + core
 DESCRIPTION:«Diego. Querías saber si puedes. Hoy se sigue respondiendo.
- »\n\n9:00 Espalda + core: Barras 3 × 4 · Remo a una mano con mancuerna
-  3 × 10–15 por lado · Remo con banda 2 × 15–20 · Face pull con ba
- nda 2 × 15–20 · Curl de bíceps 2 × 10–15 · Plancha 2 × 45 s\n11
- :15 Inglés · 1 hora\n12:30 Tolerancia al dolor: Sentadilla isométrica 
- en la pared 0:49 · Colgado de la barra 0:22 · Plancha 1:04\n12:45 Ducha
-  fría 30 s: Agua fría 30 s\n\nDespiertas 8:30 · entrenas desde 9:00 ·
-  sales al trabajo 13:30 · cama 0:30\nSi hoy entras a las 16:00: despiert
- as 9:15 · entrenas desde 9:45 · sales 15:15 · cama 1:15 (en la app toc
- a «Entro 16:00»).\nSi fallaste un día\, repetiste semanas o cambiaste 
- ajustes\, manda lo que dice la app: ahí ningún día se pierde.\n\nÓrde
- nes paso a paso: https://claude.ai/artifact/Y7MgtsGPPBnXAaGzJpKC7H
+ »\n\n9:00 Espalda + core: Barras 4 × 4 · Remo a una mano con mancuerna
+  4 × 10–15 por lado · Remo con banda 3 × 12–20 · Pullover con man
+ cuerna 3 × 10–15 · Pájaros con banda o mancuernas 3 × 12–20 · Ru
+ eda abdominal 3 × 6–12 · Bird dog 2 × 10 por lado · Hollow hold 3 
+ × 20 s\n11:15 Inglés · 1 hora\n12:30 Tolerancia al dolor: Sentadilla i
+ sométrica en la pared 0:49 · Colgado de la barra 0:22 · Plancha 1:04\n
+ 12:45 Ducha fría 30 s: Agua fría 30 s\n\nDespiertas 8:30 · entrenas de
+ sde 9:00 · sales al trabajo 13:30 · cama 0:30\nSi hoy entras a las 16:0
+ 0: despiertas 9:15 · entrenas desde 9:45 · sales 15:15 · cama 1:15 (en
+  la app toca «Entro 16:00»).\nSi fallaste un día\, repetiste semanas o
+  cambiaste ajustes\, manda lo que dice la app: ahí ningún día se pierd
+ e.\n\nÓrdenes paso a paso: https://claude.ai/artifact/Y7MgtsGPPBnXAaGzJp
+ KC7H
 TRANSP:OPAQUE
 BEGIN:VALARM
 ACTION:DISPLAY
@@ -287,23 +290,25 @@ END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:bitacora-2026-10-31@rutina-marino
-DTSTAMP:20261021T165908Z
+DTSTAMP:20261022T124151Z
 DTSTART:20261031T120000Z
 DTEND:20261031T160000Z
 SUMMARY:★ Sem 1 · Día 4 · Hombros y brazos + core
 DESCRIPTION:«“Flaquito” se borra serie por serie\, Diego. Hoy toca ot
- ra.»\n\n9:00 Hombros y brazos + core: Press militar con mancuernas 3 × 
- 8–15 · Elevaciones laterales 3 × 15–25 · Curl martillo 2 × 10–1
- 5 · Extensión de tríceps con banda 2 × 15–20 · Curl de bíceps 2 
- × 10–15 · Pallof con banda 2 × 10 por lado\n11:15 Inglés · 1 hora\
- n12:30 Tolerancia al dolor: Sentadilla isométrica en la pared 0:49 · Co
- lgado de la barra 0:22 · Plancha 1:04\n12:45 Ducha fría 30 s: Agua frí
- a 30 s\n\nDespiertas 8:30 · entrenas desde 9:00 · sales al trabajo 13:3
- 0 · cama 0:30\nSi hoy entras a las 16:00: despiertas 9:15 · entrenas de
- sde 9:45 · sales 15:15 · cama 1:15 (en la app toca «Entro 16:00»).\nS
- i fallaste un día\, repetiste semanas o cambiaste ajustes\, manda lo que
-  dice la app: ahí ningún día se pierde.\n\nÓrdenes paso a paso: https
- ://claude.ai/artifact/Y7MgtsGPPBnXAaGzJpKC7H
+ ra.»\n\n9:00 Hombros y brazos + core: Press militar con mancuernas 4 × 
+ 8–12 · Elevaciones laterales 3 × 12–20 · Curl de bíceps con mancu
+ ernas 3 × 10–15 · Extensión de tríceps sobre la cabeza 3 × 10–15
+  · Curl martillo 2 × 12–15 · Face pull con banda 3 × 15–20 · Rue
+ da abdominal 3 × 6–12 · Plancha lateral 2 × 30 s por lado · Dead bu
+ g 2 × 10 por lado\n11:15 Inglés · 1 hora\n12:30 Tolerancia al dolor: S
+ entadilla isométrica en la pared 0:49 · Colgado de la barra 0:22 · Pla
+ ncha 1:04\n12:45 Ducha fría 30 s: Agua fría 30 s\n\nDespiertas 8:30 · 
+ entrenas desde 9:00 · sales al trabajo 13:30 · cama 0:30\nSi hoy entras
+  a las 16:00: despiertas 9:15 · entrenas desde 9:45 · sales 15:15 · ca
+ ma 1:15 (en la app toca «Entro 16:00»).\nSi fallaste un día\, repetist
+ e semanas o cambiaste ajustes\, manda lo que dice la app: ahí ningún d
+ ía se pierde.\n\nÓrdenes paso a paso: https://claude.ai/artifact/Y7Mgts
+ GPPBnXAaGzJpKC7H
 TRANSP:OPAQUE
 BEGIN:VALARM
 ACTION:DISPLAY
@@ -318,7 +323,7 @@ END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:bitacora-2026-11-01@rutina-marino
-DTSTAMP:20261021T165908Z
+DTSTAMP:20261022T124151Z
 DTSTART:20261101T130000Z
 DTEND:20261101T133000Z
 SUMMARY:★ Sem 1 · Día 5 · Descanso o partido
@@ -338,7 +343,7 @@ END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:bitacora-2026-11-02@rutina-marino
-DTSTAMP:20261021T165908Z
+DTSTAMP:20261022T124152Z
 DTSTART:20261102T103000Z
 DTEND:20261102T153000Z
 SUMMARY:★ Sem 1 · Día 6 · Lago + estiramiento
@@ -372,22 +377,21 @@ END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:bitacora-2026-11-03@rutina-marino
-DTSTAMP:20261021T165908Z
+DTSTAMP:20261022T124152Z
 DTSTART:20261103T120000Z
 DTEND:20261103T160000Z
 SUMMARY:★ Sem 1 · Día 7 · Cardio + core
 DESCRIPTION:«“Flaquito” se borra serie por serie\, Diego. Hoy toca ot
- ra.»\n\n9:00 Intervalos: 5 × 1 min fuerte 1 min trotando suave entre ca
- da uno · Vuelta a la calma 5 min trote suave\n10:00 Core: Plancha 3 × 4
- 5 s · Plancha lateral 2 × 30 s por lado · Hollow hold 3 × 20 s\n11:15
-  Inglés · 1 hora\n12:30 Tolerancia al dolor: Sentadilla isométrica en 
- la pared 0:49 · Colgado de la barra 0:22 · Plancha 1:04\n12:45 Ducha fr
- ía 30 s: Agua fría 30 s\n\nDespiertas 8:30 · entrenas desde 9:00 · sa
- les al trabajo 13:30 · cama 0:30\nSi hoy entras a las 16:00: despiertas 
- 9:15 · entrenas desde 9:45 · sales 15:15 · cama 1:15 (en la app toca 
- «Entro 16:00»).\nSi fallaste un día\, repetiste semanas o cambiaste aj
- ustes\, manda lo que dice la app: ahí ningún día se pierde.\n\nÓrdene
- s paso a paso: https://claude.ai/artifact/Y7MgtsGPPBnXAaGzJpKC7H
+ ra.»\n\n9:00 Trote: Trote 25 min\n10:00 Core: Plancha 3 × 30 s · Bird 
+ dog 2 × 10 por lado · Rueda abdominal 2 × 6–10\n11:15 Inglés · 1 h
+ ora\n12:30 Tolerancia al dolor: Sentadilla isométrica en la pared 0:49 
+ · Colgado de la barra 0:22 · Plancha 1:04\n12:45 Ducha fría 30 s: Agua
+  fría 30 s\n\nDespiertas 8:30 · entrenas desde 9:00 · sales al trabajo
+  13:30 · cama 0:30\nSi hoy entras a las 16:00: despiertas 9:15 · entren
+ as desde 9:45 · sales 15:15 · cama 1:15 (en la app toca «Entro 16:00»
+ ).\nSi fallaste un día\, repetiste semanas o cambiaste ajustes\, manda l
+ o que dice la app: ahí ningún día se pierde.\n\nÓrdenes paso a paso: 
+ https://claude.ai/artifact/Y7MgtsGPPBnXAaGzJpKC7H
 TRANSP:OPAQUE
 BEGIN:VALARM
 ACTION:DISPLAY
@@ -402,23 +406,24 @@ END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:bitacora-2026-11-04@rutina-marino
-DTSTAMP:20261021T165908Z
+DTSTAMP:20261022T124152Z
 DTSTART:20261104T120000Z
 DTEND:20261104T160000Z
 SUMMARY:★ Sem 2 · Día 1 · Pecho + core
 DESCRIPTION:«Diego: el músculo se gana entrenando\, comiendo y durmiendo
- . Las tres\, hoy.»\n\n9:00 Pecho + core: Flexiones con mochila 3 × 10
- –15 · Press de pecho en el suelo 3 × 12–20 · Aperturas con banda 2
-  × 15–20 · Fondos en silla 2 × 10–20 · Extensión de tríceps aco
- stado 2 × 10–15 · Rueda abdominal 2 × 6–8 de rodillas\n11:15 Ingl
- és · 1 hora\n12:30 Tolerancia al dolor: Sentadilla isométrica en la pa
- red 0:53 · Colgado de la barra 0:24 · Plancha 1:08\n12:45 Ducha fría 3
- 0 s: Agua fría 30 s\n\nDespiertas 8:30 · entrenas desde 9:00 · sales a
- l trabajo 13:30 · cama 0:30\nSi hoy entras a las 16:00: despiertas 9:15 
- · entrenas desde 9:45 · sales 15:15 · cama 1:15 (en la app toca «Entr
- o 16:00»).\nSi fallaste un día\, repetiste semanas o cambiaste ajustes\
- , manda lo que dice la app: ahí ningún día se pierde.\n\nÓrdenes paso
-  a paso: https://claude.ai/artifact/Y7MgtsGPPBnXAaGzJpKC7H
+ . Las tres\, hoy.»\n\n9:00 Pecho + core: Press de pecho en el suelo con 
+ mancuernas 4 × 8–12 · Flexiones de brazos 3 × 8–15 · Press con ma
+ ncuernas agarre neutro 3 × 10–12 · Aperturas con banda 3 × 12–20 
+ · Flexiones con mochila 2 × 8–12 · Rueda abdominal 3 × 6–12 · Pl
+ ancha frontal 3 × 30 s · Dead bug 2 × 10 por lado\n11:15 Inglés · 1 
+ hora\n12:30 Tolerancia al dolor: Sentadilla isométrica en la pared 0:53 
+ · Colgado de la barra 0:24 · Plancha 1:08\n12:45 Ducha fría 30 s: Agua
+  fría 30 s\n\nDespiertas 8:30 · entrenas desde 9:00 · sales al trabajo
+  13:30 · cama 0:30\nSi hoy entras a las 16:00: despiertas 9:15 · entren
+ as desde 9:45 · sales 15:15 · cama 1:15 (en la app toca «Entro 16:00»
+ ).\nSi fallaste un día\, repetiste semanas o cambiaste ajustes\, manda l
+ o que dice la app: ahí ningún día se pierde.\n\nÓrdenes paso a paso: 
+ https://claude.ai/artifact/Y7MgtsGPPBnXAaGzJpKC7H
 TRANSP:OPAQUE
 BEGIN:VALARM
 ACTION:DISPLAY
@@ -433,24 +438,24 @@ END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:bitacora-2026-11-05@rutina-marino
-DTSTAMP:20261021T165908Z
+DTSTAMP:20261022T124152Z
 DTSTART:20261105T120000Z
 DTEND:20261105T160000Z
 SUMMARY:★ Sem 2 · Día 2 · Pierna + core
 DESCRIPTION:«Que te empujen y no te muevas. Eso se construye hoy\, Diego.
- »\n\n9:00 Pierna + core: Calentamiento de carrera 10 min · Saltos largo
- s 3 × 3 · Sentadilla búlgara 3 × 8–12 por pierna · Peso muerto rum
- ano 3 × 10–15 · Sentadilla goblet 2 × 12–20 · Nórdico 2 × 3–4
-  · Copenhague 2 × 15 s por lado · Gemelos a una pierna 2 × 12–20 po
- r pierna · Hollow hold 2 × 20 s\n11:15 Inglés · 1 hora\n12:30 Toleran
- cia al dolor: Sentadilla isométrica en la pared 0:53 · Colgado de la ba
- rra 0:24 · Plancha 1:08\n12:45 Ducha fría 30 s: Agua fría 30 s\n\nDesp
- iertas 8:30 · entrenas desde 9:00 · sales al trabajo 13:30 · cama 0:30
- \nSi hoy entras a las 16:00: despiertas 9:15 · entrenas desde 9:45 · sa
- les 15:15 · cama 1:15 (en la app toca «Entro 16:00»).\nSi fallaste un 
- día\, repetiste semanas o cambiaste ajustes\, manda lo que dice la app: 
- ahí ningún día se pierde.\n\nÓrdenes paso a paso: https://claude.ai/a
- rtifact/Y7MgtsGPPBnXAaGzJpKC7H
+ »\n\n9:00 Pierna + core: Sentadilla goblet 4 × 10–15 · Peso muerto r
+ umano con mancuernas 4 × 8–12 · Sentadilla búlgara 3 × 8–12 por p
+ ierna · Hip thrust con mancuerna 3 × 12–15 · Elevaciones de gemelos 
+ 3 × 15–25 · Rueda abdominal 3 × 6–10 · Plancha lateral 2 × 30 s 
+ por lado · Elevaciones de rodillas acostado 3 × 12–15\n11:15 Inglés 
+ · 1 hora\n12:30 Tolerancia al dolor: Sentadilla isométrica en la pared 
+ 0:53 · Colgado de la barra 0:24 · Plancha 1:08\n12:45 Ducha fría 30 s:
+  Agua fría 30 s\n\nDespiertas 8:30 · entrenas desde 9:00 · sales al tr
+ abajo 13:30 · cama 0:30\nSi hoy entras a las 16:00: despiertas 9:15 · e
+ ntrenas desde 9:45 · sales 15:15 · cama 1:15 (en la app toca «Entro 16
+ :00»).\nSi fallaste un día\, repetiste semanas o cambiaste ajustes\, ma
+ nda lo que dice la app: ahí ningún día se pierde.\n\nÓrdenes paso a p
+ aso: https://claude.ai/artifact/Y7MgtsGPPBnXAaGzJpKC7H
 TRANSP:OPAQUE
 BEGIN:VALARM
 ACTION:DISPLAY
@@ -465,22 +470,23 @@ END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:bitacora-2026-11-06@rutina-marino
-DTSTAMP:20261021T165908Z
+DTSTAMP:20261022T124152Z
 DTSTART:20261106T120000Z
 DTEND:20261106T160000Z
 SUMMARY:★ Sem 2 · Día 3 · Espalda + core
 DESCRIPTION:«De pie\, Diego. Esto es lo que haces hoy.»\n\n9:00 Espalda 
- + core: Barras 3 × 4 · Remo a una mano con mancuerna 3 × 10–15 por l
- ado · Remo con banda 2 × 15–20 · Face pull con banda 2 × 15–20 ·
-  Curl de bíceps 2 × 10–15 · Plancha 2 × 45 s\n11:15 Inglés · 1 ho
- ra\n12:30 Tolerancia al dolor: Sentadilla isométrica en la pared 0:53 ·
-  Colgado de la barra 0:24 · Plancha 1:08\n12:45 Ducha fría 30 s: Agua f
- ría 30 s\n\nDespiertas 8:30 · entrenas desde 9:00 · sales al trabajo 1
- 3:30 · cama 0:30\nSi hoy entras a las 16:00: despiertas 9:15 · entrenas
-  desde 9:45 · sales 15:15 · cama 1:15 (en la app toca «Entro 16:00»).
- \nSi fallaste un día\, repetiste semanas o cambiaste ajustes\, manda lo 
- que dice la app: ahí ningún día se pierde.\n\nÓrdenes paso a paso: ht
- tps://claude.ai/artifact/Y7MgtsGPPBnXAaGzJpKC7H
+ + core: Barras 4 × 4 · Remo a una mano con mancuerna 4 × 10–15 por l
+ ado · Remo con banda 3 × 12–20 · Pullover con mancuerna 3 × 10–15
+  · Pájaros con banda o mancuernas 3 × 12–20 · Rueda abdominal 3 × 
+ 6–12 · Bird dog 2 × 10 por lado · Hollow hold 3 × 20 s\n11:15 Ingl
+ és · 1 hora\n12:30 Tolerancia al dolor: Sentadilla isométrica en la pa
+ red 0:53 · Colgado de la barra 0:24 · Plancha 1:08\n12:45 Ducha fría 3
+ 0 s: Agua fría 30 s\n\nDespiertas 8:30 · entrenas desde 9:00 · sales a
+ l trabajo 13:30 · cama 0:30\nSi hoy entras a las 16:00: despiertas 9:15 
+ · entrenas desde 9:45 · sales 15:15 · cama 1:15 (en la app toca «Entr
+ o 16:00»).\nSi fallaste un día\, repetiste semanas o cambiaste ajustes\
+ , manda lo que dice la app: ahí ningún día se pierde.\n\nÓrdenes paso
+  a paso: https://claude.ai/artifact/Y7MgtsGPPBnXAaGzJpKC7H
 TRANSP:OPAQUE
 BEGIN:VALARM
 ACTION:DISPLAY
@@ -495,23 +501,24 @@ END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:bitacora-2026-11-07@rutina-marino
-DTSTAMP:20261021T165908Z
+DTSTAMP:20261022T124152Z
 DTSTART:20261107T120000Z
 DTEND:20261107T160000Z
 SUMMARY:★ Sem 2 · Día 4 · Hombros y brazos + core
 DESCRIPTION:«Arriba\, Diego. Nadie lo va a hacer por ti.»\n\n9:00 Hombro
- s y brazos + core: Press militar con mancuernas 3 × 8–15 · Elevacione
- s laterales 3 × 15–25 · Curl martillo 2 × 10–15 · Extensión de t
- ríceps con banda 2 × 15–20 · Curl de bíceps 2 × 10–15 · Pallof 
- con banda 2 × 10 por lado\n11:15 Inglés · 1 hora\n12:30 Tolerancia al 
- dolor: Sentadilla isométrica en la pared 0:53 · Colgado de la barra 0:2
- 4 · Plancha 1:08\n12:45 Ducha fría 30 s: Agua fría 30 s\n\nDespiertas 
- 8:30 · entrenas desde 9:00 · sales al trabajo 13:30 · cama 0:30\nSi ho
- y entras a las 16:00: despiertas 9:15 · entrenas desde 9:45 · sales 15:
- 15 · cama 1:15 (en la app toca «Entro 16:00»).\nSi fallaste un día\, 
- repetiste semanas o cambiaste ajustes\, manda lo que dice la app: ahí ni
- ngún día se pierde.\n\nÓrdenes paso a paso: https://claude.ai/artifact
- /Y7MgtsGPPBnXAaGzJpKC7H
+ s y brazos + core: Press militar con mancuernas 4 × 8–12 · Elevacione
+ s laterales 3 × 12–20 · Curl de bíceps con mancuernas 3 × 10–15 
+ · Extensión de tríceps sobre la cabeza 3 × 10–15 · Curl martillo 2
+  × 12–15 · Face pull con banda 3 × 15–20 · Rueda abdominal 3 × 6
+ –12 · Plancha lateral 2 × 30 s por lado · Dead bug 2 × 10 por lado\
+ n11:15 Inglés · 1 hora\n12:30 Tolerancia al dolor: Sentadilla isométri
+ ca en la pared 0:53 · Colgado de la barra 0:24 · Plancha 1:08\n12:45 Du
+ cha fría 30 s: Agua fría 30 s\n\nDespiertas 8:30 · entrenas desde 9:00
+  · sales al trabajo 13:30 · cama 0:30\nSi hoy entras a las 16:00: despi
+ ertas 9:15 · entrenas desde 9:45 · sales 15:15 · cama 1:15 (en la app 
+ toca «Entro 16:00»).\nSi fallaste un día\, repetiste semanas o cambias
+ te ajustes\, manda lo que dice la app: ahí ningún día se pierde.\n\nÓ
+ rdenes paso a paso: https://claude.ai/artifact/Y7MgtsGPPBnXAaGzJpKC7H
 TRANSP:OPAQUE
 BEGIN:VALARM
 ACTION:DISPLAY
@@ -526,7 +533,7 @@ END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:bitacora-2026-11-08@rutina-marino
-DTSTAMP:20261021T165908Z
+DTSTAMP:20261022T124152Z
 DTSTART:20261108T130000Z
 DTEND:20261108T133000Z
 SUMMARY:★ Sem 2 · Día 5 · Descanso o partido
@@ -546,7 +553,7 @@ END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:bitacora-2026-11-09@rutina-marino
-DTSTAMP:20261021T165908Z
+DTSTAMP:20261022T124152Z
 DTSTART:20261109T103000Z
 DTEND:20261109T153000Z
 SUMMARY:★ Sem 2 · Día 6 · Lago + Prueba de incomodidad · 20 min
@@ -576,21 +583,21 @@ END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:bitacora-2026-11-10@rutina-marino
-DTSTAMP:20261021T165908Z
+DTSTAMP:20261022T124152Z
 DTSTART:20261110T120000Z
 DTEND:20261110T160000Z
 SUMMARY:★ Sem 2 · Día 7 · Cardio + core
-DESCRIPTION:«Arriba\, Diego. Nadie lo va a hacer por ti.»\n\n9:00 Trote 
- nasal: Trote nasal 27 min\n10:00 Core: Plancha 3 × 45 s · Plancha later
- al 2 × 30 s por lado · Hollow hold 3 × 20 s\n11:15 Inglés · 1 hora\n
- 12:30 Tolerancia al dolor: Sentadilla isométrica en la pared 0:53 · Col
- gado de la barra 0:24 · Plancha 1:08\n12:45 Ducha fría 30 s: Agua fría
-  30 s\n\nDespiertas 8:30 · entrenas desde 9:00 · sales al trabajo 13:30
-  · cama 0:30\nSi hoy entras a las 16:00: despiertas 9:15 · entrenas des
- de 9:45 · sales 15:15 · cama 1:15 (en la app toca «Entro 16:00»).\nSi
-  fallaste un día\, repetiste semanas o cambiaste ajustes\, manda lo que 
- dice la app: ahí ningún día se pierde.\n\nÓrdenes paso a paso: https:
- //claude.ai/artifact/Y7MgtsGPPBnXAaGzJpKC7H
+DESCRIPTION:«Arriba\, Diego. Nadie lo va a hacer por ti.»\n\n9:00 Trote:
+  Trote 25 min\n10:00 Core: Plancha 3 × 30 s · Bird dog 2 × 10 por lado
+  · Rueda abdominal 2 × 6–10\n11:15 Inglés · 1 hora\n12:30 Toleranci
+ a al dolor: Sentadilla isométrica en la pared 0:53 · Colgado de la barr
+ a 0:24 · Plancha 1:08\n12:45 Ducha fría 30 s: Agua fría 30 s\n\nDespie
+ rtas 8:30 · entrenas desde 9:00 · sales al trabajo 13:30 · cama 0:30\n
+ Si hoy entras a las 16:00: despiertas 9:15 · entrenas desde 9:45 · sale
+ s 15:15 · cama 1:15 (en la app toca «Entro 16:00»).\nSi fallaste un d
+ ía\, repetiste semanas o cambiaste ajustes\, manda lo que dice la app: a
+ hí ningún día se pierde.\n\nÓrdenes paso a paso: https://claude.ai/ar
+ tifact/Y7MgtsGPPBnXAaGzJpKC7H
 TRANSP:OPAQUE
 BEGIN:VALARM
 ACTION:DISPLAY
@@ -605,23 +612,24 @@ END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:bitacora-2026-11-11@rutina-marino
-DTSTAMP:20261021T165908Z
+DTSTAMP:20261022T124152Z
 DTSTART:20261111T120000Z
 DTEND:20261111T160000Z
 SUMMARY:★ Sem 3 · Día 1 · Pecho + core
 DESCRIPTION:«Diego. Querías saber si puedes. Hoy se sigue respondiendo.
- »\n\n9:00 Pecho + core: Flexiones con mochila 3 × 10–15 · Press de p
- echo en el suelo 3 × 12–20 · Aperturas con banda 2 × 15–20 · Fond
- os en silla 2 × 10–20 · Extensión de tríceps acostado 2 × 10–15 
- · Rueda abdominal 2 × 6–8 de rodillas\n11:15 Inglés · 1 hora\n12:30
-  Tolerancia al dolor: Sentadilla isométrica en la pared 0:57 · Colgado 
- de la barra 0:26 · Plancha 1:12\n12:45 Ducha fría 1 min: Agua fría 1 m
- in\n\nDespiertas 8:30 · entrenas desde 9:00 · sales al trabajo 13:30 ·
-  cama 0:30\nSi hoy entras a las 16:00: despiertas 9:15 · entrenas desde 
- 9:45 · sales 15:15 · cama 1:15 (en la app toca «Entro 16:00»).\nSi fa
- llaste un día\, repetiste semanas o cambiaste ajustes\, manda lo que dic
- e la app: ahí ningún día se pierde.\n\nÓrdenes paso a paso: https://c
- laude.ai/artifact/Y7MgtsGPPBnXAaGzJpKC7H
+ »\n\n9:00 Pecho + core: Press de pecho en el suelo con mancuernas 4 × 8
+ –12 · Flexiones de brazos 3 × 8–15 · Press con mancuernas agarre n
+ eutro 3 × 10–12 · Aperturas con banda 3 × 12–20 · Flexiones con m
+ ochila 2 × 8–12 · Rueda abdominal 3 × 6–12 · Plancha frontal 3 ×
+  30 s · Dead bug 2 × 10 por lado\n11:15 Inglés · 1 hora\n12:30 Tolera
+ ncia al dolor: Sentadilla isométrica en la pared 0:57 · Colgado de la b
+ arra 0:26 · Plancha 1:12\n12:45 Ducha fría 1 min: Agua fría 1 min\n\nD
+ espiertas 8:30 · entrenas desde 9:00 · sales al trabajo 13:30 · cama 0
+ :30\nSi hoy entras a las 16:00: despiertas 9:15 · entrenas desde 9:45 ·
+  sales 15:15 · cama 1:15 (en la app toca «Entro 16:00»).\nSi fallaste 
+ un día\, repetiste semanas o cambiaste ajustes\, manda lo que dice la ap
+ p: ahí ningún día se pierde.\n\nÓrdenes paso a paso: https://claude.a
+ i/artifact/Y7MgtsGPPBnXAaGzJpKC7H
 TRANSP:OPAQUE
 BEGIN:VALARM
 ACTION:DISPLAY
@@ -636,24 +644,24 @@ END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:bitacora-2026-11-12@rutina-marino
-DTSTAMP:20261021T165908Z
+DTSTAMP:20261022T124152Z
 DTSTART:20261112T120000Z
 DTEND:20261112T160000Z
 SUMMARY:★ Sem 3 · Día 2 · Pierna + core
 DESCRIPTION:«“Flaquito” se borra serie por serie\, Diego. Hoy toca ot
- ra.»\n\n9:00 Pierna + core: Calentamiento de carrera 10 min · Saltos la
- rgos 3 × 3 · Sentadilla búlgara 3 × 8–12 por pierna · Peso muerto 
- rumano 3 × 10–15 · Sentadilla goblet 2 × 12–20 · Nórdico 2 × 3
- –4 · Copenhague 2 × 15 s por lado · Gemelos a una pierna 2 × 12–2
- 0 por pierna · Hollow hold 2 × 20 s\n11:15 Inglés · 1 hora\n12:30 Tol
- erancia al dolor: Sentadilla isométrica en la pared 0:57 · Colgado de l
- a barra 0:26 · Plancha 1:12\n12:45 Ducha fría 1 min: Agua fría 1 min\n
- \nDespiertas 8:30 · entrenas desde 9:00 · sales al trabajo 13:30 · cam
- a 0:30\nSi hoy entras a las 16:00: despiertas 9:15 · entrenas desde 9:45
-  · sales 15:15 · cama 1:15 (en la app toca «Entro 16:00»).\nSi fallas
- te un día\, repetiste semanas o cambiaste ajustes\, manda lo que dice la
-  app: ahí ningún día se pierde.\n\nÓrdenes paso a paso: https://claud
- e.ai/artifact/Y7MgtsGPPBnXAaGzJpKC7H
+ ra.»\n\n9:00 Pierna + core: Sentadilla goblet 4 × 10–15 · Peso muert
+ o rumano con mancuernas 4 × 8–12 · Sentadilla búlgara 3 × 8–12 po
+ r pierna · Hip thrust con mancuerna 3 × 12–15 · Elevaciones de gemel
+ os 3 × 15–25 · Rueda abdominal 3 × 6–10 · Plancha lateral 2 × 30
+  s por lado · Elevaciones de rodillas acostado 3 × 12–15\n11:15 Ingl
+ és · 1 hora\n12:30 Tolerancia al dolor: Sentadilla isométrica en la pa
+ red 0:57 · Colgado de la barra 0:26 · Plancha 1:12\n12:45 Ducha fría 1
+  min: Agua fría 1 min\n\nDespiertas 8:30 · entrenas desde 9:00 · sales
+  al trabajo 13:30 · cama 0:30\nSi hoy entras a las 16:00: despiertas 9:1
+ 5 · entrenas desde 9:45 · sales 15:15 · cama 1:15 (en la app toca «En
+ tro 16:00»).\nSi fallaste un día\, repetiste semanas o cambiaste ajuste
+ s\, manda lo que dice la app: ahí ningún día se pierde.\n\nÓrdenes pa
+ so a paso: https://claude.ai/artifact/Y7MgtsGPPBnXAaGzJpKC7H
 TRANSP:OPAQUE
 BEGIN:VALARM
 ACTION:DISPLAY
@@ -668,23 +676,24 @@ END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:bitacora-2026-11-13@rutina-marino
-DTSTAMP:20261021T165908Z
+DTSTAMP:20261022T124152Z
 DTSTART:20261113T120000Z
 DTEND:20261113T160000Z
 SUMMARY:★ Sem 3 · Día 3 · Espalda + core
 DESCRIPTION:«Diego: el músculo se gana entrenando\, comiendo y durmiendo
- . Las tres\, hoy.»\n\n9:00 Espalda + core: Barras 3 × 4 · Remo a una m
- ano con mancuerna 3 × 10–15 por lado · Remo con banda 2 × 15–20 ·
-  Face pull con banda 2 × 15–20 · Curl de bíceps 2 × 10–15 · Plan
- cha 2 × 45 s\n11:15 Inglés · 1 hora\n12:30 Tolerancia al dolor: Sentad
- illa isométrica en la pared 0:57 · Colgado de la barra 0:26 · Plancha 
- 1:12\n12:45 Ducha fría 1 min: Agua fría 1 min\n\nDespiertas 8:30 · ent
- renas desde 9:00 · sales al trabajo 13:30 · cama 0:30\nSi hoy entras a 
- las 16:00: despiertas 9:15 · entrenas desde 9:45 · sales 15:15 · cama 
- 1:15 (en la app toca «Entro 16:00»).\nSi fallaste un día\, repetiste s
- emanas o cambiaste ajustes\, manda lo que dice la app: ahí ningún día 
- se pierde.\n\nÓrdenes paso a paso: https://claude.ai/artifact/Y7MgtsGPPB
- nXAaGzJpKC7H
+ . Las tres\, hoy.»\n\n9:00 Espalda + core: Barras 4 × 4 · Remo a una m
+ ano con mancuerna 4 × 10–15 por lado · Remo con banda 3 × 12–20 ·
+  Pullover con mancuerna 3 × 10–15 · Pájaros con banda o mancuernas 3
+  × 12–20 · Rueda abdominal 3 × 6–12 · Bird dog 2 × 10 por lado 
+ · Hollow hold 3 × 20 s\n11:15 Inglés · 1 hora\n12:30 Tolerancia al do
+ lor: Sentadilla isométrica en la pared 0:57 · Colgado de la barra 0:26 
+ · Plancha 1:12\n12:45 Ducha fría 1 min: Agua fría 1 min\n\nDespiertas 
+ 8:30 · entrenas desde 9:00 · sales al trabajo 13:30 · cama 0:30\nSi ho
+ y entras a las 16:00: despiertas 9:15 · entrenas desde 9:45 · sales 15:
+ 15 · cama 1:15 (en la app toca «Entro 16:00»).\nSi fallaste un día\, 
+ repetiste semanas o cambiaste ajustes\, manda lo que dice la app: ahí ni
+ ngún día se pierde.\n\nÓrdenes paso a paso: https://claude.ai/artifact
+ /Y7MgtsGPPBnXAaGzJpKC7H
 TRANSP:OPAQUE
 BEGIN:VALARM
 ACTION:DISPLAY
@@ -699,23 +708,25 @@ END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:bitacora-2026-11-14@rutina-marino
-DTSTAMP:20261021T165908Z
+DTSTAMP:20261022T124152Z
 DTSTART:20261114T120000Z
 DTEND:20261114T160000Z
 SUMMARY:★ Sem 3 · Día 4 · Hombros y brazos + core
 DESCRIPTION:«Que te empujen y no te muevas. Eso se construye hoy\, Diego.
- »\n\n9:00 Hombros y brazos + core: Press militar con mancuernas 3 × 8
- –15 · Elevaciones laterales 3 × 15–25 · Curl martillo 2 × 10–15
-  · Extensión de tríceps con banda 2 × 15–20 · Curl de bíceps 2 ×
-  10–15 · Pallof con banda 2 × 10 por lado\n11:15 Inglés · 1 hora\n1
- 2:30 Tolerancia al dolor: Sentadilla isométrica en la pared 0:57 · Colg
- ado de la barra 0:26 · Plancha 1:12\n12:45 Ducha fría 1 min: Agua fría
-  1 min\n\nDespiertas 8:30 · entrenas desde 9:00 · sales al trabajo 13:3
- 0 · cama 0:30\nSi hoy entras a las 16:00: despiertas 9:15 · entrenas de
- sde 9:45 · sales 15:15 · cama 1:15 (en la app toca «Entro 16:00»).\nS
- i fallaste un día\, repetiste semanas o cambiaste ajustes\, manda lo que
-  dice la app: ahí ningún día se pierde.\n\nÓrdenes paso a paso: https
- ://claude.ai/artifact/Y7MgtsGPPBnXAaGzJpKC7H
+ »\n\n9:00 Hombros y brazos + core: Press militar con mancuernas 4 × 8
+ –12 · Elevaciones laterales 3 × 12–20 · Curl de bíceps con mancue
+ rnas 3 × 10–15 · Extensión de tríceps sobre la cabeza 3 × 10–15 
+ · Curl martillo 2 × 12–15 · Face pull con banda 3 × 15–20 · Rued
+ a abdominal 3 × 6–12 · Plancha lateral 2 × 30 s por lado · Dead bug
+  2 × 10 por lado\n11:15 Inglés · 1 hora\n12:30 Tolerancia al dolor: Se
+ ntadilla isométrica en la pared 0:57 · Colgado de la barra 0:26 · Plan
+ cha 1:12\n12:45 Ducha fría 1 min: Agua fría 1 min\n\nDespiertas 8:30 ·
+  entrenas desde 9:00 · sales al trabajo 13:30 · cama 0:30\nSi hoy entra
+ s a las 16:00: despiertas 9:15 · entrenas desde 9:45 · sales 15:15 · c
+ ama 1:15 (en la app toca «Entro 16:00»).\nSi fallaste un día\, repetis
+ te semanas o cambiaste ajustes\, manda lo que dice la app: ahí ningún d
+ ía se pierde.\n\nÓrdenes paso a paso: https://claude.ai/artifact/Y7Mgts
+ GPPBnXAaGzJpKC7H
 TRANSP:OPAQUE
 BEGIN:VALARM
 ACTION:DISPLAY
@@ -730,7 +741,7 @@ END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:bitacora-2026-11-15@rutina-marino
-DTSTAMP:20261021T165908Z
+DTSTAMP:20261022T124152Z
 DTSTART:20261115T130000Z
 DTEND:20261115T133000Z
 SUMMARY:★ Sem 3 · Día 5 · Descanso o partido
@@ -750,7 +761,7 @@ END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:bitacora-2026-11-16@rutina-marino
-DTSTAMP:20261021T165908Z
+DTSTAMP:20261022T124152Z
 DTSTART:20261116T103000Z
 DTEND:20261116T153000Z
 SUMMARY:★ Sem 3 · Día 6 · Lago + estiramiento
@@ -784,22 +795,21 @@ END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:bitacora-2026-11-17@rutina-marino
-DTSTAMP:20261021T165908Z
+DTSTAMP:20261022T124152Z
 DTSTART:20261117T120000Z
 DTEND:20261117T160000Z
 SUMMARY:★ Sem 3 · Día 7 · Cardio + core
 DESCRIPTION:«Diego. Querías saber si puedes. Hoy se sigue respondiendo.
- »\n\n9:00 Intervalos: 6 × 1 min fuerte 1 min trotando suave entre cada 
- uno · Vuelta a la calma 5 min trote suave\n10:00 Core: Plancha 3 × 45 s
-  · Plancha lateral 2 × 30 s por lado · Hollow hold 3 × 20 s\n11:15 In
- glés · 1 hora\n12:30 Tolerancia al dolor: Sentadilla isométrica en la 
- pared 0:57 · Colgado de la barra 0:26 · Plancha 1:12\n12:45 Ducha fría
-  1 min: Agua fría 1 min\n\nDespiertas 8:30 · entrenas desde 9:00 · sal
- es al trabajo 13:30 · cama 0:30\nSi hoy entras a las 16:00: despiertas 9
- :15 · entrenas desde 9:45 · sales 15:15 · cama 1:15 (en la app toca «
- Entro 16:00»).\nSi fallaste un día\, repetiste semanas o cambiaste ajus
- tes\, manda lo que dice la app: ahí ningún día se pierde.\n\nÓrdenes 
- paso a paso: https://claude.ai/artifact/Y7MgtsGPPBnXAaGzJpKC7H
+ »\n\n9:00 Trote: Trote 27 min\n10:00 Core: Plancha 3 × 30 s · Bird dog
+  2 × 10 por lado · Rueda abdominal 2 × 6–10\n11:15 Inglés · 1 hora
+ \n12:30 Tolerancia al dolor: Sentadilla isométrica en la pared 0:57 · C
+ olgado de la barra 0:26 · Plancha 1:12\n12:45 Ducha fría 1 min: Agua fr
+ ía 1 min\n\nDespiertas 8:30 · entrenas desde 9:00 · sales al trabajo 1
+ 3:30 · cama 0:30\nSi hoy entras a las 16:00: despiertas 9:15 · entrenas
+  desde 9:45 · sales 15:15 · cama 1:15 (en la app toca «Entro 16:00»).
+ \nSi fallaste un día\, repetiste semanas o cambiaste ajustes\, manda lo 
+ que dice la app: ahí ningún día se pierde.\n\nÓrdenes paso a paso: ht
+ tps://claude.ai/artifact/Y7MgtsGPPBnXAaGzJpKC7H
 TRANSP:OPAQUE
 BEGIN:VALARM
 ACTION:DISPLAY
@@ -814,22 +824,22 @@ END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:bitacora-2026-11-18@rutina-marino
-DTSTAMP:20261021T165908Z
+DTSTAMP:20261022T124152Z
 DTSTART:20261118T120000Z
 DTEND:20261118T160000Z
 SUMMARY:★ Sem 4 · Día 1 · Pecho + core
 DESCRIPTION:«“Flaquito” se borra serie por serie\, Diego. Hoy toca ot
- ra.»\n\n9:00 Pecho + core: Flexiones con mochila 2 × 10–15 · Press d
- e pecho en el suelo 2 × 12–20 · Aperturas con banda 2 × 15–20 · F
- ondos en silla 2 × 10–20 · Extensión de tríceps acostado 2 × 10–
- 15 · Rueda abdominal 2 × 6–8 de rodillas\n11:15 Inglés · 1 hora\n12
- :45 Ducha fría 1 min: Agua fría 1 min\n\nDespiertas 8:30 · entrenas de
- sde 9:00 · sales al trabajo 13:30 · cama 0:30\nSi hoy entras a las 16:0
- 0: despiertas 9:15 · entrenas desde 9:45 · sales 15:15 · cama 1:15 (en
-  la app toca «Entro 16:00»).\nSi fallaste un día\, repetiste semanas o
-  cambiaste ajustes\, manda lo que dice la app: ahí ningún día se pierd
- e.\n\nÓrdenes paso a paso: https://claude.ai/artifact/Y7MgtsGPPBnXAaGzJp
- KC7H
+ ra.»\n\n9:00 Pecho + core: Press de pecho en el suelo con mancuernas 2 
+ × 8–12 · Flexiones de brazos 2 × 8–15 · Press con mancuernas agar
+ re neutro 2 × 10–12 · Aperturas con banda 2 × 12–20 · Flexiones c
+ on mochila 1 × 8–12 · Rueda abdominal 2 × 6–12 · Plancha frontal 
+ 2 × 30 s · Dead bug 1 × 10 por lado\n11:15 Inglés · 1 hora\n12:45 Du
+ cha fría 1 min: Agua fría 1 min\n\nDespiertas 8:30 · entrenas desde 9:
+ 00 · sales al trabajo 13:30 · cama 0:30\nSi hoy entras a las 16:00: des
+ piertas 9:15 · entrenas desde 9:45 · sales 15:15 · cama 1:15 (en la ap
+ p toca «Entro 16:00»).\nSi fallaste un día\, repetiste semanas o cambi
+ aste ajustes\, manda lo que dice la app: ahí ningún día se pierde.\n\n
+ Órdenes paso a paso: https://claude.ai/artifact/Y7MgtsGPPBnXAaGzJpKC7H
 TRANSP:OPAQUE
 BEGIN:VALARM
 ACTION:DISPLAY
@@ -844,23 +854,23 @@ END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:bitacora-2026-11-19@rutina-marino
-DTSTAMP:20261021T165908Z
+DTSTAMP:20261022T124152Z
 DTSTART:20261119T120000Z
 DTEND:20261119T160000Z
 SUMMARY:★ Sem 4 · Día 2 · Pierna + core
 DESCRIPTION:«Diego: el músculo se gana entrenando\, comiendo y durmiendo
- . Las tres\, hoy.»\n\n9:00 Pierna + core: Calentamiento de carrera 10 mi
- n · Saltos largos 3 × 3 · Sentadilla búlgara 2 × 8–12 por pierna 
- · Peso muerto rumano 2 × 10–15 · Sentadilla goblet 2 × 12–20 · N
- órdico 2 × 3–4 · Copenhague 2 × 15 s por lado · Gemelos a una pier
- na 2 × 12–20 por pierna · Hollow hold 2 × 20 s\n11:15 Inglés · 1 h
- ora\n12:45 Ducha fría 1 min: Agua fría 1 min\n\nDespiertas 8:30 · entr
- enas desde 9:00 · sales al trabajo 13:30 · cama 0:30\nSi hoy entras a l
- as 16:00: despiertas 9:15 · entrenas desde 9:45 · sales 15:15 · cama 1
- :15 (en la app toca «Entro 16:00»).\nSi fallaste un día\, repetiste se
- manas o cambiaste ajustes\, manda lo que dice la app: ahí ningún día s
- e pierde.\n\nÓrdenes paso a paso: https://claude.ai/artifact/Y7MgtsGPPBn
- XAaGzJpKC7H
+ . Las tres\, hoy.»\n\n9:00 Pierna + core: Sentadilla goblet 2 × 10–15
+  · Peso muerto rumano con mancuernas 2 × 8–12 · Sentadilla búlgara 
+ 2 × 8–12 por pierna · Hip thrust con mancuerna 2 × 12–15 · Elevac
+ iones de gemelos 2 × 15–25 · Rueda abdominal 2 × 6–10 · Plancha l
+ ateral 1 × 30 s por lado · Elevaciones de rodillas acostado 2 × 12–1
+ 5\n11:15 Inglés · 1 hora\n12:45 Ducha fría 1 min: Agua fría 1 min\n\n
+ Despiertas 8:30 · entrenas desde 9:00 · sales al trabajo 13:30 · cama 
+ 0:30\nSi hoy entras a las 16:00: despiertas 9:15 · entrenas desde 9:45 
+ · sales 15:15 · cama 1:15 (en la app toca «Entro 16:00»).\nSi fallast
+ e un día\, repetiste semanas o cambiaste ajustes\, manda lo que dice la 
+ app: ahí ningún día se pierde.\n\nÓrdenes paso a paso: https://claude
+ .ai/artifact/Y7MgtsGPPBnXAaGzJpKC7H
 TRANSP:OPAQUE
 BEGIN:VALARM
 ACTION:DISPLAY
@@ -875,21 +885,22 @@ END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:bitacora-2026-11-20@rutina-marino
-DTSTAMP:20261021T165908Z
+DTSTAMP:20261022T124152Z
 DTSTART:20261120T120000Z
 DTEND:20261120T160000Z
 SUMMARY:★ Sem 4 · Día 3 · Espalda + core
 DESCRIPTION:«Diego. Querías saber si puedes. Hoy se sigue respondiendo.
  »\n\n9:00 Espalda + core: Barras 2 × 4 · Remo a una mano con mancuerna
-  2 × 10–15 por lado · Remo con banda 2 × 15–20 · Face pull con ba
- nda 2 × 15–20 · Curl de bíceps 2 × 10–15 · Plancha 2 × 45 s\n11
- :15 Inglés · 1 hora\n12:45 Ducha fría 1 min: Agua fría 1 min\n\nDespi
- ertas 8:30 · entrenas desde 9:00 · sales al trabajo 13:30 · cama 0:30\
- nSi hoy entras a las 16:00: despiertas 9:15 · entrenas desde 9:45 · sal
- es 15:15 · cama 1:15 (en la app toca «Entro 16:00»).\nSi fallaste un d
- ía\, repetiste semanas o cambiaste ajustes\, manda lo que dice la app: a
- hí ningún día se pierde.\n\nÓrdenes paso a paso: https://claude.ai/ar
- tifact/Y7MgtsGPPBnXAaGzJpKC7H
+  2 × 10–15 por lado · Remo con banda 2 × 12–20 · Pullover con man
+ cuerna 2 × 10–15 · Pájaros con banda o mancuernas 2 × 12–20 · Ru
+ eda abdominal 2 × 6–12 · Bird dog 1 × 10 por lado · Hollow hold 2 
+ × 20 s\n11:15 Inglés · 1 hora\n12:45 Ducha fría 1 min: Agua fría 1 m
+ in\n\nDespiertas 8:30 · entrenas desde 9:00 · sales al trabajo 13:30 ·
+  cama 0:30\nSi hoy entras a las 16:00: despiertas 9:15 · entrenas desde 
+ 9:45 · sales 15:15 · cama 1:15 (en la app toca «Entro 16:00»).\nSi fa
+ llaste un día\, repetiste semanas o cambiaste ajustes\, manda lo que dic
+ e la app: ahí ningún día se pierde.\n\nÓrdenes paso a paso: https://c
+ laude.ai/artifact/Y7MgtsGPPBnXAaGzJpKC7H
 TRANSP:OPAQUE
 BEGIN:VALARM
 ACTION:DISPLAY
@@ -904,22 +915,23 @@ END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:bitacora-2026-11-21@rutina-marino
-DTSTAMP:20261021T165908Z
+DTSTAMP:20261022T124152Z
 DTSTART:20261121T120000Z
 DTEND:20261121T160000Z
 SUMMARY:★ Sem 4 · Día 4 · Hombros y brazos + core
 DESCRIPTION:«“Flaquito” se borra serie por serie\, Diego. Hoy toca ot
  ra.»\n\n9:00 Hombros y brazos + core: Press militar con mancuernas 2 × 
- 8–15 · Elevaciones laterales 2 × 15–25 · Curl martillo 2 × 10–1
- 5 · Extensión de tríceps con banda 2 × 15–20 · Curl de bíceps 2 
- × 10–15 · Pallof con banda 2 × 10 por lado\n11:15 Inglés · 1 hora\
- n12:45 Ducha fría 1 min: Agua fría 1 min\n\nDespiertas 8:30 · entrenas
-  desde 9:00 · sales al trabajo 13:30 · cama 0:30\nSi hoy entras a las 1
- 6:00: despiertas 9:15 · entrenas desde 9:45 · sales 15:15 · cama 1:15 
- (en la app toca «Entro 16:00»).\nSi fallaste un día\, repetiste semana
- s o cambiaste ajustes\, manda lo que dice la app: ahí ningún día se pi
- erde.\n\nÓrdenes paso a paso: https://claude.ai/artifact/Y7MgtsGPPBnXAaG
- zJpKC7H
+ 8–12 · Elevaciones laterales 2 × 12–20 · Curl de bíceps con mancu
+ ernas 2 × 10–15 · Extensión de tríceps sobre la cabeza 2 × 10–15
+  · Curl martillo 1 × 12–15 · Face pull con banda 2 × 15–20 · Rue
+ da abdominal 2 × 6–12 · Plancha lateral 1 × 30 s por lado · Dead bu
+ g 1 × 10 por lado\n11:15 Inglés · 1 hora\n12:45 Ducha fría 1 min: Agu
+ a fría 1 min\n\nDespiertas 8:30 · entrenas desde 9:00 · sales al traba
+ jo 13:30 · cama 0:30\nSi hoy entras a las 16:00: despiertas 9:15 · entr
+ enas desde 9:45 · sales 15:15 · cama 1:15 (en la app toca «Entro 16:00
+ »).\nSi fallaste un día\, repetiste semanas o cambiaste ajustes\, manda
+  lo que dice la app: ahí ningún día se pierde.\n\nÓrdenes paso a paso
+ : https://claude.ai/artifact/Y7MgtsGPPBnXAaGzJpKC7H
 TRANSP:OPAQUE
 BEGIN:VALARM
 ACTION:DISPLAY
@@ -934,7 +946,7 @@ END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:bitacora-2026-11-22@rutina-marino
-DTSTAMP:20261021T165908Z
+DTSTAMP:20261022T124152Z
 DTSTART:20261122T130000Z
 DTEND:20261122T133000Z
 SUMMARY:★ Sem 4 · Día 5 · Descanso o partido
@@ -954,7 +966,7 @@ END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:bitacora-2026-11-23@rutina-marino
-DTSTAMP:20261021T165908Z
+DTSTAMP:20261022T124152Z
 DTSTART:20261123T103000Z
 DTEND:20261123T153000Z
 SUMMARY:★ Sem 4 · Día 6 · Lago + estiramiento
@@ -986,20 +998,19 @@ END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:bitacora-2026-11-24@rutina-marino
-DTSTAMP:20261021T165908Z
+DTSTAMP:20261022T124152Z
 DTSTART:20261124T120000Z
 DTEND:20261124T160000Z
 SUMMARY:★ Sem 4 · Día 7 · Cardio + core
-DESCRIPTION:«De pie\, Diego. Esto es lo que haces hoy.»\n\n9:00 Trote na
- sal: Trote nasal 25 min\n10:00 Core: Plancha 3 × 45 s · Plancha lateral
-  2 × 30 s por lado · Hollow hold 3 × 20 s\n11:15 Inglés · 1 hora\n12
- :45 Ducha fría 1 min: Agua fría 1 min\n\nDespiertas 8:30 · entrenas de
- sde 9:00 · sales al trabajo 13:30 · cama 0:30\nSi hoy entras a las 16:0
- 0: despiertas 9:15 · entrenas desde 9:45 · sales 15:15 · cama 1:15 (en
-  la app toca «Entro 16:00»).\nSi fallaste un día\, repetiste semanas o
-  cambiaste ajustes\, manda lo que dice la app: ahí ningún día se pierd
- e.\n\nÓrdenes paso a paso: https://claude.ai/artifact/Y7MgtsGPPBnXAaGzJp
- KC7H
+DESCRIPTION:«De pie\, Diego. Esto es lo que haces hoy.»\n\n9:00 Trote: T
+ rote 25 min\n10:00 Core: Plancha 2 × 30 s · Bird dog 1 × 10 por lado 
+ · Rueda abdominal 1 × 6–10\n11:15 Inglés · 1 hora\n12:45 Ducha frí
+ a 1 min: Agua fría 1 min\n\nDespiertas 8:30 · entrenas desde 9:00 · sa
+ les al trabajo 13:30 · cama 0:30\nSi hoy entras a las 16:00: despiertas 
+ 9:15 · entrenas desde 9:45 · sales 15:15 · cama 1:15 (en la app toca 
+ «Entro 16:00»).\nSi fallaste un día\, repetiste semanas o cambiaste aj
+ ustes\, manda lo que dice la app: ahí ningún día se pierde.\n\nÓrdene
+ s paso a paso: https://claude.ai/artifact/Y7MgtsGPPBnXAaGzJpKC7H
 TRANSP:OPAQUE
 BEGIN:VALARM
 ACTION:DISPLAY
@@ -1014,23 +1025,24 @@ END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:bitacora-2026-11-25@rutina-marino
-DTSTAMP:20261021T165908Z
+DTSTAMP:20261022T124152Z
 DTSTART:20261125T120000Z
 DTEND:20261125T160000Z
 SUMMARY:★ Sem 5 · Día 1 · Pecho + core
 DESCRIPTION:«Arriba\, Diego. Nadie lo va a hacer por ti.»\n\n9:00 Pecho 
- + core: Flexiones con mochila 3 × 10–15 · Press de pecho en el suelo 
- 3 × 12–20 · Aperturas con banda 2 × 15–20 · Fondos en silla 2 × 
- 10–20 · Extensión de tríceps acostado 2 × 10–15 · Rueda abdomina
- l 2 × 6–8 de rodillas\n11:15 Inglés · 1 hora\n12:30 Tolerancia al do
- lor: Sentadilla isométrica en la pared 1:05 · Colgado de la barra 0:30 
- · Plancha 1:20\n12:45 Ducha fría 1 min: Agua fría 1 min\n\nDespiertas 
- 8:30 · entrenas desde 9:00 · sales al trabajo 13:30 · cama 0:30\nSi ho
- y entras a las 16:00: despiertas 9:15 · entrenas desde 9:45 · sales 15:
- 15 · cama 1:15 (en la app toca «Entro 16:00»).\nSi fallaste un día\, 
- repetiste semanas o cambiaste ajustes\, manda lo que dice la app: ahí ni
- ngún día se pierde.\n\nÓrdenes paso a paso: https://claude.ai/artifact
- /Y7MgtsGPPBnXAaGzJpKC7H
+ + core: Press de pecho en el suelo con mancuernas 4 × 8–12 · Flexione
+ s de brazos 3 × 8–15 · Press con mancuernas agarre neutro 3 × 10–1
+ 2 · Aperturas con banda 3 × 12–20 · Flexiones con mochila 2 × 8–1
+ 2 · Rueda abdominal 3 × 6–12 · Plancha frontal 3 × 30 s · Dead bug
+  2 × 10 por lado\n11:15 Inglés · 1 hora\n12:30 Tolerancia al dolor: Se
+ ntadilla isométrica en la pared 1:05 · Colgado de la barra 0:30 · Plan
+ cha 1:20\n12:45 Ducha fría 1 min: Agua fría 1 min\n\nDespiertas 8:30 ·
+  entrenas desde 9:00 · sales al trabajo 13:30 · cama 0:30\nSi hoy entra
+ s a las 16:00: despiertas 9:15 · entrenas desde 9:45 · sales 15:15 · c
+ ama 1:15 (en la app toca «Entro 16:00»).\nSi fallaste un día\, repetis
+ te semanas o cambiaste ajustes\, manda lo que dice la app: ahí ningún d
+ ía se pierde.\n\nÓrdenes paso a paso: https://claude.ai/artifact/Y7Mgts
+ GPPBnXAaGzJpKC7H
 TRANSP:OPAQUE
 BEGIN:VALARM
 ACTION:DISPLAY
@@ -1045,24 +1057,24 @@ END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:bitacora-2026-11-26@rutina-marino
-DTSTAMP:20261021T165908Z
+DTSTAMP:20261022T124152Z
 DTSTART:20261126T120000Z
 DTEND:20261126T160000Z
 SUMMARY:★ Sem 5 · Día 2 · Pierna + core
 DESCRIPTION:«Diego. Querías saber si puedes. Hoy se sigue respondiendo.
- »\n\n9:00 Pierna + core: Calentamiento de carrera 10 min · Saltos largo
- s 3 × 3 · Sentadilla búlgara 3 × 8–12 por pierna · Peso muerto rum
- ano 3 × 10–15 · Sentadilla goblet 2 × 12–20 · Nórdico 2 × 3–4
-  · Copenhague 2 × 15 s por lado · Gemelos a una pierna 2 × 12–20 po
- r pierna · Hollow hold 2 × 20 s\n11:15 Inglés · 1 hora\n12:30 Toleran
- cia al dolor: Sentadilla isométrica en la pared 1:05 · Colgado de la ba
- rra 0:30 · Plancha 1:20\n12:45 Ducha fría 1 min: Agua fría 1 min\n\nDe
- spiertas 8:30 · entrenas desde 9:00 · sales al trabajo 13:30 · cama 0:
- 30\nSi hoy entras a las 16:00: despiertas 9:15 · entrenas desde 9:45 · 
- sales 15:15 · cama 1:15 (en la app toca «Entro 16:00»).\nSi fallaste u
- n día\, repetiste semanas o cambiaste ajustes\, manda lo que dice la app
- : ahí ningún día se pierde.\n\nÓrdenes paso a paso: https://claude.ai
- /artifact/Y7MgtsGPPBnXAaGzJpKC7H
+ »\n\n9:00 Pierna + core: Sentadilla goblet 4 × 10–15 · Peso muerto r
+ umano con mancuernas 4 × 8–12 · Sentadilla búlgara 3 × 8–12 por p
+ ierna · Hip thrust con mancuerna 3 × 12–15 · Elevaciones de gemelos 
+ 3 × 15–25 · Rueda abdominal 3 × 6–10 · Plancha lateral 2 × 30 s 
+ por lado · Elevaciones de rodillas acostado 3 × 12–15\n11:15 Inglés 
+ · 1 hora\n12:30 Tolerancia al dolor: Sentadilla isométrica en la pared 
+ 1:05 · Colgado de la barra 0:30 · Plancha 1:20\n12:45 Ducha fría 1 min
+ : Agua fría 1 min\n\nDespiertas 8:30 · entrenas desde 9:00 · sales al 
+ trabajo 13:30 · cama 0:30\nSi hoy entras a las 16:00: despiertas 9:15 ·
+  entrenas desde 9:45 · sales 15:15 · cama 1:15 (en la app toca «Entro 
+ 16:00»).\nSi fallaste un día\, repetiste semanas o cambiaste ajustes\, 
+ manda lo que dice la app: ahí ningún día se pierde.\n\nÓrdenes paso a
+  paso: https://claude.ai/artifact/Y7MgtsGPPBnXAaGzJpKC7H
 TRANSP:OPAQUE
 BEGIN:VALARM
 ACTION:DISPLAY
@@ -1077,22 +1089,24 @@ END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:bitacora-2026-11-27@rutina-marino
-DTSTAMP:20261021T165908Z
+DTSTAMP:20261022T124152Z
 DTSTART:20261127T120000Z
 DTEND:20261127T160000Z
 SUMMARY:★ Sem 5 · Día 3 · Espalda + core
 DESCRIPTION:«“Flaquito” se borra serie por serie\, Diego. Hoy toca ot
- ra.»\n\n9:00 Espalda + core: Barras 3 × 4 · Remo a una mano con mancue
- rna 3 × 10–15 por lado · Remo con banda 2 × 15–20 · Face pull con
-  banda 2 × 15–20 · Curl de bíceps 2 × 10–15 · Plancha 2 × 45 s\
- n11:15 Inglés · 1 hora\n12:30 Tolerancia al dolor: Sentadilla isométri
- ca en la pared 1:05 · Colgado de la barra 0:30 · Plancha 1:20\n12:45 Du
- cha fría 1 min: Agua fría 1 min\n\nDespiertas 8:30 · entrenas desde 9:
- 00 · sales al trabajo 13:30 · cama 0:30\nSi hoy entras a las 16:00: des
- piertas 9:15 · entrenas desde 9:45 · sales 15:15 · cama 1:15 (en la ap
- p toca «Entro 16:00»).\nSi fallaste un día\, repetiste semanas o cambi
- aste ajustes\, manda lo que dice la app: ahí ningún día se pierde.\n\n
- Órdenes paso a paso: https://claude.ai/artifact/Y7MgtsGPPBnXAaGzJpKC7H
+ ra.»\n\n9:00 Espalda + core: Barras 4 × 4 · Remo a una mano con mancue
+ rna 4 × 10–15 por lado · Remo con banda 3 × 12–20 · Pullover con 
+ mancuerna 3 × 10–15 · Pájaros con banda o mancuernas 3 × 12–20 ·
+  Rueda abdominal 3 × 6–12 · Bird dog 2 × 10 por lado · Hollow hold 
+ 3 × 20 s\n11:15 Inglés · 1 hora\n12:30 Tolerancia al dolor: Sentadilla
+  isométrica en la pared 1:05 · Colgado de la barra 0:30 · Plancha 1:20
+ \n12:45 Ducha fría 1 min: Agua fría 1 min\n\nDespiertas 8:30 · entrena
+ s desde 9:00 · sales al trabajo 13:30 · cama 0:30\nSi hoy entras a las 
+ 16:00: despiertas 9:15 · entrenas desde 9:45 · sales 15:15 · cama 1:15
+  (en la app toca «Entro 16:00»).\nSi fallaste un día\, repetiste seman
+ as o cambiaste ajustes\, manda lo que dice la app: ahí ningún día se p
+ ierde.\n\nÓrdenes paso a paso: https://claude.ai/artifact/Y7MgtsGPPBnXAa
+ GzJpKC7H
 TRANSP:OPAQUE
 BEGIN:VALARM
 ACTION:DISPLAY
@@ -1107,23 +1121,25 @@ END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:bitacora-2026-11-28@rutina-marino
-DTSTAMP:20261021T165908Z
+DTSTAMP:20261022T124152Z
 DTSTART:20261128T120000Z
 DTEND:20261128T160000Z
 SUMMARY:★ Sem 5 · Día 4 · Hombros y brazos + core
 DESCRIPTION:«Diego: el músculo se gana entrenando\, comiendo y durmiendo
  . Las tres\, hoy.»\n\n9:00 Hombros y brazos + core: Press militar con ma
- ncuernas 3 × 8–15 · Elevaciones laterales 3 × 15–25 · Curl martil
- lo 2 × 10–15 · Extensión de tríceps con banda 2 × 15–20 · Curl 
- de bíceps 2 × 10–15 · Pallof con banda 2 × 10 por lado\n11:15 Ingl
- és · 1 hora\n12:30 Tolerancia al dolor: Sentadilla isométrica en la pa
- red 1:05 · Colgado de la barra 0:30 · Plancha 1:20\n12:45 Ducha fría 1
-  min: Agua fría 1 min\n\nDespiertas 8:30 · entrenas desde 9:00 · sales
-  al trabajo 13:30 · cama 0:30\nSi hoy entras a las 16:00: despiertas 9:1
- 5 · entrenas desde 9:45 · sales 15:15 · cama 1:15 (en la app toca «En
- tro 16:00»).\nSi fallaste un día\, repetiste semanas o cambiaste ajuste
- s\, manda lo que dice la app: ahí ningún día se pierde.\n\nÓrdenes pa
- so a paso: https://claude.ai/artifact/Y7MgtsGPPBnXAaGzJpKC7H
+ ncuernas 4 × 8–12 · Elevaciones laterales 3 × 12–20 · Curl de bí
+ ceps con mancuernas 3 × 10–15 · Extensión de tríceps sobre la cabez
+ a 3 × 10–15 · Curl martillo 2 × 12–15 · Face pull con banda 3 × 
+ 15–20 · Rueda abdominal 3 × 6–12 · Plancha lateral 2 × 30 s por l
+ ado · Dead bug 2 × 10 por lado\n11:15 Inglés · 1 hora\n12:30 Toleranc
+ ia al dolor: Sentadilla isométrica en la pared 1:05 · Colgado de la bar
+ ra 0:30 · Plancha 1:20\n12:45 Ducha fría 1 min: Agua fría 1 min\n\nDes
+ piertas 8:30 · entrenas desde 9:00 · sales al trabajo 13:30 · cama 0:3
+ 0\nSi hoy entras a las 16:00: despiertas 9:15 · entrenas desde 9:45 · s
+ ales 15:15 · cama 1:15 (en la app toca «Entro 16:00»).\nSi fallaste un
+  día\, repetiste semanas o cambiaste ajustes\, manda lo que dice la app:
+  ahí ningún día se pierde.\n\nÓrdenes paso a paso: https://claude.ai/
+ artifact/Y7MgtsGPPBnXAaGzJpKC7H
 TRANSP:OPAQUE
 BEGIN:VALARM
 ACTION:DISPLAY
@@ -1138,7 +1154,7 @@ END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:bitacora-2026-11-29@rutina-marino
-DTSTAMP:20261021T165908Z
+DTSTAMP:20261022T124152Z
 DTSTART:20261129T130000Z
 DTEND:20261129T133000Z
 SUMMARY:★ Sem 5 · Día 5 · Descanso o partido
@@ -1158,7 +1174,7 @@ END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:bitacora-2026-11-30@rutina-marino
-DTSTAMP:20261021T165908Z
+DTSTAMP:20261022T124152Z
 DTSTART:20261130T103000Z
 DTEND:20261130T153000Z
 SUMMARY:★ Sem 5 · Día 6 · Lago + estiramiento
@@ -1192,22 +1208,22 @@ END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:bitacora-2026-12-01@rutina-marino
-DTSTAMP:20261021T165908Z
+DTSTAMP:20261022T124152Z
 DTSTART:20261201T120000Z
 DTEND:20261201T160000Z
 SUMMARY:★ Sem 5 · Día 7 · Cardio + core
 DESCRIPTION:«Diego. Querías saber si puedes. Hoy se sigue respondiendo.
- »\n\n9:00 Intervalos: 7 × 1 min fuerte 1 min trotando suave entre cada 
- uno · Vuelta a la calma 5 min trote suave\n10:00 Core: Plancha 3 × 45 s
-  · Plancha lateral 2 × 30 s por lado · Hollow hold 3 × 20 s\n11:15 In
- glés · 1 hora\n12:30 Tolerancia al dolor: Sentadilla isométrica en la 
- pared 1:05 · Colgado de la barra 0:30 · Plancha 1:20\n12:45 Ducha fría
-  1 min: Agua fría 1 min\n\nDespiertas 8:30 · entrenas desde 9:00 · sal
- es al trabajo 13:30 · cama 0:30\nSi hoy entras a las 16:00: despiertas 9
- :15 · entrenas desde 9:45 · sales 15:15 · cama 1:15 (en la app toca «
- Entro 16:00»).\nSi fallaste un día\, repetiste semanas o cambiaste ajus
- tes\, manda lo que dice la app: ahí ningún día se pierde.\n\nÓrdenes 
- paso a paso: https://claude.ai/artifact/Y7MgtsGPPBnXAaGzJpKC7H
+ »\n\n9:00 Aceleraciones: Aceleraciones 6 × 10–15 s · Vuelta a la cal
+ ma 5 min trote suave\n10:00 Core: Plancha 3 × 30 s · Bird dog 2 × 10 p
+ or lado · Rueda abdominal 2 × 6–10\n11:15 Inglés · 1 hora\n12:30 To
+ lerancia al dolor: Sentadilla isométrica en la pared 1:05 · Colgado de 
+ la barra 0:30 · Plancha 1:20\n12:45 Ducha fría 1 min: Agua fría 1 min\
+ n\nDespiertas 8:30 · entrenas desde 9:00 · sales al trabajo 13:30 · ca
+ ma 0:30\nSi hoy entras a las 16:00: despiertas 9:15 · entrenas desde 9:4
+ 5 · sales 15:15 · cama 1:15 (en la app toca «Entro 16:00»).\nSi falla
+ ste un día\, repetiste semanas o cambiaste ajustes\, manda lo que dice l
+ a app: ahí ningún día se pierde.\n\nÓrdenes paso a paso: https://clau
+ de.ai/artifact/Y7MgtsGPPBnXAaGzJpKC7H
 TRANSP:OPAQUE
 BEGIN:VALARM
 ACTION:DISPLAY
@@ -1222,23 +1238,24 @@ END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:bitacora-2026-12-02@rutina-marino
-DTSTAMP:20261021T165908Z
+DTSTAMP:20261022T124152Z
 DTSTART:20261202T120000Z
 DTEND:20261202T160000Z
 SUMMARY:★ Sem 6 · Día 1 · Pecho + core
 DESCRIPTION:«“Flaquito” se borra serie por serie\, Diego. Hoy toca ot
- ra.»\n\n9:00 Pecho + core: Flexiones con mochila 3 × 10–15 · Press d
- e pecho en el suelo 3 × 12–20 · Aperturas con banda 2 × 15–20 · F
- ondos en silla 2 × 10–20 · Extensión de tríceps acostado 2 × 10–
- 15 · Rueda abdominal 2 × 6–8 de rodillas\n11:15 Inglés · 1 hora\n12
- :30 Tolerancia al dolor: Sentadilla isométrica en la pared 1:09 · Colga
- do de la barra 0:32 · Plancha 1:24\n12:45 Ducha fría 1:30: Agua fría 1
- :30\n\nDespiertas 8:30 · entrenas desde 9:00 · sales al trabajo 13:30 
- · cama 0:30\nSi hoy entras a las 16:00: despiertas 9:15 · entrenas desd
- e 9:45 · sales 15:15 · cama 1:15 (en la app toca «Entro 16:00»).\nSi 
- fallaste un día\, repetiste semanas o cambiaste ajustes\, manda lo que d
- ice la app: ahí ningún día se pierde.\n\nÓrdenes paso a paso: https:/
- /claude.ai/artifact/Y7MgtsGPPBnXAaGzJpKC7H
+ ra.»\n\n9:00 Pecho + core: Press de pecho en el suelo con mancuernas 4 
+ × 8–12 · Flexiones de brazos 3 × 8–15 · Press con mancuernas agar
+ re neutro 3 × 10–12 · Aperturas con banda 3 × 12–20 · Flexiones c
+ on mochila 2 × 8–12 · Rueda abdominal 3 × 6–12 · Plancha frontal 
+ 3 × 30 s · Dead bug 2 × 10 por lado\n11:15 Inglés · 1 hora\n12:30 To
+ lerancia al dolor: Sentadilla isométrica en la pared 1:09 · Colgado de 
+ la barra 0:32 · Plancha 1:24\n12:45 Ducha fría 1:30: Agua fría 1:30\n\
+ nDespiertas 8:30 · entrenas desde 9:00 · sales al trabajo 13:30 · cama
+  0:30\nSi hoy entras a las 16:00: despiertas 9:15 · entrenas desde 9:45 
+ · sales 15:15 · cama 1:15 (en la app toca «Entro 16:00»).\nSi fallast
+ e un día\, repetiste semanas o cambiaste ajustes\, manda lo que dice la 
+ app: ahí ningún día se pierde.\n\nÓrdenes paso a paso: https://claude
+ .ai/artifact/Y7MgtsGPPBnXAaGzJpKC7H
 TRANSP:OPAQUE
 BEGIN:VALARM
 ACTION:DISPLAY
@@ -1253,24 +1270,24 @@ END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:bitacora-2026-12-03@rutina-marino
-DTSTAMP:20261021T165908Z
+DTSTAMP:20261022T124152Z
 DTSTART:20261203T120000Z
 DTEND:20261203T160000Z
 SUMMARY:★ Sem 6 · Día 2 · Pierna + core
 DESCRIPTION:«Diego: el músculo se gana entrenando\, comiendo y durmiendo
- . Las tres\, hoy.»\n\n9:00 Pierna + core: Calentamiento de carrera 10 mi
- n · Saltos largos 3 × 3 · Sentadilla búlgara 3 × 8–12 por pierna 
- · Peso muerto rumano 3 × 10–15 · Sentadilla goblet 2 × 12–20 · N
- órdico 2 × 3–4 · Copenhague 2 × 15 s por lado · Gemelos a una pier
- na 2 × 12–20 por pierna · Hollow hold 2 × 20 s\n11:15 Inglés · 1 h
- ora\n12:30 Tolerancia al dolor: Sentadilla isométrica en la pared 1:09 
- · Colgado de la barra 0:32 · Plancha 1:24\n12:45 Ducha fría 1:30: Agua
-  fría 1:30\n\nDespiertas 8:30 · entrenas desde 9:00 · sales al trabajo
-  13:30 · cama 0:30\nSi hoy entras a las 16:00: despiertas 9:15 · entren
- as desde 9:45 · sales 15:15 · cama 1:15 (en la app toca «Entro 16:00»
- ).\nSi fallaste un día\, repetiste semanas o cambiaste ajustes\, manda l
- o que dice la app: ahí ningún día se pierde.\n\nÓrdenes paso a paso: 
- https://claude.ai/artifact/Y7MgtsGPPBnXAaGzJpKC7H
+ . Las tres\, hoy.»\n\n9:00 Pierna + core: Sentadilla goblet 4 × 10–15
+  · Peso muerto rumano con mancuernas 4 × 8–12 · Sentadilla búlgara 
+ 3 × 8–12 por pierna · Hip thrust con mancuerna 3 × 12–15 · Elevac
+ iones de gemelos 3 × 15–25 · Rueda abdominal 3 × 6–10 · Plancha l
+ ateral 2 × 30 s por lado · Elevaciones de rodillas acostado 3 × 12–1
+ 5\n11:15 Inglés · 1 hora\n12:30 Tolerancia al dolor: Sentadilla isomét
+ rica en la pared 1:09 · Colgado de la barra 0:32 · Plancha 1:24\n12:45 
+ Ducha fría 1:30: Agua fría 1:30\n\nDespiertas 8:30 · entrenas desde 9:
+ 00 · sales al trabajo 13:30 · cama 0:30\nSi hoy entras a las 16:00: des
+ piertas 9:15 · entrenas desde 9:45 · sales 15:15 · cama 1:15 (en la ap
+ p toca «Entro 16:00»).\nSi fallaste un día\, repetiste semanas o cambi
+ aste ajustes\, manda lo que dice la app: ahí ningún día se pierde.\n\n
+ Órdenes paso a paso: https://claude.ai/artifact/Y7MgtsGPPBnXAaGzJpKC7H
 TRANSP:OPAQUE
 BEGIN:VALARM
 ACTION:DISPLAY
@@ -1285,22 +1302,24 @@ END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:bitacora-2026-12-04@rutina-marino
-DTSTAMP:20261021T165908Z
+DTSTAMP:20261022T124152Z
 DTSTART:20261204T120000Z
 DTEND:20261204T160000Z
 SUMMARY:★ Sem 6 · Día 3 · Espalda + core
 DESCRIPTION:«Que te empujen y no te muevas. Eso se construye hoy\, Diego.
- »\n\n9:00 Espalda + core: Barras 3 × 4 · Remo a una mano con mancuerna
-  3 × 10–15 por lado · Remo con banda 2 × 15–20 · Face pull con ba
- nda 2 × 15–20 · Curl de bíceps 2 × 10–15 · Plancha 2 × 45 s\n11
- :15 Inglés · 1 hora\n12:30 Tolerancia al dolor: Sentadilla isométrica 
- en la pared 1:09 · Colgado de la barra 0:32 · Plancha 1:24\n12:45 Ducha
-  fría 1:30: Agua fría 1:30\n\nDespiertas 8:30 · entrenas desde 9:00 ·
-  sales al trabajo 13:30 · cama 0:30\nSi hoy entras a las 16:00: despiert
- as 9:15 · entrenas desde 9:45 · sales 15:15 · cama 1:15 (en la app toc
- a «Entro 16:00»).\nSi fallaste un día\, repetiste semanas o cambiaste 
- ajustes\, manda lo que dice la app: ahí ningún día se pierde.\n\nÓrde
- nes paso a paso: https://claude.ai/artifact/Y7MgtsGPPBnXAaGzJpKC7H
+ »\n\n9:00 Espalda + core: Barras 4 × 4 · Remo a una mano con mancuerna
+  4 × 10–15 por lado · Remo con banda 3 × 12–20 · Pullover con man
+ cuerna 3 × 10–15 · Pájaros con banda o mancuernas 3 × 12–20 · Ru
+ eda abdominal 3 × 6–12 · Bird dog 2 × 10 por lado · Hollow hold 3 
+ × 20 s\n11:15 Inglés · 1 hora\n12:30 Tolerancia al dolor: Sentadilla i
+ sométrica en la pared 1:09 · Colgado de la barra 0:32 · Plancha 1:24\n
+ 12:45 Ducha fría 1:30: Agua fría 1:30\n\nDespiertas 8:30 · entrenas de
+ sde 9:00 · sales al trabajo 13:30 · cama 0:30\nSi hoy entras a las 16:0
+ 0: despiertas 9:15 · entrenas desde 9:45 · sales 15:15 · cama 1:15 (en
+  la app toca «Entro 16:00»).\nSi fallaste un día\, repetiste semanas o
+  cambiaste ajustes\, manda lo que dice la app: ahí ningún día se pierd
+ e.\n\nÓrdenes paso a paso: https://claude.ai/artifact/Y7MgtsGPPBnXAaGzJp
+ KC7H
 TRANSP:OPAQUE
 BEGIN:VALARM
 ACTION:DISPLAY
@@ -1315,23 +1334,24 @@ END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:bitacora-2026-12-05@rutina-marino
-DTSTAMP:20261021T165908Z
+DTSTAMP:20261022T124152Z
 DTSTART:20261205T120000Z
 DTEND:20261205T160000Z
 SUMMARY:★ Sem 6 · Día 4 · Hombros y brazos + core
 DESCRIPTION:«De pie\, Diego. Esto es lo que haces hoy.»\n\n9:00 Hombros 
- y brazos + core: Press militar con mancuernas 3 × 8–15 · Elevaciones 
- laterales 3 × 15–25 · Curl martillo 2 × 10–15 · Extensión de tr
- íceps con banda 2 × 15–20 · Curl de bíceps 2 × 10–15 · Pallof c
- on banda 2 × 10 por lado\n11:15 Inglés · 1 hora\n12:30 Tolerancia al d
- olor: Sentadilla isométrica en la pared 1:09 · Colgado de la barra 0:32
-  · Plancha 1:24\n12:45 Ducha fría 1:30: Agua fría 1:30\n\nDespiertas 8
- :30 · entrenas desde 9:00 · sales al trabajo 13:30 · cama 0:30\nSi hoy
-  entras a las 16:00: despiertas 9:15 · entrenas desde 9:45 · sales 15:1
- 5 · cama 1:15 (en la app toca «Entro 16:00»).\nSi fallaste un día\, r
- epetiste semanas o cambiaste ajustes\, manda lo que dice la app: ahí nin
- gún día se pierde.\n\nÓrdenes paso a paso: https://claude.ai/artifact/
- Y7MgtsGPPBnXAaGzJpKC7H
+ y brazos + core: Press militar con mancuernas 4 × 8–12 · Elevaciones 
+ laterales 3 × 12–20 · Curl de bíceps con mancuernas 3 × 10–15 · 
+ Extensión de tríceps sobre la cabeza 3 × 10–15 · Curl martillo 2 ×
+  12–15 · Face pull con banda 3 × 15–20 · Rueda abdominal 3 × 6–
+ 12 · Plancha lateral 2 × 30 s por lado · Dead bug 2 × 10 por lado\n11
+ :15 Inglés · 1 hora\n12:30 Tolerancia al dolor: Sentadilla isométrica 
+ en la pared 1:09 · Colgado de la barra 0:32 · Plancha 1:24\n12:45 Ducha
+  fría 1:30: Agua fría 1:30\n\nDespiertas 8:30 · entrenas desde 9:00 ·
+  sales al trabajo 13:30 · cama 0:30\nSi hoy entras a las 16:00: despiert
+ as 9:15 · entrenas desde 9:45 · sales 15:15 · cama 1:15 (en la app toc
+ a «Entro 16:00»).\nSi fallaste un día\, repetiste semanas o cambiaste 
+ ajustes\, manda lo que dice la app: ahí ningún día se pierde.\n\nÓrde
+ nes paso a paso: https://claude.ai/artifact/Y7MgtsGPPBnXAaGzJpKC7H
 TRANSP:OPAQUE
 BEGIN:VALARM
 ACTION:DISPLAY
@@ -1346,7 +1366,7 @@ END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:bitacora-2026-12-06@rutina-marino
-DTSTAMP:20261021T165908Z
+DTSTAMP:20261022T124152Z
 DTSTART:20261206T130000Z
 DTEND:20261206T133000Z
 SUMMARY:★ Sem 6 · Día 5 · Descanso o partido
@@ -1366,7 +1386,7 @@ END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:bitacora-2026-12-07@rutina-marino
-DTSTAMP:20261021T165908Z
+DTSTAMP:20261022T124152Z
 DTSTART:20261207T103000Z
 DTEND:20261207T153000Z
 SUMMARY:★ Sem 6 · Día 6 · Lago + Prueba de incomodidad · 40 min
@@ -1396,51 +1416,53 @@ END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:bitacora-2026-12-08@rutina-marino
-DTSTAMP:20261021T165908Z
+DTSTAMP:20261022T124152Z
 DTSTART:20261208T120000Z
 DTEND:20261208T160000Z
-SUMMARY:★ Sem 6 · Día 7 · Marcha con mochila
+SUMMARY:★ Sem 6 · Día 7 · Cardio + core
 DESCRIPTION:«“Flaquito” se borra serie por serie\, Diego. Hoy toca ot
- ra.»\n\n9:00 Marcha con mochila 5 kg: Marcha rápida 38 min con 5 kg\n11
- :15 Inglés · 1 hora\n12:30 Tolerancia al dolor: Sentadilla isométrica 
- en la pared 1:09 · Colgado de la barra 0:32 · Plancha 1:24\n12:45 Ducha
-  fría 1:30: Agua fría 1:30\n\nDespiertas 8:30 · entrenas desde 9:00 ·
-  sales al trabajo 13:30 · cama 0:30\nSi hoy entras a las 16:00: despiert
- as 9:15 · entrenas desde 9:45 · sales 15:15 · cama 1:15 (en la app toc
- a «Entro 16:00»).\nSi fallaste un día\, repetiste semanas o cambiaste 
- ajustes\, manda lo que dice la app: ahí ningún día se pierde.\n\nÓrde
- nes paso a paso: https://claude.ai/artifact/Y7MgtsGPPBnXAaGzJpKC7H
+ ra.»\n\n9:00 Trote: Trote 29 min\n10:00 Core: Plancha 3 × 30 s · Bird 
+ dog 2 × 10 por lado · Rueda abdominal 2 × 6–10\n11:15 Inglés · 1 h
+ ora\n12:30 Tolerancia al dolor: Sentadilla isométrica en la pared 1:09 
+ · Colgado de la barra 0:32 · Plancha 1:24\n12:45 Ducha fría 1:30: Agua
+  fría 1:30\n\nDespiertas 8:30 · entrenas desde 9:00 · sales al trabajo
+  13:30 · cama 0:30\nSi hoy entras a las 16:00: despiertas 9:15 · entren
+ as desde 9:45 · sales 15:15 · cama 1:15 (en la app toca «Entro 16:00»
+ ).\nSi fallaste un día\, repetiste semanas o cambiaste ajustes\, manda l
+ o que dice la app: ahí ningún día se pierde.\n\nÓrdenes paso a paso: 
+ https://claude.ai/artifact/Y7MgtsGPPBnXAaGzJpKC7H
 TRANSP:OPAQUE
 BEGIN:VALARM
 ACTION:DISPLAY
-DESCRIPTION:★ Sem 6 · Día 7 · Marcha con mochila
+DESCRIPTION:★ Sem 6 · Día 7 · Cardio + core
 TRIGGER:-PT15M
 END:VALARM
 BEGIN:VALARM
 ACTION:DISPLAY
-DESCRIPTION:★ Sem 6 · Día 7 · Marcha con mochila
+DESCRIPTION:★ Sem 6 · Día 7 · Cardio + core
 TRIGGER:PT0M
 END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:bitacora-2026-12-09@rutina-marino
-DTSTAMP:20261021T165908Z
+DTSTAMP:20261022T124152Z
 DTSTART:20261209T120000Z
 DTEND:20261209T160000Z
 SUMMARY:★ Sem 7 · Día 1 · Pecho + core
 DESCRIPTION:«Diego: el músculo se gana entrenando\, comiendo y durmiendo
- . Las tres\, hoy.»\n\n9:00 Pecho + core: Flexiones con mochila 3 × 10
- –15 · Press de pecho en el suelo 3 × 12–20 · Aperturas con banda 2
-  × 15–20 · Fondos en silla 2 × 10–20 · Extensión de tríceps aco
- stado 2 × 10–15 · Rueda abdominal 2 × 6–8 de rodillas\n11:15 Ingl
- és · 1 hora\n12:30 Tolerancia al dolor: Sentadilla isométrica en la pa
- red 1:13 · Colgado de la barra 0:34 · Plancha 1:28\n12:45 Ducha fría 1
- :30: Agua fría 1:30\n\nDespiertas 8:30 · entrenas desde 9:00 · sales a
- l trabajo 13:30 · cama 0:30\nSi hoy entras a las 16:00: despiertas 9:15 
- · entrenas desde 9:45 · sales 15:15 · cama 1:15 (en la app toca «Entr
- o 16:00»).\nSi fallaste un día\, repetiste semanas o cambiaste ajustes\
- , manda lo que dice la app: ahí ningún día se pierde.\n\nÓrdenes paso
-  a paso: https://claude.ai/artifact/Y7MgtsGPPBnXAaGzJpKC7H
+ . Las tres\, hoy.»\n\n9:00 Pecho + core: Press de pecho en el suelo con 
+ mancuernas 4 × 8–12 · Flexiones de brazos 3 × 8–15 · Press con ma
+ ncuernas agarre neutro 3 × 10–12 · Aperturas con banda 3 × 12–20 
+ · Flexiones con mochila 2 × 8–12 · Rueda abdominal 3 × 6–12 · Pl
+ ancha frontal 3 × 30 s · Dead bug 2 × 10 por lado\n11:15 Inglés · 1 
+ hora\n12:30 Tolerancia al dolor: Sentadilla isométrica en la pared 1:13 
+ · Colgado de la barra 0:34 · Plancha 1:28\n12:45 Ducha fría 1:30: Agua
+  fría 1:30\n\nDespiertas 8:30 · entrenas desde 9:00 · sales al trabajo
+  13:30 · cama 0:30\nSi hoy entras a las 16:00: despiertas 9:15 · entren
+ as desde 9:45 · sales 15:15 · cama 1:15 (en la app toca «Entro 16:00»
+ ).\nSi fallaste un día\, repetiste semanas o cambiaste ajustes\, manda l
+ o que dice la app: ahí ningún día se pierde.\n\nÓrdenes paso a paso: 
+ https://claude.ai/artifact/Y7MgtsGPPBnXAaGzJpKC7H
 TRANSP:OPAQUE
 BEGIN:VALARM
 ACTION:DISPLAY
@@ -1455,24 +1477,24 @@ END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:bitacora-2026-12-10@rutina-marino
-DTSTAMP:20261021T165908Z
+DTSTAMP:20261022T124152Z
 DTSTART:20261210T120000Z
 DTEND:20261210T160000Z
 SUMMARY:★ Sem 7 · Día 2 · Pierna + core
 DESCRIPTION:«Diego. Querías saber si puedes. Hoy se sigue respondiendo.
- »\n\n9:00 Pierna + core: Calentamiento de carrera 10 min · Saltos largo
- s 3 × 3 · Sentadilla búlgara 3 × 8–12 por pierna · Peso muerto rum
- ano 3 × 10–15 · Sentadilla goblet 2 × 12–20 · Nórdico 2 × 3–4
-  · Copenhague 2 × 15 s por lado · Gemelos a una pierna 2 × 12–20 po
- r pierna · Hollow hold 2 × 20 s\n11:15 Inglés · 1 hora\n12:30 Toleran
- cia al dolor: Sentadilla isométrica en la pared 1:13 · Colgado de la ba
- rra 0:34 · Plancha 1:28\n12:45 Ducha fría 1:30: Agua fría 1:30\n\nDesp
- iertas 8:30 · entrenas desde 9:00 · sales al trabajo 13:30 · cama 0:30
- \nSi hoy entras a las 16:00: despiertas 9:15 · entrenas desde 9:45 · sa
- les 15:15 · cama 1:15 (en la app toca «Entro 16:00»).\nSi fallaste un 
- día\, repetiste semanas o cambiaste ajustes\, manda lo que dice la app: 
- ahí ningún día se pierde.\n\nÓrdenes paso a paso: https://claude.ai/a
- rtifact/Y7MgtsGPPBnXAaGzJpKC7H
+ »\n\n9:00 Pierna + core: Sentadilla goblet 4 × 10–15 · Peso muerto r
+ umano con mancuernas 4 × 8–12 · Sentadilla búlgara 3 × 8–12 por p
+ ierna · Hip thrust con mancuerna 3 × 12–15 · Elevaciones de gemelos 
+ 3 × 15–25 · Rueda abdominal 3 × 6–10 · Plancha lateral 2 × 30 s 
+ por lado · Elevaciones de rodillas acostado 3 × 12–15\n11:15 Inglés 
+ · 1 hora\n12:30 Tolerancia al dolor: Sentadilla isométrica en la pared 
+ 1:13 · Colgado de la barra 0:34 · Plancha 1:28\n12:45 Ducha fría 1:30:
+  Agua fría 1:30\n\nDespiertas 8:30 · entrenas desde 9:00 · sales al tr
+ abajo 13:30 · cama 0:30\nSi hoy entras a las 16:00: despiertas 9:15 · e
+ ntrenas desde 9:45 · sales 15:15 · cama 1:15 (en la app toca «Entro 16
+ :00»).\nSi fallaste un día\, repetiste semanas o cambiaste ajustes\, ma
+ nda lo que dice la app: ahí ningún día se pierde.\n\nÓrdenes paso a p
+ aso: https://claude.ai/artifact/Y7MgtsGPPBnXAaGzJpKC7H
 TRANSP:OPAQUE
 BEGIN:VALARM
 ACTION:DISPLAY
@@ -1487,22 +1509,24 @@ END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:bitacora-2026-12-11@rutina-marino
-DTSTAMP:20261021T165908Z
+DTSTAMP:20261022T124152Z
 DTSTART:20261211T120000Z
 DTEND:20261211T160000Z
 SUMMARY:★ Sem 7 · Día 3 · Espalda + core
 DESCRIPTION:«“Flaquito” se borra serie por serie\, Diego. Hoy toca ot
- ra.»\n\n9:00 Espalda + core: Barras 3 × 4 · Remo a una mano con mancue
- rna 3 × 10–15 por lado · Remo con banda 2 × 15–20 · Face pull con
-  banda 2 × 15–20 · Curl de bíceps 2 × 10–15 · Plancha 2 × 45 s\
- n11:15 Inglés · 1 hora\n12:30 Tolerancia al dolor: Sentadilla isométri
- ca en la pared 1:13 · Colgado de la barra 0:34 · Plancha 1:28\n12:45 Du
- cha fría 1:30: Agua fría 1:30\n\nDespiertas 8:30 · entrenas desde 9:00
-  · sales al trabajo 13:30 · cama 0:30\nSi hoy entras a las 16:00: despi
- ertas 9:15 · entrenas desde 9:45 · sales 15:15 · cama 1:15 (en la app 
- toca «Entro 16:00»).\nSi fallaste un día\, repetiste semanas o cambias
- te ajustes\, manda lo que dice la app: ahí ningún día se pierde.\n\nÓ
- rdenes paso a paso: https://claude.ai/artifact/Y7MgtsGPPBnXAaGzJpKC7H
+ ra.»\n\n9:00 Espalda + core: Barras 4 × 4 · Remo a una mano con mancue
+ rna 4 × 10–15 por lado · Remo con banda 3 × 12–20 · Pullover con 
+ mancuerna 3 × 10–15 · Pájaros con banda o mancuernas 3 × 12–20 ·
+  Rueda abdominal 3 × 6–12 · Bird dog 2 × 10 por lado · Hollow hold 
+ 3 × 20 s\n11:15 Inglés · 1 hora\n12:30 Tolerancia al dolor: Sentadilla
+  isométrica en la pared 1:13 · Colgado de la barra 0:34 · Plancha 1:28
+ \n12:45 Ducha fría 1:30: Agua fría 1:30\n\nDespiertas 8:30 · entrenas 
+ desde 9:00 · sales al trabajo 13:30 · cama 0:30\nSi hoy entras a las 16
+ :00: despiertas 9:15 · entrenas desde 9:45 · sales 15:15 · cama 1:15 (
+ en la app toca «Entro 16:00»).\nSi fallaste un día\, repetiste semanas
+  o cambiaste ajustes\, manda lo que dice la app: ahí ningún día se pie
+ rde.\n\nÓrdenes paso a paso: https://claude.ai/artifact/Y7MgtsGPPBnXAaGz
+ JpKC7H
 TRANSP:OPAQUE
 BEGIN:VALARM
 ACTION:DISPLAY
@@ -1517,23 +1541,25 @@ END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:bitacora-2026-12-12@rutina-marino
-DTSTAMP:20261021T165908Z
+DTSTAMP:20261022T124152Z
 DTSTART:20261212T120000Z
 DTEND:20261212T160000Z
 SUMMARY:★ Sem 7 · Día 4 · Hombros y brazos + core
 DESCRIPTION:«Diego: el músculo se gana entrenando\, comiendo y durmiendo
  . Las tres\, hoy.»\n\n9:00 Hombros y brazos + core: Press militar con ma
- ncuernas 3 × 8–15 · Elevaciones laterales 3 × 15–25 · Curl martil
- lo 2 × 10–15 · Extensión de tríceps con banda 2 × 15–20 · Curl 
- de bíceps 2 × 10–15 · Pallof con banda 2 × 10 por lado\n11:15 Ingl
- és · 1 hora\n12:30 Tolerancia al dolor: Sentadilla isométrica en la pa
- red 1:13 · Colgado de la barra 0:34 · Plancha 1:28\n12:45 Ducha fría 1
- :30: Agua fría 1:30\n\nDespiertas 8:30 · entrenas desde 9:00 · sales a
- l trabajo 13:30 · cama 0:30\nSi hoy entras a las 16:00: despiertas 9:15 
- · entrenas desde 9:45 · sales 15:15 · cama 1:15 (en la app toca «Entr
- o 16:00»).\nSi fallaste un día\, repetiste semanas o cambiaste ajustes\
- , manda lo que dice la app: ahí ningún día se pierde.\n\nÓrdenes paso
-  a paso: https://claude.ai/artifact/Y7MgtsGPPBnXAaGzJpKC7H
+ ncuernas 4 × 8–12 · Elevaciones laterales 3 × 12–20 · Curl de bí
+ ceps con mancuernas 3 × 10–15 · Extensión de tríceps sobre la cabez
+ a 3 × 10–15 · Curl martillo 2 × 12–15 · Face pull con banda 3 × 
+ 15–20 · Rueda abdominal 3 × 6–12 · Plancha lateral 2 × 30 s por l
+ ado · Dead bug 2 × 10 por lado\n11:15 Inglés · 1 hora\n12:30 Toleranc
+ ia al dolor: Sentadilla isométrica en la pared 1:13 · Colgado de la bar
+ ra 0:34 · Plancha 1:28\n12:45 Ducha fría 1:30: Agua fría 1:30\n\nDespi
+ ertas 8:30 · entrenas desde 9:00 · sales al trabajo 13:30 · cama 0:30\
+ nSi hoy entras a las 16:00: despiertas 9:15 · entrenas desde 9:45 · sal
+ es 15:15 · cama 1:15 (en la app toca «Entro 16:00»).\nSi fallaste un d
+ ía\, repetiste semanas o cambiaste ajustes\, manda lo que dice la app: a
+ hí ningún día se pierde.\n\nÓrdenes paso a paso: https://claude.ai/ar
+ tifact/Y7MgtsGPPBnXAaGzJpKC7H
 TRANSP:OPAQUE
 BEGIN:VALARM
 ACTION:DISPLAY
@@ -1548,7 +1574,7 @@ END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:bitacora-2026-12-13@rutina-marino
-DTSTAMP:20261021T165908Z
+DTSTAMP:20261022T124152Z
 DTSTART:20261213T130000Z
 DTEND:20261213T133000Z
 SUMMARY:★ Sem 7 · Día 5 · Descanso o partido
@@ -1568,7 +1594,7 @@ END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:bitacora-2026-12-14@rutina-marino
-DTSTAMP:20261021T165908Z
+DTSTAMP:20261022T124152Z
 DTSTART:20261214T103000Z
 DTEND:20261214T153000Z
 SUMMARY:★ Sem 7 · Día 6 · Lago + estiramiento
@@ -1602,22 +1628,22 @@ END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:bitacora-2026-12-15@rutina-marino
-DTSTAMP:20261021T165908Z
+DTSTAMP:20261022T124152Z
 DTSTART:20261215T120000Z
 DTEND:20261215T160000Z
 SUMMARY:★ Sem 7 · Día 7 · Cardio + core
-DESCRIPTION:«Arriba\, Diego. Nadie lo va a hacer por ti.»\n\n9:00 Interv
- alos: 8 × 1 min fuerte 1 min trotando suave entre cada uno · Vuelta a l
- a calma 5 min trote suave\n10:00 Core: Plancha 3 × 45 s · Plancha later
- al 2 × 30 s por lado · Hollow hold 3 × 20 s\n11:15 Inglés · 1 hora\n
- 12:30 Tolerancia al dolor: Sentadilla isométrica en la pared 1:13 · Col
- gado de la barra 0:34 · Plancha 1:28\n12:45 Ducha fría 1:30: Agua fría
-  1:30\n\nDespiertas 8:30 · entrenas desde 9:00 · sales al trabajo 13:30
-  · cama 0:30\nSi hoy entras a las 16:00: despiertas 9:15 · entrenas des
- de 9:45 · sales 15:15 · cama 1:15 (en la app toca «Entro 16:00»).\nSi
-  fallaste un día\, repetiste semanas o cambiaste ajustes\, manda lo que 
- dice la app: ahí ningún día se pierde.\n\nÓrdenes paso a paso: https:
- //claude.ai/artifact/Y7MgtsGPPBnXAaGzJpKC7H
+DESCRIPTION:«Arriba\, Diego. Nadie lo va a hacer por ti.»\n\n9:00 Aceler
+ aciones: Aceleraciones 6 × 10–15 s · Vuelta a la calma 5 min trote su
+ ave\n10:00 Core: Plancha 3 × 30 s · Bird dog 2 × 10 por lado · Rueda 
+ abdominal 2 × 6–10\n11:15 Inglés · 1 hora\n12:30 Tolerancia al dolor
+ : Sentadilla isométrica en la pared 1:13 · Colgado de la barra 0:34 · 
+ Plancha 1:28\n12:45 Ducha fría 1:30: Agua fría 1:30\n\nDespiertas 8:30 
+ · entrenas desde 9:00 · sales al trabajo 13:30 · cama 0:30\nSi hoy ent
+ ras a las 16:00: despiertas 9:15 · entrenas desde 9:45 · sales 15:15 ·
+  cama 1:15 (en la app toca «Entro 16:00»).\nSi fallaste un día\, repet
+ iste semanas o cambiaste ajustes\, manda lo que dice la app: ahí ningún
+  día se pierde.\n\nÓrdenes paso a paso: https://claude.ai/artifact/Y7Mg
+ tsGPPBnXAaGzJpKC7H
 TRANSP:OPAQUE
 BEGIN:VALARM
 ACTION:DISPLAY
