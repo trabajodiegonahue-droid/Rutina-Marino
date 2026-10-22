@@ -147,6 +147,10 @@ body.guided{padding-bottom:calc(420px + env(safe-area-inset-bottom,0px))}
 .ses{background:var(--paper);border:1px solid var(--line);border-radius:6px;overflow:hidden;box-shadow:inset 3px 0 0 var(--line)}
 .ses:not(.done){box-shadow:inset 3px 0 0 var(--accent)}
 .ses.done{border-color:var(--ok)}
+.ses.nope{border-color:var(--bad);box-shadow:inset 3px 0 0 var(--bad)}.ses.nope .chk{border-color:var(--bad);color:var(--bad);font-size:22px;font-weight:700}.ses.nope .t{color:var(--muted)}
+.nopeb{display:inline-block;background:var(--bad);color:#fff;font-size:11px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;padding:1px 6px;border-radius:4px;vertical-align:2px}
+.nopebtn{background:none;border:1px solid var(--line);color:var(--muted);border-radius:999px;padding:5px 9px;font-size:13px;white-space:nowrap}.nopebtn.on{border-color:var(--bad);color:var(--bad)}
+.order.closed{border-color:var(--bad)}.stamp.red{border-color:var(--bad);color:var(--bad)}
 .ses.pend{border-color:var(--warn);box-shadow:inset 3px 0 0 var(--warn)}
 .pendb{display:inline-block;background:var(--warn);color:#1A1200;font-size:11px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;padding:1px 6px;border-radius:4px;vertical-align:2px}
 .pendcard{background:rgba(255,176,32,.12);border:1px solid var(--warn);border-radius:6px;padding:8px 10px;display:flex;flex-wrap:wrap;gap:6px;align-items:center}
@@ -172,7 +176,7 @@ details.reg summary::-webkit-details-marker{display:none}
 .upl{cursor:pointer;flex:1;text-align:center}
 .lnk{background:none;border:0;color:var(--accent);text-decoration:underline;padding:0;font-size:13px}
 .kpis.sum{grid-template-columns:repeat(auto-fill,minmax(96px,1fr))}.kpis.sum small{font-size:12px;color:var(--muted)}
-.sh{display:grid;grid-template-columns:44px 1fr 28px;gap:10px;align-items:center;padding:12px}
+.sh{display:grid;grid-template-columns:44px 1fr auto 28px;gap:10px;align-items:center;padding:12px}
 .chk{width:36px;height:36px;border:2px solid var(--ink);border-radius:6px;background:none;display:grid;place-items:center;padding:0}
 .ses.done .chk{background:var(--ok);border-color:var(--ok)}
 .ses.done .chk::after{content:"";width:13px;height:7px;border-left:3px solid var(--paper);border-bottom:3px solid var(--paper);transform:rotate(-45deg) translate(1px,-1px)}
@@ -960,7 +964,7 @@ const fixCfg=c=>{const d=defCfg();if(c.start==="2026-10-05"&&!c.startMoved){c.st
   return c};
 const MODES=["","ok","cansado","dolor","enfermo"];
 const fixDay=x=>{if(!isObj(x))return {};if(x.turno!=null&&!SHIFT[String(x.turno)])delete x.turno;if(x.mode!=null&&!MODES.includes(x.mode))delete x.mode;
-  ["checks","sets","test","sim","mini","runlog","ctx","undo","tprev","meals","sleep","match","reps"].forEach(f=>{if(x[f]!=null&&!isObj(x[f]))delete x[f]});
+  ["checks","sets","test","sim","mini","runlog","ctx","undo","tprev","meals","sleep","match","reps","nope"].forEach(f=>{if(x[f]!=null&&!isObj(x[f]))delete x[f]});
   if(x.runlog)Object.keys(x.runlog).forEach(t=>{if(!isObj(x.runlog[t]))delete x.runlog[t]});
   if(x.ctx&&x.ctx.temp!==""&&x.ctx.temp!=null&&!okTemp(x.ctx.temp))x.ctx.temp="";if(typeof x.note!=="string"&&x.note!=null)delete x.note;return x};
 const fixDays=o=>{Object.keys(o).forEach(k=>{if(!isISO(k))delete o[k];else o[k]=fixDay(o[k])});return o};
@@ -969,7 +973,7 @@ const isObj=x=>!!x&&typeof x==="object"&&!Array.isArray(x);
 // errores de la nube que no se arreglan reintentando
 const HARD_ERR=["invalid_argument","quota_exceeded","revoked","not_granted","capability_disabled","capability_removed","transform_error"];
 // JSON con las claves ordenadas: para comparar sin que importe el orden
-const DEEP=["sets","checks","runlog","test","mini","sim","tprev","meals","sleep","match","reps"],dc=v=>v===undefined?undefined:JSON.parse(JSON.stringify(v));
+const DEEP=["sets","checks","runlog","test","mini","sim","tprev","meals","sleep","match","reps","nope"],dc=v=>v===undefined?undefined:JSON.parse(JSON.stringify(v));
 const canon=o=>JSON.stringify(o,(k,v)=>v&&typeof v==="object"&&!Array.isArray(v)?Object.keys(v).sort().reduce((a,x)=>(a[x]=v[x],a),{}):v);
 // Cómo se guarda: cada cambio queda como “pendiente” (solo los campos que tocaste) en este teléfono hasta que la
 // nube lo confirma. Lo que llega de la nube se mezcla con lo pendiente: nunca se pisa un cambio tuyo ni se borra
@@ -1158,20 +1162,23 @@ const taskDone=(dd,t)=>!!dd&&(((dd.checks||{})[t.id])||(t.blocks.length>0&&t.blo
 // para cerrar el día cuentan las sesiones, no las rutinas (despertar, comidas, noche)
 const counts=t=>t.kind!=="rutina"&&!["despertar","desayuno","almuerzo","noche"].includes(t.id);
 function units(dd,plan){let a=0,b=0;plan.tasks.filter(counts).forEach(t=>{const all=taskDone(dd,t);t.blocks.forEach((x,i)=>{if(x.opt)return;b+=x.s;a+=all?x.s:blockDone(dd,t,i)})});return {a,b}}
+// “No pude”: el bloque queda con ✗ rojo y deja de estar pendiente; si todo lo demás está hecho, el día se cierra
+const isNope=(dd,t)=>!!dd&&!!(dd.nope||{})[t.id]&&!taskDone(dd,t);
+function closedDay(k,plan){const d=Store.days[k];if(!plan||!d||d.status)return false;const core=plan.tasks.filter(counts);return core.every(t=>taskDone(d,t)||isNope(d,t))&&core.some(t=>isNope(d,t))}
 function dayStatus(k,plan){if(!plan)return "";const d=Store.days[k],core=plan.tasks.filter(counts);
   if(d&&d.status)return d.status;
   // un descanso que ya pasó cuenta como cumplido, salvo que marques “no pude”
   if(plan.kind==="descanso"&&diffDays(parse(k),today())<0)return "done";
   if(!d)return "";
-  if((d.mode==="dolor"||d.mode==="enfermo")&&core.every(t=>taskDone(d,t)))return "injury";if(core.every(t=>taskDone(d,t)))return "done";
+  if((d.mode==="dolor"||d.mode==="enfermo")&&core.every(t=>taskDone(d,t)))return "injury";if(core.every(t=>taskDone(d,t)))return "done";if(closedDay(k,plan))return "part";
   const anyRes=o=>o&&Object.values(o).some(v=>v!==""&&v!=null&&v!==false);return units(d,plan).a||anyRes(d.test)||anyRes(d.sim)||anyRes(d.mini)?"part":""}
 // lo que falta para cerrar el día
-function missingTasks(dd,plan){return plan.tasks.filter(t=>counts(t)&&!taskDone(dd,t)).map(t=>{const left=t.blocks.filter((b,i)=>!b.opt&&blockDone(dd,t,i)<b.s).map(b=>b.n);return left.length<t.blocks.length&&left.length<=2?`${left.join(" y ")} (${t.t})`:t.t})}
+function missingTasks(dd,plan){return plan.tasks.filter(t=>counts(t)&&!taskDone(dd,t)&&!isNope(dd,t)).map(t=>{const left=t.blocks.filter((b,i)=>!b.opt&&blockDone(dd,t,i)<b.s).map(b=>b.n);return left.length<t.blocks.length&&left.length<=2?`${left.join(" y ")} (${t.t})`:t.t})}
 const okSt=s=>s==="done"||s==="injury";
 // “hoy” para la bitácora: si ayer saliste del trabajo después de medianoche (turno 16), hasta las 4:00 sigue siendo ayer
 function today(){const n=new Date();if(n.getHours()<4){const y=addDays(n,-1),ys=SHIFT[turnoOf(y)];if(ys&&ys.back&&toMin(ys.bed)<300)return y}return n}
 function streak(){let d=today(),n=0;const s0=dayStatus(iso(d),planFor(d));if(s0==="fail")return 0;if(!okSt(s0))d=addDays(d,-1);
-  for(let i=0;i<800;i++){if(locate(d).before)break;if(okSt(dayStatus(iso(d),planFor(d)))){n++;d=addDays(d,-1)}else break}return n}
+  for(let i=0;i<800;i++){if(locate(d).before)break;const pd=planFor(d);if(okSt(dayStatus(iso(d),pd))){n++;d=addDays(d,-1)}else if(closedDay(iso(d),pd))d=addDays(d,-1);else break}return n}
 function compliance(){const td=today();let tot=0,ok=0;for(let d=parse(Store.cfg.start);diffDays(d,td)<0;d=addDays(d,1)){const p=planFor(d);if(!p)break;tot++;if(okSt(dayStatus(iso(d),p)))ok++}return tot?Math.round(ok/tot*100):null}
 
 /* =================== VOZ DEL COMANDANTE =================== */
@@ -1203,7 +1210,7 @@ function orders(plan,k,isToday,dd){
 /* =================== MODO PASO A PASO =================== */
 const ORD=["Primero","Segundo","Tercero","Cuarto","Quinto","Sexto","Séptimo","Octavo"];
 function steps(plan){const out=[];plan.tasks.forEach((t,ti)=>t.blocks.forEach((b,bi)=>{if(b.s>1&&b.s<=12)for(let k=1;k<=b.s;k++)out.push({t,ti,bi,b,set:k});else out.push({t,ti,bi,b,set:0})}));return out}
-function stepDone(dd,st){const n=taskDone(dd,st.t)?st.b.s:blockDone(dd,st.t,st.bi);return st.set?n>=st.set:n>=st.b.s}
+function stepDone(dd,st){if(isNope(dd,st.t))return true;const n=taskDone(dd,st.t)?st.b.s:blockDone(dd,st.t,st.bi);return st.set?n>=st.set:n>=st.b.s}
 function firstPending(plan,dd){const ss=steps(plan);const i=ss.findIndex(x=>!stepDone(dd,x));return i<0?ss.length:i}
 function stepTitle(st){const b=st.b;
   if(st.set){let w=b.p.replace(/^\d+\s*×\s*/,"")||b.p;if(/^\d+$/.test(w))w+=" repeticiones";if(/^\d+ por lado/.test(w))w=w.replace(/^(\d+)/,"$1 repeticiones");
@@ -1487,11 +1494,12 @@ function runLogHTML(t,dd){
 function updateRunVerdict(tid){const el=document.getElementById("rlv-"+tid);if(!el)return;const p=planFor(S.date),t=p&&p.tasks.find(x=>x.id===tid);if(!t)return;const dd=Store.days[iso(S.date)]||{},v=runVerdict(t.goal,(dd.runlog||{})[tid]);el.className="rlv "+v.lvl;el.textContent=v.txt||rlHint(t.goal)}
 const rlHint=g=>g&&g.type==="crono"?`Cronometra solo el ${nf(g.d)} m a tope y anota ese tiempo.`:"Graba con adidas Running y copia aquí los km y el tiempo total.";
 // pendiente: no está hecha y ya pasó su hora (con 1 hora de margen) o el día ya pasó
-function isPend(t,dd,date){if(taskDone(dd,t)||!(counts(t)||t.id==="desayuno"||t.id==="almuerzo"))return false;const dd0=diffDays(date,today());if(dd0<0)return true;if(dd0>0||!t.h)return false;
+function isPend(t,dd,date){if(taskDone(dd,t)||isNope(dd,t)||!(counts(t)||t.id==="desayuno"||t.id==="almuerzo"))return false;const dd0=diffDays(date,today());if(dd0<0)return true;if(dd0>0||!t.h)return false;
   const n=new Date(),m=n.getHours()*60+n.getMinutes()+(diffDays(n,date)>0?1440:0);let h=toMin(t.h);if(h<240)h+=1440;return m>h+60}
 function sesHTML(t,dd,open,pend){
   const all=taskDone(dd,t),meta=[t.h,t.min?"~"+Math.round(t.min)+" min":"",t.m?nf(t.m)+" m":""].filter(Boolean).join(" · ");
-  return `<div class="ses ${all?"done":pend?"pend":""}"><div class="sh"><button class="chk" data-task="${t.id}" aria-pressed="${all}" aria-label="Marcar ${esc(t.t)} completa"></button><button class="tog" data-open="${t.id}" aria-expanded="${open}"><span class="t">${esc(t.t)}${pend?' <b class="pendb">Pendiente</b>':""}</span>${meta?`<span class="m">${esc(meta)}</span>`:""}</button><button class="chev" data-open="${t.id}" aria-label="${open?"Cerrar":"Abrir"}">${open?"▴":"▾"}</button></div>
+  const no=isNope(dd,t);
+  return `<div class="ses ${all?"done":no?"nope":pend?"pend":""}"><div class="sh"><button class="chk" data-task="${t.id}" aria-pressed="${all}" aria-label="Marcar ${esc(t.t)} completa">${no?"✗":""}</button><button class="tog" data-open="${t.id}" aria-expanded="${open}"><span class="t">${esc(t.t)}${no?' <b class="nopeb">No pude</b>':pend?' <b class="pendb">Pendiente</b>':""}</span>${meta?`<span class="m">${esc(meta)}</span>`:""}</button>${all?"<span></span>":`<button class="nopebtn ${no?"on":""}" data-nope="${t.id}" aria-label="${no?"Deshacer no pude":"No pude: "+esc(t.t)}">${no?"Deshacer":"No pude"}</button>`}<button class="chev" data-open="${t.id}" aria-label="${open?"Cerrar":"Abrir"}">${open?"▴":"▾"}</button></div>
    ${open?`<div class="sb">${t.lake&&t.safe?`<p class="safe">${esc(t.safe)}</p>`:""}${t.blocks.map((b,i)=>exHTML(t,b,i,dd,all)).join("")}${(t.kind==="carrera"||t.goal)&&t.id!=="sprint"?runLogHTML(t,dd):""}</div>`:""}</div>`;
 }
 const EMBLEM=`<svg viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="24" r="22" fill="none" stroke="#C6F135" stroke-width="2"/><circle cx="24" cy="24" r="18.5" fill="none" stroke="#C6F135" stroke-width=".8" stroke-dasharray="2 2.4" opacity=".6"/><path d="M25.3 9.4L12.3 26.8L22.4 26.8L19.5 38.4L35.5 19.5L25.3 19.5L28.2 9.4Z" fill="#C6F135" stroke="#F1F3F5" stroke-width="1.2" stroke-linejoin="round"/></svg>`;
@@ -1547,13 +1555,14 @@ function viewHoy(){
     <span>${pc>=90?"Semana de soldado. Así se llega.":pc>=70?"Bien, pero no completa. La próxima, sin huecos.":"Semana floja. Si fue cansancio o dolor, está bien: recupera. Si fueron ganas, la próxima es la que cuenta."}</span>
     ${(()=>{const lb=Store.cfg.lastBackup;return !lb||diffDays(new Date(),parse(lb))>=6?`<div class="row"><span style="flex:1">Guarda la semana: descarga tu copia de seguridad.</span><button class="btn sm" data-backup>Descargar copia</button></div>`:""})()}
     ${nw!=null?`<span class="foot">Próxima: semana ${nw}${TESTS.includes(nw)?" · semana de prueba":nw===HELL?" · SEMANA DEL INFIERNO":DELOAD.includes(nw)?" · descarga":INC[nw]?" · "+INC[nw][0]:""}.</span>`:""}</div>`}
+  if(closedDay(k,plan)){const no=plan.tasks.filter(t=>counts(t)&&isNope(dd,t)).map(t=>t.t);h+=`<div class="order closed"><p class="say" style="color:var(--bad)">✗ Día cerrado</p><p>No pudiste: ${esc(no.join(", "))}. El resto quedó hecho, así que mañana sigues con el plan. No se repite.</p></div>`}
   if(status==="done")h+=`<div class="order done"><span class="stamp">CUMPLIDO</span><p class="say" style="color:var(--ok)">${esc(pick(["Día ganado. Mañana a la misma hora.","Cumplido. Un día más que el que se rinde no tiene.","Bien. Eso es lo que se espera de ti."],k))}</p></div>`;
   h+=`<details class="card" data-keep="notes:${k}" ${S.keep["notes:"+k]?"open":""}><summary>Notas${plan.dow===0||plan.test?" y peso":""}</summary>
    ${plan.dow===0||plan.test?`<div class="field" style="max-width:140px"><label class="lbl" for="f-peso">Peso (kg)</label><input id="f-peso" inputmode="decimal" data-f="peso" value="${esc(String(dd.peso||"").replace(".",","))}" placeholder="70"></div>`:""}
    <div class="field"><label class="lbl" for="f-note">Tiempos, qué costó, sensaciones</label><textarea id="f-note" data-f="note">${esc(dd.note)}</textarea></div></details>`;
   {const past=diffDays(d,today())<0,ms=status==="done"||status==="injury"||dd.status?[]:missingTasks(dd,plan);
    if(ms.length&&u.a)h+=`<p class="foot">Te falta: ${esc(ms.slice(0,4).join(" · "))}${ms.length>4?" y "+(ms.length-4)+" más":""}.</p>`;
-   h+=`<div class="row">${status==="done"||status==="injury"||dd.status?"":`<button class="btn main" data-st="done" style="flex:2">Cumplí todo</button>`}${dd.status==="fail"?`<button class="btn sm" data-st="">Quitar “no cumplí”</button>`:dd.status==="part"?`<button class="btn sm" data-st="">Reabrir el día</button>`:status==="done"||status==="injury"?(S.confirm==="clear"?`<button class="btn sm main" data-st="" data-clear="1">Sí, desmarcar</button><button class="btn sm" data-cancel>No</button>`:`<button class="btn sm" data-ask="clear">Desmarcar el día</button>`):`${past&&u.a?`<button class="btn" data-st="part" style="flex:1">Cerrar el día así</button>`:""}${diffDays(d,today())>0?"":`<button class="btn" data-st="fail" style="flex:1">${past?"No pude ese día":"Hoy no pude"}</button>`}`}</div>`}
+   if(!closedDay(k,plan))h+=`<div class="row">${status==="done"||status==="injury"||dd.status?"":`<button class="btn main" data-st="done" style="flex:2">Cumplí todo</button>`}${dd.status==="fail"?`<button class="btn sm" data-st="">Quitar “no cumplí”</button>`:dd.status==="part"?`<button class="btn sm" data-st="">Reabrir el día</button>`:status==="done"||status==="injury"?(S.confirm==="clear"?`<button class="btn sm main" data-st="" data-clear="1">Sí, desmarcar</button><button class="btn sm" data-cancel>No</button>`:`<button class="btn sm" data-ask="clear">Desmarcar el día</button>`):`${past&&u.a?`<button class="btn" data-st="part" style="flex:1">Cerrar el día así</button>`:""}${diffDays(d,today())>0?"":`<button class="btn" data-st="fail" style="flex:1">${past?"No pude ese día":"Hoy no pude"}</button>`}`}</div>`}
   return h;
 }
 function testForm(plan,k,dd,L){
@@ -2055,6 +2064,9 @@ document.addEventListener("click",e=>{
     const ndd=Store.days[k];let ni=ss.findIndex((x,j)=>j>i&&!stepDone(ndd,x));if(ni<0)ni=firstPending(p,ndd);S.run.i=ni;
     render();window.scrollTo(0,0);if(dayStatus(k,p)==="done"&&before!=="done")toast("Día ganado, "+(Store.cfg.name||"crack")+".");return}
   if(D.turno){Store.setDay(k,{turno:D.turno});render();return}
+  if(D.nope){const p=planFor(S.date),t=p&&p.tasks.find(x=>x.id===D.nope);if(!t)return;const dd=Store.day(k),n=Object.assign({},dd.nope),now=!n[t.id];n[t.id]=now;
+    const patch={nope:n};if(dd.status==="fail")patch.status="";Store.setDay(k,patch);if(now)S.open[k+t.id]=false;render();
+    if(now)toast(closedDay(k,p)?"Día cerrado. Mañana sigues.":"Marcado: no pudiste "+t.t.toLowerCase()+".");return}
   if(D.meal){const m=Object.assign({},(Store.days[k]||{}).meals);m[D.meal]=!m[D.meal];Store.setDay(k,{meals:m});render();return}
   if(D.sens){const m=Object.assign({},(Store.days[k]||{}).match);m.sens=m.sens===D.sens?"":D.sens;Store.setDay(k,{match:m});render();return}
   if(D.engadd!==undefined){const el=document.getElementById("eng-s"),v=parseInt(el&&el.value,10);if(!(v>=0&&v<=100)){toast("Escribe el puntaje de EF SET: de 0 a 100.");return}
@@ -2072,10 +2084,10 @@ document.addEventListener("click",e=>{
       // marcar la sesión entera guarda lo que tenías; desmarcarla lo devuelve (un toque por error no borra series hechas)
       if(now){tp[t.id]={};t.blocks.forEach((bb,i)=>{tp[t.id][setKey(t,i)]=sets[setKey(t,i)]||0;sets[setKey(t,i)]=bb.s})}
       else{const pv=tp[t.id]||{};t.blocks.forEach((bb,i)=>{sets[setKey(t,i)]=pv[setKey(t,i)]||0});tp[t.id]=null}
-      c[t.id]=now;patchX.tprev=tp;if(now)S.open[k+t.id]=false}
+      c[t.id]=now;patchX.tprev=tp;if(now&&(dd.nope||{})[t.id])patchX.nope=Object.assign({},dd.nope,{[t.id]:false});if(now)S.open[k+t.id]=false}
     else{const [tid,bi,v]=D.set.split("|"),t=p.tasks.find(x=>x.id===tid);if(!t)return;const i=+bi,bb=t.blocks[i];
       if(c[tid])t.blocks.forEach((x,j)=>{if(sets[setKey(t,j)]==null)sets[setKey(t,j)]=x.s});
-      c[tid]=false;const cur=Math.min(sets[setKey(t,i)]||0,bb.s);let nv=+v;if(bb.s>1&&bb.s<=12&&nv===cur)nv=cur-1;sets[setKey(t,i)]=nv;S.open[k+tid]=true;
+      c[tid]=false;if((dd.nope||{})[tid])patchX.nope=Object.assign({},dd.nope,{[tid]:false});const cur=Math.min(sets[setKey(t,i)]||0,bb.s);let nv=+v;if(bb.s>1&&bb.s<=12&&nv===cur)nv=cur-1;sets[setKey(t,i)]=nv;S.open[k+tid]=true;
       if(nv<cur&&TM&&(TM.label==="Descanso · "+bb.n||/^Respira normal · apnea/.test(TM.label)&&bb.n==="Apnea en seco"))stopTimer();
       if(nv>cur&&nv<bb.s){if(bb.n==="Apnea en seco")startTimer(toSec(RESTS_ASECO[nv-1]||"1:00"),"Respira normal · apnea "+(nv+1));else if(bb.r)startTimer(bb.r,"Descanso · "+bb.n)}}
     const patch=Object.assign({checks:c,sets},patchX);if(dd.status==="fail")patch.status="";

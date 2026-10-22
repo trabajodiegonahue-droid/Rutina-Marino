@@ -679,6 +679,29 @@ const reload = async p => { await p.reload(); await p.waitForTimeout(200); };
   ok(errs.length === 0, 'sin errores: ' + errs.join(' | '));
   await ctx.close(); }
 
+// 30. «No pude»: el bloque queda con ✗ rojo, no queda pendiente y el día se cierra igual
+{ const { p, ctx, errs } = await page('2026-10-20T23:50:00');
+  const n = await p.locator('[data-nope="ingles"]').count();
+  ok(n === 1, 'cada bloque tiene «No pude»');
+  await p.click('[data-nope="ingles"]'); await p.waitForTimeout(150);
+  ok(await p.locator('.ses.nope').count() === 1, 'el bloque queda en rojo');
+  ok(!(await p.$eval('.pendcard', e => e.textContent).catch(() => '')).includes('Inglés'), 'inglés deja de estar pendiente');
+  // marcar todo lo demás
+  for (const id of await p.$$eval('[data-task]', els => els.map(e => e.dataset.task))) {
+    if (id === 'ingles') continue; const b = p.locator(`.ses:not(.done) [data-task="${id}"]`); if (await b.count()) { await b.first().click(); await p.waitForTimeout(450); } }
+  const t = await text(p);
+  ok(t.includes('Día cerrado') && t.includes('No pudiste: ') && t.includes('Inglés'), 'el día queda cerrado con lo que no pudiste: ' + t.slice(-300));
+  await reload(p);
+  ok(await p.locator('.ses.nope').count() === 1, '«No pude» queda guardado');
+  // al día siguiente no se retoma
+  const q = await ctx.newPage(); await q.addInitScript(() => { window.__NOSKIP = false; }); await q.clock.install({ time: new Date('2026-10-21T09:00:00') }); await q.goto(URL); await q.waitForTimeout(200);
+  ok(!(await text(q)).includes('Hoy retomas'), 'un día cerrado no se repite');
+  // deshacer
+  await p.click('[data-nope="ingles"]'); await p.waitForTimeout(100);
+  ok(await p.locator('.ses.nope').count() === 0 && !(await text(p)).includes('Día cerrado'), 'deshacer «No pude»');
+  ok(errs.length === 0, 'sin errores: ' + errs.join(' | '));
+  await ctx.close(); }
+
 await browser.close();
 console.log(`\n${passes} correctas, ${fails} fallidas`);
 process.exit(fails ? 1 : 0);
