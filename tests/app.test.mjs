@@ -10,7 +10,7 @@ const exe = process.env.CHROMIUM_PATH;
 const browser = await chromium.launch(exe ? { executablePath: exe } : {});
 // la mayoría de las pruebas salta a fechas sin registros: ahí los días no se retoman (window.__NOSKIP).
 // Las pruebas de días retomados lo apagan en su propia página (window.__NOSKIP = false).
-const NOSKIP = 'window.__NOSKIP = true;';
+const NOSKIP = 'window.__NOSKIP = true; window.__NOLOCK = true;';
 const newContext0 = browser.newContext.bind(browser);
 browser.newContext = async (...a) => { const c = await newContext0(...a); await c.addInitScript(NOSKIP); return c; };
 let fails = 0, passes = 0;
@@ -699,6 +699,26 @@ const reload = async p => { await p.reload(); await p.waitForTimeout(200); };
   // deshacer
   await p.click('[data-nope="ingles"]'); await p.waitForTimeout(100);
   ok(await p.locator('.ses.nope').count() === 0 && !(await text(p)).includes('Día cerrado'), 'deshacer «No pude»');
+  ok(errs.length === 0, 'sin errores: ' + errs.join(' | '));
+  await ctx.close(); }
+
+// 31. Hoy se avanza en orden: lo siguiente está bloqueado hasta marcar lo actual (hecho o «No pude»)
+{ const ctx = await browser.newContext({ viewport: { width: 390, height: 1200 } });
+  await ctx.addInitScript(() => { window.__NOLOCK = false; });
+  const p = await ctx.newPage(); const errs = []; p.on('pageerror', e => errs.push(e.message));
+  await p.clock.install({ time: new Date('2026-10-20T09:30:00') }); await p.goto(URL); await p.waitForTimeout(200);
+  const cur = () => p.$eval('.ses.cur .t', e => e.textContent).catch(() => '');
+  ok((await cur()).includes('Despertar'), 'lo primero es despertar: ' + await cur());
+  ok(await p.locator('.ses.lock').count() >= 3, 'lo que sigue está bloqueado');
+  await p.locator('.ses.lock .tog').first().click(); await p.waitForTimeout(100);
+  ok((await p.$eval('#toast', e => e.textContent)).includes('Primero termina'), 'tocar algo bloqueado avisa qué va primero');
+  await p.click('.ses.cur .nextrow [data-task]'); await p.waitForTimeout(450);
+  ok((await cur()).includes('Pecho'), 'después de despertar sigue el entrenamiento: ' + await cur());
+  ok(await p.locator('.ses.done').count() === 1, 'lo hecho queda tachado');
+  await p.click('.ses.cur .nextrow [data-nope]'); await p.waitForTimeout(450);
+  ok(!(await cur()).includes('Pecho') && await p.locator('.ses.nope').count() === 1, '«No pude» también desbloquea lo siguiente: ' + await cur());
+  await reload(p);
+  ok(!(await cur()).includes('Pecho') && !(await cur()).includes('Despertar'), 'el orden se mantiene al recargar');
   ok(errs.length === 0, 'sin errores: ' + errs.join(' | '));
   await ctx.close(); }
 

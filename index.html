@@ -146,7 +146,10 @@ body.guided{padding-bottom:calc(420px + env(safe-area-inset-bottom,0px))}
 /* sesiones */
 .ses{background:var(--paper);border:1px solid var(--line);border-radius:6px;overflow:hidden;box-shadow:inset 3px 0 0 var(--line)}
 .ses:not(.done){box-shadow:inset 3px 0 0 var(--accent)}
-.ses.done{border-color:var(--ok)}
+.ses.done{border-color:var(--ok)}.ses.done .t{text-decoration:line-through;color:var(--muted)}
+.ses.lock{opacity:.5;border-style:dashed}.ses.lock .tog{cursor:not-allowed}.chk.lk{border-color:var(--line);color:var(--muted)}
+.ses.cur{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent)}.nowb{display:inline-block;background:var(--accent);color:var(--accent-ink);font-size:11px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;padding:1px 6px;border-radius:4px;vertical-align:2px}
+.nextrow{margin-top:10px}
 .ses.nope{border-color:var(--bad);box-shadow:inset 3px 0 0 var(--bad)}.ses.nope .chk{border-color:var(--bad);color:var(--bad);font-size:22px;font-weight:700}.ses.nope .t{color:var(--muted)}
 .nopeb{display:inline-block;background:var(--bad);color:#fff;font-size:11px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;padding:1px 6px;border-radius:4px;vertical-align:2px}
 .nopebtn{background:none;border:1px solid var(--line);color:var(--muted);border-radius:999px;padding:5px 9px;font-size:13px;white-space:nowrap}.nopebtn.on{border-color:var(--bad);color:var(--bad)}
@@ -873,7 +876,7 @@ function dayPlan(w,dow,ctx){
        T("equipo","Dejar listo tu equipo","","10:00",[B("Mochila con peso","5 kg: libros o botellas de agua"),B("Todo junto en un rincón","mancuernas, bandas, colchoneta y rueda"),B("Probar la barra de la plaza","que esté firme"),B("Gafas y gorra de natación","para el lago del lunes",{opt:1})],{kind:"admin"})]],
      ["Motor aeróbico","tierra",[runT("run","Trote nasal 20 min","Solo por la nariz: aprende el ritmo del motor aeróbico.","07:00",z2Blocks(0)),
        T("naval","Consultar requisitos","Por si postulas al Servicio Militar o a una escuela.","10:00",[B("Preguntar","requisitos y fechas",{note:"Servicio Militar (DGMN) y Escuela Militar o de Suboficiales: edad, salud y pruebas físicas."})],{kind:"admin"})]],
-     ["Activación","tierra",[runT("run","Activación 15 min","Trote suave y 3 aceleraciones.","07:00",{blocks:[B("Trote","12 min suave"),B("Aceleraciones","3 × 60 m",{s:3,r:60})],min:15})]],
+     ["Hombros y brazos + core","tierra",[T("arms","Hombros y brazos + core","","07:00",armsDay(0),{kind:"fuerza"})]],
      ["Descanso","descanso",[...rest("Descanso","Mañana es la prueba inicial."),T("prep","Preparar la prueba","Que mañana no falte nada.","20:00",[B("Lista","cronómetro, huincha de medir, ropa de recambio, agua"),B("Lugar","barra y pista o tramo de 3,2 km",{pool:!lake||!!ctx.pool})],{kind:"admin"})]],
      ["Prueba inicial","prueba",null],
      ["Descanso activo","descanso",rest("Descanso activo","Después de la prueba, el cuerpo asimila.")]
@@ -1515,9 +1518,16 @@ const rlHint=g=>g&&g.type==="crono"?`Cronometra solo el ${nf(g.d)} m a tope y an
 // pendiente: no está hecha y ya pasó su hora (con 1 hora de margen) o el día ya pasó
 function isPend(t,dd,date){if(taskDone(dd,t)||isNope(dd,t)||!(counts(t)||t.id==="desayuno"||t.id==="almuerzo"))return false;const dd0=diffDays(date,today());if(dd0<0)return true;if(dd0>0||!t.h)return false;
   const n=new Date(),m=n.getHours()*60+n.getMinutes()+(diffDays(n,date)>0?1440:0);let h=toMin(t.h);if(h<240)h+=1440;return m>h+60}
-function sesHTML(t,dd,open,pend){
+// hoy se avanza en orden: lo que sigue se desbloquea al marcar lo actual (hecho o «No pude»)
+function curTask(plan,dd){return plan.tasks.find(t=>!taskDone(dd,t)&&!isNope(dd,t))}
+function isLocked(plan,dd,t,date){if(window.__NOLOCK||diffDays(date,today())!==0||taskDone(dd,t)||isNope(dd,t))return false;const c=curTask(plan,dd);if(!c||c.id===t.id)return false;
+  return plan.tasks.findIndex(x=>x.id===t.id)>plan.tasks.findIndex(x=>x.id===c.id)}
+function sesHTML(t,dd,open,pend,st){
   const all=taskDone(dd,t),meta=[t.h,t.min?"~"+Math.round(t.min)+" min":"",t.m?nf(t.m)+" m":""].filter(Boolean).join(" · ");
-  const no=isNope(dd,t);
+  if(st==="lock")return `<div class="ses lock"><div class="sh"><span class="chk lk" aria-hidden="true"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 018 0v3"/></svg></span><button class="tog" data-locked="${t.id}"><span class="t">${esc(t.t)}</span>${meta?`<span class="m">${esc(meta)}</span>`:""}</button></div></div>`;
+  const no=isNope(dd,t),cur=st==="cur";
+  if(cur)return `<div class="ses cur ${pend?"pend":""}"><div class="sh"><button class="chk" data-task="${t.id}" aria-pressed="false" aria-label="Marcar ${esc(t.t)} completa"></button><button class="tog" data-open="${t.id}" aria-expanded="${open}"><span class="t"><b class="nowb">Ahora</b> ${esc(t.t)}${pend?' <b class="pendb">Atrasado</b>':""}</span>${meta?`<span class="m">${esc(meta)}</span>`:""}</button><span></span><button class="chev" data-open="${t.id}" aria-label="${open?"Cerrar":"Abrir"}">${open?"▴":"▾"}</button></div>
+   ${open?`<div class="sb">${t.lake&&t.safe?`<p class="safe">${esc(t.safe)}</p>`:""}${t.blocks.map((b,i)=>exHTML(t,b,i,dd,all)).join("")}${(t.kind==="carrera"||t.goal)&&t.id!=="sprint"?runLogHTML(t,dd):""}<div class="row nextrow"><button class="btn main" data-task="${t.id}" style="flex:2">✓ Listo, siguiente</button><button class="btn" data-nope="${t.id}" style="flex:1">No pude</button></div></div>`:""}</div>`;
   return `<div class="ses ${all?"done":no?"nope":pend?"pend":""}"><div class="sh"><button class="chk" data-task="${t.id}" aria-pressed="${all}" aria-label="Marcar ${esc(t.t)} completa">${no?"✗":""}</button><button class="tog" data-open="${t.id}" aria-expanded="${open}"><span class="t">${esc(t.t)}${no?' <b class="nopeb">No pude</b>':pend?' <b class="pendb">Pendiente</b>':""}</span>${meta?`<span class="m">${esc(meta)}</span>`:""}</button>${all?"<span></span>":`<button class="nopebtn ${no?"on":""}" data-nope="${t.id}" aria-label="${no?"Deshacer no pude":"No pude: "+esc(t.t)}">${no?"Deshacer":"No pude"}</button>`}<button class="chev" data-open="${t.id}" aria-label="${open?"Cerrar":"Abrir"}">${open?"▴":"▾"}</button></div>
    ${open?`<div class="sb">${t.lake&&t.safe?`<p class="safe">${esc(t.safe)}</p>`:""}${t.blocks.map((b,i)=>exHTML(t,b,i,dd,all)).join("")}${(t.kind==="carrera"||t.goal)&&t.id!=="sprint"?runLogHTML(t,dd):""}</div>`:""}</div>`;
 }
@@ -1563,8 +1573,11 @@ function viewHoy(){
   {const N=steps(plan).length,fp=firstPending(plan,dd);
    if(fp<N)h+=`<button class="btn main start" data-rstart>${fp===0?"▶ Empezar el entrenamiento":"▶ Continuar · paso "+(fp+1)+" de "+N}</button>`}
   const pend=plan.tasks.filter(t=>isPend(t,dd,d)),nextT=plan.tasks.find(t=>!taskDone(dd,t)&&t.kind!=="rutina"&&!pend.includes(t)),openT=nextT||pend[0],defOpen=t=>t===openT;S.defOpen=openT?k+openT.id:"";
+  const seq=!window.__NOLOCK&&isToday,cT=seq?curTask(plan,dd):null;
+  if(seq){S.defOpen=cT?k+cT.id:"";h+=plan.tasks.map((t,ti)=>{const tt=Object.assign({},t,{t:(ti+1)+". "+t.t}),st=cT&&cT.id===t.id?"cur":isLocked(plan,dd,t,d)?"lock":"";return sesHTML(tt,dd,st==="cur"?(S.open[k+t.id]!=null?S.open[k+t.id]:true):S.open[k+t.id]===true,st==="cur"&&isPend(t,dd,d),st)}).join("")}
+  else{
   if(pend.length)h+=`<div class="pendcard"><b>Pendiente${pend.length>1?"s":""}</b> ${pend.map(t=>`<button class="pendlink" data-open="${t.id}">${esc(t.t)}${t.h?" · "+esc(t.h):""}</button>`).join("")}</div>`;
-  h+=plan.tasks.map((t,ti)=>sesHTML(Object.assign({},t,{t:(ti+1)+". "+t.t}),dd,S.open[k+t.id]!=null?S.open[k+t.id]:defOpen(t),pend.includes(t))).join("");
+  h+=plan.tasks.map((t,ti)=>sesHTML(Object.assign({},t,{t:(ti+1)+". "+t.t}),dd,S.open[k+t.id]!=null?S.open[k+t.id]:defOpen(t),pend.includes(t))).join("");}
   if(plan.test)h+=testForm(plan,k,dd,L);
   h+=resultsHTML(plan,k,dd);
   {const tm=addDays(d,1),tp=planFor(tm);if(tp)h+=`<div class="card"><span class="lbl">Mañana · ${dayName(tm)} · ${esc(tp.title)}</span><span>${esc(tp.tasks.filter(t=>t.id!=="noche"&&t.id!=="ducha").map(t=>(t.h?t.h+" ":"")+t.t).join(" · "))}</span>${tp.tasks.some(t=>t.kind==="agua"&&t.m||t.blocks.some(b=>/^Nado [\d.–]+ m$/.test(b.n)&&!b.opt))?`<span class="foot">Deja listo el bolso: traje de baño, gafas, gorra de color${tp.tasks.some(t=>t.blocks.some(b=>/aletas/.test(b.n+" "+b.p)))?", aletas":""}${Store.cfg.neo?", neopreno":""}, toalla y ropa abrigada.</span>`:""}${tp.tasks.some(t=>t.id==="ruck")?`<span class="foot">Deja lista la mochila con el peso.</span>`:""}${tp.test||tp.kind==="prueba"?`<span class="foot">Mañana se mide: piscina con salvavidas avisado, pista, cronómetro y el bolso listo esta noche.</span>`:""}</div>`}
@@ -2037,6 +2050,8 @@ function render(){
 }
 function setTab(t){S.tab=t;S.confirm=null;try{sessionStorage.setItem("bit-tab",t)}catch(e){}render();window.scrollTo(0,0)}
 
+// después de marcar, la pantalla baja a lo que sigue
+function goCur(){const el=document.querySelector(".ses.cur");if(el)setTimeout(()=>el.scrollIntoView({block:"start",behavior:"smooth"}),30)}
 let lastTap={sig:"",t:0};
 document.addEventListener("click",e=>{
   // abrir o cerrar una sección plegable se recuerda al instante, aunque la pantalla se redibuje enseguida
@@ -2067,6 +2082,8 @@ document.addEventListener("click",e=>{
   if(D.unrep){const i=+D.unrep,sched=Store.cfg.sched.slice(),w=sched[i];if(sched.slice(i+1,i+6).join()===[w-4,w-3,w-2,w-1,w].join()){sched.splice(i+1,5);Store.setCfg({sched,repeats:(Store.cfg.repeats||[]).filter(x=>x!==i)});render();toast("Repetición quitada: sigues con el plan normal.")}return}
   if(D.s4!==undefined){const sc=Store.cfg.sched,L=locate(today()),lived=L.after?Math.ceil((L.n+1-sc.length*7)/7):0;Store.setCfg({sched:sc.concat(Array(Math.max(0,lived)).fill(47),Array.from({length:13},(_,i)=>40+i))});S.confirm=null;render();toast("Etapa 4 otra vez: intenta superar tus marcas de la prueba final.");return}
   const k=iso(S.date);
+  if(S.tab==="hoy"&&!S.run){const lid=D.locked||D.task||D.nope||D.open||(D.set&&D.set.split("|")[0]);
+    if(lid){const p=planFor(S.date),dd0=Store.days[k]||{},t=p&&p.tasks.find(x=>x.id===lid);if(t&&(D.locked||isLocked(p,dd0,t,S.date))){const c=curTask(p,dd0);toast(c?"Primero termina: "+c.t:"Primero termina lo anterior.");return}}}
   if(D.open){const p=planFor(S.date),dd=Store.days[k]||{},tk=p&&p.tasks.find(t=>t.id===D.open),cur=S.open[k+D.open]!=null?S.open[k+D.open]:S.defOpen===k+D.open;S.open[k+D.open]=b.classList.contains("pendlink")?true:!cur;render();if(b.classList.contains("pendlink")){const el=document.querySelector(`[data-task="${D.open}"]`);if(el)el.scrollIntoView({block:"start"})}return}
   if(D.rstart!==undefined){const p=planFor(S.date);S.run={k,i:firstPending(p,Store.days[k]||{})};render();window.scrollTo(0,0);return}
   if(D.rexit!==undefined){S.run=null;render();window.scrollTo(0,0);return}
@@ -2085,7 +2102,7 @@ document.addEventListener("click",e=>{
   if(D.turno){Store.setDay(k,{turno:D.turno});render();return}
   if(D.nope){const p=planFor(S.date),t=p&&p.tasks.find(x=>x.id===D.nope);if(!t)return;const dd=Store.day(k),n=Object.assign({},dd.nope),now=!n[t.id];n[t.id]=now;
     const patch={nope:n};if(dd.status==="fail")patch.status="";Store.setDay(k,patch);if(now)S.open[k+t.id]=false;render();
-    if(now)toast(closedDay(k,p)?"Día cerrado. Mañana sigues.":"Marcado: no pudiste "+t.t.toLowerCase()+".");return}
+    if(now){toast(closedDay(k,p)?"Día cerrado. Mañana sigues.":"Marcado: no pudiste "+t.t.toLowerCase()+".");goCur()}return}
   if(D.meal){const m=Object.assign({},(Store.days[k]||{}).meals);m[D.meal]=!m[D.meal];Store.setDay(k,{meals:m});render();return}
   if(D.sens){const m=Object.assign({},(Store.days[k]||{}).match);m.sens=m.sens===D.sens?"":D.sens;Store.setDay(k,{match:m});render();return}
   if(D.engadd!==undefined){const el=document.getElementById("eng-s"),v=parseInt(el&&el.value,10);if(!(v>=0&&v<=100)){toast("Escribe el puntaje de EF SET: de 0 a 100.");return}
@@ -2111,7 +2128,7 @@ document.addEventListener("click",e=>{
       if(nv>cur&&nv<bb.s){if(bb.n==="Apnea en seco")startTimer(toSec(RESTS_ASECO[nv-1]||"1:00"),"Respira normal · apnea "+(nv+1));else if(bb.r)startTimer(bb.r,"Descanso · "+bb.n)}}
     const patch=Object.assign({checks:c,sets},patchX);if(dd.status==="fail")patch.status="";
     Store.setDay(k,patch);
-    const after=dayStatus(k,p);render();
+    const after=dayStatus(k,p);render();if(D.task&&taskDone(Store.days[k],p.tasks.find(x=>x.id===D.task)))goCur();
     if(after==="done"&&before!=="done")toast("Día ganado, "+(Store.cfg.name||"crack")+".");
     return}
   if(D.st!==undefined){const p=planFor(S.date);
