@@ -151,7 +151,7 @@ body.guided{padding-bottom:calc(420px + env(safe-area-inset-bottom,0px))}
 .ses.nope{border-color:var(--bad);box-shadow:inset 3px 0 0 var(--bad)}.ses.nope .chk{border-color:var(--bad);color:var(--bad);font-size:22px;font-weight:700}.ses.nope .t{color:var(--muted)}
 .nopeb{display:inline-block;background:var(--bad);color:#fff;font-size:11px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;padding:1px 6px;border-radius:4px;vertical-align:2px}
 .nopebtn{background:none;border:1px solid var(--line);color:var(--muted);border-radius:999px;padding:5px 9px;font-size:13px;white-space:nowrap}.nopebtn.on{border-color:var(--bad);color:var(--bad)}
-.order.closed{border-color:var(--bad)}.stamp.red{border-color:var(--bad);color:var(--bad)}
+.order.closed{border-color:var(--bad)}.order.half{border-color:var(--warn)}.stamp.red{border-color:var(--bad);color:var(--bad)}
 .ses.pend{border-color:var(--warn);box-shadow:inset 3px 0 0 var(--warn)}
 .pendb{display:inline-block;background:var(--warn);color:#1A1200;font-size:11px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;padding:1px 6px;border-radius:4px;vertical-align:2px}
 .pendcard{background:rgba(255,176,32,.12);border:1px solid var(--warn);border-radius:6px;padding:8px 10px;display:flex;flex-wrap:wrap;gap:6px;align-items:center}
@@ -1205,7 +1205,7 @@ function orders(plan,k,isToday,dd){
   const N=Store.cfg.name||"crack",out=[];
   if(isToday){const fr=fatigueRun(today());if(fr>=3)out.push(["alert",`Llevas ${fr} días seguidos cansado o con dolor. Hoy versión suave o descanso: solo técnica o movilidad. Si es dolor y no mejora, al médico.`])}
   if(isToday){const yd=addDays(today(),-1),yp=planFor(yd);if(yp&&!okSt(dayStatus(iso(yd),yp))&&!skipData().list.includes(iso(yd))){const ys=dayStatus(iso(yd),yp),yx=Store.days[iso(yd)]||{};if(ys==="fail")out.push(["alert","Ayer fallaste. Un día no te saca del camino; dos seguidos empiezan a hacerlo. Hoy retomas."]);
-      else if(!yx.status){const ms=missingTasks(yx,yp);out.push(["alert",units(yx,yp).a?`Ayer quedó a medias${ms.length?" (faltó: "+ms.slice(0,3).join(", ")+")":""}. Si lo hiciste, márcalo con ◀; si no, ciérralo ahí con «Cerrar el día así».`:"Ayer no registraste nada. Si entrenaste, márcalo con ◀; si no, toca «No pude ese día» ahí."])}}}
+      else if(!yx.status){const ms=missingTasks(yx,yp);out.push(["alert",units(yx,yp).a?`Ayer quedó a medias${ms.length?" (faltó: "+ms.slice(0,3).join(", ")+")":""}. Si lo hiciste, márcalo con ◀; si no, ciérralo ahí con «Cerrar el día».`:"Ayer no registraste nada. Si entrenaste, márcalo con ◀; si no, toca «No pude ese día» ahí."])}}}
   if(plan.maint)out.push(["say",plan.kind==="descanso"?"Descanso. La mantención también descansa.":`Mantención, ${N}. Lo que ganaste en 52 semanas se cuida igual.`]);
   else if(plan.w===HELL&&plan.kind!=="descanso")out.push(["say",pick([`${N}. Semana del infierno. Aquí se ve para qué fueron 47 semanas.`,`Infierno, día ${plan.dow+1}. No pienses en el último día: piensa en la próxima serie.`],k)]);
   else if(plan.test)out.push(["say",plan.w===0?`${N}. Hoy se mide el punto de partida. Que sea verdad, no bonito.`:plan.w===52?`Prueba final, ${N}. 52 semanas para esto.`:`Día de prueba, ${N}. Aquí se ve quién entrenó.`]);
@@ -1592,7 +1592,12 @@ function viewHoy(){
    <div class="field"><label class="lbl" for="f-note">Tiempos, qué costó, sensaciones</label><textarea id="f-note" data-f="note">${esc(dd.note)}</textarea></div></details>`;
   {const past=diffDays(d,today())<0,ms=status==="done"||status==="injury"||dd.status?[]:missingTasks(dd,plan);
    if(ms.length&&u.a)h+=`<p class="foot">Te falta: ${esc(ms.slice(0,4).join(" · "))}${ms.length>4?" y "+(ms.length-4)+" más":""}.</p>`;
-   if(!closedDay(k,plan))h+=`<div class="row">${status==="done"||status==="injury"||dd.status?"":`<button class="btn main" data-st="done" style="flex:2">Cumplí todo</button>`}${dd.status==="fail"?`<button class="btn sm" data-st="">Quitar “no cumplí”</button>`:dd.status==="part"?`<button class="btn sm" data-st="">Reabrir el día</button>`:status==="done"||status==="injury"?(S.confirm==="clear"?`<button class="btn sm main" data-st="" data-clear="1">Sí, desmarcar</button><button class="btn sm" data-cancel>No</button>`:`<button class="btn sm" data-ask="clear">Desmarcar el día</button>`):`${past&&u.a?`<button class="btn" data-st="part" style="flex:1">Cerrar el día así</button>`:""}${diffDays(d,today())>0?"":`<button class="btn" data-st="fail" style="flex:1">${past?"No pude ese día":"Hoy no pude"}</button>`}`}</div>`}
+   // hoy (en orden) no hay «Cumplí todo»: tú cierras el día y la app dice cómo quedó
+   const seqT=!window.__NOLOCK&&isToday;
+   if(dd.status==="part"||dd.status==="fail"){const core=plan.tasks.filter(counts),dn=core.filter(t=>taskDone(dd,t)).length,miss=core.filter(t=>!taskDone(dd,t)).map(t=>t.t);
+     h+=`<div class="order ${dd.status==="fail"?"closed":"half"}"><p class="say" style="color:var(${dd.status==="fail"?"--bad":"--warn"})">${dd.status==="fail"?"✗ Día incompleto":"◐ Día a medias"}</p><p>Hiciste ${dn} de ${core.length}.${miss.length?" Faltó: "+esc(miss.join(", "))+".":""} ${dd.status==="fail"?"Mañana se repite este día.":"Mañana sigues con el plan."}</p></div>`}
+   if(seqT&&!closedDay(k,plan)&&status!=="done"&&status!=="injury"&&!dd.status)h+=`<button class="btn main" data-close style="width:100%">Cerrar el día</button><p class="foot" style="text-align:center">La app revisa lo que marcaste y te dice si quedó completo, a medias o incompleto.</p>`;
+   else if(!closedDay(k,plan))h+=`<div class="row">${status==="done"||status==="injury"||dd.status?"":`<button class="btn main" data-st="done" style="flex:2">Cumplí todo</button>`}${dd.status==="fail"?`<button class="btn sm" data-st="">Quitar “no cumplí”</button>`:dd.status==="part"?`<button class="btn sm" data-st="">Reabrir el día</button>`:status==="done"||status==="injury"?(S.confirm==="clear"?`<button class="btn sm main" data-st="" data-clear="1">Sí, desmarcar</button><button class="btn sm" data-cancel>No</button>`:`<button class="btn sm" data-ask="clear">Desmarcar el día</button>`):`${past?`<button class="btn" data-close style="flex:1">Cerrar el día</button>`:""}${diffDays(d,today())>0?"":`<button class="btn" data-st="fail" style="flex:1">${past?"No pude ese día":"Hoy no pude"}</button>`}`}</div>`}
   return h;
 }
 function testForm(plan,k,dd,L){
@@ -2129,6 +2134,10 @@ document.addEventListener("click",e=>{
     const after=dayStatus(k,p);render();if(D.task&&taskDone(Store.days[k],p.tasks.find(x=>x.id===D.task)))goCur();
     if(after==="done"&&before!=="done")toast("Día ganado, "+(Store.cfg.name||"crack")+".");
     return}
+  if(D.close!==undefined){const p=planFor(S.date);if(!p)return;const dd=Store.days[k]||{},core=p.tasks.filter(counts),dn=core.filter(t=>taskDone(dd,t)).length;
+    if(dayStatus(k,p)==="done"){render();toast("Día completo.");return}
+    const any=dn>0||units(dd,p).a>0||Object.values(dd.test||{}).some(v=>v!==""&&v!=null&&v!==false);
+    Store.setDay(k,{status:any?"part":"fail"});render();toast(any?`Día a medias: ${dn} de ${core.length}.`:"Día incompleto: mañana se repite.");return}
   if(D.st!==undefined){const p=planFor(S.date);
     if(D.st==="done"&&p){markAllDone(k,p);toast("Día ganado.")}
     // desmarcar vuelve a lo que tenías antes de “Cumplí todo” (no a cero)

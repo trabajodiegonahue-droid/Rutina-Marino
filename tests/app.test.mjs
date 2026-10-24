@@ -722,6 +722,25 @@ const reload = async p => { await p.reload(); await p.waitForTimeout(200); };
   ok(errs.length === 0, 'sin errores: ' + errs.join(' | '));
   await ctx.close(); }
 
+// 32. Cerrar el día: la app dice si quedó completo, a medias o incompleto
+{ const ctx = await browser.newContext({ viewport: { width: 390, height: 1200 } });
+  await ctx.addInitScript(() => { window.__NOLOCK = false; });
+  const p = await ctx.newPage(); const errs = []; p.on('pageerror', e => errs.push(e.message));
+  await p.clock.install({ time: new Date('2026-10-20T21:00:00') }); await p.goto(URL); await p.waitForTimeout(200);
+  ok(await p.locator('[data-st="done"]').count() === 0, 'hoy no hay «Cumplí todo»');
+  await p.click('[data-close]'); await p.waitForTimeout(200);
+  ok((await text(p)).includes('Día incompleto'), 'sin nada marcado: incompleto');
+  await p.click('[data-st=""]'); await p.waitForTimeout(450);
+  await p.click('.ses.cur .nextrow [data-task]'); await p.waitForTimeout(450);
+  await p.click('.ses.cur .nextrow [data-task]'); await p.waitForTimeout(450);
+  await p.click('[data-close]'); await p.waitForTimeout(200);
+  const t = await text(p);
+  ok(t.includes('Día a medias') && t.includes('Faltó'), 'con algo hecho: a medias y qué faltó');
+  await reload(p);
+  ok((await text(p)).includes('Día a medias'), 'queda guardado');
+  ok(errs.length === 0, 'sin errores: ' + errs.join(' | '));
+  await ctx.close(); }
+
 await browser.close();
 console.log(`\n${passes} correctas, ${fails} fallidas`);
 process.exit(fails ? 1 : 0);
