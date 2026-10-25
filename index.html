@@ -153,6 +153,7 @@ body.guided{padding-bottom:calc(420px + env(safe-area-inset-bottom,0px))}
 .ses.nope{border-color:var(--bad);box-shadow:inset 3px 0 0 var(--bad)}.ses.nope .chk{border-color:var(--bad);color:var(--bad);font-size:22px;font-weight:700}.ses.nope .t{color:var(--muted)}
 .nopeb{display:inline-block;background:var(--bad);color:#fff;font-size:11px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;padding:1px 6px;border-radius:4px;vertical-align:2px}
 .nopebtn{background:none;border:1px solid var(--line);color:var(--muted);border-radius:999px;padding:5px 9px;font-size:13px;white-space:nowrap}.nopebtn.on{border-color:var(--bad);color:var(--bad)}
+.day.solo,.day.other{display:flex;align-items:center;gap:10px}.day.solo .mid,.day.other .mid{flex:1;text-align:left}.day.other{background:rgba(255,176,32,.12);border:1px solid var(--warn);border-radius:8px;padding:8px 10px}.day.other .big{color:var(--warn)}
 .daycfg summary{display:flex;justify-content:space-between;align-items:center;gap:8px;list-style:none}.daycfg summary::-webkit-details-marker{display:none}.daycfg .dcv{font-size:14px;color:var(--accent);font-weight:600}.daycfg[open] summary{margin-bottom:8px}.daycfg{padding-block:10px}.daycfg:not([open]) summary{margin:0}
 .order.closed{border-color:var(--bad)}.order.half{border-color:var(--warn)}.stamp.red{border-color:var(--bad);color:var(--bad)}
 .ses.pend{border-color:var(--warn);box-shadow:inset 3px 0 0 var(--warn)}
@@ -1544,6 +1545,10 @@ function dayHead(d,L){
   const big=L.before?"ANTES":L.after?"MANTENCIÓN":`SEM ${L.w} · DÍA ${L.dow+1}`;
   const s=L.w!=null?stageOf(L.w):null;
   const stk=streak();
+  // Hoy es siempre hoy: sin flechas. Otro día se abre desde Plan y se vuelve con un botón.
+  if(!window.__NOLOCK){const where=`${big==="ANTES"||big==="MANTENCIÓN"?big.toLowerCase():big.replace("SEM","Semana").replace("DÍA","día")}`;
+    return hqHTML(L.after?52:L.w,stk)+(isT?`<div class="day solo"><div class="mid"><div class="big">HOY · ${dayName(d).toUpperCase()}</div><div class="sub">${fmt(d)} · ${where}</div></div></div>`
+      :`<div class="day other"><div class="mid"><div class="big">${diffDays(d,today())<0?"DÍA PASADO":"DÍA QUE VIENE"}</div><div class="sub">${dayName(d)} ${fmt(d)} · ${where}</div></div><button class="nb on" data-go="0">Volver a hoy</button></div>`)}
   return hqHTML(L.after?52:L.w,stk)+`<div class="day"><button class="nb" data-go="-1" aria-label="Día anterior">◀</button><div class="mid"><div class="big">${big}</div><div class="sub">${dayName(d)} ${fmt(d)}</div></div><button class="nb ${isT?"on":""}" data-go="0">Hoy</button><button class="nb" data-go="1" aria-label="Día siguiente">▶</button></div>
   ${s?`<div class="stage"><span class="st">${s.n} · ${s.name}${L.w===HELL?" · SEMANA DEL INFIERNO":""}</span><span>${L.idx!=null?Math.round(L.idx/(Store.cfg.sched.length-1)*100)+"% del plan":""}</span></div>`:""}`;
 }
@@ -1586,7 +1591,7 @@ function viewHoy(){
   if(seq)h+=orderHTML;
   if(plan.test)h+=testForm(plan,k,dd,L);
   h+=resultsHTML(plan,k,dd);
-  {const tm=addDays(d,1),tp=planFor(tm);if(tp)h+=`<div class="card"><span class="lbl">Mañana · ${dayName(tm)} · ${esc(tp.title)}</span><span>${esc(tp.tasks.filter(t=>t.id!=="noche"&&t.id!=="ducha").map(t=>(t.h?t.h+" ":"")+t.t).join(" · "))}</span>${tp.tasks.some(t=>t.kind==="agua"&&t.m||t.blocks.some(b=>/^Nado [\d.–]+ m$/.test(b.n)&&!b.opt))?`<span class="foot">Deja listo el bolso: traje de baño, gafas, gorra de color${tp.tasks.some(t=>t.blocks.some(b=>/aletas/.test(b.n+" "+b.p)))?", aletas":""}${Store.cfg.neo?", neopreno":""}, toalla y ropa abrigada.</span>`:""}${tp.tasks.some(t=>t.id==="ruck")?`<span class="foot">Deja lista la mochila con el peso.</span>`:""}${tp.test||tp.kind==="prueba"?`<span class="foot">Mañana se mide: piscina con salvavidas avisado, pista, cronómetro y el bolso listo esta noche.</span>`:""}</div>`}
+  {const tm=addDays(d,1),tp=window.__NOLOCK?planFor(tm):null;if(tp)h+=`<div class="card"><span class="lbl">Mañana · ${dayName(tm)} · ${esc(tp.title)}</span><span>${esc(tp.tasks.filter(t=>t.id!=="noche"&&t.id!=="ducha").map(t=>(t.h?t.h+" ":"")+t.t).join(" · "))}</span>${tp.tasks.some(t=>t.kind==="agua"&&t.m||t.blocks.some(b=>/^Nado [\d.–]+ m$/.test(b.n)&&!b.opt))?`<span class="foot">Deja listo el bolso: traje de baño, gafas, gorra de color${tp.tasks.some(t=>t.blocks.some(b=>/aletas/.test(b.n+" "+b.p)))?", aletas":""}${Store.cfg.neo?", neopreno":""}, toalla y ropa abrigada.</span>`:""}${tp.tasks.some(t=>t.id==="ruck")?`<span class="foot">Deja lista la mochila con el peso.</span>`:""}${tp.test||tp.kind==="prueba"?`<span class="foot">Mañana se mide: piscina con salvavidas avisado, pista, cronómetro y el bolso listo esta noche.</span>`:""}</div>`}
   if(plan.dow===6){const L6=locate(d),wsN=L6.n-6;let ua=0,ub=0,dn=0,sm=[0,0];for(let i=0;i<7;i++){const dx=i===6?d:lastOfN(wsN+i),px=planFor(dx);if(!px)continue;const x=Store.days[iso(dx)];const u=units(x,px);ua+=u.a;ub+=u.b;if(okSt(dayStatus(iso(dx),px)))dn++;px.tasks.forEach(t=>{if(t.m){sm[1]+=t.m;if(taskDone(x,t))sm[0]+=t.m}})}
     const pc=ub?Math.round(ua/ub*100):0,nw=locate(addDays(d,1)).w;
     h+=`<div class="card"><span class="lbl">Revisión de la semana ${plan.w}</span><div class="kpis"><div class="kpi"><span class="lbl">Series</span><b>${pc}%</b></div><div class="kpi"><span class="lbl">Días</span><b>${dn}/7</b></div><div class="kpi"><span class="lbl">Nado (m)</span><b>${nf(sm[0])}</b></div></div>
@@ -2075,7 +2080,7 @@ document.addEventListener("click",e=>{
   // botones que mueven la pantalla (Hecho, Saltar, Cumplí todo, Desmarcar…): un segundo toque muy rápido cae sobre otro botón y no cuenta
   const jumpy=["rdone","rgo","rto","st","task","clear","rstart"].some(x=>D[x]!==undefined);
   if(jumpy&&lastTap.j&&now-lastTap.t<350)return;lastTap={sig,t:now,j:jumpy};
-  if(D.tab){if(D.tab==="hoy"&&S.tab==="hoy"){S.date=today();S.follow=true}if(D.tab==="plan")S.selWeek=null;setTab(D.tab);return}
+  if(D.tab){if(D.tab==="hoy"&&(S.tab==="hoy"||!window.__NOLOCK)){S.date=today();S.follow=true;S.run=null}if(D.tab==="plan")S.selWeek=null;setTab(D.tab);return}
   if(D.go!==undefined){S.run=null;S.date=D.go==="0"?today():addDays(S.date,+D.go);S.follow=diffDays(S.date,today())===0;S.confirm=null;render();return}
   if(D.goto){S.date=parse(D.goto);S.follow=diffDays(S.date,today())===0;setTab("hoy");return}
   if(D.wk!==undefined){S.selWeek=+D.wk;render();return}

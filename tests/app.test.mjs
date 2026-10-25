@@ -749,6 +749,20 @@ const reload = async p => { await p.reload(); await p.waitForTimeout(200); };
   ok(errs.length === 0, 'sin errores: ' + errs.join(' | '));
   await ctx.close(); }
 
+// 34. Hoy es siempre hoy: sin flechas; otro día se abre desde Plan y se vuelve con «Volver a hoy»
+{ const ctx = await browser.newContext({ viewport: { width: 390, height: 1200 } });
+  await ctx.addInitScript(() => { window.__NOLOCK = false; });
+  const p = await ctx.newPage(); const errs = []; p.on('pageerror', e => errs.push(e.message));
+  await p.clock.install({ time: new Date('2026-10-20T09:30:00') }); await p.goto(URL); await p.waitForTimeout(200);
+  ok(await p.locator('#app [data-go="-1"]').count() === 0 && (await text(p)).includes('HOY · MARTES'), 'Hoy sin flechas y dice HOY');
+  ok(!(await text(p)).includes('Mañana ·'), 'Hoy no mezcla el día de mañana');
+  await p.click('[data-tab="plan"]'); await p.locator('[data-goto="2026-10-22"]').first().click(); await p.waitForTimeout(150);
+  ok((await text(p)).includes('DÍA QUE VIENE') && await p.locator('[data-go="0"]').count() === 1, 'otro día se ve marcado y con «Volver a hoy»');
+  await p.click('[data-tab="registro"]'); await p.click('[data-tab="hoy"]'); await p.waitForTimeout(150);
+  ok((await text(p)).includes('HOY · MARTES'), 'tocar la pestaña Hoy siempre vuelve a hoy');
+  ok(errs.length === 0, 'sin errores: ' + errs.join(' | '));
+  await ctx.close(); }
+
 await browser.close();
 console.log(`\n${passes} correctas, ${fails} fallidas`);
 process.exit(fails ? 1 : 0);
