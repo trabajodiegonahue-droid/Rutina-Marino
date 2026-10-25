@@ -127,8 +127,8 @@ body.guided{padding-bottom:calc(420px + env(safe-area-inset-bottom,0px))}
 .alert{background:repeating-linear-gradient(-45deg,rgba(226,85,62,.12) 0 10px,transparent 10px 20px);border:1px solid var(--bad);color:var(--bad);padding:8px 12px;font-weight:600;font-size:15px;margin:0}
 
 /* cómo amaneciste */
-.mode{display:grid;grid-template-columns:repeat(2,1fr);gap:6px}
-.mode button{border:2px solid var(--line);background:var(--paper);border-radius:8px;padding:10px 4px;font-family:var(--f-label);font-weight:700;text-transform:uppercase;letter-spacing:.04em;font-size:15px}
+.mode{display:grid;grid-template-columns:repeat(4,1fr);gap:4px}
+.mode button{border:2px solid var(--line);background:var(--paper);border-radius:8px;padding:8px 2px;font-family:var(--f-label);font-weight:700;text-transform:uppercase;letter-spacing:.02em;font-size:13px}
 .seg.on{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
 .mode button.on.m-ok{background:var(--ok);border-color:var(--ok);color:var(--paper)}
 .mode button.on.m-cansado{background:var(--warn);border-color:var(--warn);color:var(--paper)}
@@ -151,6 +151,7 @@ body.guided{padding-bottom:calc(420px + env(safe-area-inset-bottom,0px))}
 .ses.nope{border-color:var(--bad);box-shadow:inset 3px 0 0 var(--bad)}.ses.nope .chk{border-color:var(--bad);color:var(--bad);font-size:22px;font-weight:700}.ses.nope .t{color:var(--muted)}
 .nopeb{display:inline-block;background:var(--bad);color:#fff;font-size:11px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;padding:1px 6px;border-radius:4px;vertical-align:2px}
 .nopebtn{background:none;border:1px solid var(--line);color:var(--muted);border-radius:999px;padding:5px 9px;font-size:13px;white-space:nowrap}.nopebtn.on{border-color:var(--bad);color:var(--bad)}
+.daycfg summary{display:flex;justify-content:space-between;align-items:center;gap:8px;list-style:none}.daycfg summary::-webkit-details-marker{display:none}.daycfg .dcv{font-size:14px;color:var(--accent);font-weight:600}.daycfg[open] summary{margin-bottom:8px}
 .order.closed{border-color:var(--bad)}.order.half{border-color:var(--warn)}.stamp.red{border-color:var(--bad);color:var(--bad)}
 .ses.pend{border-color:var(--warn);box-shadow:inset 3px 0 0 var(--warn)}
 .pendb{display:inline-block;background:var(--warn);color:#1A1200;font-size:11px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;padding:1px 6px;border-radius:4px;vertical-align:2px}
@@ -1204,8 +1205,8 @@ function compliance(){const td=today();let tot=0,ok=0;for(let d=parse(Store.cfg.
 function orders(plan,k,isToday,dd){
   const N=Store.cfg.name||"crack",out=[];
   if(isToday){const fr=fatigueRun(today());if(fr>=3)out.push(["alert",`Llevas ${fr} días seguidos cansado o con dolor. Hoy versión suave o descanso: solo técnica o movilidad. Si es dolor y no mejora, al médico.`])}
-  if(isToday){const yd=addDays(today(),-1),yp=planFor(yd);if(yp&&!okSt(dayStatus(iso(yd),yp))&&!skipData().list.includes(iso(yd))){const ys=dayStatus(iso(yd),yp),yx=Store.days[iso(yd)]||{};if(ys==="fail")out.push(["alert","Ayer fallaste. Un día no te saca del camino; dos seguidos empiezan a hacerlo. Hoy retomas."]);
-      else if(!yx.status){const ms=missingTasks(yx,yp);out.push(["alert",units(yx,yp).a?`Ayer quedó a medias${ms.length?" (faltó: "+ms.slice(0,3).join(", ")+")":""}. Si lo hiciste, márcalo con ◀; si no, ciérralo ahí con «Cerrar el día».`:"Ayer no registraste nada. Si entrenaste, márcalo con ◀; si no, toca «No pude ese día» ahí."])}}}
+  // ayer: la app ya lo evaluó sola (a medias sigue el plan; sin nada, se repite y lo dice la tarjeta de arriba)
+  if(isToday){const yd=addDays(today(),-1),yp=planFor(yd);if(yp&&dayStatus(iso(yd),yp)==="part"){const yx=Store.days[iso(yd)]||{},core=yp.tasks.filter(counts);out.push(["p",`Ayer quedó a medias (${core.filter(t=>taskDone(yx,t)).length} de ${core.length}). Hoy sigues con el plan.`])}}
   if(plan.maint)out.push(["say",plan.kind==="descanso"?"Descanso. La mantención también descansa.":`Mantención, ${N}. Lo que ganaste en 52 semanas se cuida igual.`]);
   else if(plan.w===HELL&&plan.kind!=="descanso")out.push(["say",pick([`${N}. Semana del infierno. Aquí se ve para qué fueron 47 semanas.`,`Infierno, día ${plan.dow+1}. No pienses en el último día: piensa en la próxima serie.`],k)]);
   else if(plan.test)out.push(["say",plan.w===0?`${N}. Hoy se mide el punto de partida. Que sea verdad, no bonito.`:plan.w===52?`Prueba final, ${N}. 52 semanas para esto.`:`Día de prueba, ${N}. Aquí se ve quién entrenó.`]);
@@ -1556,16 +1557,17 @@ function viewHoy(){
     h+=`<div class="card"><span class="lbl">Hoy retomas el día de ayer</span><p style="margin:0">Ayer ${why}, así que hoy toca lo mismo: ${esc(plan.title)}. Ningún día se pierde: el plan entero se corre un día.</p>${why==="quedó sin marcar"?`<button class="btn sm" data-ydone>Sí lo hice ayer: marcarlo cumplido</button>`:""}</div>`}}
   h+=`<div class="order"><div class="msg-h"><span>Tu preparador · Para: ${esc(Store.cfg.name||"crack")}</span><span>${esc(dayName(d).slice(0,3))} ${fmtS(d)}</span></div>${orders(plan,k,isToday,dd).map(([t,x])=>t==="alert"?`<p class="alert">${esc(x)}</p>`:t==="say"?`<p class="say">${esc(x)}</p>`:t==="why"?`<p class="why-q">Tu por qué: “${esc(x)}”</p>`:`<p>${esc(x)}</p>`).join("")}</div>`;
   {const cur=turnoOf(d),sh=plan.shift;
-   h+=`<div class="sec"><div class="row" style="justify-content:space-between;align-items:center"><span class="lbl">Hoy trabajo</span><div class="segs">${Object.keys(SHIFT).map(t=>`<button class="seg ${cur===t?"on":""}" data-turno="${t}">${SHIFT[t].lbl}</button>`).join("")}</div></div>
-   <p class="foot">Despiertas ${sh.wake}${sh.late?` (ayer te acostaste a la ${sh.late}: 8 h de sueño)`:""} · entrenas desde ${sh.A}${sh.leave?` · sales al trabajo ${sh.leave}`:""} · cama ${sh.bed}</p></div>`}
+   const kk="daycfg:"+k;
+   h+=`<details class="card daycfg" data-keep="${kk}" ${S.keep[kk]?"open":""}><summary><span class="lbl">Hoy trabajo</span><span class="dcv">${esc(SHIFT[cur].lbl)} ▾</span></summary><div class="row" style="justify-content:space-between;align-items:center"><span class="lbl">Cambiar turno</span><div class="segs">${Object.keys(SHIFT).map(t=>`<button class="seg ${cur===t?"on":""}" data-turno="${t}">${SHIFT[t].lbl}</button>`).join("")}</div></div>
+   <p class="foot">Despiertas ${sh.wake}${sh.late?` (ayer te acostaste a la ${sh.late}: 8 h de sueño)`:""} · entrenas desde ${sh.A}${sh.leave?` · sales al trabajo ${sh.leave}`:""} · cama ${sh.bed}</p></details>`}
   if(plan.kind!=="descanso"){
     const M=[["ok","Al 100%"],["cansado","Cansado"],["dolor","Con dolor"],["enfermo","Enfermo"]];
     const txt={ok:"Haz el plan completo.",cansado:"Versión suave: menos series, sin sesión larga. Si dura 3 días, toma 2 días suaves.",dolor:"Hoy solo recuperación. Cansancio general es normal; dolor agudo, localizado o que empeora, no.",enfermo:"Resfrío, fiebre o malestar: hoy no se entrena. Sigue la regla del cuello."}[dd.mode]||"Antes de empezar: ¿cómo amaneciste?";
+    h+=`<div class="mode">${M.map(([v,l])=>`<button class="m-${v} ${dd.mode===v?"on":""}" data-mode="${v}">${l}</button>`).join("")}</div><p class="modetxt">${esc(txt)}</p>`;
     {const hs=sleepH(dd.sleep);if(hs!=null&&hs<7&&!dd.mode)h+=`<p class="alert">Dormiste ${fmtH(hs)}: marca «Cansado».</p>`}
-    h+=`<div class="sec"><div class="mode">${M.map(([v,l])=>`<button class="m-${v} ${dd.mode===v?"on":""}" data-mode="${v}">${l}</button>`).join("")}</div><p class="modetxt">${esc(txt)}</p></div>`;
     if(dd.nolake||plan.tasks.some(t=>t.blocks.some(b=>b.n==="Ida en bicicleta")))h+=`<div class="sec"><button class="btn ${dd.nolake?"main":""}" data-nolake>${dd.nolake?"✓ Hoy no entro al lago (toca para deshacer)":"Hay viento, olas o tormenta: hoy no entro al lago"}</button><p class="foot">${dd.nolake?"La sesión de agua cambió a técnica en seco en la casa.":"Míralo por la ventana o en el pronóstico antes de salir. Si hay viento con olas, lluvia fuerte, truenos o neblina, tócalo: te doy el plan B."}</p></div>`;
   }
-  if(isToday&&plan.shift)h+=`<p class="nowline" id="now-line">${esc(nowLineText(plan))}</p>`;
+  if(isToday&&plan.shift){const nl=nowLineText(plan);if(nl)h+=`<p class="nowline" id="now-line">${esc(nl)}</p>`}
   const pct=u.b?Math.round(u.a/u.b*100):0;
   h+=`<div class="prog"><div class="row"><span class="lbl">${esc(plan.title)} · ${u.a}/${u.b} series</span><span class="mono">${pct}%</span></div><div class="bar"><i style="width:${pct}%"></i></div></div>`;
   {const N=steps(plan).length,fp=firstPending(plan,dd);
@@ -1785,7 +1787,8 @@ function nowLineText(plan){
   const lv=sh.leave?toMin(sh.leave):null,back=sh.back?toMin(sh.back)+(toMin(sh.back)<240?1440:0):null,atWork=lv!=null&&m>=lv&&m<back;
   // “Ahora” es solo la tarea de este momento (la última que empezó), si no está marcada y no estás en el trabajo
   const last=items.filter(x=>x.at<=m).pop(),nxt=items.find(x=>x.at>m),cur=!atWork&&last&&!taskDone(dd,last.t)&&m-last.at<=120?last:null;
-  const missed=items.filter(x=>x.at<=m&&x!==cur&&x.t.kind!=="rutina"&&!taskDone(dd,x.t)).length;
+  // en orden (lo normal) lo que toca ya lo dice la tarjeta «Ahora»: aquí solo trabajo, salida y cama
+  const seqM=!window.__NOLOCK,missed=seqM?0:items.filter(x=>x.at<=m&&x!==cur&&x.t.kind!=="rutina"&&!taskDone(dd,x.t)).length;
   // de madrugada: lo que manda es dormir (con turno 16 se llega a las 0:30 y la cama es a la 1:15)
   // volviendo del turno que termina después de medianoche: lo que falta es la noche
   if(late)return `Vuelves del trabajo: comida liviana, visualización y a la cama a la ${sh.bed}. Mañana despiertas a las ${((planFor(addDays(today(),1))||{}).shift||sh).wake}.`;
@@ -1794,11 +1797,11 @@ function nowLineText(plan){
   const parts=[],bed=sh.bed?toMin(sh.bed)+(toMin(sh.bed)<240?1440:0):null;
   if(bed!=null&&m>=bed&&m<bed+360)return `Hora de dormir: cama ${sh.bed}. Mañana se sigue.`+(missed?` (${missed===1?"1 tarea quedó":missed+" tareas quedaron"} sin marcar hoy)`:"");
   if(atWork)parts.push(`En el trabajo hasta las ${sh.back}`);
-  if(cur)parts.push(`Ahora: ${cur.t.t} (${cur.t.h})`);
-  if(nxt)parts.push(`Después: ${nxt.t.t} a las ${nxt.t.h}`);
+  if(cur&&!seqM)parts.push(`Ahora: ${cur.t.t} (${cur.t.h})`);
+  if(nxt&&!seqM)parts.push(`Después: ${nxt.t.t} a las ${nxt.t.h}`);
   if(lv!=null&&m<lv){const r=lv-m;parts.push(`Sales al trabajo en ${r>=60?Math.floor(r/60)+" h "+pad(r%60)+" min":r+" min"} (${sh.leave})`)}
   if(missed)parts.push(`${missed===1?"1 tarea anterior quedó":missed+" tareas anteriores quedaron"} sin marcar`);
-  return parts.join(" · ")||"Día terminado. A dormir a la hora.";
+  return parts.join(" · ")||(seqM?"":"Día terminado. A dormir a la hora.");
 }
 function updateNowLine(){const el=document.getElementById("now-line");if(!el||diffDays(S.date,today())!==0)return;const p=planFor(S.date);if(p)el.textContent=nowLineText(p)}
 setInterval(updateNowLine,30000);

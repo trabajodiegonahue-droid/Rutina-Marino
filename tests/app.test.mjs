@@ -61,7 +61,7 @@ const reload = async p => { await p.reload(); await p.waitForTimeout(200); };
 { console.log('3. Turno de trabajo');
   const { p, ctx } = await page('2026-10-13T09:00:00');
   ok((await text(p)).includes('Despiertas 8:30'), 'turno de las 14:00 por defecto');
-  await p.click('[data-turno="16"]');
+  await p.click('details.daycfg summary'); await p.click('[data-turno="16"]');
   ok((await text(p)).includes('Despiertas 9:15'), 'turno 16 cambia la hora');
   await reload(p);
   ok((await text(p)).includes('Despiertas 9:15'), 'el turno del día queda guardado');
@@ -436,7 +436,7 @@ const reload = async p => { await p.reload(); await p.waitForTimeout(200); };
   await p.tap('[data-go="-1"]');
   ok(await dots(p) === d1b && await note(p) === 'trote 20 min, barras costaron', 'el día anterior guarda series y nota');
   ok(await p.locator('[data-mode="ok"]').evaluate(e => e.classList.contains('on')), 'el día anterior guarda “Al 100%”');
-  await p.tap('[data-go="1"]'); await p.tap('[data-turno="16"]');
+  await p.tap('[data-go="1"]'); await p.tap('details.daycfg summary'); await p.tap('[data-turno="16"]');
   ok((await text(p)).includes('Despiertas 9:15'), 'turno 16 cambia la hora de despertar');
   await p.tap('[data-st="done"]'); ok((await text(p)).includes('Racha 1'), 'cumplir el día sube la racha'); await p.close();
   // jueves 8: no abre la app. Viernes 9 (descanso): la racha se cortó y el miércoles sigue cumplido
@@ -502,7 +502,7 @@ const reload = async p => { await p.reload(); await p.waitForTimeout(200); };
     await p.click('[data-mode="dolor"]'); await p.locator('summary', { hasText: 'Notas' }).click(); await p.fill('#f-note', 'hombro');
     await p.waitForTimeout(300); await p.goto(URL); await p.waitForTimeout(1500);
     const c = await cloud(p);
-    ok(c[dayPath] && c[dayPath].mode === 'dolor' && c[dayPath].note === 'hombro', 'al abrir con nube, lo marcado sin nube se sube');
+    ok(c[dayPath] && c[dayPath].mode === 'dolor' && c[dayPath].note === 'hombro', 'al abrir con nube, lo marcado sin nube se sube: ' + JSON.stringify(c[dayPath]));
     ok(await p.locator('[data-mode="dolor"]').evaluate(e => e.classList.contains('on')), 'y sigue en pantalla');
     // otro dispositivo marca algo segundos después de tu cambio: lo ves igual
     await p.click('[data-mode="cansado"]'); await p.waitForTimeout(700);
