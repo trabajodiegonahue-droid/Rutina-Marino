@@ -153,7 +153,7 @@ body.guided{padding-bottom:calc(420px + env(safe-area-inset-bottom,0px))}
 .ses.nope{border-color:var(--bad);box-shadow:inset 3px 0 0 var(--bad)}.ses.nope .chk{border-color:var(--bad);color:var(--bad);font-size:22px;font-weight:700}.ses.nope .t{color:var(--muted)}
 .nopeb{display:inline-block;background:var(--bad);color:#fff;font-size:11px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;padding:1px 6px;border-radius:4px;vertical-align:2px}
 .nopebtn{background:none;border:1px solid var(--line);color:var(--muted);border-radius:999px;padding:5px 9px;font-size:13px;white-space:nowrap}.nopebtn.on{border-color:var(--bad);color:var(--bad)}
-.daycfg summary{display:flex;justify-content:space-between;align-items:center;gap:8px;list-style:none}.daycfg summary::-webkit-details-marker{display:none}.daycfg .dcv{font-size:14px;color:var(--accent);font-weight:600}.daycfg[open] summary{margin-bottom:8px}
+.daycfg summary{display:flex;justify-content:space-between;align-items:center;gap:8px;list-style:none}.daycfg summary::-webkit-details-marker{display:none}.daycfg .dcv{font-size:14px;color:var(--accent);font-weight:600}.daycfg[open] summary{margin-bottom:8px}.daycfg{padding-block:10px}.daycfg:not([open]) summary{margin:0}
 .order.closed{border-color:var(--bad)}.order.half{border-color:var(--warn)}.stamp.red{border-color:var(--bad);color:var(--bad)}
 .ses.pend{border-color:var(--warn);box-shadow:inset 3px 0 0 var(--warn)}
 .pendb{display:inline-block;background:var(--warn);color:#1A1200;font-size:11px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;padding:1px 6px;border-radius:4px;vertical-align:2px}
@@ -1557,7 +1557,11 @@ function viewHoy(){
   // ayer no se cumplió: hoy se retoma el mismo día del plan
   if(isToday){const y=addDays(d,-1),yk=iso(y);if(skipData().list.includes(yk)){const yd=Store.days[yk]||{},why=yd.mode==="enfermo"?"estabas enfermo":yd.mode==="dolor"?"estabas con dolor":yd.status==="fail"?"marcaste que no pudiste":"quedó sin marcar";
     h+=`<div class="card"><span class="lbl">Hoy retomas el día de ayer</span><p style="margin:0">Ayer ${why}, así que hoy toca lo mismo: ${esc(plan.title)}. Ningún día se pierde: el plan entero se corre un día.</p>${why==="quedó sin marcar"?`<button class="btn sm" data-ydone>Sí lo hice ayer: marcarlo cumplido</button>`:""}</div>`}}
-  h+=`<div class="order"><div class="msg-h"><span>Tu preparador · Para: ${esc(Store.cfg.name||"crack")}</span><span>${esc(dayName(d).slice(0,3))} ${fmtS(d)}</span></div>${orders(plan,k,isToday,dd).map(([t,x])=>t==="alert"?`<p class="alert">${esc(x)}</p>`:t==="say"?`<p class="say">${esc(x)}</p>`:t==="why"?`<p class="why-q">Tu por qué: “${esc(x)}”</p>`:`<p>${esc(x)}</p>`).join("")}</div>`;
+  const seq=!window.__NOLOCK&&isToday,ords=orders(plan,k,isToday,dd);
+  // hoy (en orden) lo primero es «Ahora»: el mensaje del preparador va después de las tareas, los avisos importantes quedan arriba
+  if(seq)ords.filter(x=>x[0]==="alert").forEach(x=>{h+=`<p class="alert">${esc(x[1])}</p>`});
+  const orderHTML=`<div class="order"><div class="msg-h"><span>Tu preparador · Para: ${esc(Store.cfg.name||"crack")}</span><span>${esc(dayName(d).slice(0,3))} ${fmtS(d)}</span></div>${(seq?ords.filter(x=>x[0]!=="alert"):ords).map(([t,x])=>t==="alert"?`<p class="alert">${esc(x)}</p>`:t==="say"?`<p class="say">${esc(x)}</p>`:t==="why"?`<p class="why-q">Tu por qué: “${esc(x)}”</p>`:`<p>${esc(x)}</p>`).join("")}</div>`;
+  if(!seq)h+=orderHTML;
   {const cur=turnoOf(d),sh=plan.shift;
    const kk="daycfg:"+k;
    h+=`<details class="card daycfg" data-keep="${kk}" ${S.keep[kk]?"open":""}><summary><span class="lbl">Hoy trabajo</span><span class="dcv">${esc(SHIFT[cur].lbl)} ▾</span></summary><div class="row" style="justify-content:space-between;align-items:center"><span class="lbl">Cambiar turno</span><div class="segs">${Object.keys(SHIFT).map(t=>`<button class="seg ${cur===t?"on":""}" data-turno="${t}">${SHIFT[t].lbl}</button>`).join("")}</div></div>
@@ -1570,16 +1574,16 @@ function viewHoy(){
     if(dd.nolake||plan.tasks.some(t=>t.blocks.some(b=>b.n==="Ida en bicicleta")))h+=`<div class="sec"><button class="btn ${dd.nolake?"main":""}" data-nolake>${dd.nolake?"✓ Hoy no entro al lago (toca para deshacer)":"Hay viento, olas o tormenta: hoy no entro al lago"}</button><p class="foot">${dd.nolake?"La sesión de agua cambió a técnica en seco en la casa.":"Míralo por la ventana o en el pronóstico antes de salir. Si hay viento con olas, lluvia fuerte, truenos o neblina, tócalo: te doy el plan B."}</p></div>`;
   }
   if(isToday&&plan.shift){const nl=nowLineText(plan);if(nl)h+=`<p class="nowline" id="now-line">${esc(nl)}</p>`}
-  const pct=u.b?Math.round(u.a/u.b*100):0;
-  h+=`<div class="prog"><div class="row"><span class="lbl">${esc(plan.title)} · ${u.a}/${u.b} series</span><span class="mono">${pct}%</span></div><div class="bar"><i style="width:${pct}%"></i></div></div>`;
+  const pct=u.b?Math.round(u.a/u.b*100):0,cT=seq?curTask(plan,dd):null;
+  if(!seq)h+=`<div class="prog"><div class="row"><span class="lbl">${esc(plan.title)} · ${u.a}/${u.b} series</span><span class="mono">${pct}%</span></div><div class="bar"><i style="width:${pct}%"></i></div></div>`;
   {const N=steps(plan).length,fp=firstPending(plan,dd);
-   if(fp<N)h+=`<button class="btn main start" data-rstart>${fp===0?"▶ Empezar el entrenamiento":"▶ Continuar · paso "+(fp+1)+" de "+N}</button>`}
+   if(fp<N&&(!seq||cT&&!["rutina","estudio","admin","prep"].includes(cT.kind)))h+=`<button class="btn main start" data-rstart>${fp===0?"▶ Empezar el entrenamiento":"▶ Continuar · paso "+(fp+1)+" de "+N}</button>`}
   const pend=plan.tasks.filter(t=>isPend(t,dd,d)),nextT=plan.tasks.find(t=>!taskDone(dd,t)&&t.kind!=="rutina"&&!pend.includes(t)),openT=nextT||pend[0],defOpen=t=>t===openT;S.defOpen=openT?k+openT.id:"";
-  const seq=!window.__NOLOCK&&isToday,cT=seq?curTask(plan,dd):null;
   if(seq){S.defOpen=cT?k+cT.id:"";h+=plan.tasks.map((t,ti)=>{const tt=Object.assign({},t,{t:(ti+1)+". "+t.t}),st=cT&&cT.id===t.id?"cur":isLocked(plan,dd,t,d)?"lock":"";return sesHTML(tt,dd,st==="cur"?(S.open[k+t.id]!=null?S.open[k+t.id]:true):S.open[k+t.id]===true,st==="cur"&&isPend(t,dd,d),st)}).join("")}
   else{
   if(pend.length)h+=`<div class="pendcard"><b>Pendiente${pend.length>1?"s":""}</b> ${pend.map(t=>`<button class="pendlink" data-open="${t.id}">${esc(t.t)}${t.h?" · "+esc(t.h):""}</button>`).join("")}</div>`;
   h+=plan.tasks.map((t,ti)=>sesHTML(Object.assign({},t,{t:(ti+1)+". "+t.t}),dd,S.open[k+t.id]!=null?S.open[k+t.id]:defOpen(t),pend.includes(t))).join("");}
+  if(seq)h+=orderHTML;
   if(plan.test)h+=testForm(plan,k,dd,L);
   h+=resultsHTML(plan,k,dd);
   {const tm=addDays(d,1),tp=planFor(tm);if(tp)h+=`<div class="card"><span class="lbl">Mañana · ${dayName(tm)} · ${esc(tp.title)}</span><span>${esc(tp.tasks.filter(t=>t.id!=="noche"&&t.id!=="ducha").map(t=>(t.h?t.h+" ":"")+t.t).join(" · "))}</span>${tp.tasks.some(t=>t.kind==="agua"&&t.m||t.blocks.some(b=>/^Nado [\d.–]+ m$/.test(b.n)&&!b.opt))?`<span class="foot">Deja listo el bolso: traje de baño, gafas, gorra de color${tp.tasks.some(t=>t.blocks.some(b=>/aletas/.test(b.n+" "+b.p)))?", aletas":""}${Store.cfg.neo?", neopreno":""}, toalla y ropa abrigada.</span>`:""}${tp.tasks.some(t=>t.id==="ruck")?`<span class="foot">Deja lista la mochila con el peso.</span>`:""}${tp.test||tp.kind==="prueba"?`<span class="foot">Mañana se mide: piscina con salvavidas avisado, pista, cronómetro y el bolso listo esta noche.</span>`:""}</div>`}
@@ -2133,7 +2137,9 @@ document.addEventListener("click",e=>{
       if(c[tid])t.blocks.forEach((x,j)=>{if(sets[setKey(t,j)]==null)sets[setKey(t,j)]=x.s});
       c[tid]=false;if((dd.nope||{})[tid])patchX.nope=Object.assign({},dd.nope,{[tid]:false});const cur=Math.min(sets[setKey(t,i)]||0,bb.s);let nv=+v;if(bb.s>1&&bb.s<=12&&nv===cur)nv=cur-1;sets[setKey(t,i)]=nv;S.open[k+tid]=true;
       if(nv<cur&&TM&&(TM.label==="Descanso · "+bb.n||/^Respira normal · apnea/.test(TM.label)&&bb.n==="Apnea en seco"))stopTimer();
-      if(nv>cur&&nv<bb.s){if(bb.n==="Apnea en seco")startTimer(toSec(RESTS_ASECO[nv-1]||"1:00"),"Respira normal · apnea "+(nv+1));else if(bb.r)startTimer(bb.r,"Descanso · "+bb.n)}}
+      if(nv>cur&&nv<bb.s){if(bb.n==="Apnea en seco")startTimer(toSec(RESTS_ASECO[nv-1]||"1:00"),"Respira normal · apnea "+(nv+1));else if(bb.r)startTimer(bb.r,"Descanso · "+bb.n)}
+      // terminaste el ejercicio: descanso antes del siguiente
+      else if(nv>cur&&nv>=bb.s&&bb.r&&bb.s>1&&t.blocks[i+1]&&!t.blocks[i+1].tm){const nx=t.blocks[i+1];startTimer(bb.r,"Descanso · sigue "+nx.n)}}
     const patch=Object.assign({checks:c,sets},patchX);if(dd.status==="fail")patch.status="";
     Store.setDay(k,patch);
     const after=dayStatus(k,p);render();if(D.task&&taskDone(Store.days[k],p.tasks.find(x=>x.id===D.task)))goCur();

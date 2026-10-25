@@ -741,6 +741,14 @@ const reload = async p => { await p.reload(); await p.waitForTimeout(200); };
   ok(errs.length === 0, 'sin errores: ' + errs.join(' | '));
   await ctx.close(); }
 
+// 33. Al terminar la última serie de un ejercicio parte solo el descanso antes del siguiente
+{ const { p, ctx, errs } = await page('2026-10-20T08:00:00');
+  const dots = p.locator('.ses [data-set^="fa|1|"]'); const n = await dots.count();
+  for (let i = 0; i < n; i++) { await dots.nth(i).click(); await p.waitForTimeout(500); }
+  ok((await p.$eval('#timerbar', e => e.textContent)).includes('sigue Flexiones'), 'descanso automático antes del siguiente ejercicio: ' + await p.$eval('#timerbar', e => e.textContent));
+  ok(errs.length === 0, 'sin errores: ' + errs.join(' | '));
+  await ctx.close(); }
+
 await browser.close();
 console.log(`\n${passes} correctas, ${fails} fallidas`);
 process.exit(fails ? 1 : 0);
