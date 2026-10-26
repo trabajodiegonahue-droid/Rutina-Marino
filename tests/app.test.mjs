@@ -117,7 +117,7 @@ const reload = async p => { await p.reload(); await p.waitForTimeout(200); };
   if (await p.isVisible('#timerbar .tin.safe')) { ok((await p.$eval('#timerbar', e => e.textContent)).includes('Toca otra vez'), 'el tope del lago pide confirmar'); await p.click('[data-tstop]'); }
   ok(!(await p.isVisible('#timerbar .tin')), 'parar lo cierra');
   // descanso automático al marcar una serie
-  await p.locator('.dot', { hasText: /^1$/ }).first().click();
+  await p.locator('[data-set$="|1|1"]').first().click();
   ok(await p.isVisible('#timerbar .tin'), 'marcar una serie arranca el descanso');
   await p.clock.runFor(10 * 60 * 1000);
   ok((await p.$eval('#timerbar', e => e.textContent)).includes('¡Tiempo!') || !(await p.isVisible('#timerbar .tin')), 'llega a cero');
@@ -776,6 +776,50 @@ const reload = async p => { await p.reload(); await p.waitForTimeout(200); };
   ok(await p.locator('.vaso.on').count() === 5, 'el agua queda guardada');
   await p.click('[data-water="-1"]'); await p.waitForTimeout(100);
   ok(await p.locator('.vaso.on').count() === 4, 'restar un vaso');
+  ok(errs.length === 0, 'sin errores: ' + errs.join(' | '));
+  await ctx.close(); }
+
+// 36. Para seguir sin Claude: rutina editable, avisos al calendario, compras, récords, copia y fotos en el teléfono
+{ const { p, ctx, errs } = await page('2026-10-20T08:00:00'); // martes 20: pecho (inicio 6 oct)
+  // copia de seguridad: aviso en Hoy cuando nunca se guardó y ya hay días
+  await p.evaluate(() => { const s = JSON.parse(localStorage.getItem('bitacora-buzo-v1')) || { cfg: {}, days: {}, pend: {} }; s.days = s.days || {}; ['2026-10-17', '2026-10-18', '2026-10-19'].forEach(k => s.days[k] = { status: 'done' }); localStorage.setItem('bitacora-buzo-v1', JSON.stringify(s)); });
+  await reload(p);
+  ok(await p.locator('.card.bk [data-backup]').count() === 1, 'Hoy avisa que falta la copia de seguridad');
+  // récords: lo anotado por serie
+  await p.fill('[data-rp="Flexiones de brazos|0"]', '12'); await p.fill('[data-rp="Press de pecho en el suelo con mancuernas|0"]', '10x8kg'); await p.fill('[data-rp="Press de pecho en el suelo con mancuernas|1"]', '12x8kg');
+  await p.click('[data-tab="progreso"]'); await p.waitForTimeout(100);
+  let t = await text(p);
+  ok(t.includes('Récords por ejercicio') && t.includes('12 × 8 kg'), 'récord por ejercicio con peso');
+  // rutina editable
+  await p.click('[data-tab="plan"]'); await p.locator('details.redit summary').click(); await p.waitForTimeout(100);
+  ok(await p.locator('.rrow').count() === 8, 'el editor muestra los 8 ejercicios de pecho');
+  await p.fill('#rx-fa-1-n', 'Flexiones diamante'); await p.fill('#rx-fa-1-reps', '6–10');
+  await p.click('[data-radd="fa"]'); await p.waitForTimeout(100);
+  ok(await p.locator('.rrow').count() === 9, 'agregar un ejercicio');
+  await p.click('[data-tab="hoy"]'); await p.click('[data-go="0"]').catch(() => {}); await p.waitForTimeout(100);
+  t = await text(p);
+  ok(t.includes('Flexiones diamante') && t.includes('6–10') && t.includes('Ejercicio nuevo'), 'Hoy usa la rutina editada');
+  await reload(p); ok((await text(p)).includes('Flexiones diamante'), 'la rutina editada queda guardada');
+  await p.click('[data-tab="plan"]'); await p.locator('details.redit summary').click(); await p.click('[data-ask="rreset"]'); await p.click('[data-rreset="fa"]'); await p.click('[data-tab="hoy"]');
+  ok(!(await text(p)).includes('Flexiones diamante'), 'volver a la rutina original');
+  // avisos de la semana: archivo de calendario
+  await p.click('[data-tab="plan"]');
+  const [dl] = await Promise.all([p.waitForEvent('download'), p.click('[data-avisos]')]);
+  const ics = fs.readFileSync(await dl.path(), 'utf8');
+  ok((ics.match(/BEGIN:VEVENT/g) || []).length >= 20 && ics.includes('TRIGGER:PT0M') && ics.includes('SUMMARY:▸ Pecho + core'), 'avisos de 7 días con alarma a la hora (' + (ics.match(/BEGIN:VEVENT/g) || []).length + ')');
+  // compras de la semana
+  await p.click('[data-tab="registro"]'); await p.locator('details[data-keep="reg:compras"] summary').click();
+  await p.click('[data-buy="Huevos"]'); await p.waitForTimeout(100);
+  ok(await p.locator('[data-buy="Huevos"]').getAttribute('aria-pressed') === 'true', 'tachar en la lista de compras');
+  // fotos en el teléfono y dentro de la copia
+  await p.locator('details[data-keep="reg:fotos"] summary').click().catch(() => {});
+  const png = Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==', 'base64');
+  await p.setInputFiles('[data-photo="front"]', { name: 'f.png', mimeType: 'image/png', buffer: png }); await p.waitForTimeout(800);
+  ok(await p.locator('.pcol img').count() >= 1 && (await p.locator('.pcol img').first().getAttribute('src')).startsWith('blob:'), 'la foto queda en el teléfono');
+  await p.click('[data-tab="plan"]');
+  const [dl2] = await Promise.all([p.waitForEvent('download'), p.click('[data-backup]')]);
+  const bk = JSON.parse(fs.readFileSync(await dl2.path(), 'utf8'));
+  ok(bk.photos && Object.values(bk.photos).some(v => v.startsWith('data:image/')), 'la copia de seguridad lleva la foto');
   ok(errs.length === 0, 'sin errores: ' + errs.join(' | '));
   await ctx.close(); }
 

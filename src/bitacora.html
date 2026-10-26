@@ -153,6 +153,12 @@ body.guided{padding-bottom:calc(420px + env(safe-area-inset-bottom,0px))}
 .nopebtn{background:none;border:1px solid var(--line);color:var(--muted);border-radius:999px;padding:5px 9px;font-size:13px;white-space:nowrap}.nopebtn.on{border-color:var(--bad);color:var(--bad)}
 .day.solo,.day.other{display:flex;align-items:center;gap:10px}.day.solo .mid,.day.other .mid{flex:1;text-align:left}.day.other{background:rgba(255,176,32,.12);border:1px solid var(--warn);border-radius:8px;padding:8px 10px}.day.other .big{color:var(--warn)}
 .water .vasos{display:flex;flex-wrap:wrap;gap:4px;margin:8px 0}.vaso{background:none;border:0;padding:2px;width:30px;height:34px;color:var(--muted)}.vaso.on{color:#4FC3F7}.vaso svg{width:100%;height:100%}.water.ok{border-color:var(--ok)}
+.redit summary{display:flex;justify-content:space-between;align-items:baseline;gap:8px;list-style:none;cursor:pointer}.redit summary::-webkit-details-marker{display:none}.redit[open] summary{margin-bottom:10px}
+.rrows{display:flex;flex-direction:column;gap:8px;margin:10px 0}.rrow{border:1px solid var(--line);border-radius:8px;padding:8px;display:flex;flex-direction:column;gap:6px}
+.rrow input{background:var(--bg);border:1px solid var(--line);color:var(--ink);border-radius:6px;padding:7px 8px;font:inherit;font-size:16px;width:100%}
+.rnums{display:grid;grid-template-columns:70px 1fr 100px;gap:6px}.rnums label{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;display:flex;flex-direction:column;gap:2px}
+.rbtns{display:flex;gap:6px;justify-content:flex-end}.rbtns .nb{width:40px;height:34px}
+.tr{font-weight:700;width:18px;text-align:center}.tr.up{color:var(--ok)}.tr.down{color:var(--bad)}.reps .rec{flex-basis:100%;color:var(--accent)}
 .daycfg summary{display:flex;justify-content:space-between;align-items:center;gap:8px;list-style:none}.daycfg summary::-webkit-details-marker{display:none}.daycfg .dcv{font-size:14px;color:var(--accent);font-weight:600}.daycfg[open] summary{margin-bottom:8px}.daycfg{padding-block:10px}.daycfg:not([open]) summary{margin:0}
 .order.closed{border-color:var(--bad)}.order.half{border-color:var(--warn)}.stamp.red{border-color:var(--bad);color:var(--bad)}
 .ses.pend{border-color:var(--warn);box-shadow:inset 3px 0 0 var(--warn)}
@@ -628,45 +634,40 @@ const TEMPO="Bajada lenta (3 s), pausa de 1 s abajo, subida con fuerza.";
 const PROG="Cuando llegues al máximo del rango en todas las series, la próxima vez agrega peso (mochila o un disco) o baja más lento.";
 // rutina de Diego (semana por grupo muscular): series fijas; en la descarga, ~la mitad de las series
 const DS=(s,w)=>DELOAD.includes(w)?Math.max(1,Math.round(s*0.55)):s;
-const CALF=B("Calentamiento","6–8 min",{c:"Movilidad de hombros y caderas, 2 min de trote suave o saltos suaves y una serie liviana del primer ejercicio."});
+const CALF=B("Calentamiento","3 × 2 min",{s:3,tm:120,c:"1) Movilidad de hombros y caderas.\n2) Trote suave en el lugar o saltos suaves.\n3) Una serie liviana del primer ejercicio."});
 const EX=(w,n,s,reps,r,c,lados)=>{const k=DS(s,w);return B(n,`${k} × ${reps}`,{s:lados?k*2:k,r,c})};
 const ctm=(w,a,b)=>{const st=stN(w);return st===1?a:st===2?Math.round((a+b)/2):b};
 const TIMED=(w,n,s,a,b,lado,c)=>{const k=DS(s,w),t=ctm(w,a,b);return B(n,`${k} × ${t} s${lado?" por lado":""}`,{s:lado?k*2:k,r:30,tm:t,c})};
-const RUEDA=(w,s,reps)=>EX(w,"Rueda abdominal",s,reps,60,"Espalda baja sin hundirse: si se arquea, acorta el recorrido.");
-const DEADBUG=w=>EX(w,"Dead bug",2,"10 por lado",30,"Boca arriba, espalda baja pegada al suelo: estiras brazo y pierna contrarios, lento.");
-const BIRDDOG=w=>EX(w,"Bird dog",2,"10 por lado",30,"En cuatro apoyos: estiras brazo y pierna contrarios, sin girar la cadera.");
 // qué toca esta semana según el ciclo (después de cada descarga se parte de nuevo)
 function weekFocus(w){if(DELOAD.includes(w))return "Descarga: menos series y nada al fallo.";let k=0;for(let x=w;x>0&&!DELOAD.includes(x);x--)k++;const after=DELOAD.includes(w-k);
   return k<=1?(after&&w>4?"Esta semana: retoma el volumen normal con lo que ganaste.":"Esta semana: aprende la técnica y deja 2–3 repeticiones en reserva."):k===2?"Esta semana: suma 1–2 repeticiones por serie.":k===3?"Esta semana: sigue subiendo hasta el máximo del rango.":"Esta semana: sube un poco el peso o usa una variante más difícil."}
-function chestDay(w){return [CALF,
-  EX(w,"Press de pecho en el suelo con mancuernas",4,"8–12",90,"Baja controlado y mantén las muñecas rectas."),
-  EX(w,"Flexiones de brazos",3,"8–15",75,"Cuerpo alineado y pecho cerca del suelo."),
-  EX(w,"Press con mancuernas agarre neutro",3,"10–12",75,"Palmas enfrentadas y codos cerca del torso."),
-  EX(w,"Aperturas con banda",3,"12–20",60,"Junta las manos sin encoger los hombros."),
-  Object.assign(EX(w,"Flexiones con mochila",2,"8–12",75,"Agrega peso solo si mantienes buena técnica."),{opt:1}),
-  RUEDA(w,3,"6–12"),TIMED(w,"Plancha frontal",3,30,45,false),DEADBUG(w)]}
-function legDay(w){return [CALF,
-  EX(w,"Sentadilla goblet",4,"10–15",90,"Baja controlado y mantén el torso firme."),
-  EX(w,"Peso muerto rumano con mancuernas",4,"8–12",90,"Lleva la cadera atrás y conserva la espalda neutra."),
-  EX(w,"Sentadilla búlgara",3,"8–12 por pierna",90,"Apoya el pie trasero y controla la bajada.",1),
-  EX(w,"Hip thrust con mancuerna",3,"12–15",75,"Extiende la cadera sin arquear la zona lumbar."),
-  EX(w,"Elevaciones de gemelos",3,"15–25",45,"Pausa arriba y baja lento."),
-  RUEDA(w,3,"6–10"),TIMED(w,"Plancha lateral",2,30,40,true),EX(w,"Elevaciones de rodillas acostado",3,"12–15",45,"Espalda baja pegada al suelo.")]}
-function backDay(w,ctx){return [CALF,
-  barrasB(DS(4,w),maxB(ctx),120," Sin balancearte; usa una banda de asistencia si hace falta."),
-  EX(w,"Remo a una mano con mancuerna",4,"10–15 por lado",90,"Lleva el codo hacia la cadera.",1),
-  EX(w,"Remo con banda",3,"12–20",60,"Junta las escápulas sin subir los hombros."),
-  EX(w,"Pullover con mancuerna",3,"10–15",75,"Costillas controladas y movimiento cómodo."),
-  EX(w,"Pájaros con banda o mancuernas",3,"12–20",60,"Abre los brazos sin impulsarte."),
-  RUEDA(w,3,"6–12"),BIRDDOG(w),TIMED(w,"Hollow hold",3,20,30,false,"Espalda baja pegada al suelo, piernas y hombros elevados.")]}
-function armsDay(w){return [CALF,
-  EX(w,"Press militar con mancuernas",4,"8–12",90,"Aprieta el abdomen y no arquees la espalda."),
-  EX(w,"Elevaciones laterales",3,"12–20",60,"Hasta la altura de los hombros, sin balancearte."),
-  EX(w,"Curl de bíceps con mancuernas",3,"10–15",60,"Codos cerca del cuerpo."),
-  EX(w,"Extensión de tríceps sobre la cabeza",3,"10–15",60,"Codos estables."),
-  EX(w,"Curl martillo",2,"12–15",60,"Muñecas neutras y bajada controlada."),
-  EX(w,"Face pull con banda",3,"15–20",45,"Manos hacia la cara, abriendo los codos."),
-  RUEDA(w,3,"6–12"),TIMED(w,"Plancha lateral",2,30,40,true),DEADBUG(w)]}
+// la rutina de Diego como datos: se puede editar en Plan → Mi rutina (l: por lado; tiempo: «30–45 s»; bar: barras según tu máximo)
+const R=(n,s,reps,r,c,o)=>Object.assign({n,s,reps,r,c:c||""},o||{});
+const RUTINA={
+  fa:{t:"Pecho + core",ex:[R("Press de pecho en el suelo con mancuernas",4,"8–12",90,"Baja controlado y mantén las muñecas rectas."),R("Flexiones de brazos",3,"8–15",75,"Cuerpo alineado y pecho cerca del suelo."),R("Press con mancuernas agarre neutro",3,"10–12",75,"Palmas enfrentadas y codos cerca del torso."),R("Aperturas con banda",3,"12–20",60,"Junta las manos sin encoger los hombros."),R("Flexiones con mochila",2,"8–12",75,"Agrega peso solo si mantienes buena técnica.",{opt:1}),R("Rueda abdominal",3,"6–12",60,"Espalda baja sin hundirse: si se arquea, acorta el recorrido."),R("Plancha frontal",3,"30–45 s",30),R("Dead bug",2,"10 por lado",30,"Boca arriba, espalda baja pegada al suelo: estiras brazo y pierna contrarios, lento.")],
+    st:[["Pecho en el marco de la puerta",30,1],["Hombros cruzados",30,1],["Tríceps sobre la cabeza",30,1]]},
+  legs:{t:"Pierna + core",ex:[R("Sentadilla goblet",4,"10–15",90,"Baja controlado y mantén el torso firme."),R("Peso muerto rumano con mancuernas",4,"8–12",90,"Lleva la cadera atrás y conserva la espalda neutra."),R("Sentadilla búlgara",3,"8–12 por pierna",90,"Apoya el pie trasero y controla la bajada.",{l:1}),R("Hip thrust con mancuerna",3,"12–15",75,"Extiende la cadera sin arquear la zona lumbar."),R("Elevaciones de gemelos",3,"15–25",45,"Pausa arriba y baja lento."),R("Rueda abdominal",3,"6–10",60,"Espalda baja sin hundirse: si se arquea, acorta el recorrido."),R("Plancha lateral",2,"30–40 s",30,"",{l:1}),R("Elevaciones de rodillas acostado",3,"12–15",45,"Espalda baja pegada al suelo.")],
+    st:[["Cuádriceps",30,1],["Isquiotibiales",30,1],["Cadera (paloma)",45,1]]},
+  fb:{t:"Espalda + core",ex:[R("Dominadas en barra",4,"4–10",120,"Sin balancearte; usa una banda de asistencia si hace falta.",{bar:1}),R("Remo a una mano con mancuerna",4,"10–15 por lado",90,"Lleva el codo hacia la cadera.",{l:1}),R("Remo con banda",3,"12–20",60,"Junta las escápulas sin subir los hombros."),R("Pullover con mancuerna",3,"10–15",75,"Costillas controladas y movimiento cómodo."),R("Pájaros con banda o mancuernas",3,"12–20",60,"Abre los brazos sin impulsarte."),R("Rueda abdominal",3,"6–12",60,"Espalda baja sin hundirse: si se arquea, acorta el recorrido."),R("Bird dog",2,"10 por lado",30,"En cuatro apoyos: estiras brazo y pierna contrarios, sin girar la cadera."),R("Hollow hold",3,"20–30 s",30,"Espalda baja pegada al suelo, piernas y hombros elevados.")],
+    st:[["Dorsal colgado de la barra o en el marco",30,0],["Postura del niño",45,0],["Gato-vaca",30,0]]},
+  arms:{t:"Hombros y brazos + core",ex:[R("Press militar con mancuernas",4,"8–12",90,"Aprieta el abdomen y no arquees la espalda."),R("Elevaciones laterales",3,"12–20",60,"Hasta la altura de los hombros, sin balancearte."),R("Curl de bíceps con mancuernas",3,"10–15",60,"Codos cerca del cuerpo."),R("Extensión de tríceps sobre la cabeza",3,"10–15",60,"Codos estables."),R("Curl martillo",2,"12–15",60,"Muñecas neutras y bajada controlada."),R("Face pull con banda",3,"15–20",45,"Manos hacia la cara, abriendo los codos."),R("Rueda abdominal",3,"6–12",60,"Espalda baja sin hundirse: si se arquea, acorta el recorrido."),R("Plancha lateral",2,"30–40 s",30,"",{l:1}),R("Dead bug",2,"10 por lado",30,"Boca arriba, espalda baja pegada al suelo: estiras brazo y pierna contrarios, lento.")],
+    st:[["Hombros cruzados",30,1],["Bíceps en la pared",30,1],["Tríceps sobre la cabeza",30,1]]}
+};
+const rutinaOf=id=>{const c=(Store.cfg.rutina||{})[id];return Array.isArray(c)&&c.length?c:RUTINA[id].ex};
+function exBlock(w,x,ctx){
+  if(x.bar)return barrasB(DS(x.s,w),maxB(ctx||{}),x.r,x.c?" "+x.c:"");
+  const m=String(x.reps).match(/^(\d+)(?:\s*[–-]\s*(\d+))?\s*s(\b|$)/);
+  const b=m?TIMED(w,x.n,x.s,+m[1],+(m[2]||m[1]),!!x.l,x.c||undefined):EX(w,x.n,x.s,x.reps,x.r,x.c||undefined,!!x.l);
+  return x.opt?Object.assign(b,{opt:1}):b}
+// estiramiento corto al final: el músculo que trabajaste (no es obligatorio para cerrar la sesión)
+const stretchOf=id=>RUTINA[id].st.map(([n,t,l])=>B("Estirar: "+n,l?`${t} s por lado`:`${t} s`,{s:l?2:1,tm:t,opt:1}));
+const dayOf=(id,w,ctx)=>[CALF,...rutinaOf(id).map(x=>exBlock(w,x,ctx)),...stretchOf(id)];
+function chestDay(w){return dayOf("fa",w)}
+function legDay(w){return dayOf("legs",w)}
+function backDay(w,ctx){return dayOf("fb",w,ctx)}
+function armsDay(w){return dayOf("arms",w)}
+const RUEDA=(w,s,reps)=>EX(w,"Rueda abdominal",s,reps,60,"Espalda baja sin hundirse: si se arquea, acorta el recorrido.");
+const BIRDDOG=w=>EX(w,"Bird dog",2,"10 por lado",30,"En cuatro apoyos: estiras brazo y pierna contrarios, sin girar la cadera.");
 // día de cardio: trote a ritmo de conversación; desde la semana 5, en semanas impares, aceleraciones cortas
 function cardioDay(w,deload){const mi=deload?25:Math.min(35,25+Math.floor(w/3)*2),acc=!deload&&w>=5&&w%2===1;
   const run=acc?{blocks:[B("Calentamiento","10 min trote suave"),B("Aceleraciones","6 × 10–15 s",{s:6,r:105,c:"Rápido, en superficie segura. Descansa 90–120 s entre cada una. Si jugaste ayer o estás cansado, haz el trote."}),B("Vuelta a la calma","5 min trote suave")],min:25}
@@ -976,6 +977,9 @@ const fixCfg=c=>{const d=defCfg();if(c.start==="2026-10-05"&&!c.startMoved){c.st
   if(c.trip!==undefined&&!(Number.isInteger(+c.trip)&&+c.trip>=0&&+c.trip<=60))c.trip=15;
   if(c.eng!=null&&!(isObj(c.eng)&&(c.eng.tests==null||Array.isArray(c.eng.tests))))delete c.eng;if(c.eng&&c.eng.tests)c.eng.tests=c.eng.tests.filter(x=>isObj(x)&&isISO(x.k)&&+x.s>=0&&+x.s<=100);
   if(c.ahorro!=null&&!isObj(c.ahorro))delete c.ahorro;if(c.ahorro&&c.ahorro.log!=null)c.ahorro.log=Array.isArray(c.ahorro.log)?c.ahorro.log.filter(x=>isObj(x)&&isFinite(+x.v)):[];
+  if(c.rutina!=null){if(!isObj(c.rutina))delete c.rutina;else Object.keys(c.rutina).forEach(k=>{const a=c.rutina[k];if(!RUTINA[k]||!Array.isArray(a)||!a.length){delete c.rutina[k];return}
+    c.rutina[k]=a.filter(x=>isObj(x)&&typeof x.n==="string"&&x.n.trim()&&Number.isInteger(+x.s)&&+x.s>=1&&+x.s<=10&&typeof x.reps==="string"&&x.reps.trim()).map(x=>Object.assign({},x,{s:+x.s,r:Math.max(0,Math.min(600,parseInt(x.r,10)||0))}));if(!c.rutina[k].length)delete c.rutina[k]})}
+  if(c.lastIcs!=null&&!isISO(c.lastIcs))delete c.lastIcs;if(c.compras!=null&&!(isObj(c.compras)&&isObj(c.compras.ok||{})))delete c.compras;
   if(c.photos!=null)c.photos=Array.isArray(c.photos)?c.photos.filter(x=>isObj(x)&&isISO(x.k)):[];
   if(c.maxB&&!(isObj(c.maxB)&&Number.isInteger(+c.maxB.v)&&+c.maxB.v>0&&+c.maxB.v<=40))c.maxB=null;
   return c};
@@ -1603,6 +1607,8 @@ function viewHoy(){
     ${nw!=null?`<span class="foot">Próxima: semana ${nw}${TESTS.includes(nw)?" · semana de prueba":nw===HELL?" · SEMANA DEL INFIERNO":DELOAD.includes(nw)?" · descarga":INC[nw]?" · "+INC[nw][0]:""}.</span>`:""}</div>`}
   if(closedDay(k,plan)){const no=plan.tasks.filter(t=>counts(t)&&isNope(dd,t)).map(t=>t.t);h+=`<div class="order closed"><p class="say" style="color:var(--bad)">✗ Día cerrado</p><p>No pudiste: ${esc(no.join(", "))}. El resto quedó hecho, así que mañana sigues con el plan. No se repite.</p></div>`}
   if(status==="done")h+=`<div class="order done"><span class="stamp">CUMPLIDO</span><p class="say" style="color:var(--ok)">${esc(pick(["Día ganado. Mañana a la misma hora.","Cumplido. Un día más que el que se rinde no tiene.","Bien. Eso es lo que se espera de ti."],k))}</p></div>`;
+  if(isToday){const lb=Store.cfg.lastBackup,nd=Object.keys(Store.days).length,ago=lb?diffDays(today(),parse(lb)):null;
+    if(nd>=3&&(ago==null||ago>=7))h+=`<div class="card bk"><span class="lbl">Copia de seguridad</span><p style="margin:0">${ago==null?"Todavía no guardas ninguna copia.":`Tu última copia es de hace ${ago} días.`} Guárdala ahora: si pierdes el teléfono, con ella recuperas todo.</p><button class="btn main" data-backup>Guardar copia</button></div>`}
   h+=`<details class="card" data-keep="notes:${k}" ${S.keep["notes:"+k]?"open":""}><summary>Notas${plan.dow===0||plan.test?" y peso":""}</summary>
    ${plan.dow===0||plan.test?`<div class="field" style="max-width:140px"><label class="lbl" for="f-peso">Peso (kg)</label><input id="f-peso" inputmode="decimal" data-f="peso" value="${esc(String(dd.peso||"").replace(".",","))}" placeholder="70"></div>`:""}
    <div class="field"><label class="lbl" for="f-note">Tiempos, qué costó, sensaciones</label><textarea id="f-note" data-f="note">${esc(dd.note)}</textarea></div></details>`;
@@ -1653,6 +1659,16 @@ function verdictHTML(plan,dd,L){
   return h+`</div>`;
 }
 function updateVerdict(){const el=document.getElementById("verdict");if(!el)return;const d=S.date,L=locate(d),p=planFor(d);if(p)el.innerHTML=verdictHTML(p,Store.days[iso(d)]||{},L)}
+// Mi rutina: cambiar ejercicios, series, repeticiones y descanso sin pedírselo a nadie
+function rutinaEditor(){const id=S.redit||"fa",rows=rutinaOf(id),custom=Array.isArray((Store.cfg.rutina||{})[id]);
+  return `<details class="card redit" data-keep="redit" ${S.keep.redit?"open":""}><summary><span class="lbl">Mi rutina</span><span class="foot">cambiar ejercicios, series y repeticiones</span></summary>
+  <div class="segs">${Object.keys(RUTINA).map(k=>`<button class="seg ${k===id?"on":""}" data-rday="${k}">${esc(RUTINA[k].t.replace(" + core",""))}</button>`).join("")}</div>
+  <div class="rrows">${rows.map((x,i)=>`<div class="rrow"><input id="rx-${id}-${i}-n" class="rn" data-rx="${id}|${i}|n" value="${esc(x.n)}" aria-label="Ejercicio ${i+1}">
+    <div class="rnums"><label>Series<input id="rx-${id}-${i}-s" inputmode="numeric" data-rx="${id}|${i}|s" value="${esc(x.s)}"></label><label>Reps o tiempo<input id="rx-${id}-${i}-reps" data-rx="${id}|${i}|reps" value="${esc(x.reps)}"></label><label>Descanso (s)<input id="rx-${id}-${i}-r" inputmode="numeric" data-rx="${id}|${i}|r" value="${esc(x.r)}"></label></div>
+    <div class="rbtns"><button class="nb" data-rmv="${id}|${i}|-1" aria-label="Subir" ${i?"":"disabled"}>↑</button><button class="nb" data-rmv="${id}|${i}|1" aria-label="Bajar" ${i<rows.length-1?"":"disabled"}>↓</button><button class="nb" data-rdel="${id}|${i}" aria-label="Quitar ${esc(x.n)}">✕</button></div></div>`).join("")}</div>
+  <div class="row"><button class="btn sm" data-radd="${id}">+ Agregar ejercicio</button>${custom?(S.confirm==="rreset"?`<button class="btn sm main" data-rreset="${id}">Sí, volver a la original</button><button class="btn sm" data-cancel>No</button>`:`<button class="btn sm" data-ask="rreset">Volver a la rutina original</button>`):""}</div>
+  <p class="foot">Reps: «8–12», «10 por lado» o un tiempo como «30–45 s». En semanas de descarga la app baja las series sola. El cambio vale para todos los días de ese grupo.</p></details>`}
+function rutinaSet(id,fn){const rows=rutinaOf(id).map(x=>Object.assign({},x));fn(rows);Store.setCfg({rutina:Object.assign({},Store.cfg.rutina,{[id]:rows})})}
 function viewPlan(){
   const td=today(),L=locate(td),sched=Store.cfg.sched,start=parse(Store.cfg.start);
   const sel=S.selWeek!=null?S.selWeek:(L.idx!=null&&!L.after?L.idx:0);
@@ -1669,6 +1685,7 @@ function viewPlan(){
     h+=`<button class="li" data-goto="${k}" ${isT?'style="background:var(--chip)"':""}><span class="a">${dayName(d).slice(0,3)}<span>${fmtS(d)}</span></span><span class="b">${p?esc(p.title):"—"}${re?" · <i>se retomó al día siguiente</i>":""}</span>${p?chip(dayStatus(k,p)):""}</button>`}
   h+=`</div></div>`;
   const c=Store.cfg,sg=(key,v,l)=>`<button class="seg ${String(c[key])===String(v)?"on":""}" data-cset="${key}|${v}">${l}</button>`;
+  h+=avisosHTML()+rutinaEditor();
   h+=`<div class="card"><span class="lbl">Ajustes</span>
    <div class="row"><div class="field" style="flex:1;min-width:140px"><label class="lbl" for="c-name">Tu nombre</label><input id="c-name" data-c="name" value="${esc(c.name)}"></div><div class="field" style="flex:1;min-width:150px"><label class="lbl" for="c-start">Día 1 de la semana 0</label><input id="c-start" type="date" min="2025-01-01" max="2030-12-31" data-c="start" value="${esc(c.start)}"></div></div>
    <div class="row"><div class="field"><span class="lbl">Dónde nadas</span><div class="segs">${sg("place","lago","Lago")}${sg("place","piscina","Piscina")}</div></div><div class="field"><span class="lbl">Neopreno</span><div class="segs">${sg("neo",false,"No")}${sg("neo",true,"Sí")}</div></div><div class="field"><span class="lbl">Turno habitual</span><div class="segs">${sg("turno","13","Entro 14:00")}${sg("turno","16","Entro 16:00")}</div></div><div class="field"><span class="lbl">Piscina con salvavidas</span><div class="segs">${sg("pool",false,"No tengo")}${sg("pool",true,"Sí")}</div></div><div class="field"><span class="lbl">Boya de natación</span><div class="segs">${sg("boya",false,"No tengo")}${sg("boya",true,"Sí")}</div></div><div class="field"><span class="lbl">Compañero de agua</span><div class="segs">${sg("partner",false,"No")}${sg("partner",true,"Sí")}</div></div></div>
@@ -1821,7 +1838,7 @@ function updateNowLine(){const el=document.getElementById("now-line");if(!el||di
 setInterval(updateNowLine,30000);
 
 /* ---- copia de seguridad ---- */
-const backupData=()=>JSON.stringify({app:"bitacora-buzo-tactico",version:1,exportedAt:new Date().toISOString(),cfg:Object.assign({},Store.cfg,{lastBackup:iso(new Date())}),days:Store.days},null,1);
+const backupData=photos=>JSON.stringify(Object.assign({app:"bitacora-buzo-tactico",version:1,exportedAt:new Date().toISOString(),cfg:Object.assign({},Store.cfg,{lastBackup:iso(new Date())}),days:Store.days},photos&&Object.keys(photos).length?{photos}:{}),null,1);
 function backupHTML(){
   const lb=Store.cfg.lastBackup,nd=Object.keys(Store.days).length,R=S.restore;
   let h=`<div class="card" id="respaldo"><span class="lbl">Respaldo</span><p style="margin:0">Tus datos ya se guardan solos${Store.mode==="db"?" en tu cuenta y en este teléfono":" en este teléfono"}. La copia es un archivo tuyo con todo tu historial (${nd} ${nd===1?"día":"días"} registrados), por si cambias de teléfono o algo se borra.</p>
@@ -1833,20 +1850,36 @@ function backupHTML(){
   if(R)h+=`<div class="verdict ${R.err?"bad":"good"}">${R.err?`<b>No se pudo leer</b><span>${esc(R.err)}</span><button class="btn sm" data-cancel>Cerrar</button>`:`<b>Restaurar esta copia</b><span>Copia del ${esc(R.when)} con ${R.n} días registrados. Los días que están en la copia reemplazan a los de ahora; tus ajustes vuelven a los de la copia.</span><div class="row"><button class="btn main sm" data-restore-ok>Restaurar</button><button class="btn sm" data-cancel>Cancelar</button></div>`}</div>`;
   return h+`</div>`;
 }
+// guardar un archivo: en claude.ai con la capacidad de descargas; fuera, con un enlace de descarga normal
+async function saveFile(filename,data,type){
+  if(window.claude&&window.claude.use){let dl=null;try{dl=await window.claude.use("downloads")}catch(e){}
+    if(dl){try{await dl.save({filename,data});return "ok"}catch(e){const c=e&&e.code;if(c==="declined")return "declined";if(c==="rate_limited")return "busy";return "no"}}
+    return "no"}
+  try{const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([data],{type}));a.download=filename;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},1500);return "ok"}
+  catch(e){return "no"}}
+// avisos de los próximos 7 días para el calendario del teléfono: un evento por tarea, con aviso a la hora
+function icsWeek(from){const pad2=n=>String(n).padStart(2,"0"),stamp=new Date().toISOString().replace(/[-:]/g,"").replace(/\.\d+/,""),L=["BEGIN:VCALENDAR","VERSION:2.0","PRODID:-//Atleta Hibrido//ES","CALSCALE:GREGORIAN","METHOD:PUBLISH"];
+  const esc2=t=>String(t).replace(/[\\;,]/g,m=>"\\"+m).replace(/\n/g,"\\n");let n=0;
+  for(let i=0;i<7;i++){const d=addDays(from,i),p=planFor(d);if(!p)continue;
+    p.tasks.forEach(t=>{if(!t.h)return;let m=toMin(t.h);const day=m<240?addDays(d,1):d;const dur=Math.max(10,Math.min(120,Math.round(t.min||t.blocks.reduce((x,b)=>x+(b.tm||0)*(b.s||1),0)/60||20)));
+      const f=(dd,mm)=>{const x=new Date(dd);x.setHours(0,mm,0,0);return x.getFullYear()+pad2(x.getMonth()+1)+pad2(x.getDate())+"T"+pad2(x.getHours())+pad2(x.getMinutes())+"00"};
+      L.push("BEGIN:VEVENT","UID:"+iso(d)+"-"+t.id+"@atleta-hibrido","DTSTAMP:"+stamp,"DTSTART:"+f(day,m),"DTEND:"+f(day,m+dur),"SUMMARY:"+esc2("▸ "+t.t),
+        "DESCRIPTION:"+esc2(t.blocks.filter(b=>!b.opt).map(b=>"• "+b.n+(b.p&&b.p!==b.n?" "+b.p:"")).join("\n")),"BEGIN:VALARM","ACTION:DISPLAY","DESCRIPTION:"+esc2(t.t),"TRIGGER:PT0M","END:VALARM","END:VEVENT");n++})}
+  L.push("END:VCALENDAR");return {ics:L.join("\r\n"),n}}
+async function exportAvisos(){const {ics,n}=icsWeek(today()),r=await saveFile(`avisos-${iso(today())}.ics`,ics,"text/calendar");
+  if(r==="ok"){Store.setCfg({lastIcs:iso(today())});render();toast(`${n} avisos listos: abre el archivo y elige «Agregar al calendario».`)}else if(r==="declined")toast("Descarga cancelada.");else toast("No se pudo descargar en este navegador.")}
+function avisosHTML(){const li=Store.cfg.lastIcs,due=!li||diffDays(today(),parse(li))>=6;
+  return `<div class="card"><span class="lbl">Avisos en el calendario</span><p style="margin:0">Descarga los avisos de los próximos 7 días: uno por tarea, a su hora. Ábrelo en el celular y elige «Agregar al calendario».</p>
+  <p class="foot ${due?"pendtxt":""}">${li?"Últimos avisos: "+fmt(parse(li))+(due?" · toca bajar los de esta semana":""):"Todavía no bajas avisos."}</p><button class="btn ${due?"main":""}" data-avisos>Descargar avisos de la semana</button></div>`}
 async function exportBackup(){
-  const json=backupData(),filename=`atleta-hibrido-copia-${iso(new Date())}.json`;
-  const saved=()=>{Store.setCfg({lastBackup:iso(new Date())});S.copyBackup=false;render();toast("Copia guardada: "+filename)};
-  if(window.claude&&window.claude.use){
-    let dl=null;try{dl=await window.claude.use("downloads")}catch(e){}
-    if(dl){try{const r=await dl.save({filename,data:json});if(!r||r.status!=="delivered")saved();return}
-      catch(e){const c=e&&e.code;
-        if(c==="declined"){toast("Descarga cancelada.");return}
-        if(c==="rate_limited"){toast("Ya hay una descarga abierta: acéptala o ciérrala primero.");return}}}
-    // aquí no se pueden descargar archivos: ofrecer el texto para copiarlo
-    S.copyBackup=true;render();const el=document.getElementById("backup-text");if(el)el.scrollIntoView({block:"center"});return}
-  try{const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([json],{type:"application/json"}));a.download=filename;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},1000);saved()}
-  catch(e){toast("No se pudo descargar en este navegador.")}
-}
+  const filename=`atleta-hibrido-copia-${iso(new Date())}.json`;toast("Preparando la copia…");
+  let photos={};try{photos=await photosForBackup()}catch(e){}
+  const json=backupData(photos);const r=await saveFile(filename,json,"application/json");
+  if(r==="ok"){Store.setCfg({lastBackup:iso(new Date())});S.copyBackup=false;render();toast("Copia guardada: "+filename);return}
+  if(r==="declined"){toast("Descarga cancelada.");return}
+  if(r==="busy"){toast("Ya hay una descarga abierta: acéptala o ciérrala primero.");return}
+  // aquí no se pueden descargar archivos: ofrecer el texto para copiarlo (sin fotos)
+  S.copyBackup=true;render();const el=document.getElementById("backup-text");if(el)el.scrollIntoView({block:"center"})}
 async function copyBackup(){
   const el=document.getElementById("backup-text");if(!el)return;
   try{await navigator.clipboard.writeText(el.value);Store.setCfg({lastBackup:iso(new Date())});S.copyBackup=false;render();toast("Copia copiada. Pégala en una nota o en un correo para ti.")}
@@ -1876,7 +1909,7 @@ function rescueHTML(e){let b="";try{b=backupHTML()}catch(x){}
 function viewProgreso(){
   const res=Object.keys(Store.days).filter(k=>Store.days[k].test).sort().map(k=>({k,w:locate(parse(k)).w,t:Store.days[k].test})).filter(x=>x.w!=null);
   const cp=compliance();
-  let h=`<div class="sec"><h2>Progreso</h2><div class="kpis"><div class="kpi"><span class="lbl">Racha</span><b>${streak()}</b></div><div class="kpi"><span class="lbl">Cumplido</span><b>${cp==null?"—":cp+"%"}</b></div><div class="kpi"><span class="lbl">Pruebas</span><b>${new Set(res.map(x=>x.w)).size}/5</b></div></div></div>`+summaryHTML();
+  let h=`<div class="sec"><h2>Progreso</h2><div class="kpis"><div class="kpi"><span class="lbl">Racha</span><b>${streak()}</b></div><div class="kpi"><span class="lbl">Cumplido</span><b>${cp==null?"—":cp+"%"}</b></div><div class="kpi"><span class="lbl">Pruebas</span><b>${new Set(res.map(x=>x.w)).size}/5</b></div></div></div>`+summaryHTML()+exRecordsHTML();
   // semana actual
   const L=locate(today());if(L.w!=null){const ws=weekStartOf(today()),wds=[];for(let d=ws;diffDays(d,lastOfN(Math.floor(L.n/7)*7+6))<=0;d=addDays(d,1))wds.push(d);let sm=[0,0],ua=0,ub=0;
     for(const d of wds){const p=planFor(d);if(!p)continue;const dd=Store.days[iso(d)];const u=units(dd,p);ua+=u.a;ub+=u.b;p.tasks.forEach(t=>{if(t.m){sm[1]+=t.m;if(taskDone(dd,t))sm[0]+=t.m}})}
@@ -1996,7 +2029,20 @@ let ASSETS=null;
 // fotos: se achican en el teléfono antes de subirlas (más rápido y caben más)
 async function shrink(file){try{const bmp=await createImageBitmap(file),sc=Math.min(1,1400/Math.max(bmp.width,bmp.height)),c=document.createElement("canvas");c.width=Math.round(bmp.width*sc);c.height=Math.round(bmp.height*sc);c.getContext("2d").drawImage(bmp,0,0,c.width,c.height);
   return await new Promise(r=>c.toBlob(b=>r(b||file),"image/jpeg",0.85))}catch(e){return file}}
-async function addPhoto(file,pose){if(!ASSETS){toast("Las fotos solo se pueden subir desde tu cuenta.");return}
+// fotos en el teléfono (fuera de claude.ai): IndexedDB; viajan dentro de la copia de seguridad
+const PDB=()=>new Promise((ok,ko)=>{try{const r=indexedDB.open("atleta-fotos",1);r.onupgradeneeded=()=>r.result.createObjectStore("f");r.onsuccess=()=>ok(r.result);r.onerror=()=>ko(r.error)}catch(e){ko(e)}});
+async function pGet(key){const db=await PDB();return new Promise(ok=>{const q=db.transaction("f").objectStore("f").get(key);q.onsuccess=()=>ok(q.result||null);q.onerror=()=>ok(null)})}
+async function pPut(key,blob){const db=await PDB();return new Promise((ok,ko)=>{const tx=db.transaction("f","readwrite");tx.objectStore("f").put(blob,key);tx.oncomplete=()=>ok();tx.onerror=()=>ko(tx.error)})}
+const PURL={};
+function photoSrc(id){if(PURL[id])return PURL[id];if(/^l/.test(id)||!ASSETS){if(PURL[id]===undefined){PURL[id]="";pGet(id).then(b=>{if(b){PURL[id]=URL.createObjectURL(b);if(S.tab==="registro")render()}else if(!/^l/.test(id)){PURL[id]="/_blob/"+id;if(S.tab==="registro")render()}}).catch(()=>{})}return PURL[id]||(/^l/.test(id)?"":"/_blob/"+id)}return "/_blob/"+id}
+const blobToData=b=>new Promise((ok,ko)=>{const r=new FileReader();r.onload=()=>ok(r.result);r.onerror=ko;r.readAsDataURL(b)});
+async function photosForBackup(){const out={};for(const e of (Store.cfg.photos||[]))for(const [p] of POSES){const id=e[p];if(!id||out[id])continue;
+  try{let b=await pGet(id).catch(()=>null);if(!b&&!/^l/.test(id)){const r=await fetch("/_blob/"+id);if(r.ok)b=await r.blob()}if(b)out[id]=await blobToData(b)}catch(x){}}return out}
+async function putPhotos(map){for(const id of Object.keys(map||{})){const d=map[id];if(typeof d!=="string"||!/^data:image\//.test(d))continue;const b=await (await fetch(d)).blob();await pPut(id,b);PURL[id]=URL.createObjectURL(b)}}
+async function addPhoto(file,pose){
+  if(!ASSETS){try{const blob=await shrink(file),id="l"+Date.now().toString(36)+pose;await pPut(id,blob);PURL[id]=URL.createObjectURL(blob);
+      const k=iso(today()),ph=(Store.cfg.photos||[]).slice(),i=ph.findIndex(x=>x.k===k),e=Object.assign({k},i>=0?ph[i]:{},{[pose]:id});if(i>=0)ph[i]=e;else ph.push(e);
+      Store.setCfg({photos:ph});render();toast("Foto guardada en este teléfono. Entra en tu copia de seguridad.")}catch(e){toast("No se pudo guardar la foto en este teléfono.")}return}
   toast("Subiendo la foto…");try{const blob=await shrink(file),r=await ASSETS.upload(blob,{type:blob.type==="image/png"?"image/png":"image/jpeg"});
     const k=iso(today()),ph=(Store.cfg.photos||[]).slice(),i=ph.findIndex(x=>x.k===k),e=Object.assign({k},i>=0?ph[i]:{},{[pose]:r.id});if(i>=0)ph[i]=e;else ph.push(e);
     Store.setCfg({photos:ph});render();toast("Foto guardada.")}
@@ -2028,8 +2074,9 @@ function viewRegistro(){
   {const ph=(Store.cfg.photos||[]).slice().sort((a,b)=>a.k<b.k?-1:1),last=ph[ph.length-1],due=!last||diffDays(today(),parse(last.k))>=28,show=ph.length>1?[ph[0],last]:ph;
    h+=`<details class="sec reg" data-keep="reg:fotos" ${S.keep["reg:fotos"]||due?"open":""}><summary><h2>Fotos</h2><span class="foot ${due?"pendtxt":""}">${due?"Toca sacarlas":"Próximas: "+fmtS(addDays(parse(last.k),28))}</span></summary>
    <p class="foot">Cada 4 semanas: misma luz, misma hora (en ayunas), mismo lugar.</p>
-   ${show.length?`<div class="photos">${show.map(e=>`<div class="pcol"><span class="lbl">${fmtS(parse(e.k))}</span>${POSES.map(([p,l])=>e[p]?`<img src="/_blob/${esc(e[p])}" alt="${l} ${fmtS(parse(e.k))}" loading="lazy">`:`<div class="noimg">${l}</div>`).join("")}</div>`).join("")}</div>`:""}
-   ${ASSETS?`<div class="row">${POSES.map(([p,l])=>`<label class="btn sm upl">${l}<input type="file" accept="image/*" capture="environment" data-photo="${p}" hidden></label>`).join("")}</div>`:`<p class="foot">Para subir fotos, abre la app desde tu cuenta.</p>`}</details>`}
+   ${show.length?`<div class="photos">${show.map(e=>`<div class="pcol"><span class="lbl">${fmtS(parse(e.k))}</span>${POSES.map(([p,l])=>e[p]?`<img src="${esc(photoSrc(e[p]))}" alt="${l} ${fmtS(parse(e.k))}" loading="lazy">`:`<div class="noimg">${l}</div>`).join("")}</div>`).join("")}</div>`:""}
+   <div class="row">${POSES.map(([p,l])=>`<label class="btn sm upl">${l}<input type="file" accept="image/*" capture="environment" data-photo="${p}" hidden></label>`).join("")}</div>${ASSETS?"":`<p class="foot">Las fotos quedan en este teléfono y viajan en tu copia de seguridad.</p>`}</details>`}
+  h+=comprasHTML();
   // ahorro
   {const a=ahorroOf(),pc=Math.max(0,Math.min(100,a.tot/a.meta*100));
    h+=`<div class="sec reg"><div class="row" style="justify-content:space-between"><h2>Ahorro working holiday</h2><span class="mono">${Math.round(pc)}%</span></div><div class="bar"><i style="width:${pc}%"></i></div>
@@ -2039,6 +2086,30 @@ function viewRegistro(){
   return h;
 }
 // resumen para Progreso
+// lista de compras de la semana, según tus comidas y tu peso (batido, desayuno, almuerzo, colación y comida al llegar)
+function compras(){const n=NUT(bodyWeight(),true,false),r5=x=>Math.max(1,Math.round(x));
+  return [["Huevos",`${Math.ceil((n.eggs*4+7)/6)*6} (${Math.ceil((n.eggs*4+7)/12)} docenas)`],["Leche",`${r5((0.3+0.25)*7)} litros`],["Plátanos",`${7+4}`],["Fruta (manzanas, naranjas)",`${10}`],
+    ["Avena","1 kg"],["Mantequilla de maní","1 frasco"],["Pan (marraqueta o molde)",`${r5(2*7/2)*2} unidades`],["Arroz","1 kg"],["Fideos","500 g"],["Porotos, lentejas o garbanzos","1 kg"],
+    ["Pollo (pechuga o trutro)",`${(Math.round(n.chicken*5/100)/10).toLocaleString("es-CL")} kg`],["Carne molida o pescado",`${(Math.round(n.chicken*2/100)/10).toLocaleString("es-CL")} kg`],["Atún al agua","3 latas"],
+    ["Yogur","7"],["Tomates, lechuga, zanahoria","para 7 ensaladas"],["Papas","1,5 kg"],["Aceite de oliva o maravilla","si queda poco"]]}
+const weekKey=()=>iso(weekStartOf(today()));
+function comprasHTML(){const L=compras(),c=Store.cfg.compras||{},ok=c.w===weekKey()?c.ok||{}:{},n=L.filter(x=>ok[x[0]]).length;
+  return `<details class="sec reg" data-keep="reg:compras" ${S.keep["reg:compras"]?"open":""}><summary><h2>Compras</h2><span class="foot">${n}/${L.length} de esta semana</span></summary>
+  <p class="foot">Para 7 días con tus 5 comidas${bodyWeight()?` y tus ${nf(bodyWeight())} kg`:""}. Se reinicia cada semana.</p>
+  <div class="meals">${L.map(([x,q])=>`<button class="meal ${ok[x]?"on":""}" data-buy="${esc(x)}" aria-pressed="${!!ok[x]}"><span class="mk">${ok[x]?"✓":""}</span><span class="mn">${esc(x)}</span><span class="mh">${esc(q)}</span></button>`).join("")}</div></details>`}
+// récords por ejercicio a partir de lo que anotas en cada serie («10» o «10x8kg»)
+function parseRep(v){const t=String(v||"").toLowerCase().replace(",",".").replace(/\s+/g,"");let m;
+  if((m=t.match(/^(\d+)[x×*](\d+(?:\.\d+)?)k/)))return {r:+m[1],kg:+m[2]};   // 10x8kg
+  if((m=t.match(/^(\d+(?:\.\d+)?)k\w*[x×*](\d+)/)))return {r:+m[2],kg:+m[1]};  // 8kgx10
+  if((m=t.match(/^(\d+)/)))return {r:+m[1],kg:0};return null}
+let RECC=null;
+function records(){if(RECC)return RECC;const out={};Object.keys(Store.days).sort().forEach(k=>{const rp=Store.days[k].reps||{};Object.keys(rp).forEach(n=>{const sets=(rp[n]||[]).map(parseRep).filter(Boolean);if(!sets.length)return;
+    const o=out[n]=out[n]||{best:null,ses:[]};const tot=sets.reduce((a,x)=>a+x.r,0),vol=sets.reduce((a,x)=>a+x.r*(x.kg||1),0);o.ses.push({k,tot,vol});
+    sets.forEach(x=>{if(!o.best||x.kg>o.best.kg||x.kg===o.best.kg&&x.r>o.best.r)o.best=Object.assign({k},x)})})});return RECC=out}
+const fmtBest=b=>b.kg?`${b.r} × ${String(b.kg).replace(".",",")} kg`:`${b.r} reps`;
+function exRecordsHTML(){const R=records(),names=Object.keys(R).sort((a,b)=>R[b].ses[R[b].ses.length-1].k.localeCompare(R[a].ses[R[a].ses.length-1].k));if(!names.length)return "";
+  return `<div class="card"><span class="lbl">Récords por ejercicio</span><div class="list">${names.slice(0,20).map(n=>{const o=R[n],s=o.ses,l=s[s.length-1],pv=s[s.length-2],tr=pv?(l.vol>pv.vol?"↑":l.vol<pv.vol?"↓":"="):"";
+    return `<div class="li"><span class="b">${esc(n)}</span><span class="mono">${esc(fmtBest(o.best))}</span><span class="tr ${tr==="↑"?"up":tr==="↓"?"down":""}" title="Comparado con la sesión anterior">${tr}</span></div>`}).join("")}</div><p class="foot">↑ hiciste más que la sesión anterior (repeticiones × peso) · ↓ menos.</p></div>`}
 function summaryHTML(){
   const ks=Object.keys(Store.days).sort(),pw=ks.map(k=>numv(Store.days[k].peso)).filter(v=>okKg(v)),tb=ks.map(k=>numv((Store.days[k].test||{}).brazo)).filter(v=>v>15&&v<70);
   const dlt=(a,u)=>a.length>1?`${a[a.length-1].toLocaleString("es-CL")} ${u} <small>(${a[a.length-1]-a[0]>=0?"+":""}${(Math.round((a[a.length-1]-a[0])*10)/10).toLocaleString("es-CL")})</small>`:a.length?`${a[0].toLocaleString("es-CL")} ${u}`:"—";
@@ -2049,13 +2120,14 @@ let REPC={};
 function prevReps(name,k){const ck=name+"|"+k;if(REPC[ck]!==undefined)return REPC[ck];let r=null;const ks=Object.keys(Store.days).filter(x=>x<k).sort().reverse();
   for(const x of ks){const v=(Store.days[x].reps||{})[name];if(Array.isArray(v)&&v.some(y=>y)){r={k:x,v};break}}return REPC[ck]=r}
 function repsHTML(t,b,i){if(t.kind!=="fuerza"||b.tm||!(b.s>=2&&b.s<=8)||!/×/.test(b.p))return "";const k=iso(S.date),cur=((Store.days[k]||{}).reps||{})[b.n]||[],pv=prevReps(b.n,k);
-  return `<div class="reps">${Array.from({length:b.s},(_,j)=>`<input id="rp-${esc(t.id)}-${i}-${j}" data-rp="${esc(b.n)}|${j}" inputmode="text" aria-label="Serie ${j+1}: repeticiones o peso" value="${esc(cur[j]||"")}" placeholder="${esc(pv&&pv.v[j]||"reps")}">`).join("")}${pv?`<span class="foot">Antes (${fmtS(parse(pv.k))}): ${esc(pv.v.map(x=>x||"–").join(" · "))}</span>`:""}</div>`}
+  const rc=records()[b.n];
+  return `<div class="reps">${rc?`<span class="foot rec">Récord: ${esc(fmtBest(rc.best))}</span>`:""}${Array.from({length:b.s},(_,j)=>`<input id="rp-${esc(t.id)}-${i}-${j}" data-rp="${esc(b.n)}|${j}" inputmode="text" aria-label="Serie ${j+1}: repeticiones o peso" value="${esc(cur[j]||"")}" placeholder="${esc(pv&&pv.v[j]||"reps")}">`).join("")}${pv?`<span class="foot">Antes (${fmtS(parse(pv.k))}): ${esc(pv.v.map(x=>x||"–").join(" · "))}</span>`:""}</div>`}
 (async()=>{try{for(let i=0;i<50&&!(window.claude&&window.claude.use);i++)await new Promise(r=>setTimeout(r,100));if(window.claude&&window.claude.use){ASSETS=await window.claude.use("assets");if(ASSETS&&S.tab==="registro")render()}}catch(e){ASSETS=null}})();
 
 const TABS=[["hoy","Hoy"],["plan","Plan"],["registro","Registro"],["progreso","Progreso"],["guia","Guía"]];
 const ICON={hoy:'<path d="M13.0 2.0L4.0 14.0L11.0 14.0L9.0 22.0L20.0 9.0L13.0 9.0L15.0 2.0Z"/>',plan:'<path d="M3 6l6-2 6 2 6-2v14l-6 2-6-2-6 2z"/><path d="M9 4v14M15 6v14"/>',registro:'<rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 4V2h6v2M9 10h6M9 14h6M9 18h3"/>',progreso:'<path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/>',guia:'<path d="M4 4h7a3 3 0 013 3v13a2 2 0 00-2-2H4zM20 4h-5a3 3 0 00-3 3"/><path d="M20 4v14h-6"/>'};
 function render(){
-  CTX=null;PLANC={},SK=null;REPC={};if(S.follow&&!S.run&&diffDays(S.date,today())!==0){S.date=today()}
+  CTX=null;PLANC={},SK=null;REPC={};RECC=null;if(S.follow&&!S.run&&diffDays(S.date,today())!==0){S.date=today()}
   // conservar el foco y el cursor si una actualización llega mientras escribes
   const ae=document.activeElement,fid=ae&&app.contains(ae)&&ae.id?ae.id:null,sel=fid&&ae.selectionStart!=null?[ae.selectionStart,ae.selectionEnd]:null;
   const hqTop=()=>{const L=locate(today());return hqHTML(L.after?52:L.w,streak())};
@@ -2097,6 +2169,8 @@ document.addEventListener("click",e=>{
   if(D.pasteOpen!==undefined){S.paste=true;S.restore=null;render();const t=document.getElementById("restore-text");if(t){t.scrollIntoView({block:"center"});t.focus()}return}
   if(D.pasteCheck!==undefined){const t=document.getElementById("restore-text");if(t){S.pasteText="";checkBackup(t.value)}return}
   if(D.backup!==undefined){exportBackup();return}
+  if(D.avisos!==undefined){exportAvisos();return}
+  if(D.restoreOk!==undefined&&S.restore&&S.restore.data&&S.restore.data.photos&&!S.restore.photosDone){const R0=S.restore;putPhotos(R0.data.photos).catch(()=>{}).then(()=>{R0.photosDone=true;b.click()});return}
   if(D.restoreOk!==undefined&&S.restore&&S.restore.data){Store.restore(S.restore.data);S.restore=null;CTX=null;render();toast(Store.mode==="db"?"Copia restaurada. Se está subiendo a tu cuenta: el indicador de arriba dice cuándo termina.":"Copia restaurada.");return}
   if(D.rep){const i=+D.rep,sched=Store.cfg.sched.slice(),w=sched[i];sched.splice(i+1,0,w-4,w-3,w-2,w-1,w);Store.setCfg({sched,repeats:(Store.cfg.repeats||[]).concat([i])});S.confirm=null;render();toast(`Orden recibida: semanas ${w-4}–${w-1} otra vez y la prueba de nuevo.`);return}
   if(D.unrep){const i=+D.unrep,sched=Store.cfg.sched.slice(),w=sched[i];if(sched.slice(i+1,i+6).join()===[w-4,w-3,w-2,w-1,w].join()){sched.splice(i+1,5);Store.setCfg({sched,repeats:(Store.cfg.repeats||[]).filter(x=>x!==i)});render();toast("Repetición quitada: sigues con el plan normal.")}return}
@@ -2124,6 +2198,12 @@ document.addEventListener("click",e=>{
     const patch={nope:n};if(dd.status==="fail")patch.status="";Store.setDay(k,patch);if(now)S.open[k+t.id]=false;render();
     if(now){toast(closedDay(k,p)?"Día cerrado. Mañana sigues.":"Marcado: no pudiste "+t.t.toLowerCase()+".");goCur()}return}
   if(D.water||D.vaso){const dd=Store.days[k]||{},cur=Math.max(0,+dd.water||0);let n=D.vaso?(+D.vaso===cur?cur-1:+D.vaso):cur+(+D.water);n=Math.max(0,Math.min(40,n));Store.setDay(k,{water:n});render();return}
+  if(D.buy){const c=Store.cfg.compras||{},wk=weekKey(),ok=Object.assign({},c.w===wk?c.ok:{});ok[D.buy]=!ok[D.buy];Store.setCfg({compras:{w:wk,ok}});render();return}
+  if(D.rday){S.redit=D.rday;S.keep.redit=true;render();return}
+  if(D.rmv){const [id,i,dv]=D.rmv.split("|"),a=+i,b=a+(+dv);rutinaSet(id,r=>{if(b<0||b>=r.length)return;[r[a],r[b]]=[r[b],r[a]]});render();return}
+  if(D.rdel){const [id,i]=D.rdel.split("|");if(rutinaOf(id).length<=1){toast("Deja al menos un ejercicio.");return}rutinaSet(id,r=>r.splice(+i,1));render();return}
+  if(D.radd){rutinaSet(D.radd,r=>r.push({n:"Ejercicio nuevo",s:3,reps:"10–12",r:60,c:""}));render();const el=document.querySelector(".rrow:last-child .rn");if(el){el.focus();el.select()}return}
+  if(D.rreset){const c=Object.assign({},Store.cfg.rutina);delete c[D.rreset];Store.setCfg({rutina:c});S.confirm=null;render();toast("Volviste a la rutina original.");return}
   if(D.meal){const m=Object.assign({},(Store.days[k]||{}).meals);m[D.meal]=!m[D.meal];Store.setDay(k,{meals:m});render();return}
   if(D.sens){const m=Object.assign({},(Store.days[k]||{}).match);m.sens=m.sens===D.sens?"":D.sens;Store.setDay(k,{match:m});render();return}
   if(D.engadd!==undefined){const el=document.getElementById("eng-s"),v=parseInt(el&&el.value,10);if(!(v>=0&&v<=100)){toast("Escribe el puntaje de EF SET: de 0 a 100.");return}
@@ -2173,6 +2253,10 @@ document.addEventListener("input",e=>{
   if(D.f)Store.setDay(k,{[D.f]:el.value});
   else if(D.t){const t=Object.assign({},(Store.days[k]||{}).test||{});t[D.t]=el.value.trim();Store.setDay(k,{test:t});updateVerdict()}
   else if(D.x){const [kind,f]=D.x.split("|"),dd=Store.day(k),r=Object.assign({},dd[kind]||{});r[f]=el.value.trim();Store.setDay(k,{[kind]:r});updateResults(kind)}
+  else if(D.rx){const [id,i,f]=D.rx.split("|"),v=el.value;let val=v;
+    if(f==="s"||f==="r"){const n=parseInt(v,10);if(!(n>=(f==="s"?1:0)&&n<=(f==="s"?10:600)))return;val=n}
+    else{val=v.trim().slice(0,f==="n"?60:20);if(!val)return}
+    rutinaSet(id,r=>{if(!r[+i])return;r[+i][f]=val;if(f!=="n")delete r[+i].bar})}
   else if(D.r){const [kind,f]=D.r.split("|"),r=Object.assign({},(Store.days[k]||{})[kind]);r[f]=el.value.trim();Store.setDay(k,{[kind]:r});
     if(kind==="sleep"){const o=document.getElementById("sl-out"),hs=sleepH(r);if(o)o.textContent=hs==null?"Anota la noche que pasó.":hs<7?`${fmtH(hs)}: poco. Hoy marca «Cansado» en Hoy.`:`${fmtH(hs)}. Bien.`}}
   else if(D.rp){const i=D.rp.lastIndexOf("|"),name=D.rp.slice(0,i),j=+D.rp.slice(i+1),rp=Object.assign({},(Store.days[k]||{}).reps),a=(rp[name]||[]).slice();while(a.length<=j)a.push("");a[j]=el.value.trim().slice(0,12);rp[name]=a;Store.setDay(k,{reps:rp})}
@@ -2240,5 +2324,7 @@ document.addEventListener("pointerdown",()=>{pressing=true},true);
 const release=()=>{pressing=false;if(pendingRender){pendingRender=false;setTimeout(render,0)}};
 document.addEventListener("pointerup",release,true);document.addEventListener("pointercancel",release,true);
 Store.init(()=>{if(pressing){pendingRender=true;return}render()});
+// fuera de claude.ai (la página propia en GitHub): se guarda en el teléfono para abrir sin internet
+if("serviceWorker" in navigator&&location.protocol==="https:"&&!/claude\.ai|claudeusercontent|anthropic/.test(location.hostname))navigator.serviceWorker.register("sw.js").catch(()=>{});
 })();
 </script>
