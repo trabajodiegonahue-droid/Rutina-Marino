@@ -160,6 +160,7 @@ body.guided{padding-bottom:calc(420px + env(safe-area-inset-bottom,0px))}
 .rrow input{background:var(--bg);border:1px solid var(--line);color:var(--ink);border-radius:6px;padding:7px 8px;font:inherit;font-size:16px;width:100%}
 .rnums{display:grid;grid-template-columns:70px 1fr 100px;gap:6px}.rnums label{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;display:flex;flex-direction:column;gap:2px}
 .rbtns{display:flex;gap:6px;justify-content:flex-end}.rbtns .nb{width:40px;height:34px}
+.kgf{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--muted);flex-basis:100%}.kgf input{width:70px}.reps .meta{flex-basis:100%;color:var(--ink)}.reps .meta.up{color:var(--ok);font-weight:600}
 .tr{font-weight:700;width:18px;text-align:center}.tr.up{color:var(--ok)}.tr.down{color:var(--bad)}.reps .rec{flex-basis:100%;color:var(--accent)}
 .daycfg summary{display:flex;justify-content:space-between;align-items:center;gap:8px;list-style:none}.daycfg summary::-webkit-details-marker{display:none}.daycfg .dcv{font-size:14px;color:var(--accent);font-weight:600}.daycfg[open] summary{margin-bottom:8px}.daycfg{padding-block:10px}.daycfg:not([open]) summary{margin:0}
 .order.closed{border-color:var(--bad)}.order.half{border-color:var(--warn)}.stamp.red{border-color:var(--bad);color:var(--bad)}
@@ -636,7 +637,6 @@ const TEMPO="Bajada lenta (3 s), pausa de 1 s abajo, subida con fuerza.";
 const PROG="Cuando llegues al máximo del rango en todas las series, la próxima vez agrega peso (mochila o un disco) o baja más lento.";
 // rutina de Diego (semana por grupo muscular): series fijas; en la descarga, ~la mitad de las series
 const DS=(s,w)=>DELOAD.includes(w)?Math.max(1,Math.round(s*0.55)):s;
-const CALF=B("Calentamiento","3 × 2 min",{s:3,tm:120,c:"1) Movilidad de hombros y caderas.\n2) Trote suave en el lugar o saltos suaves.\n3) Una serie liviana del primer ejercicio."});
 const EX=(w,n,s,reps,r,c,lados)=>{const k=DS(s,w);return B(n,`${k} × ${reps}`,{s:lados?k*2:k,r,c})};
 const ctm=(w,a,b)=>{const st=stN(w);return st===1?a:st===2?Math.round((a+b)/2):b};
 const TIMED=(w,n,s,a,b,lado,c)=>{const k=DS(s,w),t=ctm(w,a,b);return B(n,`${k} × ${t} s${lado?" por lado":""}`,{s:lado?k*2:k,r:30,tm:t,c})};
@@ -662,8 +662,19 @@ function exBlock(w,x,ctx){
   const b=m?TIMED(w,x.n,x.s,+m[1],+(m[2]||m[1]),!!x.l,x.c||undefined):EX(w,x.n,x.s,x.reps,x.r,x.c||undefined,!!x.l);
   return x.opt?Object.assign(b,{opt:1}):b}
 // estiramiento corto al final: el músculo que trabajaste (no es obligatorio para cerrar la sesión)
-const stretchOf=id=>RUTINA[id].st.map(([n,t,l])=>B("Estirar: "+n,l?`${t} s por lado`:`${t} s`,{s:l?2:1,tm:t,opt:1}));
-const dayOf=(id,w,ctx)=>[CALF,...rutinaOf(id).map(x=>exBlock(w,x,ctx)),...stretchOf(id)];
+// elongación después: estática, 2 veces cada lado (con el músculo caliente es cuando más sirve)
+const stretchOf=id=>RUTINA[id].st.map(([n,t,l])=>B("Estirar: "+n,l?`2 × ${t} s por lado`:`2 × ${t} s`,{s:l?4:2,tm:t,r:0,c:"Suave, sin dolor: estira hasta sentir tensión y respira lento. Nunca rebotes."}));
+// antes: movilidad y activación dinámica (estirar quieto y largo antes de la fuerza te quita fuerza; moverse la prepara)
+const WARM={fa:"1) Movilidad de hombros: 10 círculos de brazos adelante y atrás, 10 «dislocaciones» con la banda.\n2) Activación: 15 aperturas con banda (pull-apart) y 10 flexiones suaves.\n3) Una serie liviana del primer ejercicio, con la mitad del peso.",
+  arms:"1) Movilidad de hombros: 10 círculos de brazos, 10 «dislocaciones» con la banda, 10 rotaciones de muñeca.\n2) Activación: 15 face pull con banda y 10 elevaciones laterales sin peso.\n3) Una serie liviana del primer ejercicio, con la mitad del peso.",
+  legs:"1) Movilidad de cadera y tobillo: 10 balanceos de pierna adelante-atrás y 10 de lado (cada pierna), 10 círculos de cadera, 10 tobillos contra la pared.\n2) Activación: 15 puentes de glúteo, 10 sentadillas sin peso, 10 zancadas caminando.\n3) Una serie liviana del primer ejercicio, con la mitad del peso.",
+  fb:"1) Movilidad de hombros y espalda: 10 gato-vaca, 10 rotaciones de pecho a cada lado (en cuatro apoyos), 10 «dislocaciones» con la banda.\n2) Activación: 2 × 20 s colgado de la barra y 15 aperturas con banda.\n3) Una serie liviana del primer ejercicio."};
+const calfOf=id=>B("Calentamiento","3 × 2 min",{s:3,tm:120,c:WARM[id]});
+// prevención de lesiones: el nórdico baja a la mitad los desgarros del isquiotibial y el Copenhague las lesiones de ingle en futbolistas
+const nordicB=w=>{const st=stN(w),n=st===1?"3–4":st===2?"4–6":"5–8";return B("Prevención: nórdico",`2 × ${n}`,{s:2,r:120,c:"De rodillas sobre la colchoneta, pies trabados bajo un sillón: bajas el cuerpo lo más lento que puedas y te recibes con las manos. Sube empujando con las manos."})};
+const copenB=w=>{const st=stN(w),t=st===1?15:st===2?20:30;return B("Prevención: Copenhague",`2 × ${t} s por lado`,{s:4,r:30,tm:t,c:"Plancha lateral con el pie de arriba apoyado en una silla (empieza con la rodilla apoyada). Cadera arriba."})};
+const PREV={legs:w=>[nordicB(w),copenB(w)],fa:()=>[],fb:()=>[],arms:()=>[]};
+const dayOf=(id,w,ctx)=>[calfOf(id),...rutinaOf(id).map(x=>exBlock(w,x,ctx)),...PREV[id](w),...stretchOf(id)];
 function chestDay(w){return dayOf("fa",w)}
 function legDay(w){return dayOf("legs",w)}
 function backDay(w,ctx){return dayOf("fb",w,ctx)}
@@ -674,7 +685,9 @@ const BIRDDOG=w=>EX(w,"Bird dog",2,"10 por lado",30,"En cuatro apoyos: estiras b
 function cardioDay(w,deload){const mi=deload?25:Math.min(35,25+Math.floor(w/3)*2),acc=!deload&&w>=5&&w%2===1;
   const run=acc?{blocks:[B("Calentamiento","10 min trote suave"),B("Aceleraciones","6 × 10–15 s",{s:6,r:105,c:"Rápido, en superficie segura. Descansa 90–120 s entre cada una. Si jugaste ayer o estás cansado, haz el trote."}),B("Vuelta a la calma","5 min trote suave")],min:25}
     :{blocks:[B("Trote",`${mi} min`,{tm:mi*60,c:"Ritmo de conversación: puedes hablar en frases completas."})],min:mi,goal:{type:"cont",min:mi,max:mi}};
-  const core=[TIMED(w,"Plancha",3,30,45,false),BIRDDOG(w),RUEDA(w,2,"6–10")];
+  run.blocks.unshift(B("Movilidad antes de correr","5 min",{tm:300,c:"10 balanceos de pierna adelante-atrás y de lado, 10 círculos de cadera y tobillo, 2 × 20 m de skipping y talones al glúteo."}));run.min+=5;
+  const core=[TIMED(w,"Plancha",3,30,45,false),BIRDDOG(w),RUEDA(w,2,"6–10"),nordicB(w),
+    ...[["Cuádriceps",30],["Isquiotibiales",30],["Gemelos en la pared",30],["Cadera (paloma)",45]].map(([n,t])=>B("Estirar: "+n,`2 × ${t} s por lado`,{s:4,tm:t,r:0,c:"Suave, sin dolor: hasta sentir tensión y respira lento."}))];
   return {run,acc,core}}
 const STRETCH=()=>[B("Cuádriceps","2 × 30 s por pierna",{s:4,tm:30}),B("Isquiotibiales","2 × 30 s por pierna",{s:4,tm:30}),B("Cadera (paloma)","2 × 45 s por lado",{s:4,tm:45}),B("Aductores (mariposa)","2 × 45 s",{s:2,tm:45}),B("Gemelos en la pared","2 × 30 s por pierna",{s:4,tm:30}),B("Pecho en el marco de la puerta","2 × 30 s por lado",{s:4,tm:30}),B("Espalda (postura del niño)","2 × 45 s",{s:2,tm:45}),B("Hombros cruzados","2 × 30 s por lado",{s:4,tm:30})];
 function upperA(w,ctx){const m=setsM(w),a=setsA(w),st=stN(w);return [CAL,
@@ -987,7 +1000,7 @@ const fixCfg=c=>{const d=defCfg();if(c.start==="2026-10-05"&&!c.startMoved){c.st
   return c};
 const MODES=["","ok","cansado","dolor","enfermo"];
 const fixDay=x=>{if(!isObj(x))return {};if(x.turno!=null&&!SHIFT[String(x.turno)])delete x.turno;if(x.mode!=null&&!MODES.includes(x.mode))delete x.mode;
-  ["checks","sets","test","sim","mini","runlog","ctx","undo","tprev","meals","sleep","match","reps","nope"].forEach(f=>{if(x[f]!=null&&!isObj(x[f]))delete x[f]});
+  ["checks","sets","test","sim","mini","runlog","ctx","undo","tprev","meals","sleep","match","reps","nope","kg"].forEach(f=>{if(x[f]!=null&&!isObj(x[f]))delete x[f]});
   if(x.runlog)Object.keys(x.runlog).forEach(t=>{if(!isObj(x.runlog[t]))delete x.runlog[t]});
   if(x.ctx&&x.ctx.temp!==""&&x.ctx.temp!=null&&!okTemp(x.ctx.temp))x.ctx.temp="";if(typeof x.note!=="string"&&x.note!=null)delete x.note;if(x.water!=null&&!(Number.isInteger(+x.water)&&+x.water>=0&&+x.water<=40))delete x.water;return x};
 const fixDays=o=>{Object.keys(o).forEach(k=>{if(!isISO(k))delete o[k];else o[k]=fixDay(o[k])});return o};
@@ -996,7 +1009,7 @@ const isObj=x=>!!x&&typeof x==="object"&&!Array.isArray(x);
 // errores de la nube que no se arreglan reintentando
 const HARD_ERR=["invalid_argument","quota_exceeded","revoked","not_granted","capability_disabled","capability_removed","transform_error"];
 // JSON con las claves ordenadas: para comparar sin que importe el orden
-const DEEP=["sets","checks","runlog","test","mini","sim","tprev","meals","sleep","match","reps","nope"],dc=v=>v===undefined?undefined:JSON.parse(JSON.stringify(v));
+const DEEP=["sets","checks","runlog","test","mini","sim","tprev","meals","sleep","match","reps","nope","kg"],dc=v=>v===undefined?undefined:JSON.parse(JSON.stringify(v));
 const canon=o=>JSON.stringify(o,(k,v)=>v&&typeof v==="object"&&!Array.isArray(v)?Object.keys(v).sort().reduce((a,x)=>(a[x]=v[x],a),{}):v);
 // Cómo se guarda: cada cambio queda como “pendiente” (solo los campos que tocaste) en este teléfono hasta que la
 // nube lo confirma. Lo que llega de la nube se mezcla con lo pendiente: nunca se pisa un cambio tuyo ni se borra
@@ -1961,6 +1974,12 @@ function viewGuia(){return `<div class="sec prose"><h2>Guía</h2>
  <li><b>Prueba cada 13 semanas</b> (un domingo): flexiones, barras, salto largo, abdominales, 3.200 m, nado 50 m y medidas. Ahí ves en números el músculo que ganaste.</li>
  <li><b>Lo militar:</b> sesiones de incomodidad y una semana del infierno adaptada (sem 48), siempre durmiendo 8 h.</li>
  <li><b>Inglés:</b> 1 hora diaria con un tema por semana pensado para el working holiday (entrevista, hostel, trabajos, banco). Para Australia se pide inglés “funcional”, que suele equivaler a IELTS 4,5: confírmalo en el sitio oficial antes de postular.</li></ul>
+ <h3>Para no lesionarte</h3><ul>
+ <li><b>Antes:</b> movilidad y activación (3 × 2 min, distinta según el día). Moverte prepara el músculo; estirar quieto y largo justo antes de la fuerza te quita fuerza.</li>
+ <li><b>Después:</b> elongación estática del músculo que trabajaste, 2 veces por lado, sin dolor. Está al final de cada sesión.</li>
+ <li><b>Prevención:</b> el nórdico (pierna y sábado) y el Copenhague (pierna) son los ejercicios con más pruebas para evitar desgarros del muslo y lesiones de ingle en futbolistas.</li>
+ <li><b>Si algo molesta:</b> dolor punzante, en un punto, o que empeora con cada repetición: paras ese ejercicio. Marca «Con dolor» y ese día solo recuperas. Si al otro día sigue, no lo entrenes y consúltalo.</li>
+ <li>Sube el peso solo cuando completes todas las series en el tope del rango: la app te avisa cuándo.</li></ul>
  <h3>Técnica</h3><ul>
  <li><b>Barras:</b> agarre prono, desde brazos estirados hasta el mentón sobre la barra, sin balanceo. Si no sale: negativas, bajando en 5 s.</li>
  <li><b>Flexiones:</b> cuerpo recto, codos a 45°, pecho a un puño del suelo.</li>
@@ -2105,7 +2124,7 @@ function parseRep(v){const t=String(v||"").toLowerCase().replace(",",".").replac
   if((m=t.match(/^(\d+(?:\.\d+)?)k\w*[x×*](\d+)/)))return {r:+m[2],kg:+m[1]};  // 8kgx10
   if((m=t.match(/^(\d+)/)))return {r:+m[1],kg:0};return null}
 let RECC=null;
-function records(){if(RECC)return RECC;const out={};Object.keys(Store.days).sort().forEach(k=>{const rp=Store.days[k].reps||{};Object.keys(rp).forEach(n=>{const sets=(rp[n]||[]).map(parseRep).filter(Boolean);if(!sets.length)return;
+function records(){if(RECC)return RECC;const out={};Object.keys(Store.days).sort().forEach(k=>{const rp=Store.days[k].reps||{};Object.keys(rp).forEach(n=>{const dk=parseFloat(String(((Store.days[k].kg||{})[n])||"").replace(",","."))||0,sets=(rp[n]||[]).map(parseRep).filter(Boolean).map(x=>x.kg?x:Object.assign(x,{kg:dk}));if(!sets.length)return;
     const o=out[n]=out[n]||{best:null,ses:[]};const tot=sets.reduce((a,x)=>a+x.r,0),vol=sets.reduce((a,x)=>a+x.r*(x.kg||1),0);o.ses.push({k,tot,vol});
     sets.forEach(x=>{if(!o.best||x.kg>o.best.kg||x.kg===o.best.kg&&x.r>o.best.r)o.best=Object.assign({k},x)})})});return RECC=out}
 const fmtBest=b=>b.kg?`${b.r} × ${String(b.kg).replace(".",",")} kg`:`${b.r} reps`;
@@ -2121,9 +2140,26 @@ function summaryHTML(){
 let REPC={};
 function prevReps(name,k){const ck=name+"|"+k;if(REPC[ck]!==undefined)return REPC[ck];let r=null;const ks=Object.keys(Store.days).filter(x=>x<k).sort().reverse();
   for(const x of ks){const v=(Store.days[x].reps||{})[name];if(Array.isArray(v)&&v.some(y=>y)){r={k:x,v};break}}return REPC[ck]=r}
-function repsHTML(t,b,i){if(t.kind!=="fuerza"||b.tm||!(b.s>=2&&b.s<=8)||!/×/.test(b.p))return "";const k=iso(S.date),cur=((Store.days[k]||{}).reps||{})[b.n]||[],pv=prevReps(b.n,k);
-  const rc=records()[b.n];
-  return `<div class="reps">${rc?`<span class="foot rec">Récord: ${esc(fmtBest(rc.best))}</span>`:""}${Array.from({length:b.s},(_,j)=>`<input id="rp-${esc(t.id)}-${i}-${j}" data-rp="${esc(b.n)}|${j}" inputmode="text" aria-label="Serie ${j+1}: repeticiones o peso" value="${esc(cur[j]||"")}" placeholder="${esc(pv&&pv.v[j]||"reps")}">`).join("")}${pv?`<span class="foot">Antes (${fmtS(parse(pv.k))}): ${esc(pv.v.map(x=>x||"–").join(" · "))}</span>`:""}</div>`}
+// progresión doble: cuando todas las series llegan al tope del rango, sube el peso y vuelves al mínimo; si no, +1 repetición por serie
+const ONE_DB=/goblet|una mano|pullover|sobre la cabeza|hip thrust/i; // con una sola mancuerna llegas a ~20 kg; con dos, 10 kg cada una
+function rangeOf(b){const m=String(b.p).match(/×\s*(\d+)\s*[–-]\s*(\d+)/);return m?[+m[1],+m[2]]:null}
+function lastKg(name,k){const ks=Object.keys(Store.days).filter(x=>x<k).sort().reverse();for(const x of ks){const v=parseFloat(String(((Store.days[x].kg||{})[name])||"").replace(",","."));if(v>0)return v}return 0}
+function progOf(b,k){const rg=rangeOf(b);if(!rg)return null;const [lo,hi]=rg,pv=prevReps(b.n,k),n=b.s;
+  if(!pv)return {first:true,kg:lastKg(b.n,k),reps:Array(n).fill(lo),lo,hi};
+  const pk=parseFloat(String(((Store.days[pv.k].kg||{})[b.n])||"").replace(",","."))||0,sets=pv.v.map(x=>parseRep(x)).map(x=>x?x.r:0);
+  const kg=pk||Math.max(0,...pv.v.map(x=>(parseRep(x)||{}).kg||0))||lastKg(b.n,k);
+  const top=sets.filter(r=>r>0).length>=n&&sets.slice(0,n).every(r=>r>=hi);
+  if(top){const max=ONE_DB.test(b.n)?20:10,step=kg>=8?2:1;
+    if(!kg)return {up:"peso",kg:0,reps:Array(n).fill(lo),lo,hi,prev:pv,msg:"Llegaste al tope: hoy agrega la mochila con peso o baja en 3 s."};
+    if(kg+step>max)return {up:"max",kg,reps:Array(n).fill(hi),lo,hi,prev:pv,msg:`Estás en el máximo de tus mancuernas (${max} kg): baja en 3 s y haz 1 s de pausa abajo.`};
+    return {up:"kg",kg:kg+step,reps:Array(n).fill(lo),lo,hi,prev:pv,msg:`¡Subes de peso! Hoy ${String(kg+step).replace(".",",")} kg (o el disco más cercano), desde ${lo} repeticiones.`}}
+  return {kg,reps:Array.from({length:n},(_,j)=>Math.min(hi,Math.max(lo,(sets[j]||sets.filter(Boolean).slice(-1)[0]||lo-1)+1))),lo,hi,prev:pv}}
+function repsHTML(t,b,i){if(t.kind!=="fuerza"||b.tm||!(b.s>=2&&b.s<=8)||!/×/.test(b.p))return "";const k=iso(S.date),dd=Store.days[k]||{},cur=(dd.reps||{})[b.n]||[],pv=prevReps(b.n,k),pg=progOf(b,k),kgNow=((dd.kg||{})[b.n])||"";
+  const rc=records()[b.n],tkg=pg&&pg.kg?String(pg.kg).replace(".",","):"";
+  const meta=pg?(pg.first?`Primera vez: elige un peso con el que llegues a ${pg.lo}–${pg.hi} con buena técnica.`:pg.msg||`Meta de hoy: ${pg.reps.join(" · ")}${tkg?` con ${tkg} kg`:""} (1 más que la vez pasada).`):"";
+  return `<div class="reps">${meta?`<span class="foot meta ${pg&&pg.up==="kg"?"up":""}">${esc(meta)}</span>`:""}${rc?`<span class="foot rec">Récord: ${esc(fmtBest(rc.best))}</span>`:""}
+    <label class="kgf">Peso<input id="kg-${esc(t.id)}-${i}" data-kg="${esc(b.n)}" inputmode="decimal" value="${esc(kgNow)}" placeholder="${esc(tkg||"kg")}">kg</label>
+    ${Array.from({length:b.s},(_,j)=>`<input id="rp-${esc(t.id)}-${i}-${j}" data-rp="${esc(b.n)}|${j}" data-tkg="${esc(tkg)}" inputmode="numeric" aria-label="Serie ${j+1}: repeticiones" value="${esc(cur[j]||"")}" placeholder="${esc(pg?String(pg.reps[j]):pv&&pv.v[j]||"reps")}">`).join("")}${pv?`<span class="foot">Antes (${fmtS(parse(pv.k))}): ${esc(pv.v.map(x=>x||"–").join(" · "))}${((Store.days[pv.k].kg||{})[b.n])?` con ${esc(Store.days[pv.k].kg[b.n])} kg`:""}</span>`:""}</div>`}
 (async()=>{try{for(let i=0;i<50&&!(window.claude&&window.claude.use);i++)await new Promise(r=>setTimeout(r,100));if(window.claude&&window.claude.use){ASSETS=await window.claude.use("assets");if(ASSETS&&S.tab==="registro")render()}}catch(e){ASSETS=null}})();
 
 const TABS=[["hoy","Hoy"],["plan","Plan"],["registro","Registro"],["progreso","Progreso"],["guia","Guía"]];
@@ -2261,7 +2297,12 @@ document.addEventListener("input",e=>{
     rutinaSet(id,r=>{if(!r[+i])return;r[+i][f]=val;if(f!=="n")delete r[+i].bar})}
   else if(D.r){const [kind,f]=D.r.split("|"),r=Object.assign({},(Store.days[k]||{})[kind]);r[f]=el.value.trim();Store.setDay(k,{[kind]:r});
     if(kind==="sleep"){const o=document.getElementById("sl-out"),hs=sleepH(r);if(o)o.textContent=hs==null?"Anota la noche que pasó.":hs<7?`${fmtH(hs)}: poco. Hoy marca «Cansado» en Hoy.`:`${fmtH(hs)}. Bien.`}}
-  else if(D.rp){const i=D.rp.lastIndexOf("|"),name=D.rp.slice(0,i),j=+D.rp.slice(i+1),rp=Object.assign({},(Store.days[k]||{}).reps),a=(rp[name]||[]).slice();while(a.length<=j)a.push("");a[j]=el.value.trim().slice(0,12);rp[name]=a;Store.setDay(k,{reps:rp})}
+  else if(D.rp){const i=D.rp.lastIndexOf("|"),name=D.rp.slice(0,i),j=+D.rp.slice(i+1),dd0=Store.days[k]||{},rp=Object.assign({},dd0.reps),a=(rp[name]||[]).slice();while(a.length<=j)a.push("");a[j]=el.value.trim().slice(0,12);rp[name]=a;
+    const patch={reps:rp};
+    // si no escribiste el peso, se guarda el que te tocaba hoy (así la próxima vez sabe desde dónde subir)
+    if(D.tkg&&!((dd0.kg||{})[name])){patch.kg=Object.assign({},dd0.kg,{[name]:D.tkg});const kf=el.parentElement&&el.parentElement.querySelector("[data-kg]");if(kf&&!kf.value)kf.value=D.tkg}
+    Store.setDay(k,patch)}
+  else if(D.kg){const v=el.value.trim().replace(",",".");if(v&&!(+v>=0&&+v<=200))return;Store.setDay(k,{kg:Object.assign({},(Store.days[k]||{}).kg,{[D.kg]:v.replace(".",",")})})}
   else if(D.rl){const [tid,f]=D.rl.split("|"),dd=Store.day(k),rl=Object.assign({},dd.runlog||{});rl[tid]=Object.assign({},rl[tid]||{},{[f]:el.value.trim()});Store.setDay(k,{runlog:rl});updateRunVerdict(tid)}
   else if(D.tc){const t=Object.assign({},(Store.days[k]||{}).test||{});t[D.tc]=el.checked;Store.setDay(k,{test:t});updateVerdict()}
   else if(D.c==="name")Store.setCfg({name:el.value.trim()||"crack"});

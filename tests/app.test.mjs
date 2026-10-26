@@ -823,6 +823,31 @@ const reload = async p => { await p.reload(); await p.waitForTimeout(200); };
   ok(errs.length === 0, 'sin errores: ' + errs.join(' | '));
   await ctx.close(); }
 
+// 37. Progresión: +1 repetición por serie y, al llegar al tope del rango en todas, sube el peso
+{ const ctx = await browser.newContext({ viewport: { width: 390, height: 1400 } }); const errs = [];
+  const n = 'Press de pecho en el suelo con mancuernas';
+  const days = { '2026-10-13': { reps: { [n]: ['10', '9', '9', '8'] }, kg: { [n]: '8' } }, '2026-10-20': {} };
+  await ctx.addInitScript(([dd]) => { if (!localStorage.getItem('bitacora-buzo-v1')) localStorage.setItem('bitacora-buzo-v1', JSON.stringify({ cfg: { start: '2026-10-06' }, days: dd, pend: {} })); }, [days]);
+  let p = await ctx.newPage(); p.on('pageerror', e => errs.push(e.message)); await p.clock.install({ time: new Date('2026-10-20T08:00:00') }); await p.goto(URL); await p.waitForTimeout(300);
+  let t = await text(p);
+  ok(t.includes('Meta de hoy: 11 · 10 · 10 · 9 con 8 kg'), 'meta: una repetición más por serie con el mismo peso');
+  ok(await p.getAttribute(`[data-rp="${n}|0"]`, 'placeholder') === '11', 'la casilla propone la meta');
+  // hace 12 en todas (tope del rango) sin escribir el peso: se guarda el de la meta
+  for (let j = 0; j < 4; j++) await p.fill(`[data-rp="${n}|${j}"]`, '12');
+  ok(await p.evaluate(nm => JSON.parse(localStorage.getItem('bitacora-buzo-v1')).days['2026-10-20'].kg[nm], n) === '8', 'si no escribes el peso se guarda el de la meta');
+  await p.close();
+  p = await ctx.newPage(); p.on('pageerror', e => errs.push(e.message)); await p.clock.install({ time: new Date('2026-10-27T08:00:00') }); await p.goto(URL); await p.waitForTimeout(300);
+  t = await text(p);
+  ok(t.includes('¡Subes de peso! Hoy 10 kg') && await p.getAttribute(`[data-kg="${n}"]`, 'placeholder') === '10', 'tope del rango en todas: sube el peso y vuelve al mínimo');
+  await p.close();
+  // día de pierna: calentamiento, prevención y elongación al final
+  p = await ctx.newPage(); await p.clock.install({ time: new Date('2026-10-21T08:00:00') }); await p.goto(URL); await p.waitForTimeout(300);
+  t = await text(p);
+  ok(t.includes('Prevención: nórdico') && t.includes('Prevención: Copenhague') && t.includes('Estirar: Isquiotibiales'), 'pierna: prevención y elongación');
+  await p.close();
+  ok(errs.length === 0, 'sin errores: ' + errs.join(' | '));
+  await ctx.close(); }
+
 await browser.close();
 console.log(`\n${passes} correctas, ${fails} fallidas`);
 process.exit(fails ? 1 : 0);
