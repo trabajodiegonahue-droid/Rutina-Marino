@@ -10,7 +10,7 @@ const datos = opt('nube') ? readNube(opt('nube')) : opt('datos') ? JSON.parse(fs
 const dateArg = args.find((a, i) => /^\d{4}-\d{2}-\d{2}$/.test(a) && args[i - 1] !== '--inicio');
 const A = loadApp(datos);
 const date = dateArg ? A.parse(dateArg) : A.today();
-const o = ordenDelDia(A, date, { turno: opt('turno', A.Store.cfg.turno || '13'), start: datos ? undefined : opt('inicio', '2026-10-21'), place: opt('lugar') });
+const o = ordenDelDia(A, date, { turno: opt('turno', A.Store.cfg.turno || '13'), start: datos ? undefined : opt('inicio', '2026-10-26'), place: opt('lugar') });
 // --eventos: un evento de calendario por tarea (con aviso a la hora), para crearlos en Google Calendar
 if (args.includes('--eventos')) {
   const pad = n => String(n).padStart(2, '0'), base = A.iso(date);

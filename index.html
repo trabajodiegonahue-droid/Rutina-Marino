@@ -289,6 +289,8 @@ const DIAS=["Lunes","Martes","Miércoles","Jueves","Viernes","Sábado","Domingo"
 const TESTS=[0,13,26,39,52];
 const DELOAD=[4,8,12,17,21,25,30,34,38,43,47,51];
 const HELL=48;
+// día del lago en la semana (contado desde el inicio): domingo, libre
+const LDOW=6;
 // Semanas 1–26: [natación (1 vez por semana), trote largo del sábado, intervalos del martes, circuito militar, extra]
 const S12={
 1:["600 m: drills con tabla, tramos de 25 m","25 min suave","Intervalos 4 × 400 m","Fuerza B 3 vueltas","Ducha fría 30 s"],
@@ -868,20 +870,15 @@ function dayPlan(w,dow,ctx){
   const treadT=()=>lake?null:T("control","Control en el agua","Estar cómodo en lo hondo: la base para no tenerle miedo al agua.","08:00",treadBlocks(w),{kind:"agua",safe:"Solo en piscina con salvavidas avisado. Nunca solo."});
   if(w===HELL){const H=hellDay(dow,ctx);title=H.title;kind=H.kind;tasks=H.tasks}
   else if(w===0){
-    // la semana empieza el día del inicio (miércoles): 0 mié · 1 jue · 2 vie · 3 sáb · 4 dom · 5 lun (libre: lago y prueba) · 6 mar
+    // semana 0 (desde el lunes 26 oct): la rutina con técnica (2–3 repeticiones en reserva) y la prueba inicial el domingo
     const W0=[
-     ["Arranque","tierra",[runT("run","Trote suave 20 min","Primer día: soltar las piernas y ver cómo estás.","07:00",runBlocks("20 min suave",1)),
-       T("tec","Aprende los ejercicios de torso","Hoy aprendes la técnica. Sin llegar al fallo: el lunes es la prueba inicial.","08:00",[CAL,B("Flexiones","2 × 10",{s:2,r:90}),B("Remo a una mano con mancuerna","2 × 10 por lado",{s:4,r:45}),B("Press militar con mancuernas","2 × 10",{s:2,r:60}),B("Barras","2 × 3",{s:2,r:120}),B("Rueda abdominal","2 × 5 de rodillas",{s:2,r:60})],{kind:"fuerza"}),
-       T("med","Pedir hora al médico","Chequeo antes de cargar fuerte.","09:00",[B("Pedir","examen general",{note:"Electrocardiograma, presión, vista y control dental. Cuenta cualquier lesión antigua."})],{kind:"admin"}),
-       T("porque","Escribir tu “por qué”","Escríbelo también en Plan → Ajustes: la app te lo recuerda en los días duros.","20:00",[B("Una hoja","por qué quieres cambiar tu físico"),B("2–3 frases","para cuando cueste",{note:"Cambia “no puedo más” por “esto es lo que vine a entrenar”."})],{kind:"admin"})]],
-     ["Técnica de piernas","tierra",[T("tec2","Aprende los ejercicios de piernas","Técnica primero: el peso viene después.","07:00",[B("Calentamiento de carrera","10 min"),B("Sentadilla búlgara","2 × 8 por pierna",{s:4,r:60}),B("Peso muerto rumano","2 × 10",{s:2,r:90}),B("Nórdico","2 × 3",{s:2,r:120}),B("Copenhague","2 × 15 s por lado",{s:4,r:30,tm:15}),B("Sentadilla goblet","2 × 12",{s:2,r:90})],{kind:"fuerza"}),
-       T("equipo","Dejar listo tu equipo","","10:00",[B("Mochila con peso","5 kg: libros o botellas de agua"),B("Todo junto en un rincón","mancuernas, bandas, colchoneta y rueda"),B("Probar la barra de la plaza","que esté firme"),B("Gafas y gorra de natación","para el lago del lunes",{opt:1})],{kind:"admin"})]],
-     ["Motor aeróbico","tierra",[runT("run","Trote nasal 20 min","Solo por la nariz: aprende el ritmo del motor aeróbico.","07:00",z2Blocks(0)),
-       T("naval","Consultar requisitos","Por si postulas al Servicio Militar o a una escuela.","10:00",[B("Preguntar","requisitos y fechas",{note:"Servicio Militar (DGMN) y Escuela Militar o de Suboficiales: edad, salud y pruebas físicas."})],{kind:"admin"})]],
+     ["Pecho + core","tierra",[T("fa","Pecho + core","","07:00",chestDay(0),{kind:"fuerza"})]],
+     ["Pierna + core","tierra",[T("legs","Pierna + core","","07:00",legDay(0),{kind:"fuerza"})]],
+     ["Espalda + core","tierra",[T("fb","Espalda + core","","07:00",backDay(0,ctx),{kind:"fuerza"})]],
      ["Hombros y brazos + core","tierra",[T("arms","Hombros y brazos + core","","07:00",armsDay(0),{kind:"fuerza"})]],
-     ["Descanso","descanso",[...rest("Descanso","Mañana es la prueba inicial."),T("prep","Preparar la prueba","Que mañana no falte nada.","20:00",[B("Lista","cronómetro, huincha de medir, ropa de recambio, agua"),B("Lugar","barra y pista o tramo de 3,2 km",{pool:!lake||!!ctx.pool})],{kind:"admin"})]],
-     ["Prueba inicial","prueba",null],
-     ["Descanso activo","descanso",rest("Descanso activo","Después de la prueba, el cuerpo asimila.")]
+     ["Descanso o partido","descanso",rest("Descanso","",[B("Partido de fútbol","si juegas",{opt:1})])],
+     ["Trote suave","tierra",[runT("run","Trote suave 20 min","Mañana es la prueba: suave.","07:00",runBlocks("20 min suave",1)),T("prep","Preparar la prueba","Que mañana no falte nada.","20:00",[B("Lista","cronómetro, huincha de medir, ropa de recambio, agua"),B("Lugar","barra y pista o tramo de 3,2 km",{pool:!lake||!!ctx.pool})],{kind:"admin"})]],
+     ["Prueba inicial","prueba",null]
     ];
     [title,kind,tasks]=W0[dow];
   } else if(TESTS.includes(w)){
@@ -890,24 +887,24 @@ function dayPlan(w,dow,ctx){
      ["Velocidad suave","tierra",[runT("run","Velocidad suave","Aceleraciones cortas, sin cansarte.","07:00",{blocks:speedBlocks(w).slice(0,2),min:20})]],
      ["Trote suave","tierra",[runT("run","Trote nasal 25 min","Ritmo conversación.","07:00",runBlocks("25 min suave",w))]],
      ["Movilidad","tierra",[T("mov","Movilidad y core suave","Sin carga.","07:00",[B("Movilidad","15 min"),...core(w).slice(0,2)],{kind:"fuerza"})]],
+     ["Descanso","descanso",rest("Descanso","Recuperación y sueño.")],
      ["Descanso","descanso",[...rest("Descanso","Mañana es la prueba: duerme 8–9 h."),T("prep","Preparar la prueba","Que mañana no falte nada.","20:00",[B("Lista","cronómetro, huincha de medir, ropa de recambio, agua"),B("Lugar","barra y pista o tramo de 3,2 km",{pool:!lake||!!ctx.pool})],{kind:"prep"})]],
-     [w===52?"Prueba final":"Prueba de evaluación","prueba",null],
-     ["Descanso activo","descanso",rest("Descanso activo","Recuperación y sueño.")]
+     [w===52?"Prueba final":"Prueba de evaluación","prueba",null]
     ];
     [title,kind,tasks]=TW[dow];
   } else {
     const early=w<=26,r=early?S12[w]:S34[w];
-    // 0 mié pecho · 1 jue pierna · 2 vie espalda · 3 sáb hombros y brazos · 4 dom descanso o partido · 5 lun lago + estiramiento · 6 mar cardio
+    // desde el inicio (lunes): 0 lun pecho · 1 mar pierna · 2 mié espalda · 3 jue hombros y brazos · 4 vie descanso o partido · 5 sáb cardio · 6 dom lago + estiramiento
     if(dow===0){title="Pecho + core";tasks=[T("fa","Pecho + core","","07:00",chestDay(w),{kind:"fuerza"})]}
     if(dow===1){title="Pierna + core";tasks=[T("legs","Pierna + core","","07:00",legDay(w),{kind:"fuerza"})]}
     if(dow===2){title="Espalda + core";tasks=[T("fb","Espalda + core","","07:00",backDay(w,ctx),{kind:"fuerza"})]}
     if(dow===3){title="Hombros y brazos + core";tasks=[T("arms","Hombros y brazos + core","","07:00",armsDay(w),{kind:"fuerza"})]}
     if(dow===4){title="Descanso o partido";kind="descanso";tasks=rest("Descanso","",[B("Partido de fútbol","si juegas",{opt:1})])}
-    if(dow===5&&INC[w]&&incMin(w)>=120){title=INC[w][0];tasks=[T("inc",INC[w][0],"","07:00",incBlocks(w),{kind:"fuerza",safe:"Hidrátate y come antes. Dolor agudo: paras."})]}
-    else if(dow===5){title=INC[w]?"Lago + "+INC[w][0]:"Lago + estiramiento";kind="agua";
+    if(dow===LDOW&&INC[w]&&incMin(w)>=120){title=INC[w][0];tasks=[T("inc",INC[w][0],"","07:00",incBlocks(w),{kind:"fuerza",safe:"Hidrátate y come antes. Dolor agudo: paras."})]}
+    else if(dow===LDOW){title=INC[w]?"Lago + "+INC[w][0]:"Lago + estiramiento";kind="agua";
       tasks=[swimT("swim",w<=13?"Aprender a nadar":"Natación","","07:00",swimBlocks(r[0],w)),treadT(),
         INC[w]?T("inc",INC[w][0],"","10:00",incBlocks(w),{kind:"fuerza",safe:"Hidrátate y come antes. Dolor agudo: paras."}):T("stretch","Estiramiento","","10:00",STRETCH(),{kind:"fuerza"})]}
-    if(dow===6){const c=cardioDay(w,deload);title="Cardio + core";
+    if(dow===5){const c=cardioDay(w,deload);title="Cardio + core";
       tasks=[runT(c.acc?"int":"run",c.acc?"Aceleraciones":"Trote","","07:00",c.run),T("core","Core","","08:00",c.core,{kind:"fuerza"})]}
 
   }
@@ -915,14 +912,12 @@ function dayPlan(w,dow,ctx){
   tasks=tasks.filter(Boolean).map(t=>lake&&t.kind==="agua"&&t.blocks.some(b=>b.m)?lakeify(t,w,ctx):lake&&t.blocks.some(b=>/^Nado [\d.–]+ m$/.test(b.n))?lakeSprint(t,w,ctx):t);
   // nado de la prueba en el lago: con las reglas y el tope de siempre
   if(lake)tasks=tasks.map(t=>t.blocks.some(b=>/^6\. Nado 50 m/.test(b.n))?Object.assign({},t,{blocks:t.blocks.map(b=>/^6\. Nado 50 m/.test(b.n)?Object.assign({},b,{note:(ctx.pool?"En piscina, o en el lago":"En el lago")+": paralelo a la orilla y donde haces pie, con las reglas de siempre. Si el agua está muy fría, queda pendiente."}):b)}):t);
-  if(!["descanso","admin","prueba"].includes(kind)&&w!==HELL&&!TESTS.includes(w)&&!deload&&!(INC[w]&&dow===5)&&!(st>=3&&dow===3))tasks.push(tolT(w));
+  if(!["descanso","admin","prueba"].includes(kind)&&w!==HELL&&!TESTS.includes(w)&&!deload&&!(INC[w]&&dow===LDOW)&&!(st>=3&&dow===3))tasks.push(tolT(w));
   // descarga de las etapas 3 y 4: la fuerza también baja (en la 51, solo movilidad, como dice el PDF)
   if(deload&&st>=3)tasks=tasks.map(t=>!t||!["fa","fb","legs","legs2","arms","core","pt"].includes(t.id)?t:w===51?Object.assign({},t,{t:"Movilidad",why:"Descarga fuerte antes de la prueba final.",blocks:[B("Movilidad","20 min",{tm:1200,note:"Círculos de cadera, hombros y tobillos, gato-vaca y sentadilla profunda. Nada de fuerza esta semana."})]}):Object.assign({},t,{why:(t.why?t.why+" ":"")+"Descarga: menos series."}));
-  if(w===0&&dow===2)tasks.push(tolT(0));
-  if(TESTS.includes(w)&&w>0&&dow===4)tasks.push(T("prep","Preparar la prueba","Que mañana no falte nada.","20:00",[B("Lista","cronómetro, ropa de recambio, agua"),B("Lugar","barra y pista o tramo de 3,2 km",{pool:!lake||!!ctx.pool})],{kind:"prep"}));
-  if(w>=1&&kind!=="descanso"&&w!==HELL&&!(INC[w]&&dow===5))tasks.push(T("ducha","Ducha fría "+cold(w),"Adaptación al frío.","11:15",[B("Agua fría",cold(w),{tm:coldSec(w),note:"Al final de la ducha. Respira lento y largo por la nariz."})],{kind:"rutina"}));
+  if(w>=1&&kind!=="descanso"&&w!==HELL&&!(INC[w]&&dow===LDOW))tasks.push(T("ducha","Ducha fría "+cold(w),"Adaptación al frío.","11:15",[B("Agua fría",cold(w),{tm:coldSec(w),note:"Al final de la ducha. Respira lento y largo por la nariz."})],{kind:"rutina"}));
   tasks.push(T("noche","Noche","Sin pantalla los últimos 30 min.","22:00",[B("Visualización","5 min",{tm:300,note:"La prueba completa, con el cansancio incluido. Te ves terminando."}),B("A la cama","8 h")],{kind:"rutina"}));
-  return {w,dow,title,kind,deload,stage:stageOf(w),tasks,test:kind==="prueba"&&TESTS.includes(w)&&dow===5,lake};
+  return {w,dow,title,kind,deload,stage:stageOf(w),tasks,test:kind==="prueba"&&TESTS.includes(w)&&dow===6,lake};
 }
 // Cansado: menos series y menos tiempo. Con dolor: solo movilidad.
 // menos series sin romper el texto: “N ×”, “N vueltas”, “N en M series”, pirámides con la cima más baja, minutos por cada minuto
@@ -1223,8 +1218,8 @@ function orders(plan,k,isToday,dd){
   if(dd.mode==="dolor"){out.splice(out.findIndex(x=>x[0]==="say"),1,["say",`${N}, hoy se recupera. El que se lesiona no llega al servicio.`])}
   else{if(plan.deload&&plan.kind!=="descanso")out.push(["p","Semana de descarga: la carga baja a propósito. No te la saltes por orgullo."]);
     else if(plan.tasks.some(t=>["fa","legs","fb","arms"].includes(t.id))&&!plan.test)out.push(["p",weekFocus(plan.w)]);
-    if(INC[plan.w]&&plan.dow===5&&dd.mode!=="cansado")out.push(["p","Hoy hay sesión larga de incomodidad. Come bien antes y lleva agua."])}
-  const why=(Store.cfg.why||"").trim(),hard=dd.mode==="cansado"||(INC[plan.w]&&plan.dow===5)||(plan.w===HELL&&plan.kind!=="descanso")||plan.test||plan.kind==="prueba";
+    if(INC[plan.w]&&plan.dow===LDOW&&dd.mode!=="cansado")out.push(["p","Hoy hay sesión larga de incomodidad. Come bien antes y lleva agua."])}
+  const why=(Store.cfg.why||"").trim(),hard=dd.mode==="cansado"||(INC[plan.w]&&plan.dow===LDOW)||(plan.w===HELL&&plan.kind!=="descanso")||plan.test||plan.kind==="prueba";
   if(why&&hard)out.push(["why",why]);
   if(dd.mode==="cansado")out.push(["p","Vas cansado: hoy hay menos series. Cumple esas completas."]);
   if(dd.mode==="dolor")out.push(["p","Con dolor no se entrena lo que duele. Recupera y reporta."]);
@@ -1905,7 +1900,7 @@ function viewGuia(){return `<div class="sec prose"><h2>Guía</h2>
  <li><b>Atleta híbrido:</b> músculo que se note, rápido y explosivo para el fútbol, y con el aguante y la cabeza de un militar. Todo con lo que tienes en casa: mancuernas de 10 kg (una sola puede llevar 20 kg), bandas, colchoneta, rueda, mochila y la barra de la plaza.</li>
  <li><b>Ectomorfo no es una condena:</b> te cuesta más subir de peso, no ganar músculo. Lo que falla casi siempre es comer poco. Por eso la app te da 2 g de proteína por kilo, un batido de masa diario y una meta de peso semanal.</li>
  <li>Si más adelante entras al gimnasio, el plan se adapta: más peso en vez de más repeticiones.</li>
- <li>El día libre (lunes) es para el lago y las pruebas; el domingo, descanso o partido.</li></ul>
+ <li>El domingo (libre) es para el lago y las pruebas; el viernes, descanso o partido.</li></ul>
  <h3>Lo que dice la ciencia y cómo lo usa el plan</h3>
  <div class="tbl"><table><thead><tr><th>Evidencia</th><th>En tu plan</th></tr></thead><tbody>
  <tr><td>El músculo crece igual con pesos livianos o pesados si llegas cerca del fallo; más series por semana dan más crecimiento, hasta unas 10–20 (<a href="https://jssm.org/15-4-715.p_d_f" target="_blank" rel="noopener">Schoenfeld</a>)</td><td>Con mancuernas de 10 kg subes repeticiones, bajas lento y llegas cerca del fallo. 3 → 5 series por ejercicio a lo largo del año, cada músculo 2 veces por semana</td></tr>
@@ -1918,9 +1913,9 @@ function viewGuia(){return `<div class="sec prose"><h2>Guía</h2>
  <tr><td>La máscara de “altura” no simula altura; funciona como entrenador de los músculos respiratorios (<a href="https://jssm.org/15-2-379.p_d_f" target="_blank" rel="noopener">Porcari 2016</a>)</td><td>Tu boquilla nasal: solo en los trotes suaves</td></tr>
  <tr><td>La creatina monohidrato es segura y mejora el rendimiento y las ganancias de músculo (<a href="https://pmc.ncbi.nlm.nih.gov/articles/5469049/" target="_blank" rel="noopener">ISSN 2017</a>)</td><td>Opcional: 3–5 g al día. Coméntalo en tu chequeo médico</td></tr></tbody></table></div>
  <h3>Cómo sube el plan</h3><ul>
- <li><b>Semana:</b> mié pecho + core · jue pierna + core · vie espalda + core · sáb hombros y brazos + core · dom descanso o partido · lun lago + estiramiento · mar cardio (trote a ritmo de conversación; desde la semana 5, aceleraciones cortas semana por medio) + core. Todos los días: inglés 1 hora.</li>
+ <li><b>Semana:</b> lun pecho + core · mar pierna + core · mié espalda + core · jue hombros y brazos + core · vie descanso o partido · sáb cardio (trote a ritmo de conversación; desde la semana 5, aceleraciones cortas semana por medio) + core · dom lago + estiramiento. Todos los días: inglés 1 hora.</li>
  <li><b>Progresión:</b> semana 1 técnica con 2–3 repeticiones en reserva · semana 2 suma 1–2 repeticiones · semana 3 hasta el máximo del rango · semana 4 más peso o una variante más difícil · después, <b>descarga</b> (cerca de la mitad de las series, nada al fallo) y se parte de nuevo. Cuando completas todas las series en el máximo del rango, sube el peso; si no tienes más, baja en 3 s o haz pausas. No subas peso, repeticiones y series a la vez.</li>
- <li><b>Prueba cada 13 semanas</b> (un lunes): flexiones, barras, salto largo, abdominales, 3.200 m, nado 50 m y medidas. Ahí ves en números el músculo que ganaste.</li>
+ <li><b>Prueba cada 13 semanas</b> (un domingo): flexiones, barras, salto largo, abdominales, 3.200 m, nado 50 m y medidas. Ahí ves en números el músculo que ganaste.</li>
  <li><b>Lo militar:</b> sesiones de incomodidad y una semana del infierno adaptada (sem 48), siempre durmiendo 8 h.</li>
  <li><b>Inglés:</b> 1 hora diaria con un tema por semana pensado para el working holiday (entrevista, hostel, trabajos, banco). Para Australia se pide inglés “funcional”, que suele equivaler a IELTS 4,5: confírmalo en el sitio oficial antes de postular.</li></ul>
  <h3>Técnica</h3><ul>

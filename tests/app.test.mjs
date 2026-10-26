@@ -72,7 +72,7 @@ const reload = async p => { await p.reload(); await p.waitForTimeout(200); };
 
 // 4. Ajustes: cambian el plan
 { console.log('4. Ajustes');
-  const { p, ctx } = await page('2026-10-18T09:00:00'); // día 6 de la semana 1 (lunes del plan): lago + piernas B
+  const { p, ctx } = await page('2026-10-19T07:00:00'); // día 7 de la semana 1: lago
   ok((await text(p)).includes('· lago'), 'lago por defecto');
   await p.click('[data-tab="plan"]');
   await p.click('[data-cset="place|piscina"]');
@@ -81,9 +81,9 @@ const reload = async p => { await p.reload(); await p.waitForTimeout(200); };
   const t = await text(p);
   ok(!t.includes('· lago'), 'piscina quita el modo lago');
   ok(!/× \d+ brazadas/.test(t) && t.includes('150 m suave'), 'piscina muestra metros, no brazadas');
-  for (let i = 0; i < 3; i++) await p.click('[data-go="-1"]'); // espalda
+  for (let i = 0; i < 4; i++) await p.click('[data-go="-1"]'); // espalda
   ok((await text(p)).includes('4 × 8'), 'barras = máximo 10 − 2');
-  await reload(p); for (let i = 0; i < 3; i++) await p.click('[data-go="-1"]');
+  await reload(p); for (let i = 0; i < 4; i++) await p.click('[data-go="-1"]');
   ok((await text(p)).includes('4 × 8'), 'el máximo de barras queda guardado');
   await p.click('[data-tab="plan"]');
   ok(await p.inputValue('#c-peso') === '80', 'el peso queda guardado');
@@ -154,17 +154,17 @@ const reload = async p => { await p.reload(); await p.waitForTimeout(200); };
 
 // 9. Prueba de evaluación: resultados y repetir semanas
 { console.log('9. Prueba');
-  const { p, ctx } = await page('2027-01-10T09:00:00'); // semana 13, día 6 con inicio 6 oct
+  const { p, ctx } = await page('2027-01-11T09:00:00'); // semana 13, día 7 (la prueba) con inicio 6 oct
   const t = await text(p);
-  ok(t.includes('SEM 13 · DÍA 6'), 'semana 13 día 6 (' + (t.match(/SEM \d+ · DÍA \d/) || [''])[0] + ')');
+  ok(t.includes('SEM 13 · DÍA 7'), 'semana 13 día 7 (' + (t.match(/SEM \d+ · DÍA \d/) || [''])[0] + ')');
   for (const [id, v] of [['flex', '30'], ['barras', '4'], ['salto', '190'], ['abd', '40'], ['run', '17:00'], ['swim', '1:40']]) await p.fill('#t-' + id, v);
   await p.dispatchEvent('#t-run', 'change');
   ok((await text(p)).includes('No llegaste a la meta'), 'evalúa contra la meta');
   await p.click('[data-ask="rep"]'); await p.click('[data-rep]');
   await p.click('[data-go="1"]');
-  ok((await text(p)).includes('SEM 9 · DÍA 0') || (await text(p)).includes('SEM 13 · DÍA 7'), 'sigue el día 7 de la semana 13');
-  await p.click('[data-go="1"]');
   ok((await text(p)).includes('SEM 9 · DÍA 1'), 'después se repite la semana 9');
+  await p.click('[data-go="1"]');
+  ok((await text(p)).includes('SEM 9 · DÍA 2'), 'y sigue la semana 9');
   await reload(p);
   const sched = await p.evaluate(() => JSON.parse(localStorage.getItem('bitacora-buzo-v1')).cfg.sched);
   ok(sched.slice(13, 19).join() === '13,9,10,11,12,13', 'la repetición queda guardada en el plan (' + sched.slice(13, 19).join() + ')');
@@ -215,7 +215,7 @@ const reload = async p => { await p.reload(); await p.waitForTimeout(200); };
 
 // 13. Registro de adidas Running: ritmo, cumplimiento y guardado
 { console.log('13. Registro de carrera');
-  const { p, ctx, errs } = await page('2026-10-26T07:00:00'); // semana 2, día 7: trote 25 min
+  const { p, ctx, errs } = await page('2026-10-25T07:00:00'); // semana 2, día 6: trote 25 min
   await p.fill('#rl-run-km', '4,4'); await p.fill('#rl-run-t', '27:30');
   const v = await p.$eval('#rlv-run', e => e.textContent);
   ok(v.includes('ritmo 6:15 por km') && v.includes('Cumpliste'), 'calcula ritmo y cumplimiento (' + v + ')');
@@ -258,7 +258,7 @@ const reload = async p => { await p.reload(); await p.waitForTimeout(200); };
   ok(t.includes('Inglés · 1 hora'), 'inglés todos los días');
   await p.click('[data-go="1"]'); t = await text(p);
   ok(t.includes('Pierna + core') && t.includes('Sentadilla búlgara'), 'pierna y core');
-  for (let i = 0; i < 4; i++) await p.click('[data-go="1"]'); t = await text(p);
+  for (let i = 0; i < 5; i++) await p.click('[data-go="1"]'); t = await text(p);
   ok(t.includes('· lago') && t.includes('Estiramiento'), 'el día libre: lago y estiramiento');
   await ctx.close(); }
 { const { p, ctx } = await page('2026-10-13T13:00:00'); // ya pasó la hora del torso y del inglés
@@ -271,7 +271,7 @@ const reload = async p => { await p.reload(); await p.waitForTimeout(200); };
 
 // 16. Progreso: constancia, gráficos, récords y diario
 { console.log('16. Progreso');
-  const { p, ctx, errs } = await page('2026-10-11T09:00:00'); // prueba inicial
+  const { p, ctx, errs } = await page('2026-10-12T09:00:00'); // prueba inicial
   for (const [id, v] of [['flex', '30'], ['barras', '4'], ['salto', '195'], ['abd', '40'], ['run', '16:40'], ['swim', '1:50'], ['brazo', '29']]) await p.fill('#t-' + id, v);
   await p.locator('summary', { hasText: 'Notas' }).click(); await p.fill('#f-note', 'la carrera me costó');
   await p.click('[data-tab="progreso"]');
@@ -455,9 +455,9 @@ const reload = async p => { await p.reload(); await p.waitForTimeout(200); };
   ok(await p.evaluate(() => Object.values((JSON.parse(localStorage.getItem('bitacora-buzo-v1')).days['2026-10-09'] || {}).sets || {}).some(v => v > 0)), 'en la noche siguen las series de la mañana');
   await p.close();
   // domingo 11: prueba inicial; anota resultados, cierra y vuelve
-  p = await open('2026-10-11T08:00:00');
+  p = await open('2026-10-12T08:00:00');
   await p.fill('#t-barras', '7'); await p.fill('#t-run', '11:40'); await p.close();
-  p = await open('2026-10-11T13:00:00');
+  p = await open('2026-10-12T13:00:00');
   ok(await p.inputValue('#t-barras') === '7' && await p.inputValue('#t-run') === '11:40', 'los resultados de la prueba quedan guardados');
   await p.tap('[data-tab="progreso"]');
   const prog = await text(p);
@@ -532,10 +532,10 @@ const reload = async p => { await p.reload(); await p.waitForTimeout(200); };
 { console.log('24. Lago y ajustes');
   const ctx = await browser.newContext({ viewport: { width: 390, height: 1200 } }); const errs = [];
   const open = async (time) => { const p = await ctx.newPage(); p.on('pageerror', e => errs.push(e.message)); await p.clock.install({ time: new Date(time) }); await p.goto(URL); await p.waitForTimeout(250); return p; };
-  let p = await open('2026-10-18T09:00:00');
+  let p = await open('2026-10-19T07:00:00');
   ok((await text(p)).includes('máximo 5 min'), 'en octubre sin neopreno el lago es de 5 min');
   await p.locator('[data-st="done"]').scrollIntoViewIfNeeded(); await p.click('[data-st="done"]'); await p.close();
-  p = await open('2026-10-19T09:00:00');
+  p = await open('2026-10-20T09:00:00');
   await p.click('[data-tab="plan"]'); await p.click('[data-cset="place|piscina"]'); await p.click('[data-tab="hoy"]');
   await p.waitForTimeout(400); await p.click('[data-go="-1"]');
   ok((await text(p)).includes('CUMPLIDO') && (await text(p)).includes('· lago'), 'pasarse a piscina no cambia el día que ya hiciste en el lago');
@@ -546,7 +546,7 @@ const reload = async p => { await p.reload(); await p.waitForTimeout(200); };
   p = await open('2027-03-09T09:00:00');
   ok((await p.evaluate(() => JSON.parse(localStorage.getItem('bitacora-buzo-v1')).cfg.tempK)) === '2027-03-02', 'la temperatura queda con su fecha');
   await p.close();
-  p = await open('2027-07-18T09:00:00');
+  p = await open('2027-07-19T07:00:00');
   ok((await text(p)).includes('Hoy no entras al lago'), 'en julio la temperatura de marzo ya no vale: no se entra');
   await p.close();
   ok(errs.length === 0, 'sin errores: ' + errs.join(' | '));
@@ -555,7 +555,7 @@ const reload = async p => { await p.reload(); await p.waitForTimeout(200); };
 // 25. Plan B: viento en el lago y día enfermo
 { console.log('25. Plan B: viento y enfermo');
   const ctx = await browser.newContext({ viewport: { width: 390, height: 1200 } }); const errs = [];
-  const p = await ctx.newPage(); p.on('pageerror', e => errs.push(e.message)); await p.clock.install({ time: new Date('2026-10-18T08:00:00') }); await p.goto(URL); await p.waitForTimeout(250);
+  const p = await ctx.newPage(); p.on('pageerror', e => errs.push(e.message)); await p.clock.install({ time: new Date('2026-10-19T08:00:00') }); await p.goto(URL); await p.waitForTimeout(250);
   ok((await text(p)).includes('Ida en bicicleta'), 'día de lago: ida en bici');
   await p.click('[data-nolake]'); await p.waitForTimeout(300);
   let t = await text(p);
@@ -565,7 +565,7 @@ const reload = async p => { await p.reload(); await p.waitForTimeout(200); };
   await p.click('[data-mode="enfermo"]'); await p.waitForTimeout(300);
   t = await text(p);
   ok(t.includes('Regla del cuello') && !t.includes('Ida en bicicleta'), 'enfermo: solo la regla del cuello, sin lago');
-  ok((await p.evaluate(() => JSON.parse(localStorage.getItem('bitacora-buzo-v1')).days['2026-10-18'].mode)) === 'enfermo', 'enfermo queda guardado');
+  ok((await p.evaluate(() => JSON.parse(localStorage.getItem('bitacora-buzo-v1')).days['2026-10-19'].mode)) === 'enfermo', 'enfermo queda guardado');
   ok(errs.length === 0, 'sin errores: ' + errs.join(' | '));
   await ctx.close(); }
 
@@ -576,19 +576,19 @@ const reload = async p => { await p.reload(); await p.waitForTimeout(200); };
   const title = p => p.evaluate(() => document.querySelector('#app').textContent);
   let p = await open('2026-10-06T08:00:00');
   await p.locator('[data-st="done"]').scrollIntoViewIfNeeded(); await p.click('[data-st="done"]'); await p.waitForTimeout(300); await p.close();
-  // el 7 no se marcó: el 8 retoma el día 2 (Técnica de piernas)
+  // el 7 no se marcó: el 8 retoma el día 2 (Pierna + core)
   p = await open('2026-10-08T08:00:00'); let t = await title(p);
-  ok(t.includes('Hoy retomas el día de ayer') && t.includes('Técnica de piernas'), 'un día sin marcar se retoma al día siguiente');
+  ok(t.includes('Hoy retomas el día de ayer') && t.includes('Pierna + core'), 'un día sin marcar se retoma al día siguiente');
   await p.click('[data-ydone]'); await p.waitForTimeout(300); t = await title(p);
-  ok(t.includes('Motor aeróbico') && !t.includes('Hoy retomas'), '«sí lo hice ayer» marca ayer y hoy sigue con el día siguiente');
+  ok(t.includes('Espalda + core') && !t.includes('Hoy retomas'), '«sí lo hice ayer» marca ayer y hoy sigue con el día siguiente');
   await p.close();
   // el 9 enfermo: el 10 vuelve a tocar lo mismo del 9
   p = await open('2026-10-09T08:00:00'); t = await title(p);
-  const t9 = t.includes('Hoy retomas') ? 'Motor aeróbico' : '';
-  ok(t9 === 'Motor aeróbico', 'el 8 sin marcar: el 9 retoma el Motor aeróbico');
+  const t9 = t.includes('Hoy retomas') ? 'Espalda + core' : '';
+  ok(t9 === 'Espalda + core', 'el 8 sin marcar: el 9 retoma el Espalda + core');
   await p.click('[data-mode="enfermo"]'); await p.waitForTimeout(300); await p.close();
   p = await open('2026-10-10T08:00:00'); t = await title(p);
-  ok(t.includes('estabas enfermo') && t.includes('Motor aeróbico'), 'después de un día enfermo se retoma el mismo día');
+  ok(t.includes('estabas enfermo') && t.includes('Espalda + core'), 'después de un día enfermo se retoma el mismo día');
   await p.click('[data-tab="plan"]'); t = await title(p);
   ok(t.includes('se retomó al día siguiente'), 'en Plan se ven los días retomados');
   await p.close();
@@ -630,13 +630,13 @@ const reload = async p => { await p.reload(); await p.waitForTimeout(200); };
   await p.close();
   // la prueba con resultados anotados (sin tocar los círculos) no se repite al día siguiente
   const ctx2 = await browser.newContext({ viewport: { width: 390, height: 1200 } });
-  const days = {}; for (let i = 0; i < 5; i++) days['2026-10-' + String(6 + i).padStart(2, '0')] = { status: 'done' };
+  const days = {}; for (let i = 0; i < 6; i++) days['2026-10-' + String(6 + i).padStart(2, '0')] = { status: 'done' };
   await ctx2.addInitScript(([dd]) => { window.__NOSKIP = false; if (!localStorage.getItem('bitacora-buzo-v1')) localStorage.setItem('bitacora-buzo-v1', JSON.stringify({ cfg: { start: '2026-10-06' }, days: dd, pend: {} })); }, [days]);
-  let q = await ctx2.newPage(); q.on('pageerror', e => errs.push(e.message)); await q.clock.install({ time: new Date('2026-10-11T09:00:00') }); await q.goto(URL); await q.waitForTimeout(300);
+  let q = await ctx2.newPage(); q.on('pageerror', e => errs.push(e.message)); await q.clock.install({ time: new Date('2026-10-12T09:00:00') }); await q.goto(URL); await q.waitForTimeout(300);
   await q.click('[data-tset="sinParar|true"]'); await q.waitForTimeout(150);
   ok(await q.locator('[data-tset="sinParar|true"]').evaluate(e => e.classList.contains('on')), 'el Sí de «500 m sin parar» queda marcado');
   await q.fill('#t-barras', '5'); await q.locator('#t-barras').blur(); await q.waitForTimeout(600); await q.evaluate(() => localStorage.getItem('bitacora-buzo-v1')); await q.close();
-  q = await ctx2.newPage(); q.on('pageerror', e => errs.push(e.message)); await q.clock.install({ time: new Date('2026-10-12T09:00:00') }); await q.goto(URL); await q.waitForTimeout(300);
+  q = await ctx2.newPage(); q.on('pageerror', e => errs.push(e.message)); await q.clock.install({ time: new Date('2026-10-13T09:00:00') }); await q.goto(URL); await q.waitForTimeout(300);
   const tq = await q.$eval('#app', e => e.textContent);
   ok(!tq.includes('Hoy retomas'), 'una prueba con resultados anotados no se repite: ' + tq.slice(0, 160) + ' | ' + await q.evaluate(() => localStorage.getItem('bitacora-buzo-v1').slice(0, 400)));
   await q.close(); await ctx2.close();
