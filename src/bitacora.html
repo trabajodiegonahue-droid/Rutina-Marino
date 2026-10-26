@@ -152,6 +152,7 @@ body.guided{padding-bottom:calc(420px + env(safe-area-inset-bottom,0px))}
 .nopeb{display:inline-block;background:var(--bad);color:#fff;font-size:11px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;padding:1px 6px;border-radius:4px;vertical-align:2px}
 .nopebtn{background:none;border:1px solid var(--line);color:var(--muted);border-radius:999px;padding:5px 9px;font-size:13px;white-space:nowrap}.nopebtn.on{border-color:var(--bad);color:var(--bad)}
 .day.solo,.day.other{display:flex;align-items:center;gap:10px}.day.solo .mid,.day.other .mid{flex:1;text-align:left}.day.other{background:rgba(255,176,32,.12);border:1px solid var(--warn);border-radius:8px;padding:8px 10px}.day.other .big{color:var(--warn)}
+.water .vasos{display:flex;flex-wrap:wrap;gap:4px;margin:8px 0}.vaso{background:none;border:0;padding:2px;width:30px;height:34px;color:var(--muted)}.vaso.on{color:#4FC3F7}.vaso svg{width:100%;height:100%}.water.ok{border-color:var(--ok)}
 .daycfg summary{display:flex;justify-content:space-between;align-items:center;gap:8px;list-style:none}.daycfg summary::-webkit-details-marker{display:none}.daycfg .dcv{font-size:14px;color:var(--accent);font-weight:600}.daycfg[open] summary{margin-bottom:8px}.daycfg{padding-block:10px}.daycfg:not([open]) summary{margin:0}
 .order.closed{border-color:var(--bad)}.order.half{border-color:var(--warn)}.stamp.red{border-color:var(--bad);color:var(--bad)}
 .ses.pend{border-color:var(--warn);box-shadow:inset 3px 0 0 var(--warn)}
@@ -982,7 +983,7 @@ const MODES=["","ok","cansado","dolor","enfermo"];
 const fixDay=x=>{if(!isObj(x))return {};if(x.turno!=null&&!SHIFT[String(x.turno)])delete x.turno;if(x.mode!=null&&!MODES.includes(x.mode))delete x.mode;
   ["checks","sets","test","sim","mini","runlog","ctx","undo","tprev","meals","sleep","match","reps","nope"].forEach(f=>{if(x[f]!=null&&!isObj(x[f]))delete x[f]});
   if(x.runlog)Object.keys(x.runlog).forEach(t=>{if(!isObj(x.runlog[t]))delete x.runlog[t]});
-  if(x.ctx&&x.ctx.temp!==""&&x.ctx.temp!=null&&!okTemp(x.ctx.temp))x.ctx.temp="";if(typeof x.note!=="string"&&x.note!=null)delete x.note;return x};
+  if(x.ctx&&x.ctx.temp!==""&&x.ctx.temp!=null&&!okTemp(x.ctx.temp))x.ctx.temp="";if(typeof x.note!=="string"&&x.note!=null)delete x.note;if(x.water!=null&&!(Number.isInteger(+x.water)&&+x.water>=0&&+x.water<=40))delete x.water;return x};
 const fixDays=o=>{Object.keys(o).forEach(k=>{if(!isISO(k))delete o[k];else o[k]=fixDay(o[k])});return o};
 const clone=o=>JSON.parse(JSON.stringify(o||{}));
 const isObj=x=>!!x&&typeof x==="object"&&!Array.isArray(x);
@@ -1517,6 +1518,14 @@ function isPend(t,dd,date){if(taskDone(dd,t)||isNope(dd,t)||!(counts(t)||t.id===
 function curTask(plan,dd){return plan.tasks.find(t=>!taskDone(dd,t)&&!isNope(dd,t))}
 function isLocked(plan,dd,t,date){if(window.__NOLOCK||diffDays(date,today())!==0||taskDone(dd,t)||isNope(dd,t))return false;const c=curTask(plan,dd);if(!c||c.id===t.id)return false;
   return plan.tasks.findIndex(x=>x.id===t.id)>plan.tasks.findIndex(x=>x.id===c.id)}
+// agua del día en vasos de 250 ml: cada toque suma un vaso
+const VASO=250;
+function waterGoal(plan){let L=0;plan.tasks.forEach(t=>t.blocks.forEach(b=>{if(b.n==="Agua del día")L=parseFloat(String(b.p).replace(",","."))||0}));return Math.round((L||2.5)*1000/VASO)}
+function waterHTML(plan,dd){const g=waterGoal(plan),n=Math.max(0,Math.min(40,+dd.water||0)),full=n>=g;
+  return `<div class="card water ${full?"ok":""}"><div class="row" style="justify-content:space-between;align-items:center"><span class="lbl">Agua de hoy</span><span class="mono">${nf(n*VASO)} / ${nf(g*VASO)} ml</span></div>
+  <div class="vasos">${Array.from({length:Math.max(g,n)},(_,i)=>`<button class="vaso ${i<n?"on":""}" data-vaso="${i+1}" aria-label="Vaso ${i+1}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 3h14l-2 18H7z" fill="${i<n?"currentColor":"none"}" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg></button>`).join("")}</div>
+  <div class="row"><button class="btn main" data-water="1" style="flex:2">+ 1 vaso</button><button class="btn" data-water="-1" style="flex:1" ${n?"":"disabled"}>− 1</button></div>
+  <p class="foot">${full?"Meta cumplida.":`Te faltan ${g-n} vasos.`} Una botella de 1 L son 4 vasos.</p></div>`}
 function sesHTML(t,dd,open,pend,st){
   const all=taskDone(dd,t),meta=[t.h,t.min?"~"+Math.round(t.min)+" min":"",t.m?nf(t.m)+" m":""].filter(Boolean).join(" · ");
   if(st==="lock")return `<div class="ses lock"><div class="sh"><span class="chk lk" aria-hidden="true"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 018 0v3"/></svg></span><button class="tog" data-locked="${t.id}"><span class="t">${esc(t.t)}</span>${meta?`<span class="m">${esc(meta)}</span>`:""}</button></div></div>`;
@@ -1581,6 +1590,7 @@ function viewHoy(){
   else{
   if(pend.length)h+=`<div class="pendcard"><b>Pendiente${pend.length>1?"s":""}</b> ${pend.map(t=>`<button class="pendlink" data-open="${t.id}">${esc(t.t)}${t.h?" · "+esc(t.h):""}</button>`).join("")}</div>`;
   h+=plan.tasks.map((t,ti)=>sesHTML(Object.assign({},t,{t:(ti+1)+". "+t.t}),dd,S.open[k+t.id]!=null?S.open[k+t.id]:defOpen(t),pend.includes(t))).join("");}
+  h+=waterHTML(plan,dd);
   if(seq)h+=orderHTML;
   if(plan.test)h+=testForm(plan,k,dd,L);
   h+=resultsHTML(plan,k,dd);
@@ -2113,6 +2123,7 @@ document.addEventListener("click",e=>{
   if(D.nope){const p=planFor(S.date),t=p&&p.tasks.find(x=>x.id===D.nope);if(!t)return;const dd=Store.day(k),n=Object.assign({},dd.nope),now=!n[t.id];n[t.id]=now;
     const patch={nope:n};if(dd.status==="fail")patch.status="";Store.setDay(k,patch);if(now)S.open[k+t.id]=false;render();
     if(now){toast(closedDay(k,p)?"Día cerrado. Mañana sigues.":"Marcado: no pudiste "+t.t.toLowerCase()+".");goCur()}return}
+  if(D.water||D.vaso){const dd=Store.days[k]||{},cur=Math.max(0,+dd.water||0);let n=D.vaso?(+D.vaso===cur?cur-1:+D.vaso):cur+(+D.water);n=Math.max(0,Math.min(40,n));Store.setDay(k,{water:n});render();return}
   if(D.meal){const m=Object.assign({},(Store.days[k]||{}).meals);m[D.meal]=!m[D.meal];Store.setDay(k,{meals:m});render();return}
   if(D.sens){const m=Object.assign({},(Store.days[k]||{}).match);m.sens=m.sens===D.sens?"":D.sens;Store.setDay(k,{match:m});render();return}
   if(D.engadd!==undefined){const el=document.getElementById("eng-s"),v=parseInt(el&&el.value,10);if(!(v>=0&&v<=100)){toast("Escribe el puntaje de EF SET: de 0 a 100.");return}

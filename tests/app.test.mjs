@@ -635,7 +635,9 @@ const reload = async p => { await p.reload(); await p.waitForTimeout(200); };
   let q = await ctx2.newPage(); q.on('pageerror', e => errs.push(e.message)); await q.clock.install({ time: new Date('2026-10-12T09:00:00') }); await q.goto(URL); await q.waitForTimeout(300);
   await q.click('[data-tset="sinParar|true"]'); await q.waitForTimeout(150);
   ok(await q.locator('[data-tset="sinParar|true"]').evaluate(e => e.classList.contains('on')), 'el Sí de «500 m sin parar» queda marcado');
-  await q.fill('#t-barras', '5'); await q.locator('#t-barras').blur(); await q.waitForTimeout(600); await q.evaluate(() => localStorage.getItem('bitacora-buzo-v1')); await q.close();
+  await q.fill('#t-barras', '5'); await q.locator('#t-barras').blur();
+  const saved = await q.waitForFunction(() => { const d = (JSON.parse(localStorage.getItem('bitacora-buzo-v1') || '{}').days || {})['2026-10-12']; return d && d.test && d.test.barras === '5'; }, null, { timeout: 5000 }).then(() => true, () => false);
+  ok(saved, 'el resultado de la prueba se guarda en el teléfono'); await q.close();
   q = await ctx2.newPage(); q.on('pageerror', e => errs.push(e.message)); await q.clock.install({ time: new Date('2026-10-13T09:00:00') }); await q.goto(URL); await q.waitForTimeout(300);
   const tq = await q.$eval('#app', e => e.textContent);
   ok(!tq.includes('Hoy retomas'), 'una prueba con resultados anotados no se repite: ' + tq.slice(0, 160) + ' | ' + await q.evaluate(() => localStorage.getItem('bitacora-buzo-v1').slice(0, 400)));
@@ -760,6 +762,20 @@ const reload = async p => { await p.reload(); await p.waitForTimeout(200); };
   ok((await text(p)).includes('DÍA QUE VIENE') && await p.locator('[data-go="0"]').count() === 1, 'otro día se ve marcado y con «Volver a hoy»');
   await p.click('[data-tab="registro"]'); await p.click('[data-tab="hoy"]'); await p.waitForTimeout(150);
   ok((await text(p)).includes('HOY · MARTES'), 'tocar la pestaña Hoy siempre vuelve a hoy');
+  ok(errs.length === 0, 'sin errores: ' + errs.join(' | '));
+  await ctx.close(); }
+
+// 35. Agua en vasos: cada toque suma 250 ml y queda guardado
+{ const { p, ctx, errs } = await page('2026-10-20T10:00:00');
+  ok(await p.locator('.water [data-vaso]').count() >= 8, 'se ven los vasos de la meta del día');
+  await p.click('[data-water="1"]'); await p.click('[data-water="1"]'); await p.waitForTimeout(100);
+  ok((await p.$eval('.water', e => e.textContent)).includes('500 /'), 'dos vasos = 500 ml');
+  await p.click('[data-vaso="5"]'); await p.waitForTimeout(100);
+  ok(await p.locator('.vaso.on').count() === 5, 'tocar el vaso 5 llena hasta ahí');
+  await reload(p);
+  ok(await p.locator('.vaso.on').count() === 5, 'el agua queda guardada');
+  await p.click('[data-water="-1"]'); await p.waitForTimeout(100);
+  ok(await p.locator('.vaso.on').count() === 4, 'restar un vaso');
   ok(errs.length === 0, 'sin errores: ' + errs.join(' | '));
   await ctx.close(); }
 
