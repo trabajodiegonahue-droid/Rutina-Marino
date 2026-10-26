@@ -860,7 +860,6 @@ function applyShift(plan,turno,kg,o){
   tasks.push(T("despertar","Despertar",sh.late?`Ayer te acostaste a la ${sh.late}: hoy despiertas ${sh.wake} para dormir 8 h. La mañana es más corta: haz primero lo principal.`:`Alarma a las ${sh.wake}, sin posponer.`,sh.wake,[
     B("Levántate",sh.wake,{c:`Levántate a las ${sh.wake} apenas suene la alarma. Sin posponer: es lo primero del día. ${plan.dow===0?"Hoy es el primer día de la semana: pésate en ayunas, después de ir al baño y antes de tomar agua, y anótalo en Notas y peso.":""}`}),
     B("Agua","500 ml",{c:"Toma un vaso grande de agua (500 ml) antes de cualquier otra cosa: llevas 8 horas sin tomar."}),
-    B("Agua del día",N.water.match(/[\d,.]+ litros/)[0],{c:N.water}),
     longInc?B("Desayuno","antes de salir",{c:N.breakfast+"\nHoy la sesión es larga: lleva agua y una colación (plátano, pan con mantequilla de maní) para la mitad."}):B(rest?"Desayuno":"Algo liviano",rest?"tranquilo":"antes de entrenar",{c:rest?N.restBreak:N.pre})],{kind:"rutina"}));
   if(!rest&&!longInc)tasks.push(T("desayuno","Desayuno completo",sh.home?`Al volver del lago (${sh.home}).`:"Después de la sesión principal.",fromMin(Math.max(toMin(sh.B)-25,sh.home?toMin(sh.home):0)),[B("Desayuno","completo",{c:N.breakfast}),B("Batido de masa","con el desayuno",{c:N.shake})],{kind:"rutina"}));
   tasks.push(T("almuerzo","Almuerzo"+(sh.leave?" y colación":""),sh.leave?`Antes de salir al trabajo a las ${sh.leave}.`:"",sh.lunch,[B("Almuerzo","plato completo",{c:N.lunch})].concat(sh.leave?[B("Colación para el trabajo","prepárala ahora",{c:N.snack})]:[]),{kind:"rutina"}));
@@ -868,7 +867,8 @@ function applyShift(plan,turno,kg,o){
   if(!sh.leave&&!plan.test)tasks.push(Object.assign(studyT(plan),{h:fromMin(toMin(sh.lunch)+110)}));
   const key=t=>t.id==="despertar"?-2:t.id==="noche"?1e5:t.h?toMin(t.h)+(toMin(t.h)<240?1440:0):-1;
   tasks.sort((a,b)=>key(a)-key(b));
-  return Object.assign({},plan,{tasks,shift:sh});
+  // el agua del día se lleva en la tarjeta de vasos (al final de Hoy), no como tarea
+  return Object.assign({},plan,{tasks,shift:sh,waterL:parseFloat((N.water.match(/([\d,.]+) litros/)||[,"2,5"])[1].replace(",","."))||2.5});
 }
 
 /* =================== GENERADOR DEL DÍA =================== */
@@ -1533,11 +1533,11 @@ function isPend(t,dd,date){if(taskDone(dd,t)||isNope(dd,t)||!(counts(t)||t.id===
   const n=new Date(),m=n.getHours()*60+n.getMinutes()+(diffDays(n,date)>0?1440:0);let h=toMin(t.h);if(h<240)h+=1440;return m>h+60}
 // hoy se avanza en orden: lo que sigue se desbloquea al marcar lo actual (hecho o «No pude»)
 function curTask(plan,dd){return plan.tasks.find(t=>!taskDone(dd,t)&&!isNope(dd,t))}
-function isLocked(plan,dd,t,date){if(window.__NOLOCK||diffDays(date,today())!==0||taskDone(dd,t)||isNope(dd,t))return false;const c=curTask(plan,dd);if(!c||c.id===t.id)return false;
-  return plan.tasks.findIndex(x=>x.id===t.id)>plan.tasks.findIndex(x=>x.id===c.id)}
+// nada se bloquea: «Ahora» solo marca lo que sigue (Diego prefiere poder marcar en cualquier orden)
+function isLocked(){return false}
 // agua del día en vasos de 250 ml: cada toque suma un vaso
 const VASO=250;
-function waterGoal(plan){let L=0;plan.tasks.forEach(t=>t.blocks.forEach(b=>{if(b.n==="Agua del día")L=parseFloat(String(b.p).replace(",","."))||0}));return Math.round((L||2.5)*1000/VASO)}
+function waterGoal(plan){return Math.round((plan.waterL||2.5)*1000/VASO)}
 function waterHTML(plan,dd){const g=waterGoal(plan),n=Math.max(0,Math.min(40,+dd.water||0)),full=n>=g;
   return `<div class="card water ${full?"ok":""}"><div class="row" style="justify-content:space-between;align-items:center"><span class="lbl">Agua de hoy</span><span class="mono">${nf(n*VASO)} / ${nf(g*VASO)} ml</span></div>
   <div class="vasos">${Array.from({length:Math.max(g,n)},(_,i)=>`<button class="vaso ${i<n?"on":""}" data-vaso="${i+1}" aria-label="Vaso ${i+1}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 3h14l-2 18H7z" fill="${i<n?"currentColor":"none"}" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg></button>`).join("")}</div>
@@ -1607,7 +1607,6 @@ function viewHoy(){
   else{
   if(pend.length)h+=`<div class="pendcard"><b>Pendiente${pend.length>1?"s":""}</b> ${pend.map(t=>`<button class="pendlink" data-open="${t.id}">${esc(t.t)}${t.h?" · "+esc(t.h):""}</button>`).join("")}</div>`;
   h+=plan.tasks.map((t,ti)=>sesHTML(Object.assign({},t,{t:(ti+1)+". "+t.t}),dd,S.open[k+t.id]!=null?S.open[k+t.id]:defOpen(t),pend.includes(t))).join("");}
-  h+=waterHTML(plan,dd);
   if(seq)h+=orderHTML;
   if(plan.test)h+=testForm(plan,k,dd,L);
   h+=resultsHTML(plan,k,dd);
@@ -1633,6 +1632,8 @@ function viewHoy(){
      h+=`<div class="order ${dd.status==="fail"?"closed":"half"}"><p class="say" style="color:var(${dd.status==="fail"?"--bad":"--warn"})">${dd.status==="fail"?"✗ Día incompleto":"◐ Día a medias"}</p><p>Hiciste ${dn} de ${core.length}.${miss.length?" Faltó: "+esc(miss.join(", "))+".":""} ${dd.status==="fail"?"Mañana se repite este día.":"Mañana sigues con el plan."}</p></div>`}
    if(seqT&&!closedDay(k,plan)&&status!=="done"&&status!=="injury"&&!dd.status)h+=`<button class="btn main" data-close style="width:100%">Cerrar el día</button><p class="foot" style="text-align:center">La app revisa lo que marcaste y te dice si quedó completo, a medias o incompleto.</p>`;
    else if(!closedDay(k,plan))h+=`<div class="row">${status==="done"||status==="injury"||dd.status?"":`<button class="btn main" data-st="done" style="flex:2">Cumplí todo</button>`}${dd.status==="fail"?`<button class="btn sm" data-st="">Quitar “no cumplí”</button>`:dd.status==="part"?`<button class="btn sm" data-st="">Reabrir el día</button>`:status==="done"||status==="injury"?(S.confirm==="clear"?`<button class="btn sm main" data-st="" data-clear="1">Sí, desmarcar</button><button class="btn sm" data-cancel>No</button>`:`<button class="btn sm" data-ask="clear">Desmarcar el día</button>`):`${past?`<button class="btn" data-close style="flex:1">Cerrar el día</button>`:""}${diffDays(d,today())>0?"":`<button class="btn" data-st="fail" style="flex:1">${past?"No pude ese día":"Hoy no pude"}</button>`}`}</div>`}
+  // lo que se va sumando durante el día va al final
+  h+=waterHTML(plan,dd);
   return h;
 }
 function testForm(plan,k,dd,L){

@@ -704,16 +704,16 @@ const reload = async p => { await p.reload(); await p.waitForTimeout(200); };
   ok(errs.length === 0, 'sin errores: ' + errs.join(' | '));
   await ctx.close(); }
 
-// 31. Hoy se avanza en orden: lo siguiente está bloqueado hasta marcar lo actual (hecho o «No pude»)
+// 31. Hoy se avanza en orden con «Ahora», pero nada se bloquea
 { const ctx = await browser.newContext({ viewport: { width: 390, height: 1200 } });
   await ctx.addInitScript(() => { window.__NOLOCK = false; });
   const p = await ctx.newPage(); const errs = []; p.on('pageerror', e => errs.push(e.message));
   await p.clock.install({ time: new Date('2026-10-20T09:30:00') }); await p.goto(URL); await p.waitForTimeout(200);
   const cur = () => p.$eval('.ses.cur .t', e => e.textContent).catch(() => '');
   ok((await cur()).includes('Despertar'), 'lo primero es despertar: ' + await cur());
-  ok(await p.locator('.ses.lock').count() >= 3, 'lo que sigue está bloqueado');
-  await p.locator('.ses.lock .tog').first().click(); await p.waitForTimeout(100);
-  ok((await p.$eval('#toast', e => e.textContent)).includes('Primero termina'), 'tocar algo bloqueado avisa qué va primero');
+  ok(await p.locator('.ses.lock').count() === 0, 'nada queda bloqueado');
+  await p.locator('[data-open="ingles"]').first().click(); await p.waitForTimeout(100);
+  ok(await p.locator('[data-rp], .ses .sb').count() >= 1 && (await text(p)).includes('Vocabulario'), 'se puede abrir cualquier tarea aunque no sea la de «Ahora»');
   await p.click('.ses.cur .nextrow [data-task]'); await p.waitForTimeout(450);
   ok((await cur()).includes('Pecho'), 'después de despertar sigue el entrenamiento: ' + await cur());
   ok(await p.locator('.ses.done').count() === 1, 'lo hecho queda tachado');
@@ -768,6 +768,8 @@ const reload = async p => { await p.reload(); await p.waitForTimeout(200); };
 // 35. Agua en vasos: cada toque suma 250 ml y queda guardado
 { const { p, ctx, errs } = await page('2026-10-20T10:00:00');
   ok(await p.locator('.water [data-vaso]').count() >= 8, 'se ven los vasos de la meta del día');
+  ok(await p.evaluate(() => { const w = document.querySelector('.water'), all = [...document.querySelectorAll('#app > *')]; return all.indexOf(w) === all.length - 1; }), 'el agua va al final de Hoy');
+  ok(!(await text(p)).includes('Agua del día'), 'el agua ya no es un paso de «Despertar»');
   await p.click('[data-water="1"]'); await p.click('[data-water="1"]'); await p.waitForTimeout(100);
   ok((await p.$eval('.water', e => e.textContent)).includes('500 /'), 'dos vasos = 500 ml');
   await p.click('[data-vaso="5"]'); await p.waitForTimeout(100);
