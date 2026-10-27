@@ -731,6 +731,21 @@ function intervalBlocks(w){const st=stN(w),dl=DELOAD.includes(w);
   const n=st===3?8:10;return {blocks:[B("Calentamiento","10 min trote suave + 3 aceleraciones"),B(`${n} × 30 m`,"sprint, 25 s de pausa",{s:n,r:25,note:"Sprints repetidos, como en un partido: 30 m a tope, 25 s caminando y otra vez. Es lo que te deja seguir corriendo en el minuto 85."}),B("Vuelta a la calma","8 min trote suave"),ELONG],min:30}}
 function z2Blocks(w){const mi=Math.min(55,25+Math.floor(w/2)*2);return {blocks:[B("Trote nasal",`${mi} min`,{tm:mi*60,note:"Solo respirando por la nariz (puedes usar la boquilla de respirar por la nariz). Si tienes que abrir la boca, bajas el ritmo. Es el motor aeróbico: recuperarte entre sprints."}),ELONG],min:mi+5,goal:{type:"cont",min:mi,max:mi}}}
 const ENG_TOP=["Presentarte: quién eres, de dónde vienes, qué haces","Tu rutina diaria (presente simple)","Contar qué hiciste ayer (pasado simple)","Planes y futuro (going to / will)","Hacer preguntas (do, does, did, what, where, how)","Entrevista de trabajo: experiencia y fortalezas","En el hostel y el aeropuerto","Pedir y dar indicaciones","Trabajo en cafetería y restaurante","Trabajo en el campo y la cosecha (fruit picking)","Construcción y trabajo físico: seguridad y herramientas","Llamar por teléfono y dejar un mensaje","Abrir cuenta en el banco y trámites","Ir al médico y la farmacia","Present perfect: experiencias (have you ever…?)","Comparar (bigger, the best) y opinar","Hablar de deporte y fútbol","Escribir un correo formal y tu CV en inglés"];
+// aprender a vender: un tema por semana y una misión para probarlo en la pega
+const VENTA=[["Escuchar al cliente","Pregunta y escucha antes de recomendar.","Hoy, en 3 mesas, pregunta «¿qué les gusta?» antes de ofrecer algo."],
+  ["Recomendar con seguridad","Recomienda 1 cosa concreta, con una razón, no una lista.","Hoy recomienda un trago o plato con una frase: «el … está muy bueno porque …»."],
+  ["Ofrecer algo más (upsell)","Ofrece un complemento cuando tiene sentido, no siempre.","Ofrece postre o café en todas las mesas al retirar los platos y cuenta cuántos aceptan."],
+  ["Lenguaje corporal","Sonrisa, contacto visual, postura abierta, nombre del cliente.","Mira a los ojos y sonríe al saludar en cada mesa. Anota si cambia la propina."],
+  ["Manejar objeciones","«Es caro», «no sé»: entiende el motivo y ofrece otra opción.","Cuando alguien dude, pregunta «¿qué prefieres, algo más suave o más dulce?»."],
+  ["Cerrar la venta","Ayuda a decidir: dos opciones claras en vez de «¿qué quieres?».","Hoy ofrece siempre 2 opciones concretas al tomar el pedido."],
+  ["Contar una historia","Una frase de dónde viene el producto vende más que el precio.","Aprende la historia de 2 tragos de la carta y cuéntala."],
+  ["Clientes difíciles","Calma, escuchar, disculpa breve y solución.","Ante un reclamo: escucha sin interrumpir, repite lo que entendiste y propone algo."],
+  ["Fidelizar","Que vuelvan: recordar nombres y gustos.","Recuerda el nombre y el pedido de un cliente que repite."],
+  ["Números","Venta promedio por mesa, propinas, qué se vende más.","Anota en tus notas cuántas mesas atendiste y tus propinas de hoy."],
+  ["Negociar","Saber lo que quieres, escuchar lo que quiere el otro, buscar un acuerdo.","Lee o mira 10 min sobre negociación y anota 3 ideas."],
+  ["Confianza","Vender es ayudar: cree en lo que ofreces.","Prueba los productos que más vendes para recomendarlos de verdad."]];
+function ventaT(plan){const n=Math.max(0,plan.w),v=VENTA[n%VENTA.length];
+  return T("venta","Aprender a vender · 15 min",`Tema de la semana: ${v[0]}.`,"",[B("Aprende",v[0],{tm:600,c:v[1]+" Busca un video corto o un artículo de este tema y anota la idea principal."}),B("Misión en la pega","pruébalo hoy",{c:v[2]})],{kind:"rutina"})}
 function englishT(plan){const n=Math.max(0,plan.w)*7+plan.dow,top=ENG_TOP[Math.floor(n/7)%ENG_TOP.length];
   return T("ingles","Inglés · 1 hora",`Para tu working holiday. Tema de la semana: ${top}.`,"",[
     B("Vocabulario","15 min",{tm:900,c:`10 palabras o frases nuevas del tema de la semana (${top}) en tu mazo de Anki (gratis) o en tu cuaderno, y repasa las de días anteriores. Cada palabra con una frase de ejemplo tuya.`}),
@@ -877,6 +892,7 @@ function applyShift(plan,turno,kg,o){
   tasks.push(T("almuerzo","Almuerzo"+(sh.leave?" y colación":""),sh.leave?`Antes de salir al trabajo a las ${sh.leave}.`:"",sh.lunch,[B("Almuerzo","plato completo",{c:N.lunch})].concat(sh.leave?[B("Colación para el trabajo","prepárala ahora",{c:N.snack})]:[]),{kind:"rutina"}));
   tasks.push(Object.assign(englishT(plan),{h:sh.leave?sh.B:fromMin(toMin(sh.lunch)+45)}));
   if(!sh.leave&&!plan.test)tasks.push(Object.assign(studyT(plan),{h:fromMin(toMin(sh.lunch)+110)}));
+  if(!plan.test)tasks.push(Object.assign(ventaT(plan),{h:fromMin(toMin(sh.leave?sh.C:sh.lunch)+(sh.leave?0:200))}));
   // lo de todos los días: perro, casa, pausas en la pega
   tasks.push(T("perro","Sacar al perro","",fromMin(toMin(sh.wake)+20),[B("Paseo","15–20 min",{tm:1200,c:"Caminata tranquila: también te sirve de movilidad antes de entrenar."})],{kind:"rutina"}));
   tasks.push(T("casa","Tareas de la casa","",fromMin(toMin(sh.B)+65),[B("Ordena tu pieza y ayuda","15 min",{tm:900,c:"Cama hecha, ropa en su lugar, loza o lo que toque en la casa."})],{kind:"rutina"}));
@@ -1017,7 +1033,7 @@ const MODES=["","ok","cansado","dolor","enfermo"];
 const fixDay=x=>{if(!isObj(x))return {};if(x.turno!=null&&!SHIFT[String(x.turno)])delete x.turno;if(x.mode!=null&&!MODES.includes(x.mode))delete x.mode;
   ["checks","sets","test","sim","mini","runlog","ctx","undo","tprev","meals","sleep","match","reps","nope","kg"].forEach(f=>{if(x[f]!=null&&!isObj(x[f]))delete x[f]});
   if(x.runlog)Object.keys(x.runlog).forEach(t=>{if(!isObj(x.runlog[t]))delete x.runlog[t]});
-  if(x.ctx&&x.ctx.temp!==""&&x.ctx.temp!=null&&!okTemp(x.ctx.temp))x.ctx.temp="";if(typeof x.note!=="string"&&x.note!=null)delete x.note;if(x.water!=null&&!(Number.isInteger(+x.water)&&+x.water>=0&&+x.water<=40))delete x.water;if(x.partido!=null&&typeof x.partido!=="boolean")delete x.partido;return x};
+  if(x.ctx&&x.ctx.temp!==""&&x.ctx.temp!=null&&!okTemp(x.ctx.temp))x.ctx.temp="";if(typeof x.note!=="string"&&x.note!=null)delete x.note;if(x.water!=null&&!(Number.isInteger(+x.water)&&+x.water>=0&&+x.water<=40))delete x.water;if(x.partido!=null&&typeof x.partido!=="boolean")delete x.partido;if(x.viaje!=null&&typeof x.viaje!=="boolean")delete x.viaje;return x};
 const fixDays=o=>{Object.keys(o).forEach(k=>{if(!isISO(k))delete o[k];else o[k]=fixDay(o[k])});return o};
 const clone=o=>JSON.parse(JSON.stringify(o||{}));
 const isObj=x=>!!x&&typeof x==="object"&&!Array.isArray(x);
@@ -1161,7 +1177,7 @@ const Store={mode:"local",cfg:defCfg(),days:{},pend:{},ver:{},recent:{},remote:{
    no avanza el plan; al día siguiente se retoma el mismo. Los descansos que pasan siempre avanzan. ---- */
 let SK=null;
 function missedDay(k,d){const p=planFor(d);if(!p||p.kind==="descanso")return false;const dd=Store.days[k]||{};
-  if(dd.mode==="enfermo"||dd.mode==="dolor")return true;const s=dayStatus(k,p);return s==="fail"||s===""}
+  if(dd.mode==="enfermo"||dd.mode==="dolor")return true;const s=dayStatus(k,p);return s==="fail"||s===""||s==="viaje"}
 // un día con algo marcado guarda qué día del plan le tocó (pn): corregir un día viejo no reescribe los demás
 const frozenN=dd=>dd&&Number.isInteger(dd.pn)&&dd.pn>=0?dd.pn:null;
 function skipData(){if(SK)return SK;const st=parse(Store.cfg.start),td=today(),len=Store.cfg.sched.length,pre=diffDays(td,st)<0;
@@ -1197,7 +1213,11 @@ function ctxFor(date){const c=Store.cfg,dd=Store.days[iso(date)],fz=dd&&dd.ctx&&
 // trabajas de martes a sábado: domingo y lunes son libres salvo que marques otro turno ese día
 const OFF=[0,1];const turnoOf=d=>(Store.days[iso(d)]||{}).turno||(OFF.includes(d.getDay())?"libre":Store.cfg.turno);
 let PLANC={};
-function planFor(date){const ck=iso(date);if(ck in PLANC)return PLANC[ck];const p=planFor0(date);return PLANC[ck]=p&&(Store.days[ck]||{}).partido?matchDay(p):p}
+function planFor(date){const ck=iso(date);if(ck in PLANC)return PLANC[ck];const p=planFor0(date);const dd=Store.days[ck]||{};return PLANC[ck]=p&&dd.viaje?travelDay(p):p&&dd.partido?matchDay(p):p}
+// día de viaje (Temuco): el entrenamiento de ese día se corre al día siguiente; si puedes, un circuito corto sin equipo
+function travelDay(p){const keep=p.tasks.filter(t=>["despertar","noche"].includes(t.id));
+  const c=T("viaje","Circuito de viaje (si puedes)","","",[B("Flexiones","3 × 15",{s:3,r:45}),B("Sentadillas","3 × 20",{s:3,r:45}),B("Zancadas","3 × 10 por pierna",{s:3,r:45}),B("Plancha","3 × 40 s",{s:3,r:30,tm:40}),B("Estirar: cuádriceps y cadera","2 × 30 s por lado",{s:4,tm:30})],{kind:"rutina"});
+  return Object.assign({},p,{title:"Viaje",kind:"viaje",tasks:[keep[0],c,keep[1]].filter(Boolean)})}
 // día de partido: el entrenamiento de ese día se cambia por el partido, con lo de antes y lo de después
 function matchDay(p){const keep=p.tasks.filter(t=>t.kind==="rutina"||t.kind==="estudio"||["despertar","desayuno","almuerzo","noche"].includes(t.id));
   const tr=p.tasks.find(t=>!keep.includes(t)&&t.h),h=tr?tr.h:(p.shift&&p.shift.A)||"10:00";
@@ -1224,6 +1244,7 @@ function units(dd,plan){let a=0,b=0;plan.tasks.filter(counts).forEach(t=>{const 
 const isNope=(dd,t)=>!!dd&&!!(dd.nope||{})[t.id]&&!taskDone(dd,t);
 function closedDay(k,plan){const d=Store.days[k];if(!plan||!d||d.status)return false;const core=plan.tasks.filter(counts);return core.every(t=>taskDone(d,t)||isNope(d,t))&&core.some(t=>isNope(d,t))}
 function dayStatus(k,plan){if(!plan)return "";const d=Store.days[k],core=plan.tasks.filter(counts);
+  if(plan.kind==="viaje")return (d&&d.status)||"viaje";
   if(d&&d.status)return d.status;
   // un descanso que ya pasó cuenta como cumplido, salvo que marques “no pude”
   if(plan.kind==="descanso"&&diffDays(parse(k),today())<0)return "done";
@@ -1236,7 +1257,7 @@ const okSt=s=>s==="done"||s==="injury";
 // “hoy” para la bitácora: si ayer saliste del trabajo después de medianoche (turno 16), hasta las 4:00 sigue siendo ayer
 function today(){const n=new Date();if(n.getHours()<4){const y=addDays(n,-1),ys=SHIFT[turnoOf(y)];if(ys&&ys.back&&toMin(ys.bed)<300)return y}return n}
 function streak(){let d=today(),n=0;const s0=dayStatus(iso(d),planFor(d));if(s0==="fail")return 0;if(!okSt(s0))d=addDays(d,-1);
-  for(let i=0;i<800;i++){if(locate(d).before)break;const pd=planFor(d);if(okSt(dayStatus(iso(d),pd))){n++;d=addDays(d,-1)}else if(closedDay(iso(d),pd))d=addDays(d,-1);else break}return n}
+  for(let i=0;i<800;i++){if(locate(d).before)break;const pd=planFor(d);if(okSt(dayStatus(iso(d),pd))){n++;d=addDays(d,-1)}else if(closedDay(iso(d),pd)||(Store.days[iso(d)]||{}).viaje)d=addDays(d,-1);else break}return n}
 function compliance(){const td=today();let tot=0,ok=0;for(let d=parse(Store.cfg.start);diffDays(d,td)<0;d=addDays(d,1)){const p=planFor(d);if(!p)break;tot++;if(okSt(dayStatus(iso(d),p)))ok++}return tot?Math.round(ok/tot*100):null}
 
 /* =================== VOZ DEL COMANDANTE =================== */
@@ -1512,7 +1533,7 @@ window.addEventListener("focus",followToday);
 setInterval(followToday,60000);
 try{const t=sessionStorage.getItem("bit-tab");if(t&&["hoy","plan","registro","progreso","guia"].includes(t))S.tab=t}catch(e){}
 let toastT;function toast(m){const el=document.getElementById("toast");el.textContent=m;el.hidden=false;clearTimeout(toastT);toastT=setTimeout(()=>{el.hidden=true},3500)}
-function chip(s){const m={done:"Cumplido",fail:"No cumplido",injury:"Recuperación",part:"A medias"};return `<span class="chip ${s||""}">${s?m[s]:"Pendiente"}</span>`}
+function chip(s){const m={done:"Cumplido",fail:"No cumplido",injury:"Recuperación",part:"A medias",viaje:"Viaje"};return `<span class="chip ${s||""}">${s?m[s]:"Pendiente"}</span>`}
 
 function exHTML(t,b,i,dd,all){
   const n=all?b.s:blockDone(dd,t,i);let ctl="";
@@ -1627,7 +1648,8 @@ function viewHoy(){
     {const hs=sleepH(dd.sleep);if(hs!=null&&hs<7&&!dd.mode)h+=`<p class="alert">Dormiste ${fmtH(hs)}: marca «Cansado».</p>`}
     if(dd.nolake||plan.tasks.some(t=>t.blocks.some(b=>b.n==="Ida en bicicleta")))h+=`<div class="sec"><button class="btn ${dd.nolake?"main":""}" data-nolake>${dd.nolake?"✓ Hoy no entro al lago (toca para deshacer)":"Hay viento, olas o tormenta: hoy no entro al lago"}</button><p class="foot">${dd.nolake?"La sesión de agua cambió a técnica en seco en la casa.":"Míralo por la ventana o en el pronóstico antes de salir. Si hay viento con olas, lluvia fuerte, truenos o neblina, tócalo: te doy el plan B."}</p></div>`;
   }
-  h+=`<button class="btn sm ${dd.partido?"main":""}" data-partido style="align-self:flex-start">${dd.partido?"✓ Hoy juego partido (toca para deshacer)":"⚽ Hoy juego partido"}</button>`;
+  h+=`<div class="row"><button class="btn sm ${dd.partido?"main":""}" data-partido>${dd.partido?"✓ Partido (deshacer)":"⚽ Hoy juego partido"}</button><button class="btn sm ${dd.viaje?"main":""}" data-viaje>${dd.viaje?"✓ Viaje (deshacer)":"🚌 Hoy viajo a Temuco"}</button></div>`;
+  if(dd.viaje)h+=`<p class="foot">Día con tu polola: el entrenamiento de hoy se corre a mañana, no se pierde y la racha no se corta. Si tienes 20 min, haz el circuito.</p>`;
   if(isToday&&plan.shift){const nl=nowLineText(plan);if(nl)h+=`<p class="nowline" id="now-line">${esc(nl)}</p>`}
   const pct=u.b?Math.round(u.a/u.b*100):0,cT=seq?curTask(plan,dd):null;
   if(!seq)h+=`<div class="prog"><div class="row"><span class="lbl">${esc(plan.title)} · ${u.a}/${u.b} series</span><span class="mono">${pct}%</span></div><div class="bar"><i style="width:${pct}%"></i></div></div>`;
@@ -2269,6 +2291,7 @@ document.addEventListener("click",e=>{
   if(D.nope){const p=planFor(S.date),t=p&&p.tasks.find(x=>x.id===D.nope);if(!t)return;const dd=Store.day(k),n=Object.assign({},dd.nope),now=!n[t.id];n[t.id]=now;
     const patch={nope:n};if(dd.status==="fail")patch.status="";Store.setDay(k,patch);if(now)S.open[k+t.id]=false;render();
     if(now){toast(closedDay(k,p)?"Día cerrado. Mañana sigues.":"Marcado: no pudiste "+t.t.toLowerCase()+".");goCur()}return}
+  if(D.viaje!==undefined){const dd=Store.day(k);Store.setDay(k,{viaje:!dd.viaje,partido:false});render();toast(dd.viaje?"Volviste al plan del día.":"Día de viaje: el entrenamiento se corre a mañana.");return}
   if(D.partido!==undefined){const dd=Store.day(k);Store.setDay(k,{partido:!dd.partido});render();toast(dd.partido?"Volviste al plan del día.":"Día de partido: comida antes, calentamiento y elongación después.");return}
   if(D.water||D.vaso){const dd=Store.days[k]||{},cur=Math.max(0,+dd.water||0);let n=D.vaso?(+D.vaso===cur?cur-1:+D.vaso):cur+(+D.water);n=Math.max(0,Math.min(40,n));Store.setDay(k,{water:n});render();return}
   if(D.buy){const c=Store.cfg.compras||{},wk=weekKey(),ok=Object.assign({},c.w===wk?c.ok:{});ok[D.buy]=!ok[D.buy];Store.setCfg({compras:{w:wk,ok}});render();return}

@@ -868,6 +868,25 @@ const reload = async p => { await p.reload(); await p.waitForTimeout(200); };
   ok(errs.length === 0, 'sin errores: ' + errs.join(' | '));
   await ctx.close(); }
 
+// 39. Día de viaje (Temuco): el entrenamiento se corre a mañana y la racha no se corta; aprender a vender
+{ const ctx = await browser.newContext({ viewport: { width: 390, height: 1400 } }); const errs = [];
+  await ctx.addInitScript(() => { window.__NOSKIP = false; });
+  const days = { '2026-10-06': { status: 'done' }, '2026-10-07': { status: 'done' } };
+  await ctx.addInitScript(([dd]) => { if (!localStorage.getItem('bitacora-buzo-v1')) localStorage.setItem('bitacora-buzo-v1', JSON.stringify({ cfg: { start: '2026-10-06' }, days: dd, pend: {} })); }, [days]);
+  let p = await ctx.newPage(); p.on('pageerror', e => errs.push(e.message)); await p.clock.install({ time: new Date('2026-10-08T09:00:00') }); await p.goto(URL); await p.waitForTimeout(300);
+  const t0 = await text(p);
+  ok(t0.includes('Aprender a vender'), 'aprender a vender en el día');
+  const plan0 = (t0.match(/SEM \d+ · DÍA \d/) || [''])[0];
+  await p.click('[data-viaje]'); await p.waitForTimeout(150);
+  ok((await text(p)).includes('Circuito de viaje') && (await text(p)).includes('Racha 2'), 'día de viaje: circuito opcional y la racha sigue');
+  await p.close();
+  p = await ctx.newPage(); p.on('pageerror', e => errs.push(e.message)); await p.clock.install({ time: new Date('2026-10-09T09:00:00') }); await p.goto(URL); await p.waitForTimeout(300);
+  const t1 = await text(p);
+  ok(t1.includes('Hoy retomas') && (t1.match(/SEM \d+ · DÍA \d/) || [''])[0] === plan0, 'al día siguiente toca lo que no hiciste por el viaje: ' + plan0);
+  ok(t1.includes('Racha 2'), 'la racha no se cortó por el viaje');
+  ok(errs.length === 0, 'sin errores: ' + errs.join(' | '));
+  await ctx.close(); }
+
 await browser.close();
 console.log(`\n${passes} correctas, ${fails} fallidas`);
 process.exit(fails ? 1 : 0);
