@@ -913,6 +913,37 @@ const reload = async p => { await p.reload(); await p.waitForTimeout(200); };
   ok((await text(p)).includes('Práctica militar'), 'práctica militar semanal desde ya');
   await ctx.close(); }
 
+// 41. Imprevistos: por qué no pudiste, poco tiempo, urgencia y pausa
+{ const ctx = await browser.newContext({ viewport: { width: 390, height: 1400 } }); const errs = [];
+  await ctx.addInitScript(() => { window.__NOSKIP = false; window.__NOLOCK = false; });
+  const days = { '2026-10-06': { status: 'done' }, '2026-10-07': { status: 'done' } };
+  await ctx.addInitScript(([dd]) => { if (!localStorage.getItem('bitacora-buzo-v1')) localStorage.setItem('bitacora-buzo-v1', JSON.stringify({ cfg: { start: '2026-10-06' }, days: dd, pend: {} })); }, [days]);
+  let p = await ctx.newPage(); p.on('pageerror', e => errs.push(e.message)); await p.clock.install({ time: new Date('2026-10-08T09:00:00') }); await p.goto(URL); await p.waitForTimeout(300);
+  // poco tiempo: versión exprés
+  await p.click('[data-express]'); await p.waitForTimeout(150);
+  let t = await text(p);
+  ok(t.includes('(exprés)') && !t.includes('Tolerancia al dolor'), 'versión exprés: lo esencial');
+  await p.click('[data-express]'); await p.waitForTimeout(150);
+  // «No pude» pregunta por qué y da un consejo
+  await p.click('[data-nope="ingles"]'); await p.waitForTimeout(150);
+  await p.click('[data-nwhy="tiempo"]'); await p.waitForTimeout(150);
+  ok((await text(p)).includes('20 minutos valen más que cero'), '«No pude» pregunta por qué y aconseja');
+  // cerrar el día sin nada hecho y elegir urgencia: no corta la racha y se repite
+  await p.click('[data-close]'); await p.waitForTimeout(150);
+  await p.click('[data-dwhy="urgencia"]'); await p.waitForTimeout(150);
+  ok((await text(p)).includes('la racha no se corta') || (await text(p)).includes('tu racha no se corta'), 'urgencia: el día se corre y la racha sigue');
+  await p.close();
+  p = await ctx.newPage(); p.on('pageerror', e => errs.push(e.message)); await p.clock.install({ time: new Date('2026-10-09T09:00:00') }); await p.goto(URL); await p.waitForTimeout(300);
+  t = await text(p);
+  ok(t.includes('Hoy retomas') && t.includes('Racha 2'), 'después de una urgencia se retoma y la racha sigue: ' + (t.match(/Racha \d+/) || [''])[0]);
+  ok(t.includes('Ayer te faltó tiempo'), 'el preparador recuerda el motivo de ayer');
+  // pausa del plan
+  await p.click('[data-tab="plan"]'); await p.fill('#c-pd', '2026-10-09'); await p.fill('#c-ph', '2026-10-12'); await p.click('[data-tab="hoy"]'); await p.waitForTimeout(150);
+  ok((await text(p)).includes('Plan en pausa'), 'pausar el plan');
+  await p.click('[data-tab="progreso"]'); ok((await text(p)).includes('Por qué no entrenas'), 'Progreso muestra los motivos');
+  ok(errs.length === 0, 'sin errores: ' + errs.join(' | '));
+  await ctx.close(); }
+
 await browser.close();
 console.log(`\n${passes} correctas, ${fails} fallidas`);
 process.exit(fails ? 1 : 0);

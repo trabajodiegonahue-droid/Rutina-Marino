@@ -164,6 +164,7 @@ body.guided{padding-bottom:calc(420px + env(safe-area-inset-bottom,0px))}
 .tr{font-weight:700;width:18px;text-align:center}.tr.up{color:var(--ok)}.tr.down{color:var(--bad)}.reps .rec{flex-basis:100%;color:var(--accent)}
 .card.sum .li{display:grid;grid-template-columns:1fr auto 20px;gap:10px;align-items:center;padding:8px 10px}
 .wk{width:100%;border-collapse:collapse;font-size:14px;margin:8px 0}.wk td,.wk th{padding:5px 3px;text-align:center;border-bottom:1px solid var(--line)}.wk th{font-size:11px;color:var(--muted);font-weight:600;text-transform:uppercase}.wk td.wk-t{text-align:left;font-size:12px;color:var(--muted)}.wk-today td{background:var(--chip)}.wk-y{color:var(--ok);font-weight:700}.wk-x{color:var(--bad);font-weight:700}.wk-n{color:var(--muted)}
+.whyb{border-top:1px dashed var(--line)}.segs.why .seg{font-size:13px;padding:6px 8px}
 .hq .cd{font-size:12px;color:var(--muted);margin-top:2px}.hq .cd b{color:var(--accent)}
 .daycfg summary{display:flex;justify-content:space-between;align-items:center;gap:8px;list-style:none}.daycfg summary::-webkit-details-marker{display:none}.daycfg .dcv{font-size:14px;color:var(--accent);font-weight:600}.daycfg[open] summary{margin-bottom:8px}.daycfg{padding-block:10px}.daycfg:not([open]) summary{margin:0}
 .order.closed{border-color:var(--bad)}.order.half{border-color:var(--warn)}.stamp.red{border-color:var(--bad);color:var(--bad)}
@@ -1043,22 +1044,22 @@ const fixCfg=c=>{const d=defCfg();if(c.start==="2026-10-05"&&!c.startMoved){c.st
   if(c.ahorro!=null&&!isObj(c.ahorro))delete c.ahorro;if(c.ahorro&&c.ahorro.log!=null)c.ahorro.log=Array.isArray(c.ahorro.log)?c.ahorro.log.filter(x=>isObj(x)&&isFinite(+x.v)):[];
   if(c.rutina!=null){if(!isObj(c.rutina))delete c.rutina;else Object.keys(c.rutina).forEach(k=>{const a=c.rutina[k];if(!RUTINA[k]||!Array.isArray(a)||!a.length){delete c.rutina[k];return}
     c.rutina[k]=a.filter(x=>isObj(x)&&typeof x.n==="string"&&x.n.trim()&&Number.isInteger(+x.s)&&+x.s>=1&&+x.s<=10&&typeof x.reps==="string"&&x.reps.trim()).map(x=>Object.assign({},x,{s:+x.s,r:Math.max(0,Math.min(600,parseInt(x.r,10)||0))}));if(!c.rutina[k].length)delete c.rutina[k]})}
-  if(c.lastIcs!=null&&!isISO(c.lastIcs))delete c.lastIcs;if(c.meta!=null&&!isISO(c.meta))delete c.meta;if(c.compras!=null&&!(isObj(c.compras)&&isObj(c.compras.ok||{})))delete c.compras;
+  if(c.lastIcs!=null&&!isISO(c.lastIcs))delete c.lastIcs;if(c.meta!=null&&!isISO(c.meta))delete c.meta;if(c.pausa!=null&&!(isObj(c.pausa)&&isISO(c.pausa.desde)&&isISO(c.pausa.hasta)))c.pausa=null;if(c.compras!=null&&!(isObj(c.compras)&&isObj(c.compras.ok||{})))delete c.compras;
   if(c.photos!=null)c.photos=Array.isArray(c.photos)?c.photos.filter(x=>isObj(x)&&isISO(x.k)):[];
   if(c.maxB&&!(isObj(c.maxB)&&Number.isInteger(+c.maxB.v)&&+c.maxB.v>0&&+c.maxB.v<=40))c.maxB=null;
   return c};
 const MODES=["","ok","cansado","dolor","enfermo"];
 const fixDay=x=>{if(!isObj(x))return {};if(x.turno!=null&&!SHIFT[String(x.turno)])delete x.turno;if(x.mode!=null&&!MODES.includes(x.mode))delete x.mode;
-  ["checks","sets","test","sim","mini","runlog","ctx","undo","tprev","meals","sleep","match","reps","nope","kg"].forEach(f=>{if(x[f]!=null&&!isObj(x[f]))delete x[f]});
+  ["checks","sets","test","sim","mini","runlog","ctx","undo","tprev","meals","sleep","match","reps","nope","kg","nopeWhy"].forEach(f=>{if(x[f]!=null&&!isObj(x[f]))delete x[f]});
   if(x.runlog)Object.keys(x.runlog).forEach(t=>{if(!isObj(x.runlog[t]))delete x.runlog[t]});
-  if(x.ctx&&x.ctx.temp!==""&&x.ctx.temp!=null&&!okTemp(x.ctx.temp))x.ctx.temp="";if(typeof x.note!=="string"&&x.note!=null)delete x.note;if(x.water!=null&&!(Number.isInteger(+x.water)&&+x.water>=0&&+x.water<=40))delete x.water;if(x.partido!=null&&typeof x.partido!=="boolean")delete x.partido;if(x.viaje!=null&&typeof x.viaje!=="boolean")delete x.viaje;if(x.zona!=null&&x.zona!==""&&!ZONAS[x.zona])delete x.zona;return x};
+  if(x.ctx&&x.ctx.temp!==""&&x.ctx.temp!=null&&!okTemp(x.ctx.temp))x.ctx.temp="";if(typeof x.note!=="string"&&x.note!=null)delete x.note;if(x.water!=null&&!(Number.isInteger(+x.water)&&+x.water>=0&&+x.water<=40))delete x.water;if(x.partido!=null&&typeof x.partido!=="boolean")delete x.partido;if(x.viaje!=null&&typeof x.viaje!=="boolean")delete x.viaje;if(x.zona!=null&&x.zona!==""&&!ZONAS[x.zona])delete x.zona;if(x.motivo!=null&&x.motivo!==""&&!MOT[x.motivo])delete x.motivo;["urgencia","express"].forEach(f=>{if(x[f]!=null&&typeof x[f]!=="boolean")delete x[f]});return x};
 const fixDays=o=>{Object.keys(o).forEach(k=>{if(!isISO(k))delete o[k];else o[k]=fixDay(o[k])});return o};
 const clone=o=>JSON.parse(JSON.stringify(o||{}));
 const isObj=x=>!!x&&typeof x==="object"&&!Array.isArray(x);
 // errores de la nube que no se arreglan reintentando
 const HARD_ERR=["invalid_argument","quota_exceeded","revoked","not_granted","capability_disabled","capability_removed","transform_error"];
 // JSON con las claves ordenadas: para comparar sin que importe el orden
-const DEEP=["sets","checks","runlog","test","mini","sim","tprev","meals","sleep","match","reps","nope","kg"],dc=v=>v===undefined?undefined:JSON.parse(JSON.stringify(v));
+const DEEP=["sets","checks","runlog","test","mini","sim","tprev","meals","sleep","match","reps","nope","kg","nopeWhy"],dc=v=>v===undefined?undefined:JSON.parse(JSON.stringify(v));
 const canon=o=>JSON.stringify(o,(k,v)=>v&&typeof v==="object"&&!Array.isArray(v)?Object.keys(v).sort().reduce((a,x)=>(a[x]=v[x],a),{}):v);
 // Cómo se guarda: cada cambio queda como “pendiente” (solo los campos que tocaste) en este teléfono hasta que la
 // nube lo confirma. Lo que llega de la nube se mezcla con lo pendiente: nunca se pisa un cambio tuyo ni se borra
@@ -1195,7 +1196,7 @@ const Store={mode:"local",cfg:defCfg(),days:{},pend:{},ver:{},recent:{},remote:{
    no avanza el plan; al día siguiente se retoma el mismo. Los descansos que pasan siempre avanzan. ---- */
 let SK=null;
 function missedDay(k,d){const p=planFor(d);if(!p||p.kind==="descanso")return false;const dd=Store.days[k]||{};
-  if(dd.mode==="enfermo"||dd.mode==="dolor")return true;const s=dayStatus(k,p);return s==="fail"||s===""||s==="viaje"}
+  if(dd.mode==="enfermo"||dd.mode==="dolor")return true;const s=dayStatus(k,p);return s==="fail"||s===""||s==="viaje"||s==="urgencia"||s==="pausa"}
 // un día con algo marcado guarda qué día del plan le tocó (pn): corregir un día viejo no reescribe los demás
 const frozenN=dd=>dd&&Number.isInteger(dd.pn)&&dd.pn>=0?dd.pn:null;
 function skipData(){if(SK)return SK;const st=parse(Store.cfg.start),td=today(),len=Store.cfg.sched.length,pre=diffDays(td,st)<0;
@@ -1231,7 +1232,14 @@ function ctxFor(date){const c=Store.cfg,dd=Store.days[iso(date)],fz=dd&&dd.ctx&&
 // trabajas de martes a sábado: domingo y lunes son libres salvo que marques otro turno ese día
 const OFF=[0,1];const turnoOf=d=>(Store.days[iso(d)]||{}).turno||(OFF.includes(d.getDay())?"libre":Store.cfg.turno);
 let PLANC={};
-function planFor(date){const ck=iso(date);if(ck in PLANC)return PLANC[ck];const p=planFor0(date);const dd=Store.days[ck]||{};let q=p&&dd.viaje?travelDay(p):p&&dd.partido?matchDay(p):p;if(q&&dd.mode!=="dolor"&&dd.mode!=="enfermo")q=protectZone(q,date);return PLANC[ck]=q}
+function planFor(date){const ck=iso(date);if(ck in PLANC)return PLANC[ck];const p=planFor0(date);const dd=Store.days[ck]||{};let q=p&&dd.viaje?travelDay(p):p&&dd.partido?matchDay(p):p;if(q&&dd.mode!=="dolor"&&dd.mode!=="enfermo")q=protectZone(q,date);if(q&&dd.express&&!dd.viaje)q=expressDay(q);return PLANC[ck]=q}
+// poco tiempo: lo esencial en ~20 min (calentamiento corto, 3 ejercicios × 2 series, 1 estiramiento; trote de 15 min)
+function expressDay(p){const two=b=>{const l=b.s>=2&&/por (lado|pierna)/.test(b.p)?2:1;return Object.assign({},b,{s:2*l,p:String(b.p).replace(/^\d+(\s*×)/,"2$1")})};
+  return Object.assign({},p,{title:p.title+" · exprés",express:true,tasks:p.tasks.filter(t=>!["tol","ducha","mil","casa","venta"].includes(t.id)).map(t=>{
+    if(t.kind==="fuerza"){const ex=t.blocks.filter((b,i)=>i>0&&!/^Estirar|^Prevención/.test(b.n)&&!b.opt),st=t.blocks.find(b=>/^Estirar/.test(b.n));
+      return Object.assign({},t,{t:t.t+" (exprés)",blocks:[Object.assign({},t.blocks[0],{s:1}),...ex.slice(0,3).map(two),...(st?[st]:[])]})}
+    if(t.kind==="carrera")return Object.assign({},t,{t:t.t+" (exprés)",goal:null,blocks:t.blocks.filter(b=>b.tm).slice(0,2).map(b=>b.tm>900?Object.assign({},b,{tm:900,p:"15 min"}):b)});
+    return t})})}
 // lesiones: si los 2 días anteriores marcaste «Con dolor» en una zona, esa zona va sin carga
 const ZONAS={cuadriceps:["Cuádriceps",/sentadilla|búlgara|zancada|goblet|hip thrust|nórdico|step/i],isquio:["Isquiotibial",/peso muerto|nórdico|hip thrust|puente/i],rodilla:["Rodilla",/sentadilla|búlgara|zancada|goblet|salto|nórdico/i],
   tobillo:["Tobillo",/gemelos|salto|zancada|búlgara|aceleraciones|trote|marcha|3\.200/i],hombro:["Hombro",/press|flexiones|fondos|elevaciones laterales|face pull|barras|dominadas|aperturas|pullover|pájaros|plancha/i],
@@ -1271,6 +1279,8 @@ const isNope=(dd,t)=>!!dd&&!!(dd.nope||{})[t.id]&&!taskDone(dd,t);
 function closedDay(k,plan){const d=Store.days[k];if(!plan||!d||d.status)return false;const core=plan.tasks.filter(counts);return core.every(t=>taskDone(d,t)||isNope(d,t))&&core.some(t=>isNope(d,t))}
 function dayStatus(k,plan){if(!plan)return "";const d=Store.days[k],core=plan.tasks.filter(counts);
   if(plan.kind==="viaje")return (d&&d.status)||"viaje";
+  if(d&&d.urgencia&&!core.every(t=>taskDone(d,t)))return "urgencia";
+  if(inPausa(k)&&!(d&&core.every(t=>taskDone(d,t))))return "pausa";
   if(d&&d.status)return d.status;
   // un descanso que ya pasó cuenta como cumplido, salvo que marques “no pude”
   if(plan.kind==="descanso"&&diffDays(parse(k),today())<0)return "done";
@@ -1283,7 +1293,7 @@ const okSt=s=>s==="done"||s==="injury";
 // “hoy” para la bitácora: si ayer saliste del trabajo después de medianoche (turno 16), hasta las 4:00 sigue siendo ayer
 function today(){const n=new Date();if(n.getHours()<4){const y=addDays(n,-1),ys=SHIFT[turnoOf(y)];if(ys&&ys.back&&toMin(ys.bed)<300)return y}return n}
 function streak(){let d=today(),n=0;const s0=dayStatus(iso(d),planFor(d));if(s0==="fail")return 0;if(!okSt(s0))d=addDays(d,-1);
-  for(let i=0;i<800;i++){if(locate(d).before)break;const pd=planFor(d);if(okSt(dayStatus(iso(d),pd))){n++;d=addDays(d,-1)}else if(closedDay(iso(d),pd)||(Store.days[iso(d)]||{}).viaje)d=addDays(d,-1);else break}return n}
+  for(let i=0;i<800;i++){if(locate(d).before)break;const pd=planFor(d);if(okSt(dayStatus(iso(d),pd))){n++;d=addDays(d,-1)}else if(closedDay(iso(d),pd)||(Store.days[iso(d)]||{}).viaje||(Store.days[iso(d)]||{}).urgencia||inPausa(iso(d)))d=addDays(d,-1);else break}return n}
 function compliance(){const td=today();let tot=0,ok=0;for(let d=parse(Store.cfg.start);diffDays(d,td)<0;d=addDays(d,1)){const p=planFor(d);if(!p)break;tot++;if(okSt(dayStatus(iso(d),p)))ok++}return tot?Math.round(ok/tot*100):null}
 
 /* =================== VOZ DEL COMANDANTE =================== */
@@ -1292,6 +1302,11 @@ function orders(plan,k,isToday,dd){
   if(isToday){const fr=fatigueRun(today());if(fr>=3)out.push(["alert",`Llevas ${fr} días seguidos cansado o con dolor. Hoy versión suave o descanso: solo técnica o movilidad. Si es dolor y no mejora, al médico.`])}
   // ayer: la app ya lo evaluó sola (a medias sigue el plan; sin nada, se repite y lo dice la tarjeta de arriba)
   if(isToday){const yd=addDays(today(),-1),yp=planFor(yd);if(yp&&dayStatus(iso(yd),yp)==="part"){const yx=Store.days[iso(yd)]||{},core=yp.tasks.filter(counts);out.push(["p",`Ayer quedó a medias (${core.filter(t=>taskDone(yx,t)).length} de ${core.length}). Hoy sigues con el plan.`])}}
+  // lo que dijiste ayer que te frenó
+  if(isToday){const yx=Store.days[iso(addDays(today(),-1))]||{},ws=[yx.motivo,...Object.values(yx.nopeWhy||{})].filter(Boolean);
+    if(ws.some(w=>w==="noquise"||w==="panorama"))out.push(["alert","Ayer no quisiste. Hoy no se negocia: empieza y no pienses."]);
+    else if(ws.includes("tiempo"))out.push(["p","Ayer te faltó tiempo. Hoy, si se aprieta, toca «Tengo poco tiempo»: 20 minutos y cumples."]);
+    else if(ws.includes("cansado"))out.push(["p","Ayer llegaste cansado. Duerme tus 8 h hoy: es parte del entrenamiento."])}
   if(plan.maint)out.push(["say",plan.kind==="descanso"?"Descanso. La mantención también descansa.":`Mantención, ${N}. Lo que ganaste en 52 semanas se cuida igual.`]);
   else if(plan.w===HELL&&plan.kind!=="descanso")out.push(["say",pick([`${N}. Semana del infierno. Aquí se ve para qué fueron 47 semanas.`,`Infierno, día ${plan.dow+1}. No pienses en el último día: piensa en la próxima serie.`],k)]);
   else if(plan.test)out.push(["say",plan.w===0?`${N}. Hoy se mide el punto de partida. Que sea verdad, no bonito.`:plan.w===52?`Prueba final, ${N}. 52 semanas para esto.`:`Día de prueba, ${N}. Aquí se ve quién entrenó.`]);
@@ -1559,7 +1574,7 @@ window.addEventListener("focus",followToday);
 setInterval(followToday,60000);
 try{const t=sessionStorage.getItem("bit-tab");if(t&&["hoy","plan","registro","progreso","guia"].includes(t))S.tab=t}catch(e){}
 let toastT;function toast(m){const el=document.getElementById("toast");el.textContent=m;el.hidden=false;clearTimeout(toastT);toastT=setTimeout(()=>{el.hidden=true},3500)}
-function chip(s){const m={done:"Cumplido",fail:"No cumplido",injury:"Recuperación",part:"A medias",viaje:"Viaje"};return `<span class="chip ${s||""}">${s?m[s]:"Pendiente"}</span>`}
+function chip(s){const m={done:"Cumplido",fail:"No cumplido",injury:"Recuperación",part:"A medias",viaje:"Viaje",urgencia:"Urgencia",pausa:"En pausa"};return `<span class="chip ${s||""}">${s?m[s]:"Pendiente"}</span>`}
 
 function exHTML(t,b,i,dd,all){
   const n=all?b.s:blockDone(dd,t,i);let ctl="";
@@ -1625,8 +1640,19 @@ function sesHTML(t,dd,open,pend,st){
   if(cur)return `<div class="ses cur ${pend?"pend":""}"><div class="sh"><button class="chk" data-task="${t.id}" aria-pressed="false" aria-label="Marcar ${esc(t.t)} completa"></button><button class="tog" data-open="${t.id}" aria-expanded="${open}"><span class="t"><b class="nowb">Ahora</b> ${esc(t.t)}${pend?' <b class="pendb">Atrasado</b>':""}</span>${meta?`<span class="m">${esc(meta)}</span>`:""}</button><span></span><button class="chev" data-open="${t.id}" aria-label="${open?"Cerrar":"Abrir"}">${open?"▴":"▾"}</button></div>
    ${open?`<div class="sb">${t.lake&&t.safe?`<p class="safe">${esc(t.safe)}</p>`:""}${t.blocks.map((b,i)=>exHTML(t,b,i,dd,all)).join("")}${(t.kind==="carrera"||t.goal)&&t.id!=="sprint"?runLogHTML(t,dd):""}<div class="row nextrow"><button class="btn main" data-task="${t.id}" style="flex:2">✓ Listo, siguiente</button><button class="btn" data-nope="${t.id}" style="flex:1">No pude</button></div></div>`:""}</div>`;
   return `<div class="ses ${all?"done":no?"nope":pend?"pend":""}"><div class="sh"><button class="chk" data-task="${t.id}" aria-pressed="${all}" aria-label="Marcar ${esc(t.t)} completa">${no?"✗":""}</button><button class="tog" data-open="${t.id}" aria-expanded="${open}"><span class="t">${esc(t.t)}${no?' <b class="nopeb">No pude</b>':pend?' <b class="pendb">Pendiente</b>':""}</span>${meta?`<span class="m">${esc(meta)}</span>`:""}</button>${all?"<span></span>":`<button class="nopebtn ${no?"on":""}" data-nope="${t.id}" aria-label="${no?"Deshacer no pude":"No pude: "+esc(t.t)}">${no?"Deshacer":"No pude"}</button>`}<button class="chev" data-open="${t.id}" aria-label="${open?"Cerrar":"Abrir"}">${open?"▴":"▾"}</button></div>
-   ${open?`<div class="sb">${t.lake&&t.safe?`<p class="safe">${esc(t.safe)}</p>`:""}${t.blocks.map((b,i)=>exHTML(t,b,i,dd,all)).join("")}${(t.kind==="carrera"||t.goal)&&t.id!=="sprint"?runLogHTML(t,dd):""}</div>`:""}</div>`;
+   ${open?`<div class="sb">${t.lake&&t.safe?`<p class="safe">${esc(t.safe)}</p>`:""}${t.blocks.map((b,i)=>exHTML(t,b,i,dd,all)).join("")}${(t.kind==="carrera"||t.goal)&&t.id!=="sprint"?runLogHTML(t,dd):""}</div>`:""}${no?nopeWhyHTML(t,dd):""}</div>`;
 }
+// pausa del plan (vacaciones, enfermedad larga, mudanza): esos días no cuentan y el plan sigue donde quedó
+const inPausa=k=>{const z=Store.cfg.pausa;return !!(z&&isISO(z.desde)&&isISO(z.hasta)&&k>=z.desde&&k<=z.hasta)};
+// por qué no pudiste: la app reacciona distinto según el motivo
+const MOTIVOS=[["tiempo","Sin tiempo"],["cansado","Cansado"],["enfermo","Enfermo"],["dolor","Dolor o lesión"],["pega","Trabajo o turno extra"],["urgencia","Urgencia o familia"],["viaje","Viaje"],["panorama","Panorama"],["clima","Clima"],["noquise","No quise"],["otro","Otro"]];
+const MOT=Object.fromEntries(MOTIVOS);
+const CONSEJO={tiempo:"Cuando falte tiempo, toca «Tengo poco tiempo»: 20 minutos valen más que cero.",cansado:"Si se repite, revisa tu sueño en Registro. Marca «Cansado» antes de empezar: hay versión suave.",
+  enfermo:"Marca «Enfermo»: el día se repite cuando sanes.",dolor:"Marca «Con dolor» y la zona: la app la protege 2 días.",pega:"Si te quedas más, usa «Hoy salgo a las…»: se corre tu sueño y mañana sigues.",
+  urgencia:"Las urgencias pasan. Este día se corre a mañana y tu racha no se corta.",viaje:"La próxima vez toca «Hoy viajo a Temuco»: el día se corre solo.",panorama:"Si sabes que hay panorama, entrena antes o usa «Tengo poco tiempo».",
+  clima:"La fuerza es bajo techo. Si llueve para trotar, haz el circuito de la casa.",noquise:"Sin ganas también se entrena. Mañana solo empieza: 5 minutos y el resto sale solo.",otro:"Anótalo en Notas para acordarte."};
+const whyChips=(attr,cur)=>`<div class="segs why">${MOTIVOS.map(([v,l])=>`<button class="seg ${cur===v?"on":""}" ${attr}="${v}">${l}</button>`).join("")}</div>`;
+function nopeWhyHTML(t,dd){const w=(dd.nopeWhy||{})[t.id];return `<div class="sb whyb"><span class="lbl">¿Por qué no pudiste?</span>${whyChips(`data-nwhy-t="${t.id}" data-nwhy`,w)}${w&&CONSEJO[w]?`<p class="foot">${esc(CONSEJO[w])}</p>`:""}</div>`}
 const EMBLEM=`<svg viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="24" r="22" fill="none" stroke="#C6F135" stroke-width="2"/><circle cx="24" cy="24" r="18.5" fill="none" stroke="#C6F135" stroke-width=".8" stroke-dasharray="2 2.4" opacity=".6"/><path d="M25.3 9.4L12.3 26.8L22.4 26.8L19.5 38.4L35.5 19.5L25.3 19.5L28.2 9.4Z" fill="#C6F135" stroke="#F1F3F5" stroke-width="1.2" stroke-linejoin="round"/></svg>`;
 const RANKS=[[0,"Punto de partida",1],[1,"Novato",1],[14,"En construcción",2],[27,"Atleta",3],[40,"Bestia",4],[48,"Infierno",4],[52,"Monstruo",5]];
 function rankOf(w){let r=RANKS[0];RANKS.forEach(x=>{if(w!=null&&w>=x[0])r=x});return r}
@@ -1676,7 +1702,8 @@ function viewHoy(){
     {const hs=sleepH(dd.sleep);if(hs!=null&&hs<7&&!dd.mode)h+=`<p class="alert">Dormiste ${fmtH(hs)}: marca «Cansado».</p>`}
     if(dd.nolake||plan.tasks.some(t=>t.blocks.some(b=>b.n==="Ida en bicicleta")))h+=`<div class="sec"><button class="btn ${dd.nolake?"main":""}" data-nolake>${dd.nolake?"✓ Hoy no entro al lago (toca para deshacer)":"Hay viento, olas o tormenta: hoy no entro al lago"}</button><p class="foot">${dd.nolake?"La sesión de agua cambió a técnica en seco en la casa.":"Míralo por la ventana o en el pronóstico antes de salir. Si hay viento con olas, lluvia fuerte, truenos o neblina, tócalo: te doy el plan B."}</p></div>`;
   }
-  h+=`<div class="row"><button class="btn sm ${dd.partido?"main":""}" data-partido>${dd.partido?"✓ Partido (deshacer)":"⚽ Hoy juego partido"}</button><button class="btn sm ${dd.viaje?"main":""}" data-viaje>${dd.viaje?"✓ Viaje (deshacer)":"🚌 Hoy viajo a Temuco"}</button></div>`;
+  if(inPausa(k))h+=`<div class="card"><span class="lbl">Plan en pausa</span><p style="margin:0">Hasta el ${fmt(parse(Store.cfg.pausa.hasta))}. Estos días no cuentan: cuando vuelvas, sigues donde quedaste y la racha sigue. Si puedes, haz el circuito de viaje o sal a caminar.</p></div>`;
+  h+=`<div class="row"><button class="btn sm ${dd.partido?"main":""}" data-partido>${dd.partido?"✓ Partido (deshacer)":"⚽ Hoy juego partido"}</button><button class="btn sm ${dd.viaje?"main":""}" data-viaje>${dd.viaje?"✓ Viaje (deshacer)":"🚌 Hoy viajo a Temuco"}</button><button class="btn sm ${dd.express?"main":""}" data-express>${dd.express?"✓ Exprés (deshacer)":"⏱ Tengo poco tiempo"}</button></div>`;
   if(dd.viaje)h+=`<p class="foot">Día con tu polola: el entrenamiento de hoy se corre a mañana, no se pierde y la racha no se corta. Si tienes 20 min, haz el circuito.</p>`;
   if(isToday&&plan.shift){const nl=nowLineText(plan);if(nl)h+=`<p class="nowline" id="now-line">${esc(nl)}</p>`}
   const pct=u.b?Math.round(u.a/u.b*100):0,cT=seq?curTask(plan,dd):null;
@@ -1710,7 +1737,7 @@ function viewHoy(){
    // hoy (en orden) no hay «Cumplí todo»: tú cierras el día y la app dice cómo quedó
    const seqT=!window.__NOLOCK&&isToday;
    if(dd.status==="part"||dd.status==="fail"){const core=plan.tasks.filter(counts),dn=core.filter(t=>taskDone(dd,t)).length,miss=core.filter(t=>!taskDone(dd,t)).map(t=>t.t);
-     h+=`<div class="order ${dd.status==="fail"?"closed":"half"}"><p class="say" style="color:var(${dd.status==="fail"?"--bad":"--warn"})">${dd.status==="fail"?"✗ Día incompleto":"◐ Día a medias"}</p><p>Hiciste ${dn} de ${core.length}.${miss.length?" Faltó: "+esc(miss.join(", "))+".":""} ${dd.status==="fail"?"Mañana se repite este día.":"Mañana sigues con el plan."}</p></div>`}
+     h+=`<div class="order ${dd.status==="fail"?"closed":"half"}"><p class="say" style="color:var(${dd.status==="fail"?"--bad":"--warn"})">${dd.status==="fail"?"✗ Día incompleto":"◐ Día a medias"}</p><p>Hiciste ${dn} de ${core.length}.${miss.length?" Faltó: "+esc(miss.join(", "))+".":""} ${dd.status==="fail"?"Mañana se repite este día.":"Mañana sigues con el plan."}</p><span class="lbl">¿Por qué?</span>${whyChips("data-dwhy",dd.motivo)}${dd.motivo&&CONSEJO[dd.motivo]?`<p class="foot">${esc(CONSEJO[dd.motivo])}</p>`:""}</div>`}
    if(seqT&&!closedDay(k,plan)&&status!=="done"&&status!=="injury"&&!dd.status)h+=`<button class="btn main" data-close style="width:100%">Cerrar el día</button><p class="foot" style="text-align:center">La app revisa lo que marcaste y te dice si quedó completo, a medias o incompleto.</p>`;
    else if(!closedDay(k,plan))h+=`<div class="row">${status==="done"||status==="injury"||dd.status?"":`<button class="btn main" data-st="done" style="flex:2">Cumplí todo</button>`}${dd.status==="fail"?`<button class="btn sm" data-st="">Quitar “no cumplí”</button>`:dd.status==="part"?`<button class="btn sm" data-st="">Reabrir el día</button>`:status==="done"||status==="injury"?(S.confirm==="clear"?`<button class="btn sm main" data-st="" data-clear="1">Sí, desmarcar</button><button class="btn sm" data-cancel>No</button>`:`<button class="btn sm" data-ask="clear">Desmarcar el día</button>`):`${past?`<button class="btn" data-close style="flex:1">Cerrar el día</button>`:""}${diffDays(d,today())>0?"":`<button class="btn" data-st="fail" style="flex:1">${past?"No pude ese día":"Hoy no pude"}</button>`}`}</div>`}
   // lo que se va sumando durante el día va al final
@@ -1787,6 +1814,7 @@ function viewPlan(){
    <div class="row"><div class="field"><span class="lbl">Dónde nadas</span><div class="segs">${sg("place","lago","Lago")}${sg("place","piscina","Piscina")}</div></div><div class="field"><span class="lbl">Neopreno</span><div class="segs">${sg("neo",false,"No")}${sg("neo",true,"Sí")}</div></div><div class="field"><span class="lbl">Turno habitual</span><div class="segs">${sg("turno","13","Entro 14:00")}${sg("turno","16","Entro 16:00")}</div></div><div class="field"><span class="lbl">Piscina con salvavidas</span><div class="segs">${sg("pool",false,"No tengo")}${sg("pool",true,"Sí")}</div></div><div class="field"><span class="lbl">Boya de natación</span><div class="segs">${sg("boya",false,"No tengo")}${sg("boya",true,"Sí")}</div></div><div class="field"><span class="lbl">Compañero de agua</span><div class="segs">${sg("partner",false,"No")}${sg("partner",true,"Sí")}</div></div></div>
    <div class="row"><div class="field" style="max-width:140px"><label class="lbl" for="c-peso">Peso en ayunas (kg)</label><input id="c-peso" inputmode="decimal" data-c="peso" value="${esc(bodyWeight()?nf(bodyWeight()):"")}" placeholder="70"></div><div class="field" style="max-width:140px"><label class="lbl" for="c-alt">Estatura (cm)</label><input id="c-alt" inputmode="numeric" data-c="alt" value="${esc(c.alt||"")}" placeholder="175"></div><p class="foot" style="flex:1;min-width:150px">Con tu peso calculo la proteína, las porciones y el agua de cada día. Pésate en ayunas el primer día de cada semana.</p></div>
    <div class="row"><div class="field" style="max-width:170px"><label class="lbl" for="c-maxb">Máximo de barras hoy</label><input id="c-maxb" inputmode="numeric" data-c="maxb" value="${esc((c.maxB&&c.maxB.v)||"")}" placeholder="${esc(lastTest().barras||6)}"></div><p class="foot" style="flex:1;min-width:160px">Mídete cada 3–4 semanas: las series de barras se ajustan solas.</p></div>
+   <div class="field"><span class="lbl">Pausar el plan (vacaciones, enfermedad larga, imprevisto)</span><div class="row" style="align-items:center"><label class="foot">desde<input type="date" id="c-pd" data-c="pdesde" value="${esc((c.pausa||{}).desde||"")}"></label><label class="foot">hasta<input type="date" id="c-ph" data-c="phasta" value="${esc((c.pausa||{}).hasta||"")}"></label>${c.pausa?`<button class="btn sm" data-nopausa>Quitar pausa</button>`:""}</div><span class="foot">Esos días no cuentan ni cortan la racha: al volver sigues donde quedaste.</span></div>
    <div class="field" style="max-width:200px"><label class="lbl" for="c-meta">Fecha del servicio militar</label><input id="c-meta" type="date" data-c="meta" value="${esc(c.meta||"2027-04-01")}"></div>
    <div class="field" style="max-width:240px"><label class="lbl" for="c-turno">Tu turno normal (martes a sábado)</label><select id="c-turno" data-cturno>${HORAS.map(x=>`<option value="${x}" ${(turnoHora(c.turno)||"")===x?"selected":""}>Entro ${x}</option>`).join("")}</select><span class="foot">Domingo y lunes quedan libres; si un día trabajas, cámbialo ese día en Hoy.</span></div>
    <div class="field"><label class="lbl" for="c-why">Tu por qué</label><textarea id="c-why" data-c="why" placeholder="Por qué quieres cambiar tu físico. La app te lo recuerda en los días duros.">${esc(c.why||"")}</textarea></div>
@@ -2007,7 +2035,7 @@ function rescueHTML(e){let b="";try{b=backupHTML()}catch(x){}
 function viewProgreso(){
   const res=Object.keys(Store.days).filter(k=>Store.days[k].test).sort().map(k=>({k,w:locate(parse(k)).w,t:Store.days[k].test})).filter(x=>x.w!=null);
   const cp=compliance();
-  let h=`<div class="sec"><h2>Progreso</h2><div class="kpis"><div class="kpi"><span class="lbl">Racha</span><b>${streak()}</b></div><div class="kpi"><span class="lbl">Cumplido</span><b>${cp==null?"—":cp+"%"}</b></div><div class="kpi"><span class="lbl">Pruebas</span><b>${new Set(res.map(x=>x.w)).size}/5</b></div></div></div>`+weekHTML()+summaryHTML()+exRecordsHTML()+exportHTML();
+  let h=`<div class="sec"><h2>Progreso</h2><div class="kpis"><div class="kpi"><span class="lbl">Racha</span><b>${streak()}</b></div><div class="kpi"><span class="lbl">Cumplido</span><b>${cp==null?"—":cp+"%"}</b></div><div class="kpi"><span class="lbl">Pruebas</span><b>${new Set(res.map(x=>x.w)).size}/5</b></div></div></div>`+weekHTML()+whyStatsHTML()+summaryHTML()+exRecordsHTML()+exportHTML();
   // semana actual
   const L=locate(today());if(L.w!=null){const ws=weekStartOf(today()),wds=[];for(let d=ws;diffDays(d,lastOfN(Math.floor(L.n/7)*7+6))<=0;d=addDays(d,1))wds.push(d);let sm=[0,0],ua=0,ub=0;
     for(const d of wds){const p=planFor(d);if(!p)continue;const dd=Store.days[iso(d)];const u=units(dd,p);ua+=u.a;ub+=u.b;p.tasks.forEach(t=>{if(t.m){sm[1]+=t.m;if(taskDone(dd,t))sm[0]+=t.m}})}
@@ -2034,14 +2062,18 @@ function weekHTML(){const td=today(),L=locate(td);if(L.before)return "";const ws
     rows+=`<tr${diffDays(d,td)===0?' class="wk-today"':""}><td>${dayName(d).slice(0,3)}</td><td class="wk-t">${esc(p.title)}</td><td>${fut?ic(null):ic(okSt(st))}</td><td>${fut?ic(null):ic(mn>=5)}</td><td>${fut?ic(null):ic(w>=g)}</td><td>${fut||hs==null?ic(null):ic(hs>=7)}</td></tr>`}
   const pc=tot[1]?Math.round(tot[0]/tot[1]*100):0,say=!tot[1]?"":pc===100?"Semana perfecta. Así se llega a abril.":pc>=70?"Bien, pero no completa. La próxima, sin huecos.":"Semana floja. Si fue cansancio, recupera. Si fueron ganas, la próxima es la que cuenta.";
   return `<div class="card"><span class="lbl">Mi semana · semana ${L.w}</span><table class="wk"><tr><th></th><th></th><th>Día</th><th>Comida</th><th>Agua</th><th>Sueño</th></tr>${rows}</table>${say?`<p class="foot">${tot[0]} de ${tot[1]} días cumplidos. ${say}</p>`:""}</div>`}
+// por qué no entrenas: los motivos de los últimos 30 días y qué hacer con el más común
+function whyStatsHTML(){const td=today(),c={};for(let i=0;i<30;i++){const x=Store.days[iso(addDays(td,-i))];if(!x)continue;[x.motivo,...Object.values(x.nopeWhy||{})].filter(w=>MOT[w]).forEach(w=>c[w]=(c[w]||0)+1)}
+  const ks=Object.keys(c).sort((a,b)=>c[b]-c[a]);if(!ks.length)return "";
+  return `<div class="card"><span class="lbl">Por qué no entrenas (30 días)</span><div class="list">${ks.map(w=>`<div class="li"><span class="b">${MOT[w]}</span><span class="mono">${c[w]}</span></div>`).join("")}</div><p class="foot">Lo que más te frena: ${MOT[ks[0]].toLowerCase()}. ${esc(CONSEJO[ks[0]]||"")}</p></div>`}
 // planilla con todo tu historial (se abre en Excel o Google Sheets)
 function exportHTML(){return `<div class="card"><span class="lbl">Exportar</span><p style="margin:0">Descarga una planilla con todos tus días: estado, peso, agua, comidas, sueño, repeticiones y pruebas.</p><button class="btn" data-csv>Descargar planilla</button></div>`}
 async function exportCSV(){const q=v=>{const t=String(v==null?"":v);return /[";\n]/.test(t)?'"'+t.replace(/"/g,'""')+'"':t};
-  const head=["Fecha","Día","Semana","Plan","Estado","Cómo amaneciste","Dolor en","Peso (kg)","Agua (vasos)","Comidas","Sueño (h)","Partido","Viaje","Repeticiones","Prueba","Notas"],L=[head.join(";")];
+  const head=["Fecha","Día","Semana","Plan","Estado","Motivo","Cómo amaneciste","Dolor en","Peso (kg)","Agua (vasos)","Comidas","Sueño (h)","Partido","Viaje","Repeticiones","Prueba","Notas"],L=[head.join(";")];
   Object.keys(Store.days).filter(isISO).sort().forEach(k=>{const d=parse(k),p=planFor(d),dd=Store.days[k]||{},lc=locate(d);if(!p)return;const ms=mealsOf(p),hs=sleepH(dd.sleep);
     const reps=Object.keys(dd.reps||{}).map(n=>`${n}: ${(dd.reps[n]||[]).filter(Boolean).join("-")}${(dd.kg||{})[n]?" con "+dd.kg[n]+" kg":""}`).join(" | ");
     const test=Object.keys(dd.test||{}).filter(x=>dd.test[x]!==""&&dd.test[x]!=null).map(x=>`${x} ${dd.test[x]}`).join(" | ");
-    L.push([k,dayName(d),lc.w,p.title,dayStatus(k,p)||"",dd.mode||"",dd.zona?ZONAS[dd.zona][0]:"",dd.peso||"",dd.water||"",ms.filter(m=>mealDone(dd,p,m)).length,hs==null?"":String(Math.round(hs*10)/10).replace(".",","),dd.partido?"sí":"",dd.viaje?"sí":"",reps,test,dd.note||""].map(q).join(";"))});
+    L.push([k,dayName(d),lc.w,p.title,dayStatus(k,p)||"",[dd.motivo,...Object.values(dd.nopeWhy||{})].filter(w=>MOT[w]).map(w=>MOT[w]).join(", "),dd.mode||"",dd.zona?ZONAS[dd.zona][0]:"",dd.peso||"",dd.water||"",ms.filter(m=>mealDone(dd,p,m)).length,hs==null?"":String(Math.round(hs*10)/10).replace(".",","),dd.partido?"sí":"",dd.viaje?"sí":"",reps,test,dd.note||""].map(q).join(";"))});
   const r=await saveFile(`atleta-hibrido-${iso(today())}.csv`,"\ufeff"+L.join("\r\n"),"text/csv");toast(r==="ok"?"Planilla descargada.":r==="declined"?"Descarga cancelada.":"No se pudo descargar en este navegador.")}
 function viewGuia(){return `<div class="sec prose"><h2>Guía</h2>
  <h3>Cómo usar la app (cuando estés solo)</h3><ol>
@@ -2343,6 +2375,10 @@ document.addEventListener("click",e=>{
   if(D.nope){const p=planFor(S.date),t=p&&p.tasks.find(x=>x.id===D.nope);if(!t)return;const dd=Store.day(k),n=Object.assign({},dd.nope),now=!n[t.id];n[t.id]=now;
     const patch={nope:n};if(dd.status==="fail")patch.status="";Store.setDay(k,patch);if(now)S.open[k+t.id]=false;render();
     if(now){toast(closedDay(k,p)?"Día cerrado. Mañana sigues.":"Marcado: no pudiste "+t.t.toLowerCase()+".");goCur()}return}
+  if(D.nwhy){const dd=Store.day(k),w=Object.assign({},dd.nopeWhy);w[D.nwhyT]=w[D.nwhyT]===D.nwhy?"":D.nwhy;Store.setDay(k,{nopeWhy:w});render();return}
+  if(D.dwhy){const dd=Store.day(k),v=dd.motivo===D.dwhy?"":D.dwhy;Store.setDay(k,{motivo:v,urgencia:v==="urgencia"});render();if(v==="urgencia")toast("Urgencia: este día se corre a mañana y la racha sigue.");return}
+  if(D.express!==undefined){const dd=Store.day(k);Store.setDay(k,{express:!dd.express});render();toast(dd.express?"Volviste a la sesión completa.":"Versión exprés: lo esencial en 20 minutos.");return}
+  if(D.nopausa!==undefined){Store.setCfg({pausa:null});render();toast("Pausa quitada.");return}
   if(D.zona){const dd=Store.day(k);Store.setDay(k,{zona:dd.zona===D.zona?"":D.zona});render();return}
   if(D.viaje!==undefined){const dd=Store.day(k);Store.setDay(k,{viaje:!dd.viaje,partido:false});render();toast(dd.viaje?"Volviste al plan del día.":"Día de viaje: el entrenamiento se corre a mañana.");return}
   if(D.partido!==undefined){const dd=Store.day(k);Store.setDay(k,{partido:!dd.partido});render();toast(dd.partido?"Volviste al plan del día.":"Día de partido: comida antes, calentamiento y elongación después.");return}
@@ -2419,6 +2455,7 @@ document.addEventListener("input",e=>{
   else if(D.c==="name")Store.setCfg({name:el.value.trim()||"crack"});
   else if(D.c==="peso"){const v=el.value.trim().replace(",",".");if(v&&!okKg(+v)){kgWarn();return}clearTimeout(kgT);Store.setCfg({peso:v});Store.setDay(iso(today()),{peso:v})}
   else if(D.c==="ahmeta"){const v=numv(el.value);if(v>0&&v<1000000)Store.setCfg({ahorro:Object.assign({},Store.cfg.ahorro,{meta:v})})}
+  else if(D.c==="pdesde"||D.c==="phasta"){if(!isISO(el.value))return;const z=Object.assign({desde:iso(today()),hasta:iso(today())},Store.cfg.pausa,{[D.c==="pdesde"?"desde":"hasta"]:el.value});if(z.hasta<z.desde)z.hasta=z.desde;Store.setCfg({pausa:z})}
   else if(D.c==="meta"){if(isISO(el.value))Store.setCfg({meta:el.value})}
   else if(D.c==="alt")Store.setCfg({alt:el.value.trim()});
   else if(D.c==="why")Store.setCfg({why:el.value});
