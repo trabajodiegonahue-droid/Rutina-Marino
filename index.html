@@ -549,7 +549,8 @@ const ASECO=()=>[B("Apnea en seco","8 × 1:00",{s:8,tm:60,note:"Acostado en casa
 // marcha con mochila: lo más militar del plan. Sube de a poco el peso y el tiempo (unos 6 km/h)
 function ruck(w){if(w<=13)return {mi:30+Math.max(0,w-2)*2,kg:4+Math.floor(w/4)};if(w<=26)return {mi:50+(w-14)*2,kg:8+Math.floor((w-14)/4)};
   if(w<=39)return {mi:60+(w-27)*2,kg:10+Math.floor((w-27)/4)};return {mi:Math.min(120,75+(w-40)*4),kg:Math.min(15,12+Math.floor((w-40)/4))}}
-function ruckT(w){const rk=ruck(w);return T("ruck",`Marcha con mochila ${rk.kg} kg`,"En el servicio se camina lejos con peso: espalda, pies y cabeza.","07:00",[B("Marcha rápida",`${rk.mi} min con ${rk.kg} kg`,{tm:rk.mi*60,note:"Mochila ajustada alta, pegada a la espalda. Paso rápido, sin trotar. Calcetines secos."}),ELONG],{kind:"carrera",goal:{type:"ruck",min:rk.mi}})}
+// mochila de tela: hasta ~8 kg; el peso se arma con botellas de agua o libros
+function ruckT(w){const rk=Object.assign({},ruck(w));rk.kg=Math.min(8,rk.kg);return T("ruck",`Marcha con mochila ${rk.kg} kg`,"En el servicio se camina lejos con peso: espalda, pies y cabeza.","07:00",[B("Marcha rápida",`${rk.mi} min con ${rk.kg} kg`,{tm:rk.mi*60,c:`Arma los ${rk.kg} kg con botellas de agua (una de 1,5 L pesa 1,5 kg) o libros, envueltos en una polera para que no se muevan y pegados a la espalda. Tu mochila es de tela: no le pongas más de 8 kg; si se ve que no aguanta, usa menos peso y camina más rápido.\nMochila ajustada alta. Paso rápido, sin trotar. Calcetines secos.`}),ELONG],{kind:"carrera",goal:{type:"ruck",min:rk.mi}})}
 function testBlocks(){return [B("1. Flexiones","máximo en 2 min",{tm:120,note:"Pecho a un puño del suelo, cuerpo recto."}),B("2. Barras","máximo seguidas",{note:"Agarre prono, brazos extendidos, mentón sobre la barra."}),B("3. Salto largo","el mejor de 3",{note:"Desde parado, con los dos pies; mides con huincha desde la línea hasta el talón más atrasado."}),B("4. Abdominales","máximo en 2 min",{tm:120,note:"Codos a los muslos, omóplatos al suelo."}),B("5. Carrera 3.200 m","tiempo",{note:"8 vueltas de 400 m, o 3,2 km medidos con adidas Running."}),B("6. Nado 50 m","si puedes",{opt:1,note:"Si hoy no tienes dónde, anótalo después de tu próximo nado."}),B("7. Medidas","peso, brazo, pecho, cintura, muslo",{opt:1,c:"En ayunas, con huincha de costura: brazo (bíceps contraído, la parte más gruesa), pecho (a la altura de los pezones, después de botar el aire), cintura (a la altura del ombligo, relajado) y muslo (la parte más gruesa). Siempre igual, para comparar: los números te van a mostrar el músculo que ganas."})]}
 function miniBlocks(spec,ctx){const run=/1\.600/.test(spec)?"1.600 m":"1.200 m",b=Math.max(1,Math.round(maxB(ctx)*0.7));
   return [B("Barras",""+b,{note:`70% de tu máximo (${maxB(ctx)})`+(/pausa/.test(spec)?". Con pausa de 1 s arriba.":"")+(/mochila/.test(spec)?". Con mochila de 5 kg.":"")}),B("Flexiones","1 min a tope",{tm:60}),B("Abdominales","1 min a tope",{tm:60}),B("Sentadillas","1 min a tope",{tm:60}),B("Burpees","1 min a tope",{tm:60}),B("Carrera",run,{note:"Sin pausa desde el último ejercicio."})]}
@@ -850,9 +851,9 @@ function NUT(kg,train,hell){
   return {P,prot,perMeal,eggs,chicken,water,base,
    pre:`Come algo liviano 30–60 minutos antes de entrenar, para tener energía sin sentirte pesado. Elige UNA opción:
 a) 1 plátano + media marraqueta (o media hallulla) con 1 cucharada de mantequilla de maní.
-b) 1 yogur + 3 cucharadas de avena + 1 cucharadita de miel.
+b) 1 yogur + 1 plátano.
 c) 1 tostada con miel o mermelada + 1 manzana.
-No comas frituras, palta en cantidad, ni un plato grande: se te va a revolver el estómago.`,
+Antes de entrenar no: avena, legumbres, frituras, palta en cantidad ni un plato grande (te caen mal). La avena va después, en el batido o el desayuno.`,
    restBreak:`Desayuna tranquilo. Elige UNA opción:
 a) ${eggs} huevos revueltos + 1 marraqueta + 1 fruta + 1 vaso de leche.
 b) 1 taza de avena (80 g) cocida en leche + 1 plátano + 1 yogur.
@@ -1702,6 +1703,7 @@ function viewHoy(){
     {const hs=sleepH(dd.sleep);if(hs!=null&&hs<7&&!dd.mode)h+=`<p class="alert">Dormiste ${fmtH(hs)}: marca «Cansado».</p>`}
     if(dd.nolake||plan.tasks.some(t=>t.blocks.some(b=>b.n==="Ida en bicicleta")))h+=`<div class="sec"><button class="btn ${dd.nolake?"main":""}" data-nolake>${dd.nolake?"✓ Hoy no entro al lago (toca para deshacer)":"Hay viento, olas o tormenta: hoy no entro al lago"}</button><p class="foot">${dd.nolake?"La sesión de agua cambió a técnica en seco en la casa.":"Míralo por la ventana o en el pronóstico antes de salir. Si hay viento con olas, lluvia fuerte, truenos o neblina, tócalo: te doy el plan B."}</p></div>`;
   }
+  {const md=metaDays();if(isToday&&md!=null&&md<=7&&md>=-30&&!inPausa(k))h+=`<div class="card"><span class="lbl">${md>0?`El servicio es en ${md} días`:"Llegó el servicio"}</span><p style="margin:0">Si allá no puedes usar el celular, deja el plan en pausa mientras estés: tus datos quedan guardados y al volver sigues donde quedaste. Antes de irte, guarda tu copia de seguridad.</p><div class="row"><button class="btn main sm" data-backup>Guardar copia</button><button class="btn sm" data-pausaserv>Pausar el plan mientras estoy allá</button></div></div>`}
   if(inPausa(k))h+=`<div class="card"><span class="lbl">Plan en pausa</span><p style="margin:0">Hasta el ${fmt(parse(Store.cfg.pausa.hasta))}. Estos días no cuentan: cuando vuelvas, sigues donde quedaste y la racha sigue. Si puedes, haz el circuito de viaje o sal a caminar.</p></div>`;
   h+=`<div class="row"><button class="btn sm ${dd.partido?"main":""}" data-partido>${dd.partido?"✓ Partido (deshacer)":"⚽ Hoy juego partido"}</button><button class="btn sm ${dd.viaje?"main":""}" data-viaje>${dd.viaje?"✓ Viaje (deshacer)":"🚌 Hoy viajo a Temuco"}</button><button class="btn sm ${dd.express?"main":""}" data-express>${dd.express?"✓ Exprés (deshacer)":"⏱ Tengo poco tiempo"}</button></div>`;
   if(dd.viaje)h+=`<p class="foot">Día con tu polola: el entrenamiento de hoy se corre a mañana, no se pierde y la racha no se corta. Si tienes 20 min, haz el circuito.</p>`;
@@ -2378,6 +2380,7 @@ document.addEventListener("click",e=>{
   if(D.nwhy){const dd=Store.day(k),w=Object.assign({},dd.nopeWhy);w[D.nwhyT]=w[D.nwhyT]===D.nwhy?"":D.nwhy;Store.setDay(k,{nopeWhy:w});render();return}
   if(D.dwhy){const dd=Store.day(k),v=dd.motivo===D.dwhy?"":D.dwhy;Store.setDay(k,{motivo:v,urgencia:v==="urgencia"});render();if(v==="urgencia")toast("Urgencia: este día se corre a mañana y la racha sigue.");return}
   if(D.express!==undefined){const dd=Store.day(k);Store.setDay(k,{express:!dd.express});render();toast(dd.express?"Volviste a la sesión completa.":"Versión exprés: lo esencial en 20 minutos.");return}
+  if(D.pausaserv!==undefined){const st=Store.cfg.meta&&isISO(Store.cfg.meta)&&Store.cfg.meta>iso(today())?Store.cfg.meta:iso(today());Store.setCfg({pausa:{desde:st,hasta:iso(addDays(parse(st),730))}});render();toast("Plan en pausa durante el servicio. Cuando vuelvas, quítala en Plan → Ajustes.");return}
   if(D.nopausa!==undefined){Store.setCfg({pausa:null});render();toast("Pausa quitada.");return}
   if(D.zona){const dd=Store.day(k);Store.setDay(k,{zona:dd.zona===D.zona?"":D.zona});render();return}
   if(D.viaje!==undefined){const dd=Store.day(k);Store.setDay(k,{viaje:!dd.viaje,partido:false});render();toast(dd.viaje?"Volviste al plan del día.":"Día de viaje: el entrenamiento se corre a mañana.");return}
