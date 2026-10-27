@@ -218,11 +218,11 @@ const reload = async p => { await p.reload(); await p.waitForTimeout(200); };
 
 // 13. Registro de adidas Running: ritmo, cumplimiento y guardado
 { console.log('13. Registro de carrera');
-  const { p, ctx, errs } = await page('2026-10-25T07:00:00'); // semana 2, día 6: trote 25 min
+  const { p, ctx, errs } = await page('2026-11-01T07:00:00'); // semana 3, día 6: trote 27 min
   await p.fill('#rl-run-km', '4,4'); await p.fill('#rl-run-t', '27:30');
   const v = await p.$eval('#rlv-run', e => e.textContent);
   ok(v.includes('ritmo 6:15 por km') && v.includes('Cumpliste'), 'calcula ritmo y cumplimiento (' + v + ')');
-  await p.fill('#rl-run-t', '20:00');
+  await p.fill('#rl-run-t', '22:00');
   ok((await p.$eval('#rlv-run', e => e.textContent)).includes('Te faltaron 5 min'), 'avisa si faltaron minutos');
   await reload(p);
   ok(await p.inputValue('#rl-run-km') === '4,4', 'el registro queda guardado');
@@ -885,6 +885,32 @@ const reload = async p => { await p.reload(); await p.waitForTimeout(200); };
   ok(t1.includes('Hoy retomas') && (t1.match(/SEM \d+ · DÍA \d/) || [''])[0] === plan0, 'al día siguiente toca lo que no hiciste por el viaje: ' + plan0);
   ok(t1.includes('Racha 2'), 'la racha no se cortó por el viaje');
   ok(errs.length === 0, 'sin errores: ' + errs.join(' | '));
+  await ctx.close(); }
+
+// 40. Salgo más tarde, dolor por zona, Mi semana, planilla, práctica militar y cómo usar
+{ const { p, ctx, errs } = await page('2026-10-13T09:00:00'); // martes: pecho (inicio 6 oct)
+  // salgo más tarde: mañana despierta 8 h después
+  await p.click('details.daycfg summary'); await p.selectOption('#salida-sel', '1:30'); await p.waitForTimeout(150);
+  ok((await text(p)).includes('salgo 1:30') && (await text(p)).includes('cama 3:00'), 'salir más tarde corre la cama');
+  await p.click('[data-go="1"]'); await p.waitForTimeout(100);
+  ok((await text(p)).includes('Despiertas 11:00'), 'al día siguiente despierta 8 h después de acostarse');
+  // dolor por zona: al día siguiente ese grupo va sin carga
+  await p.click('[data-go="-1"]'); await p.click('[data-mode="dolor"]'); await p.click('[data-zona="cuadriceps"]'); await p.waitForTimeout(100);
+  ok((await text(p)).includes('Los próximos 2 días'), 'elegir la zona del dolor');
+  await p.click('[data-go="1"]'); await p.waitForTimeout(100);
+  let t = await text(p);
+  ok(t.includes('Cuida cuádriceps') && !t.includes('Sentadilla búlgara'), 'el día siguiente no carga la zona con dolor');
+  // Mi semana y planilla
+  await p.click('[data-tab="progreso"]'); t = await text(p);
+  ok(t.includes('Mi semana') && t.includes('Comida'), 'Mi semana en Progreso');
+  const [dl] = await Promise.all([p.waitForEvent('download'), p.click('[data-csv]')]);
+  const csv = fs.readFileSync(await dl.path(), 'utf8');
+  ok(csv.includes('Fecha;Día;Semana') && csv.includes('Cuádriceps'), 'planilla con tus días');
+  await p.click('[data-tab="guia"]'); ok((await text(p)).includes('Cómo usar la app'), 'instructivo en la Guía');
+  ok(errs.length === 0, 'sin errores: ' + errs.join(' | '));
+  await ctx.close(); }
+{ const { p, ctx, errs } = await page('2026-10-15T08:00:00'); // jueves: espalda + práctica militar
+  ok((await text(p)).includes('Práctica militar'), 'práctica militar semanal desde ya');
   await ctx.close(); }
 
 await browser.close();
