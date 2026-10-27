@@ -34,7 +34,7 @@ for (let w = 0; w <= 52; w++) for (let dow = 0; dow < 7; dow++) for (const month
   plan.tasks.forEach(t => t.blocks.filter(b => b.n === 'Cuerda').forEach(b => ok(b.s <= 8 && /en total/.test(b.p), `${where}: cuerda ${b.p} en ${b.s} series`)));
   // horario: nada a la hora del trabajo y en orden
   const sh = plan.shift; if (sh && sh.leave) { const lv = A.toMin(sh.leave), bk = A.toMin(sh.back) + (A.toMin(sh.back) < 240 ? 1440 : 0);
-    plan.tasks.filter(t => t.h && t.id !== 'noche').forEach(t => { const m = A.toMin(t.h) + (A.toMin(t.h) < 240 ? 1440 : 0); ok(m < lv || m >= bk, `${where}: ${t.t} a las ${t.h}, en horario de trabajo`); }); }
+    plan.tasks.filter(t => t.h && t.id !== 'noche' && t.id !== 'pausa').forEach(t => { const m = A.toMin(t.h) + (A.toMin(t.h) < 240 ? 1440 : 0); ok(m < lv || m >= bk, `${where}: ${t.t} a las ${t.h}, en horario de trabajo`); }); }
 }
 console.log(`\n${passes} correctas, ${fails} fallidas`);
 process.exit(fails ? 1 : 0);

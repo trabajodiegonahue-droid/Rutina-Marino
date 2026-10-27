@@ -60,14 +60,17 @@ const reload = async p => { await p.reload(); await p.waitForTimeout(200); };
 // 3. Turno: cambian las horas y queda guardado
 { console.log('3. Turno de trabajo');
   const { p, ctx } = await page('2026-10-13T09:00:00');
-  ok((await text(p)).includes('Despiertas 8:30'), 'turno de las 14:00 por defecto');
-  await p.click('details.daycfg summary'); await p.click('[data-turno="16"]');
-  ok((await text(p)).includes('Despiertas 9:15'), 'turno 16 cambia la hora');
+  ok((await text(p)).includes('Despiertas 8:00'), 'turno de las 14:00 por defecto');
+  await p.click('details.daycfg summary'); await p.click('[data-turno="16:00"]');
+  ok((await text(p)).includes('Despiertas 10:00') && (await text(p)).includes('sales del trabajo 0:30'), 'turno 16 cambia la hora');
   await reload(p);
-  ok((await text(p)).includes('Despiertas 9:15'), 'el turno del día queda guardado');
+  ok((await text(p)).includes('Despiertas 10:00'), 'el turno del día queda guardado');
+  await p.click('details.daycfg summary'); await p.selectOption('#turno-sel', '18:00'); await p.waitForTimeout(100);
+  ok((await text(p)).includes('Despiertas 12:00') && (await text(p)).includes('Entro 18:00'), 'se puede entrar a cualquier hora');
+  if (!(await p.isVisible('[data-turno="16:00"]'))) await p.click('details.daycfg summary'); await p.click('[data-turno="16:00"]');
   await p.click('[data-go="1"]');
-  ok((await text(p)).includes('Despiertas 9:15') && (await text(p)).includes('ayer te acostaste a la 1:15'), 'después del turno 16, el día siguiente despierta 8 h después de acostarse');
-  ok(await p.locator('[data-turno="13"]').evaluate(e => e.classList.contains('on')), 'el día siguiente vuelve al turno habitual');
+  ok((await text(p)).includes('Despiertas 10:00') && (await text(p)).includes('ayer te acostaste a la 2:00'), 'después del turno 16, el día siguiente despierta 8 h después de acostarse');
+  ok(await p.locator('[data-turno="14:00"]').evaluate(e => e.classList.contains('on')), 'el día siguiente vuelve al turno habitual');
   await ctx.close(); }
 
 // 4. Ajustes: cambian el plan
@@ -297,7 +300,7 @@ const reload = async p => { await p.reload(); await p.waitForTimeout(200); };
 { console.log('18. Diseño útil');
   const { p, ctx } = await page('2026-10-14T10:00:00');
   const nl = await p.$eval('#now-line', e => e.textContent);
-  ok(nl.includes('Sales al trabajo en 3 h 30 min'), 'cuenta regresiva (' + nl + ')');
+  ok(nl.includes('Sales al trabajo en 3 h 15 min'), 'cuenta regresiva (' + nl + ')');
   await p.click('[data-rstart]'); await p.locator('.btn', { hasText: 'Iniciar' }).first().click().catch(() => {});
   ok(await p.evaluate(() => document.body.classList.contains('guided')), 'paso a paso activa el temporizador gigante');
   await p.click('[data-rexit]'); await p.click('[data-tab="plan"]'); await p.click('[data-cset="bigText|true"]');
@@ -436,19 +439,19 @@ const reload = async p => { await p.reload(); await p.waitForTimeout(200); };
   await p.tap('[data-go="-1"]');
   ok(await dots(p) === d1b && await note(p) === 'trote 20 min, barras costaron', 'el día anterior guarda series y nota');
   ok(await p.locator('[data-mode="ok"]').evaluate(e => e.classList.contains('on')), 'el día anterior guarda “Al 100%”');
-  await p.tap('[data-go="1"]'); await p.tap('details.daycfg summary'); await p.tap('[data-turno="16"]');
-  ok((await text(p)).includes('Despiertas 9:15'), 'turno 16 cambia la hora de despertar');
+  await p.tap('[data-go="1"]'); await p.tap('details.daycfg summary'); await p.tap('[data-turno="16:00"]');
+  ok((await text(p)).includes('Despiertas 10:00'), 'turno 16 cambia la hora de despertar');
   await p.tap('[data-st="done"]'); ok((await text(p)).includes('Racha 1'), 'cumplir el día sube la racha'); await p.close();
   // jueves 8: no abre la app. Viernes 9 (descanso): la racha se cortó y el miércoles sigue cumplido
   p = await open('2026-10-10T10:00:00');
   ok((await text(p)).includes('Descanso'), 'el día 5 es descanso');
   await p.tap('[data-go="-1"]'); await p.tap('[data-go="-1"]'); await p.tap('[data-go="-1"]');
   ok((await text(p)).includes('Misión cumplida') || (await text(p)).includes('CUMPLIDO'), 'el miércoles sigue cumplido');
-  ok(await p.locator('[data-turno="16"]').evaluate(e => e.classList.contains('on')), 'el miércoles conserva el turno 16');
+  ok(await p.locator('[data-turno="16:00"]').evaluate(e => e.classList.contains('on')), 'el miércoles conserva el turno 16');
   await p.close();
   // sábado 10, con turno 13 por defecto: hoy no hereda el turno 16 del miércoles
   p = await open('2026-10-09T08:00:00');
-  ok(await p.locator('[data-turno="13"]').evaluate(e => e.classList.contains('on')), 'el turno de un día no se pega a los demás');
+  ok(await p.locator('[data-turno="14:00"]').evaluate(e => e.classList.contains('on')), 'el turno de un día no se pega a los demás');
   await tapDots(p, 1); await p.tap('[data-mode="cansado"]'); await p.close();
   p = await open('2026-10-09T22:50:00');
   ok(await p.locator('[data-mode="cansado"]').evaluate(e => e.classList.contains('on')), 'en la noche sigue “Cansado”');
@@ -467,10 +470,10 @@ const reload = async p => { await p.reload(); await p.waitForTimeout(200); };
   // la línea de “ahora” dice la verdad en el trabajo y de madrugada después del turno 16
   p = await open('2026-10-06T18:30:00');
   let nl = await p.$eval('#now-line', e => e.textContent);
-  ok(nl.includes('En el trabajo hasta las 23:30') && !nl.includes('Almuerzo'), 'en el trabajo no manda a almorzar (' + nl + ')'); await p.close();
+  ok(nl.includes('En el trabajo hasta las 22:30') && !nl.includes('Almuerzo'), 'en el trabajo no manda a almorzar (' + nl + ')'); await p.close();
   p = await open('2026-10-08T00:45:00');
   nl = await p.$eval('#now-line', e => e.textContent);
-  ok(nl.includes('a la cama a la 1:15'), 'al volver del turno 16 manda a dormir (' + nl + ')'); await p.close();
+  ok(nl.includes('a la cama a la 2:00'), 'al volver del turno 16 manda a dormir (' + nl + ')'); await p.close();
   ok(errs.length === 0, 'sin errores en toda la semana: ' + errs.join(' | '));
   await ctx.close(); }
 
@@ -493,7 +496,7 @@ const reload = async p => { await p.reload(); await p.waitForTimeout(200); };
     const c = await cloud(p);
     ok(c[planPath].start === '2026-09-29' && c[planPath].turno === '16' && c[planPath].why === 'por mi familia' && c[planPath].bigText === true, 'los ajustes de la nube se mantienen y se suma la letra grande');
     ok(c[dayPath].mode === 'cansado' && c[dayPath].note === 'nota de ayer en el computador' && c[dayPath].sets['a.0'] === 1 && Object.keys(c[dayPath].sets).length >= 2, 'el día mezcla lo de la nube con la serie nueva');
-    ok((await text(p)).includes('Despiertas 9:15'), 'el teléfono nuevo muestra tu turno de la nube');
+    ok((await text(p)).includes('Despiertas 10:00'), 'el teléfono nuevo muestra tu turno de la nube');
     ok(errs.length === 0, 'sin errores: ' + errs.join(' | ')); await ctx.close(); }
   // la nube no carga al abrir (lago sin señal): lo marcado sube la próxima vez
   { const { ctx, p, errs } = await mk(() => { if (!localStorage.getItem('__fakecloud')) localStorage.setItem('__fakecloud', JSON.stringify({ 'data/users/u1/plan': { start: '2026-10-06' } })); });
@@ -715,8 +718,10 @@ const reload = async p => { await p.reload(); await p.waitForTimeout(200); };
   await p.locator('[data-open="ingles"]').first().click(); await p.waitForTimeout(100);
   ok(await p.locator('[data-rp], .ses .sb').count() >= 1 && (await text(p)).includes('Vocabulario'), 'se puede abrir cualquier tarea aunque no sea la de «Ahora»');
   await p.click('.ses.cur .nextrow [data-task]'); await p.waitForTimeout(450);
-  ok((await cur()).includes('Pecho'), 'después de despertar sigue el entrenamiento: ' + await cur());
-  ok(await p.locator('.ses.done').count() === 1, 'lo hecho queda tachado');
+  ok((await cur()).includes('Sacar al perro'), 'después de despertar, sacar al perro: ' + await cur());
+  await p.click('.ses.cur .nextrow [data-task]'); await p.waitForTimeout(450);
+  ok((await cur()).includes('Pecho'), 'y después el entrenamiento: ' + await cur());
+  ok(await p.locator('.ses.done').count() === 2, 'lo hecho queda tachado');
   await p.click('.ses.cur .nextrow [data-nope]'); await p.waitForTimeout(450);
   ok(!(await cur()).includes('Pecho') && await p.locator('.ses.nope').count() === 1, '«No pude» también desbloquea lo siguiente: ' + await cur());
   await reload(p);
@@ -733,8 +738,7 @@ const reload = async p => { await p.reload(); await p.waitForTimeout(200); };
   await p.click('[data-close]'); await p.waitForTimeout(200);
   ok((await text(p)).includes('Día incompleto'), 'sin nada marcado: incompleto');
   await p.click('[data-st=""]'); await p.waitForTimeout(450);
-  await p.click('.ses.cur .nextrow [data-task]'); await p.waitForTimeout(450);
-  await p.click('.ses.cur .nextrow [data-task]'); await p.waitForTimeout(450);
+  for (let i = 0; i < 3; i++) { await p.click('.ses.cur .nextrow [data-task]'); await p.waitForTimeout(450); }
   await p.click('[data-close]'); await p.waitForTimeout(200);
   const t = await text(p);
   ok(t.includes('Día a medias') && t.includes('Faltó'), 'con algo hecho: a medias y qué faltó');
@@ -768,7 +772,7 @@ const reload = async p => { await p.reload(); await p.waitForTimeout(200); };
 // 35. Agua en vasos: cada toque suma 250 ml y queda guardado
 { const { p, ctx, errs } = await page('2026-10-20T10:00:00');
   ok(await p.locator('.water [data-vaso]').count() >= 8, 'se ven los vasos de la meta del día');
-  ok(await p.evaluate(() => { const w = document.querySelector('.water'), all = [...document.querySelectorAll('#app > *')]; return all.indexOf(w) === all.length - 1; }), 'el agua va al final de Hoy');
+  ok(await p.evaluate(() => { const w = document.querySelector('.water'), all = [...document.querySelectorAll('#app > *')]; return all.indexOf(w) >= all.length - 2; }), 'el agua va al final de Hoy (antes del resumen del día)');
   ok(!(await text(p)).includes('Agua del día'), 'el agua ya no es un paso de «Despertar»');
   await p.click('[data-water="1"]'); await p.click('[data-water="1"]'); await p.waitForTimeout(100);
   ok((await p.$eval('.water', e => e.textContent)).includes('500 /'), 'dos vasos = 500 ml');
@@ -840,13 +844,27 @@ const reload = async p => { await p.reload(); await p.waitForTimeout(200); };
   await p.close();
   p = await ctx.newPage(); p.on('pageerror', e => errs.push(e.message)); await p.clock.install({ time: new Date('2026-10-27T08:00:00') }); await p.goto(URL); await p.waitForTimeout(300);
   t = await text(p);
-  ok(t.includes('¡Subes de peso! Hoy 10 kg') && await p.getAttribute(`[data-kg="${n}"]`, 'placeholder') === '10', 'tope del rango en todas: sube el peso y vuelve al mínimo');
+  ok(t.includes('¡Subes de peso! Hoy 9,6 kg en cada mancuerna') && await p.getAttribute(`[data-kg="${n}"]`, 'placeholder') === '9,6', 'tope del rango en todas: sube un disco de 0,8 por lado y vuelve al mínimo');
   await p.close();
   // día de pierna: calentamiento, prevención y elongación al final
   p = await ctx.newPage(); await p.clock.install({ time: new Date('2026-10-21T08:00:00') }); await p.goto(URL); await p.waitForTimeout(300);
   t = await text(p);
   ok(t.includes('Prevención: nórdico') && t.includes('Prevención: Copenhague') && t.includes('Estirar: Isquiotibiales'), 'pierna: prevención y elongación');
   await p.close();
+  ok(errs.length === 0, 'sin errores: ' + errs.join(' | '));
+  await ctx.close(); }
+
+// 38. Día de partido, resumen del día y cuenta regresiva al servicio
+{ const { p, ctx, errs } = await page('2026-10-20T09:00:00');
+  ok((await text(p)).includes('días para el servicio'), 'cuenta regresiva al servicio militar');
+  await p.click('[data-partido]'); await p.waitForTimeout(150);
+  let t = await text(p);
+  ok(t.includes('Partido') && t.includes('Comida 3 h antes') && !t.includes('Pecho + core'), 'día de partido: cambia el entrenamiento por el partido');
+  ok(t.includes('Tu día') && t.includes('Agua'), 'resumen del día al final');
+  await reload(p); ok((await text(p)).includes('Comida 3 h antes'), 'el partido queda guardado');
+  await p.click('[data-partido]'); await p.waitForTimeout(150);
+  ok((await text(p)).includes('Pecho + core'), 'deshacer el partido vuelve al plan');
+  ok((await text(p)).includes('Sacar al perro') && (await text(p)).includes('Pausa activa en la pega'), 'perro y pausa activa en el día');
   ok(errs.length === 0, 'sin errores: ' + errs.join(' | '));
   await ctx.close(); }
 
