@@ -862,7 +862,7 @@ const reload = async p => { await p.reload(); await p.waitForTimeout(200); };
   await p.click('[data-partido]'); await p.waitForTimeout(150);
   let t = await text(p);
   ok(t.includes('Partido') && t.includes('Comida 3 h antes') && !t.includes('Pecho + core'), 'día de partido: cambia el entrenamiento por el partido');
-  ok(t.includes('Tu día') && t.includes('Agua'), 'resumen del día al final');
+  ok(t.includes('Resumen del día') && t.includes('Agua'), 'resumen del día al final');
   await reload(p); ok((await text(p)).includes('Comida 3 h antes'), 'el partido queda guardado');
   await p.click('[data-partido]'); await p.waitForTimeout(150);
   ok((await text(p)).includes('Pecho + core'), 'deshacer el partido vuelve al plan');
@@ -984,6 +984,26 @@ const reload = async p => { await p.reload(); await p.waitForTimeout(200); };
 { const { p, ctx } = await page('2026-10-12T09:00:00'); // prueba inicial
   await p.click('[data-tbanda="negra"]'); await p.fill('#t-barras', '4'); await p.waitForTimeout(100);
   ok(await p.locator('[data-tbanda="negra"]').evaluate(e => e.classList.contains('on')), 'en la prueba se anota la banda de las barras');
+  await ctx.close(); }
+
+// 44. Resumen del día, «Comenzar nuevo día» y barras de progreso
+{ const ctx = await browser.newContext({ viewport: { width: 390, height: 1400 } }); const errs = [];
+  await ctx.addInitScript(() => { window.__NOLOCK = false; });
+  const n = 'Press de pecho en el suelo con mancuernas';
+  await ctx.addInitScript(([n]) => { if (!localStorage.getItem('bitacora-buzo-v1')) localStorage.setItem('bitacora-buzo-v1', JSON.stringify({ cfg: { start: '2026-10-06' }, days: { '2026-10-13': { reps: { [n]: ['12', '12', '12'] }, kg: { [n]: '8' } } }, pend: {} })); }, [n]);
+  const p = await ctx.newPage(); p.on('pageerror', e => errs.push(e.message)); await p.clock.install({ time: new Date('2026-10-20T21:00:00') }); await p.goto(URL); await p.waitForTimeout(300);
+  await p.locator('[data-open="fa"]').first().click(); for (let j = 0; j < 3; j++) await p.fill(`[data-rp="${n}|${j}"]`, '15'); await p.waitForTimeout(100);
+  await p.click('[data-close]'); await p.waitForTimeout(150);
+  let t = await text(p);
+  ok(t.includes('Resumen del día') && t.includes('Récords de hoy') && await p.locator('[data-newday]').count() === 1, 'al cerrar: resumen arriba, récord del día y botón de nuevo día');
+  await p.click('[data-newday]'); await p.waitForTimeout(150);
+  t = await text(p);
+  ok(t.includes('HOY · MIÉRCOLES') && t.includes('Empezaste este día antes de tiempo'), 'comenzar nuevo día pasa a mañana');
+  await p.click('[data-backday]'); await p.waitForTimeout(150);
+  ok((await text(p)).includes('HOY · MARTES'), 'se puede volver al día anterior');
+  await p.click('[data-tab="progreso"]'); t = await text(p);
+  ok(t.includes('¿Mejoras o empeoras?') && t.includes('Días cumplidos por semana') && await p.locator('.tb-bar i.up').count() >= 1, 'barras de progreso: semanas y ejercicios');
+  ok(errs.length === 0, 'sin errores: ' + errs.join(' | '));
   await ctx.close(); }
 
 await browser.close();
