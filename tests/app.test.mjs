@@ -965,6 +965,23 @@ const reload = async p => { await p.reload(); await p.waitForTimeout(200); };
   ok(errs.length === 0, 'sin errores: ' + errs.join(' | '));
   await ctx.close(); }
 
+// 43. Barras: con o sin banda (morada o negra), récord aparte para cada una
+{ const { p, ctx, errs } = await page('2026-10-15T08:00:00'); // jueves: espalda
+  const pull = await p.$eval('[data-banda]', e => e.dataset.banda.split('|')[0]);
+  ok(/Barras/.test(pull), 'las barras tienen selector de banda: ' + pull);
+  await p.click(`[data-banda="${pull}|morada"]`); await p.waitForTimeout(100);
+  await p.fill(`[data-rp="${pull}|0"]`, '6'); await p.waitForTimeout(100);
+  await reload(p);
+  ok(await p.locator(`[data-banda="${pull}|morada"]`).evaluate(e => e.classList.contains('on')), 'la banda queda guardada');
+  await p.click('[data-tab="progreso"]');
+  ok((await text(p)).includes('(banda morada)'), 'el récord dice con qué banda');
+  ok(errs.length === 0, 'sin errores: ' + errs.join(' | '));
+  await ctx.close(); }
+{ const { p, ctx } = await page('2026-10-12T09:00:00'); // prueba inicial
+  await p.click('[data-tbanda="negra"]'); await p.fill('#t-barras', '4'); await p.waitForTimeout(100);
+  ok(await p.locator('[data-tbanda="negra"]').evaluate(e => e.classList.contains('on')), 'en la prueba se anota la banda de las barras');
+  await ctx.close(); }
+
 await browser.close();
 console.log(`\n${passes} correctas, ${fails} fallidas`);
 process.exit(fails ? 1 : 0);
