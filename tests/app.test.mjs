@@ -257,7 +257,7 @@ const reload = async p => { await p.reload(); await p.waitForTimeout(200); };
 { console.log('15. Plan híbrido');
   const { p, ctx } = await page('2026-10-13T09:00:00'); // semana 1, día 1: torso A
   let t = await text(p);
-  ok(t.includes('Pecho + core') && t.includes('Flexiones con mochila') && t.includes('Rueda abdominal'), 'pecho y core con lo que hay en casa');
+  ok(t.includes('Pecho + core') && t.includes('Flexiones con déficit') && t.includes('Rueda abdominal'), 'pecho y core con lo que hay en casa');
   ok(t.includes('Inglés · 1 hora'), 'inglés todos los días');
   await p.click('[data-go="1"]'); t = await text(p);
   ok(t.includes('Pierna + core') && t.includes('Sentadilla búlgara'), 'pierna y core');
@@ -653,11 +653,11 @@ const reload = async p => { await p.reload(); await p.waitForTimeout(200); };
   const hoy0 = await text(p);
   ok(await p.locator('[data-tab="registro"]').count() === 1, 'hay pestaña Registro');
   // repeticiones por serie en el día de pecho
-  const rp = p.locator('[data-rp^="Flexiones con mochila|"]');
+  const rp = p.locator('[data-rp^="Flexiones con déficit|"]');
   ok(await rp.count() >= 2, 'casillas de repeticiones en la fuerza: ' + await rp.count());
   await rp.nth(0).fill('12'); await rp.nth(1).fill('10'); await p.waitForTimeout(200);
   await reload(p);
-  ok(await p.locator('[data-rp="Flexiones con mochila|0"]').inputValue() === '12', 'las repeticiones quedan guardadas');
+  ok(await p.locator('[data-rp="Flexiones con déficit|0"]').inputValue() === '12', 'las repeticiones quedan guardadas');
   // registro del día
   await p.click('[data-tab="registro"]'); await p.waitForTimeout(150);
   ok((await text(p)).includes('Comidas'), 'Registro muestra comidas');
@@ -680,8 +680,8 @@ const reload = async p => { await p.reload(); await p.waitForTimeout(200); };
   ok(pr.includes('Resumen') && pr.includes('Partidos'), 'Progreso tiene el resumen');
   // la semana siguiente muestra lo de la anterior
   const q = await ctx.newPage(); await q.clock.install({ time: new Date('2026-10-27T08:00:00') }); await q.goto(URL); await q.waitForTimeout(200);
-  const ph = await q.locator('[data-rp="Flexiones con mochila|0"]').getAttribute('placeholder').catch(() => null);
-  ok(ph === '12', 'la semana siguiente muestra las repeticiones anteriores: ' + ph);
+  const ph = await q.locator('[data-rp="Flexiones con déficit|0"]').getAttribute('placeholder').catch(() => null);
+  ok(ph === '13', 'la semana siguiente propone una repetición más que la anterior: ' + ph);
   ok(errs.length === 0, 'sin errores: ' + errs.join(' | '));
   await ctx.close(); }
 
@@ -752,7 +752,7 @@ const reload = async p => { await p.reload(); await p.waitForTimeout(200); };
 { const { p, ctx, errs } = await page('2026-10-20T08:00:00');
   const dots = p.locator('.ses [data-set^="fa|1|"]'); const n = await dots.count();
   for (let i = 0; i < n; i++) { await dots.nth(i).click(); await p.waitForTimeout(500); }
-  ok((await p.$eval('#timerbar', e => e.textContent)).includes('sigue Flexiones'), 'descanso automático antes del siguiente ejercicio: ' + await p.$eval('#timerbar', e => e.textContent));
+  ok((await p.$eval('#timerbar', e => e.textContent)).includes('sigue Press de pecho'), 'descanso automático antes del siguiente ejercicio: ' + await p.$eval('#timerbar', e => e.textContent));
   ok(errs.length === 0, 'sin errores: ' + errs.join(' | '));
   await ctx.close(); }
 
@@ -793,7 +793,7 @@ const reload = async p => { await p.reload(); await p.waitForTimeout(200); };
   await reload(p);
   ok(await p.locator('.card.bk [data-backup]').count() === 1, 'Hoy avisa que falta la copia de seguridad');
   // récords: lo anotado por serie
-  await p.fill('[data-rp="Flexiones de brazos|0"]', '12'); await p.fill('[data-rp="Press de pecho en el suelo con mancuernas|0"]', '10x8kg'); await p.fill('[data-rp="Press de pecho en el suelo con mancuernas|1"]', '12x8kg');
+  await p.fill('[data-rp="Flexiones declinadas|0"]', '12'); await p.fill('[data-rp="Press de pecho en el suelo con mancuernas|0"]', '10x8kg'); await p.fill('[data-rp="Press de pecho en el suelo con mancuernas|1"]', '12x8kg');
   await p.click('[data-tab="progreso"]'); await p.waitForTimeout(100);
   let t = await text(p);
   ok(t.includes('Récords por ejercicio') && t.includes('12 × 8 kg'), 'récord por ejercicio con peso');
@@ -833,15 +833,15 @@ const reload = async p => { await p.reload(); await p.waitForTimeout(200); };
 // 37. Progresión: +1 repetición por serie y, al llegar al tope del rango en todas, sube el peso
 { const ctx = await browser.newContext({ viewport: { width: 390, height: 1400 } }); const errs = [];
   const n = 'Press de pecho en el suelo con mancuernas';
-  const days = { '2026-10-13': { reps: { [n]: ['10', '9', '9', '8'] }, kg: { [n]: '8' } }, '2026-10-20': {} };
+  const days = { '2026-10-13': { reps: { [n]: ['14', '13', '13'] }, kg: { [n]: '8' } }, '2026-10-20': {} };
   await ctx.addInitScript(([dd]) => { if (!localStorage.getItem('bitacora-buzo-v1')) localStorage.setItem('bitacora-buzo-v1', JSON.stringify({ cfg: { start: '2026-10-06' }, days: dd, pend: {} })); }, [days]);
   let p = await ctx.newPage(); p.on('pageerror', e => errs.push(e.message)); await p.clock.install({ time: new Date('2026-10-20T08:00:00') }); await p.goto(URL); await p.waitForTimeout(300);
   let t = await text(p);
-  ok(t.includes('Meta de hoy: 11 · 10 · 10 · 9 con 8 kg'), 'meta: una repetición más por serie con el mismo peso');
-  ok(await p.getAttribute(`[data-rp="${n}|0"]`, 'placeholder') === '11', 'la casilla propone la meta');
+  ok(t.includes('Meta de hoy: 15 · 14 · 14 con 8 kg'), 'meta: una repetición más por serie con el mismo peso');
+  ok(await p.getAttribute(`[data-rp="${n}|0"]`, 'placeholder') === '15', 'la casilla propone la meta');
   // hace 12 en todas (tope del rango) sin escribir el peso: se guarda el de la meta
-  for (let j = 0; j < 4; j++) await p.fill(`[data-rp="${n}|${j}"]`, '12');
-  await p.waitForFunction(nm => { const d = (JSON.parse(localStorage.getItem('bitacora-buzo-v1') || '{}').days || {})['2026-10-20']; return d && d.reps && (d.reps[nm] || []).filter(x => x === '12').length === 4; }, n, { timeout: 5000 }).catch(() => {});
+  for (let j = 0; j < 3; j++) await p.fill(`[data-rp="${n}|${j}"]`, '20');
+  await p.waitForFunction(nm => { const d = (JSON.parse(localStorage.getItem('bitacora-buzo-v1') || '{}').days || {})['2026-10-20']; return d && d.reps && (d.reps[nm] || []).filter(x => x === '20').length === 3; }, n, { timeout: 5000 }).catch(() => {});
   ok(await p.evaluate(nm => JSON.parse(localStorage.getItem('bitacora-buzo-v1')).days['2026-10-20'].kg[nm], n) === '8', 'si no escribes el peso se guarda el de la meta');
   await p.close();
   p = await ctx.newPage(); p.on('pageerror', e => errs.push(e.message)); await p.clock.install({ time: new Date('2026-10-27T08:00:00') }); await p.goto(URL); await p.waitForTimeout(300);
@@ -885,7 +885,7 @@ const reload = async p => { await p.reload(); await p.waitForTimeout(200); };
   p = await ctx.newPage(); p.on('pageerror', e => errs.push(e.message)); await p.clock.install({ time: new Date('2026-10-09T09:00:00') }); await p.goto(URL); await p.waitForTimeout(300);
   const t1 = await text(p);
   ok(t1.includes('Hoy retomas') && (t1.match(/SEM \d+ · DÍA \d/) || [''])[0] === plan0, 'al día siguiente toca lo que no hiciste por el viaje: ' + plan0);
-  ok(t1.includes('Racha 2'), 'la racha no se cortó por el viaje');
+  ok(t1.includes('Racha 2'), 'la racha no se cortó por el viaje: ' + (t1.match(/Racha \d+/) || [''])[0] + ' ' + t1.slice(0, 160));
   ok(errs.length === 0, 'sin errores: ' + errs.join(' | '));
   await ctx.close(); }
 
