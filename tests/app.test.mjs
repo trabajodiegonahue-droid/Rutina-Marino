@@ -973,8 +973,12 @@ const reload = async p => { await p.reload(); await p.waitForTimeout(200); };
   await p.fill(`[data-rp="${pull}|0"]`, '6'); await p.waitForTimeout(100);
   await reload(p);
   ok(await p.locator(`[data-banda="${pull}|morada"]`).evaluate(e => e.classList.contains('on')), 'la banda queda guardada');
+  // serie por serie: la 2 sin banda (morada → negra → sin)
+  await p.click(`[data-bset^="${pull}|1|"]`); await p.click(`[data-bset^="${pull}|1|"]`); await p.waitForTimeout(100);
+  ok((await p.locator(`[data-bset^="${pull}|1|"]`).textContent()) === 'sin' && (await p.locator(`[data-bset^="${pull}|0|"]`).textContent()) === 'morada', 'cada serie con su banda');
+  await p.fill(`[data-rp="${pull}|1"]`, '3'); await p.waitForTimeout(100);
   await p.click('[data-tab="progreso"]');
-  ok((await text(p)).includes('(banda morada)'), 'el récord dice con qué banda');
+  ok((await text(p)).includes('(banda morada)') && (await text(p)).includes('(sin banda)'), 'récords separados por banda, serie por serie');
   ok(errs.length === 0, 'sin errores: ' + errs.join(' | '));
   await ctx.close(); }
 { const { p, ctx } = await page('2026-10-12T09:00:00'); // prueba inicial
