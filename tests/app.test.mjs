@@ -665,6 +665,7 @@ const reload = async p => { await p.reload(); await p.waitForTimeout(200); };
   ok(await p.locator('[data-meal="col"]').getAttribute('aria-pressed') === 'true', 'marcar una comida');
   await p.fill('#sl-bed', '01:30'); await p.fill('#sl-wake', '07:30'); await p.waitForTimeout(100);
   ok((await p.$eval('#sl-out', e => e.textContent)).includes('6 h'), 'calcula horas de sueño: ' + await p.$eval('#sl-out', e => e.textContent));
+  await p.locator('details[data-keep="reg:ahorro"] summary').click(); await p.locator('details[data-keep="reg:ingles"] summary').click();
   await p.fill('#ah-v', '150'); await p.click('[data-ahadd="1"]'); await p.waitForTimeout(100);
   ok((await text(p)).includes('150 de 5.000 AUD'), 'ahorro sumado');
   await p.fill('#eng-s', '52'); await p.click('[data-engadd]'); await p.waitForTimeout(100);
@@ -840,11 +841,12 @@ const reload = async p => { await p.reload(); await p.waitForTimeout(200); };
   ok(await p.getAttribute(`[data-rp="${n}|0"]`, 'placeholder') === '11', 'la casilla propone la meta');
   // hace 12 en todas (tope del rango) sin escribir el peso: se guarda el de la meta
   for (let j = 0; j < 4; j++) await p.fill(`[data-rp="${n}|${j}"]`, '12');
+  await p.waitForFunction(nm => { const d = (JSON.parse(localStorage.getItem('bitacora-buzo-v1') || '{}').days || {})['2026-10-20']; return d && d.reps && (d.reps[nm] || []).filter(x => x === '12').length === 4; }, n, { timeout: 5000 }).catch(() => {});
   ok(await p.evaluate(nm => JSON.parse(localStorage.getItem('bitacora-buzo-v1')).days['2026-10-20'].kg[nm], n) === '8', 'si no escribes el peso se guarda el de la meta');
   await p.close();
   p = await ctx.newPage(); p.on('pageerror', e => errs.push(e.message)); await p.clock.install({ time: new Date('2026-10-27T08:00:00') }); await p.goto(URL); await p.waitForTimeout(300);
   t = await text(p);
-  ok(t.includes('¡Subes de peso! Hoy 9,6 kg en cada mancuerna') && await p.getAttribute(`[data-kg="${n}"]`, 'placeholder') === '9,6', 'tope del rango en todas: sube un disco de 0,8 por lado y vuelve al mínimo');
+  ok(t.includes('¡Subes de peso! Hoy 9,6 kg en cada mancuerna') && await p.getAttribute(`[data-kg="${n}"]`, 'placeholder') === '9,6', 'tope del rango en todas: sube un disco de 0,8 por lado y vuelve al mínimo: ' + t.slice(t.indexOf('Press de pecho'), t.indexOf('Press de pecho') + 300));
   await p.close();
   // día de pierna: calentamiento, prevención y elongación al final
   p = await ctx.newPage(); await p.clock.install({ time: new Date('2026-10-21T08:00:00') }); await p.goto(URL); await p.waitForTimeout(300);
@@ -941,6 +943,25 @@ const reload = async p => { await p.reload(); await p.waitForTimeout(200); };
   await p.click('[data-tab="plan"]'); await p.fill('#c-pd', '2026-10-09'); await p.fill('#c-ph', '2026-10-12'); await p.click('[data-tab="hoy"]'); await p.waitForTimeout(150);
   ok((await text(p)).includes('Plan en pausa'), 'pausar el plan');
   await p.click('[data-tab="progreso"]'); ok((await text(p)).includes('Por qué no entrenas'), 'Progreso muestra los motivos');
+  ok(errs.length === 0, 'sin errores: ' + errs.join(' | '));
+  await ctx.close(); }
+
+// 42. Lo marcado se ve igual en todos lados: comidas de Registro = casillas de Hoy; cerrar «a medias» y terminar después = completo
+{ const { p, ctx, errs } = await page('2026-10-20T23:30:00');
+  // en Hoy marco «Comida al llegar» (bloque de Noche) y Registro la muestra hecha
+  await p.locator('[data-open="noche"]').first().click(); await p.waitForTimeout(100);
+  await p.locator('[data-set^="noche|0|"]').first().click(); await p.waitForTimeout(150);
+  await p.click('[data-tab="registro"]'); await p.waitForTimeout(100);
+  ok(await p.locator('.meal.on', { hasText: 'Comida al llegar' }).count() === 1, 'Registro ve la comida marcada en Hoy');
+  // y al revés: marcar el almuerzo en Registro lo marca en Hoy
+  await p.locator('.meal', { hasText: 'Almuerzo' }).click(); await p.waitForTimeout(150);
+  await p.click('[data-tab="hoy"]'); await p.locator('[data-open="almuerzo"]').first().click(); await p.waitForTimeout(100);
+  ok(await p.locator('.ses', { hasText: 'Almuerzo' }).locator('.dot.on').count() >= 1, 'Hoy ve el almuerzo marcado en Registro');
+  // cerrar a medias y después terminar todo: queda completo
+  await p.evaluate(() => { const s = JSON.parse(localStorage.getItem('bitacora-buzo-v1')); s.days['2026-10-20'].status = 'part'; localStorage.setItem('bitacora-buzo-v1', JSON.stringify(s)); });
+  await reload(p);
+  for (const id of await p.$$eval('.ses:not(.done) [data-task]', els => [...new Set(els.map(e => e.dataset.task))])) { const b = p.locator(`.ses:not(.done) .chk[data-task="${id}"]`); if (await b.count()) { await b.first().click(); await p.waitForTimeout(450); } }
+  ok((await text(p)).includes('CUMPLIDO') && !(await text(p)).includes('Día a medias'), 'si terminas después de cerrar a medias, queda completo');
   ok(errs.length === 0, 'sin errores: ' + errs.join(' | '));
   await ctx.close(); }
 
