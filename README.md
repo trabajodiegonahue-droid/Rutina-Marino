@@ -1,6 +1,6 @@
 # Bitácora Militar
 
-App de una sola página para seguir, día por día, un plan de atleta híbrido en casa: músculo (ectomorfo), velocidad y aguante para el fútbol, y dureza militar, con natación el lunes e inglés 1 hora al día. Semana 0 + 52 semanas en 4 etapas.
+App de una sola página para seguir, día por día, un plan de atleta híbrido en casa: músculo (ectomorfo), velocidad y aguante para el fútbol, y dureza militar, con natación el lunes e inglés 25 minutos al día. Semana 0 + 52 semanas en 4 etapas.
 
 - **Hoy**: botón «Empezar la orden» que guía paso a paso (una orden a la vez, serie por serie, con descanso automático); la orden del día, cómo amaneciste (al 100%, cansado o con dolor) y cada sesión con series, repeticiones, metros, ritmos y descansos con temporizador.
 - **Plan**: las 53 semanas por etapa (semana del infierno adaptada en la 48), la semana elegida día por día y los ajustes.

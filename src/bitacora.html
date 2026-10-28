@@ -768,12 +768,12 @@ const VENTA=[["Escuchar al cliente","Pregunta y escucha antes de recomendar.","H
   ["Confianza","Vender es ayudar: cree en lo que ofreces.","Prueba los productos que más vendes para recomendarlos de verdad."]];
 function ventaT(plan){const n=Math.max(0,plan.w),v=VENTA[n%VENTA.length];
   return T("venta","Aprender a vender · 15 min",`Tema de la semana: ${v[0]}.`,"",[B("Aprende",v[0],{tm:600,c:v[1]+" Busca un video corto o un artículo de este tema y anota la idea principal."}),B("Misión en la pega","pruébalo hoy",{c:v[2]})],{kind:"rutina"})}
-function englishT(plan){const n=Math.max(0,plan.w)*7+plan.dow,top=ENG_TOP[Math.floor(n/7)%ENG_TOP.length];
-  return T("ingles","Inglés · 1 hora",`Para tu working holiday. Tema de la semana: ${top}.`,"",[
-    B("Vocabulario","15 min",{tm:900,c:`10 palabras o frases nuevas del tema de la semana (${top}) en tu mazo de Anki (gratis) o en tu cuaderno, y repasa las de días anteriores. Cada palabra con una frase de ejemplo tuya.`}),
-    B("Escuchar","20 min",{tm:1200,c:"Un episodio de «6 Minute English» de BBC Learning English (gratis), o un video en inglés con subtítulos en inglés. Escúchalo 2 veces y anota 5 frases que te sirvan."}),
-    B("Hablar","15 min",{tm:900,c:`Grábate 2 minutos en el celular hablando del tema de la semana, sin leer. Después escúchate y repite las frases que te costaron. Si puedes, habla con alguien en inglés (intercambio de idiomas por app).`}),
-    B("Escribir","10 min",{tm:600,c:"Escribe 5–8 líneas sobre tu día en inglés. Una vez por semana pásalas por Write & Improve de Cambridge (gratis) para que te corrija."})],{kind:"estudio"})}
+// inglés: 25 minutos todos los días (mejor poco y diario que mucho y a veces); hablar y escribir se turnan
+function englishT(plan){const n=Math.max(0,plan.w)*7+plan.dow,top=ENG_TOP[Math.floor(n/7)%ENG_TOP.length],habla=plan.dow%2===0;
+  return T("ingles","Inglés · 25 min",`Para tu working holiday. Tema de la semana: ${top}.`,"",[
+    B("Vocabulario","8 min",{tm:480,c:`5 palabras o frases nuevas del tema de la semana (${top}) en Anki (gratis) o en tu cuaderno, cada una con una frase tuya, y repasa las de días anteriores.`}),
+    B("Escuchar","10 min",{tm:600,c:"Un episodio de «6 Minute English» de BBC Learning English (gratis) o un video corto en inglés con subtítulos en inglés. Anota 3 frases que te sirvan."}),
+    habla?B("Hablar","7 min",{tm:420,c:`Grábate 1–2 minutos hablando del tema de la semana, sin leer. Escúchate y repite las frases que te costaron.`}):B("Escribir","7 min",{tm:420,c:"Escribe 4–5 líneas sobre tu día en inglés. Una vez por semana pásalas por Write & Improve de Cambridge (gratis) para que te corrija."})],{kind:"estudio",min:25})}
 /* ---- tolerancia al dolor: aguantar ardor, quemazón y ganas de parar, sin lesionarse ---- */
 function tolT(w){
   const ws=Math.min(240,45+w*4),hang=Math.min(120,20+w*2),pl=Math.min(240,60+w*4);
@@ -2125,11 +2125,11 @@ function viewGuia(){return `<div class="sec prose"><h2>Guía</h2>
  <tr><td>La máscara de “altura” no simula altura; funciona como entrenador de los músculos respiratorios (<a href="https://jssm.org/15-2-379.p_d_f" target="_blank" rel="noopener">Porcari 2016</a>)</td><td>Tu boquilla nasal: solo en los trotes suaves</td></tr>
  <tr><td>La creatina monohidrato es segura y mejora el rendimiento y las ganancias de músculo (<a href="https://pmc.ncbi.nlm.nih.gov/articles/5469049/" target="_blank" rel="noopener">ISSN 2017</a>)</td><td>Opcional: 3–5 g al día. Coméntalo en tu chequeo médico</td></tr></tbody></table></div>
  <h3>Cómo sube el plan</h3><ul>
- <li><b>Semana:</b> lun pecho + core · mar pierna + core · mié espalda + core · jue hombros y brazos + core · vie descanso o partido · sáb cardio (trote a ritmo de conversación; desde la semana 5, aceleraciones cortas semana por medio) + core · dom lago + estiramiento. Todos los días: inglés 1 hora.</li>
+ <li><b>Semana:</b> lun pecho + core · mar pierna + core · mié espalda + core · jue hombros y brazos + core · vie descanso o partido · sáb cardio (trote a ritmo de conversación; desde la semana 5, aceleraciones cortas semana por medio) + core · dom lago + estiramiento. Todos los días: inglés 25 min.</li>
  <li><b>Progresión:</b> semana 1 técnica con 2–3 repeticiones en reserva · semana 2 suma 1–2 repeticiones · semana 3 hasta el máximo del rango · semana 4 más peso o una variante más difícil · después, <b>descarga</b> (cerca de la mitad de las series, nada al fallo) y se parte de nuevo. Cuando completas todas las series en el máximo del rango, sube el peso; si no tienes más, baja en 3 s o haz pausas. No subas peso, repeticiones y series a la vez.</li>
  <li><b>Prueba cada 13 semanas</b> (un domingo): flexiones, barras, salto largo, abdominales, 3.200 m, nado 50 m y medidas. Ahí ves en números el músculo que ganaste.</li>
  <li><b>Lo militar:</b> sesiones de incomodidad y una semana del infierno adaptada (sem 48), siempre durmiendo 8 h.</li>
- <li><b>Inglés:</b> 1 hora diaria con un tema por semana pensado para el working holiday (entrevista, hostel, trabajos, banco). Para Australia se pide inglés “funcional”, que suele equivaler a IELTS 4,5: confírmalo en el sitio oficial antes de postular.</li></ul>
+ <li><b>Inglés:</b> 25 minutos diarios (vocabulario, escuchar y, día por medio, hablar o escribir) con un tema por semana pensado para el working holiday (entrevista, hostel, trabajos, banco). Para Australia se pide inglés “funcional”, que suele equivaler a IELTS 4,5: confírmalo en el sitio oficial antes de postular.</li></ul>
  <h3>Para no lesionarte</h3><ul>
  <li><b>Antes:</b> movilidad y activación (3 × 2 min, distinta según el día). Moverte prepara el músculo; estirar quieto y largo justo antes de la fuerza te quita fuerza.</li>
  <li><b>Después:</b> elongación estática del músculo que trabajaste, 2 veces por lado, sin dolor. Está al final de cada sesión.</li>

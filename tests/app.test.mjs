@@ -258,7 +258,7 @@ const reload = async p => { await p.reload(); await p.waitForTimeout(200); };
   const { p, ctx } = await page('2026-10-13T09:00:00'); // semana 1, día 1: torso A
   let t = await text(p);
   ok(t.includes('Pecho + core') && t.includes('Flexiones con déficit') && t.includes('Rueda abdominal'), 'pecho y core con lo que hay en casa');
-  ok(t.includes('Inglés · 1 hora'), 'inglés todos los días');
+  ok(t.includes('Inglés · 25 min'), 'inglés todos los días, 25 min');
   await p.click('[data-go="1"]'); t = await text(p);
   ok(t.includes('Pierna + core') && t.includes('Sentadilla búlgara'), 'pierna y core');
   for (let i = 0; i < 5; i++) await p.click('[data-go="1"]'); t = await text(p);
