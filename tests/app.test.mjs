@@ -12,7 +12,10 @@ const browser = await chromium.launch(exe ? { executablePath: exe } : {});
 // Las pruebas de días retomados lo apagan en su propia página (window.__NOSKIP = false).
 const NOSKIP = 'window.__NOSKIP = true; window.__NOLOCK = true;';
 const newContext0 = browser.newContext.bind(browser);
-browser.newContext = async (...a) => { const c = await newContext0(...a); await c.addInitScript(NOSKIP); return c; };
+// Chromium guarda localStorage de forma asíncrona entre pestañas: antes de cerrar una, se espera a que termine de escribir
+browser.newContext = async (...a) => { const c = await newContext0(...a); await c.addInitScript(NOSKIP);
+  const np = c.newPage.bind(c); c.newPage = async (...b) => { const pg = await np(...b); const cl = pg.close.bind(pg); pg.close = async (...o) => { await pg.waitForTimeout(600).catch(() => {}); return cl(...o); }; return pg; };
+  return c; };
 let fails = 0, passes = 0;
 const ok = (cond, msg) => { if (cond) { passes++; } else { fails++; console.log('  ✗ ' + msg); } };
 const FAKE_CLOUD = fs.readFileSync(path.join(here, 'fake-cloud.js'), 'utf8');
@@ -752,7 +755,7 @@ const reload = async p => { await p.reload(); await p.waitForTimeout(200); };
 { const { p, ctx, errs } = await page('2026-10-20T08:00:00');
   const dots = p.locator('.ses [data-set^="fa|1|"]'); const n = await dots.count();
   for (let i = 0; i < n; i++) { await dots.nth(i).click(); await p.waitForTimeout(500); }
-  ok((await p.$eval('#timerbar', e => e.textContent)).includes('sigue Press de pecho'), 'descanso automático antes del siguiente ejercicio: ' + await p.$eval('#timerbar', e => e.textContent));
+  ok((await p.$eval('#timerbar', e => e.textContent)).includes('sigue Fondos'), 'descanso automático antes del siguiente ejercicio: ' + await p.$eval('#timerbar', e => e.textContent));
   ok(errs.length === 0, 'sin errores: ' + errs.join(' | '));
   await ctx.close(); }
 
@@ -1004,6 +1007,35 @@ const reload = async p => { await p.reload(); await p.waitForTimeout(200); };
   await p.click('[data-tab="progreso"]'); t = await text(p);
   ok(t.includes('¿Mejoras o empeoras?') && t.includes('Días cumplidos por semana') && await p.locator('.tb-bar i.up').count() >= 1, 'barras de progreso: semanas y ejercicios');
   ok(errs.length === 0, 'sin errores: ' + errs.join(' | '));
+  await ctx.close(); }
+
+// 45. Fondos y barras de la plaza, frase del día, modo enfoque, proteína, medallas y semana floja
+{ const ctx = await browser.newContext({ viewport: { width: 390, height: 1400 } }); const errs = [];
+  await ctx.addInitScript(() => { window.__NOLOCK = false; });
+  const p = await ctx.newPage(); p.on('pageerror', e => errs.push(e.message)); await p.clock.install({ time: new Date('2026-10-13T08:00:00') }); await p.goto(URL); await p.waitForTimeout(300);
+  let t = await text(p);
+  ok(t.includes('Mejor que ayer, peor que mañana') || t.includes('Lo que la mente') || t.includes('Si crees que puedes'), 'frase del día arriba');
+  // fondos con banda por serie; sin tríceps detrás de la cabeza
+  await p.locator('[data-open="fa"]').first().click(); await p.waitForTimeout(100);
+  t = await text(p);
+  ok(t.includes('Fondos en paralelas') && await p.locator('[data-bset^="Fondos en paralelas|"]').count() >= 1 && !t.includes('sobre la cabeza'), 'fondos con banda por serie y sin tríceps detrás de la cabeza');
+  // modo enfoque
+  await p.click('[data-focus]'); await p.waitForTimeout(100);
+  ok(await p.locator('.ses').count() === 1 && await p.locator('.ses.cur').count() === 1, 'modo enfoque: solo lo de ahora');
+  await p.click('[data-focus]'); await p.waitForTimeout(100);
+  ok(await p.locator('.ses').count() > 3, 'salir del modo enfoque');
+  // proteína
+  await p.click('[data-tab="registro"]'); await p.click('[data-prot="huevo"]'); await p.click('[data-prot="atun"]'); await p.waitForTimeout(100);
+  ok((await text(p)).includes('31 /'), 'proteína: huevo + atún = 31 g');
+  await p.click('[data-tab="progreso"]'); ok((await text(p)).includes('Medallas de racha'), 'medallas de racha');
+  await p.click('[data-tab="plan"]'); await p.locator('details.redit summary').click(); await p.click('[data-rday="fb"]'); await p.waitForTimeout(100);
+  ok((await text(p)).includes('Remo invertido') || await p.locator('input[value="Remo invertido en barra baja"]').count() === 1, 'espalda con remo invertido en la barra');
+  ok(errs.length === 0, 'sin errores: ' + errs.join(' | '));
+  await ctx.close(); }
+{ const ctx = await browser.newContext({ viewport: { width: 390, height: 1400 } });
+  await ctx.addInitScript(() => { window.__NOLOCK = false; window.__NOSKIP = true; if (!localStorage.getItem('bitacora-buzo-v1')) localStorage.setItem('bitacora-buzo-v1', JSON.stringify({ cfg: { start: '2026-10-06' }, days: { '2026-10-13': { status: 'fail' }, '2026-10-14': { status: 'fail' } }, pend: {} })); });
+  const p = await ctx.newPage(); await p.clock.install({ time: new Date('2026-10-15T08:00:00') }); await p.goto(URL); await p.waitForTimeout(300);
+  ok((await text(p)).includes('Semana floja'), 'alerta de semana floja');
   await ctx.close(); }
 
 await browser.close();
