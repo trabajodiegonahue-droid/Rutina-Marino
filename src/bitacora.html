@@ -1753,7 +1753,8 @@ function viewHoy(){
   if(L.after)h+=`<div class="card"><span class="lbl">Plan terminado</span><p style="margin:0">Terminaste las 52 semanas. Ahora es mantención: el mismo tipo de semana con menos carga, para no perder lo ganado. Si aún no entras a la Armada y quieres otra vuelta dura, en Plan está «Repetir etapa 4». Ya dentro: 3 sesiones de nado y 2 de fuerza continua por semana, y la etapa 4 completa 3 meses antes de postular al curso.</p></div>`;
   const dd=Store.days[k]||{},plan=planFor(d),status=dayStatus(k,plan),u=units(dd,plan);
   // ayer no se cumplió: hoy se retoma el mismo día del plan
-  if(isToday){const y=addDays(d,-1),yk=iso(y);if(skipData().list.includes(yk)){const yd=Store.days[yk]||{},why=yd.mode==="enfermo"?"estabas enfermo":yd.mode==="dolor"?"estabas con dolor":yd.status==="fail"?"marcaste que no pudiste":"quedó sin marcar";
+  // con partido, viaje o recuperación activos, la tarjeta de «retomas» confunde: lo explica «¿Qué pasa hoy?»
+  if(isToday&&!(dd.partido||dd.prepartido||dd.postpartido||dd.viaje)){const y=addDays(d,-1),yk=iso(y);if(skipData().list.includes(yk)){const yd=Store.days[yk]||{},why=yd.mode==="enfermo"?"estabas enfermo":yd.mode==="dolor"?"estabas con dolor":yd.status==="fail"?"marcaste que no pudiste":"quedó sin marcar";
     h+=`<div class="card"><span class="lbl">Hoy retomas el día de ayer</span><p style="margin:0">Ayer ${why}, así que hoy toca lo mismo: ${esc(plan.title)}. Ningún día se pierde: el plan entero se corre un día.</p>${why==="quedó sin marcar"?`<button class="btn sm" data-ydone>Sí lo hice ayer: marcarlo cumplido</button>`:""}</div>`}}
   const seq=!window.__NOLOCK&&isToday,ords=orders(plan,k,isToday,dd);
   if(isToday&&!S.focus)h+=`<p class="frase">“${esc(fraseHoy(d))}”</p>`;

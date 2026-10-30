@@ -12,9 +12,15 @@ const browser = await chromium.launch(exe ? { executablePath: exe } : {});
 // Las pruebas de días retomados lo apagan en su propia página (window.__NOSKIP = false).
 const NOSKIP = 'window.__NOSKIP = true; window.__NOLOCK = true;';
 const newContext0 = browser.newContext.bind(browser);
-// Chromium guarda localStorage de forma asíncrona entre pestañas: antes de cerrar una, se espera a que termine de escribir
+// Chromium abre cada pestaña nueva en otro proceso y a veces lee localStorage atrasado. Como en el celular (una sola
+// pestaña que se cierra y se vuelve a abrir), «cerrar» deja la pestaña en blanco y la próxima «nueva» la reutiliza.
 browser.newContext = async (...a) => { const c = await newContext0(...a); await c.addInitScript(NOSKIP);
-  const np = c.newPage.bind(c); c.newPage = async (...b) => { const pg = await np(...b); const cl = pg.close.bind(pg); pg.close = async (...o) => { await pg.evaluate(() => new Promise(r => setTimeout(r, 50))).catch(() => {}); await pg.waitForTimeout(1500).catch(() => {}); return cl(...o); }; return pg; };
+  const np = c.newPage.bind(c); let spare = null;
+  c.newPage = async (...b) => { if (spare) { const pg = spare; spare = null; return pg; }
+    const pg = await np(...b); const cl = pg.close.bind(pg); let inst = false; const ci = pg.clock.install.bind(pg.clock);
+    pg.clock.install = async o => { if (!inst) { inst = true; return ci(o); } return pg.clock.setSystemTime(o && o.time); };
+    pg.close = async (...o) => { if (spare) return cl(...o); await pg.evaluate(() => sessionStorage.clear()).catch(() => {}); spare = pg; };
+    return pg; };
   return c; };
 let fails = 0, passes = 0;
 const ok = (cond, msg) => { if (cond) { passes++; } else { fails++; console.log('  ✗ ' + msg); } };
