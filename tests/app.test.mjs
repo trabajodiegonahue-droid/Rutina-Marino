@@ -10,7 +10,7 @@ const exe = process.env.CHROMIUM_PATH;
 const browser = await chromium.launch(exe ? { executablePath: exe } : {});
 // la mayoría de las pruebas salta a fechas sin registros: ahí los días no se retoman (window.__NOSKIP).
 // Las pruebas de días retomados lo apagan en su propia página (window.__NOSKIP = false).
-const NOSKIP = 'window.__NOSKIP = true; window.__NOLOCK = true; window.__OPENALL = true;';
+const NOSKIP = 'window.__NOSKIP = true; window.__NOLOCK = true; window.__OPENALL = true; window.__NOWELCOME = true;';
 const newContext0 = browser.newContext.bind(browser);
 // Chromium abre cada pestaña nueva en otro proceso y a veces lee localStorage atrasado. Como en el celular (una sola
 // pestaña que se cierra y se vuelve a abrir), «cerrar» deja la pestaña en blanco y la próxima «nueva» la reutiliza.
@@ -1104,6 +1104,27 @@ const reload = async p => { await p.reload(); await p.waitForTimeout(200); };
   await p.click('[data-tab="progreso"]'); await p.waitForTimeout(100);
   t = await text(p);
   ok(t.includes('Series por músculo esta semana') && /Pecho\s*\d+\/10/.test(t) && !/Pecho\s*0\/10/.test(t), 'series por músculo cuenta el pecho');
+  ok(errs.length === 0, 'sin errores: ' + errs.join(' | '));
+  await ctx.close(); }
+
+// 48. Bienvenida la primera vez, «Ahora» arriba con modo enfoque, encabezado en una línea y avisos
+{ const ctx = await browser.newContext({ viewport: { width: 390, height: 1400 } }); const errs = [];
+  await ctx.addInitScript(() => { window.__NOWELCOME = false; window.__NOLOCK = false; });
+  const p = await ctx.newPage(); p.on('pageerror', e => errs.push(e.message)); await p.clock.install({ time: new Date('2026-10-27T09:00:00') }); await p.goto(URL); await p.waitForTimeout(300);
+  let t = await text(p);
+  ok(t.includes('Bienvenido') && t.includes('¿Vienes de la app de Claude?') && await p.locator('[data-welcome]').count() === 1, 'bienvenida la primera vez, con restaurar la copia');
+  await p.fill('#w-name', 'Diego'); await p.waitForTimeout(100);
+  await p.click('[data-welcome]'); await p.waitForTimeout(200);
+  t = await text(p);
+  ok(!t.includes('¿Vienes de la app de Claude?') && await p.locator('.card.ahora').count() === 1, 'después de empezar: «Ahora» arriba');
+  ok(/días para el servicio/.test(t) && !t.includes('Faltan'), 'encabezado corto');
+  await p.click('.card.ahora [data-focus]'); await p.waitForTimeout(100);
+  ok(await p.locator('.ses').count() === 1 && (await text(p)).includes('Salir del modo enfoque'), 'el modo enfoque se abre desde «Ahora»');
+  await p.click('[data-focus]'); await p.waitForTimeout(100);
+  await p.click('[data-tab="plan"]'); await p.waitForTimeout(100);
+  ok((await text(p)).includes('Avisos en el teléfono') && await p.locator('[data-notif="on"]').count() === 1, 'avisos en Ajustes');
+  await p.reload(); await p.waitForTimeout(300);
+  ok(!(await text(p)).includes('¿Vienes de la app de Claude?'), 'la bienvenida no vuelve a salir');
   ok(errs.length === 0, 'sin errores: ' + errs.join(' | '));
   await ctx.close(); }
 

@@ -38,7 +38,7 @@ button:focus-visible,input:focus-visible,textarea:focus-visible,summary:focus-vi
 .hq>div:nth-child(2){min-width:0;flex:1}
 .hq .streak{flex:none}
 .hq .t{font-family:var(--f-label);font-weight:700;letter-spacing:.1em;font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--accent);text-transform:uppercase}
-.hq .rk{display:flex;align-items:center;gap:8px;font-family:var(--f-label);font-weight:700;text-transform:uppercase;letter-spacing:.06em;font-size:16px}
+.hq .rk{display:flex;align-items:center;gap:6px;font-family:var(--f-label);font-weight:700;text-transform:uppercase;letter-spacing:0;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.hq .cd{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .hq .rk .chev{display:inline-flex;align-items:flex-end;gap:2px;height:16px}
 .hq .rk .chev i{display:block;width:4px;background:var(--accent);border-radius:1px}
 .hq .rk .chev i:nth-child(1){height:6px}.hq .rk .chev i:nth-child(2){height:9px}.hq .rk .chev i:nth-child(3){height:12px}.hq .rk .chev i:nth-child(4){height:14px}.hq .rk .chev i:nth-child(5){height:16px}
@@ -179,6 +179,8 @@ body.guided{padding-bottom:calc(420px + env(safe-area-inset-bottom,0px))}
 details.card>summary.sum2{display:flex;flex-direction:column;gap:2px;cursor:pointer;list-style:none}details.card>summary.sum2::-webkit-details-marker{display:none}details.card>summary.sum2 .lbl::after{content:" ▾";color:var(--muted)}details.card[open]>summary.sum2 .lbl::after{content:" ▴"}
 .ajg{border-top:1px solid var(--line);padding:10px 0 4px}.ajg:first-of-type{border-top:0}.ajg>summary{display:flex;justify-content:space-between;align-items:center;gap:10px;cursor:pointer;list-style:none;font-weight:600;font-size:16px;padding:4px 0}.ajg>summary::-webkit-details-marker{display:none}.ajg>summary .foot{font-weight:400;text-align:right;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:55%}.ajg>summary::after{content:"▾";color:var(--muted)}.ajg[open]>summary::after{content:"▴"}.ajg>.in{padding-top:6px}
 .kpi .lbl{overflow-wrap:normal;word-break:normal;font-size:12px;letter-spacing:.05em}
+.ahora{border-left:3px solid var(--accent)}.ahora .at{display:block;font-size:20px;margin:6px 0 2px}.ahora .row{margin-top:10px}.welcome .say{font-size:26px}
+select{background:var(--paper2);color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:10px 12px;font:inherit;font-size:16px;max-width:100%}
 .situ .srow{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:8px}.situ .sl{font-size:13px;color:var(--muted);min-width:64px}.situ .seg{font-size:14px}.situ .smsg{margin-top:8px;color:var(--ink)}
 .temp{display:flex;gap:4px;align-items:flex-end;margin-top:8px}.tm{flex:1;display:flex;flex-direction:column;align-items:center}.tmb{height:50px;width:100%;display:flex;gap:2px;align-items:flex-end;justify-content:center}.tmb i{display:block;width:40%;border-radius:2px 2px 0 0}.tmb i.g,.dotg{background:var(--accent)}.tmb i.a,.dota{background:#4FC3F7}.dotg,.dota{display:inline-block;width:8px;height:8px;border-radius:2px}.tm small{font-size:9px;color:var(--muted)}.sos{border-color:var(--bad)}
 .rec-hoy{margin:8px 0 0;color:var(--accent);font-weight:600;font-size:14px}
@@ -1767,7 +1769,7 @@ function rankOf(w){let r=RANKS[0];RANKS.forEach(x=>{if(w!=null&&w>=x[0])r=x});re
 const MES3=["ENE","FEB","MAR","ABR","MAY","JUN","JUL","AGO","SEP","OCT","NOV","DIC"];
 function dtg(d){const n=new Date();return pad(d.getDate())+pad(n.getHours())+pad(n.getMinutes())+" "+MES3[d.getMonth()]+" "+String(d.getFullYear()).slice(2)}
 function metaDays(){const m=Store.cfg.meta||"2027-04-01";return isISO(m)?diffDays(parse(m),today()):null}
-function hqHTML(w,st){const r=rankOf(w),md=metaDays();return `<div class="hq">${EMBLEM}<div><div class="t">Atleta híbrido</div><div class="rk"><span class="chev">${"<i></i>".repeat(r[2])}</span>${r[1]}</div>${md!=null&&md>=0?`<div class="cd">Faltan <b>${md}</b> días para el servicio</div>`:""}</div><div class="streak">Racha <b>${st}${st>=3?" 🔥":""}</b><span id="savechip" class="savechip"></span></div></div>`}
+function hqHTML(w,st){const r=rankOf(w),md=metaDays();return `<div class="hq">${EMBLEM}<div><div class="t">Atleta híbrido</div><div class="rk"><span class="chev">${"<i></i>".repeat(r[2])}</span>${r[1]}</div>${md!=null&&md>=0?`<div class="cd"><b>${md}</b> días para el servicio</div>`:""}</div><div class="streak">Racha <b>${st}${st>=3?" 🔥":""}</b><span id="savechip" class="savechip"></span></div></div>`}
 function paintSave(){const el=document.getElementById("savechip");if(!el)return;const st=Store.saveState();el.className="savechip "+st.cls;el.textContent=(st.cls==="ok"||st.cls==="local"?"✓ ":st.cls==="err"?"⚠ ":"")+st.txt;el.title=st.long;el.setAttribute("aria-label",st.long)}
 function dayHead(d,L){
   const isT=diffDays(d,today())===0;
@@ -1781,8 +1783,17 @@ function dayHead(d,L){
   return hqHTML(L.after?52:L.w,stk)+`<div class="day"><button class="nb" data-go="-1" aria-label="Día anterior">◀</button><div class="mid"><div class="big">${big}</div><div class="sub">${dayName(d)} ${fmt(d)}</div></div><button class="nb ${isT?"on":""}" data-go="0">Hoy</button><button class="nb" data-go="1" aria-label="Día siguiente">▶</button></div>
   ${s?`<div class="stage"><span class="st">${s.n} · ${s.name}${L.w===HELL?" · SEMANA DEL INFIERNO":""}</span><span>${L.idx!=null?Math.round(L.idx/(Store.cfg.sched.length-1)*100)+"% del plan":""}</span></div>`:""}`;
 }
+// primera vez con la app nueva (sin datos): bienvenida corta y traer la copia de la app de Claude
+function welcomeHTML(){const c=Store.cfg,inst=window.navigator.standalone||(window.matchMedia&&matchMedia("(display-mode: standalone)").matches);
+  return `<div class="order welcome"><p class="say">Bienvenido${c.name?", "+esc(c.name):""}.</p><p>Esta es tu app de entrenamiento y del día. Tres pasos y partes:</p></div>
+   <div class="card"><span class="lbl">1 · ¿Vienes de la app de Claude?</span><p style="margin:0">Allá toca Plan → Respaldo → «Descargar copia». Aquí abre ese archivo y vuelve todo tu historial.</p><div class="row" style="margin-top:10px"><label class="btn main" for="restore-file" style="flex:1;text-align:center">Abrir mi copia</label><button class="btn" data-paste-open style="flex:1">Pegar como texto</button></div>${(b=>{const i=b.indexOf('<div class="verdict');return i<0?"":b.slice(i,b.lastIndexOf("</div>"))})(backupHTML())}<p class="foot">¿Primera vez? Salta este paso.</p></div>
+   <div class="card"><span class="lbl">2 · Tus datos</span><div class="field"><label class="lbl" for="w-name">Tu nombre</label><input id="w-name" data-c="name" value="${esc(c.name)}" placeholder="Diego"></div>
+    <div class="field" style="max-width:240px"><label class="lbl" for="w-turno">Tu turno normal</label><select id="w-turno" data-cturno>${HORAS.map(x=>`<option value="${x}" ${(turnoHora(c.turno)||"")===x?"selected":""}>Entro ${x}</option>`).join("")}</select></div></div>
+   ${inst?"":`<div class="card"><span class="lbl">3 · Instálala</span><p style="margin:0">En Safari toca <b>Compartir</b> → <b>«Agregar a inicio»</b>. Queda como una app, funciona sin internet y te puede avisar.</p></div>`}
+   <button class="btn main" data-welcome style="width:100%">Empezar →</button><p class="foot" style="text-align:center">Todo esto se cambia después en Plan → Ajustes.</p>`}
 function viewHoy(){
   const d=S.date,k=iso(d),L=locate(d),isToday=diffDays(d,today())===0;
+  if(!window.__NOWELCOME&&OWN_HOST&&!Store.cfg.welcome&&Store.mode!=="db"&&!Object.keys(Store.days).length)return welcomeHTML();
   let h=dayHead(d,L);
   if(L.before){const st=parse(Store.cfg.start),p1=dayPlan(0,0,ctxFor(st));
     return h+`<div class="order"><p class="say">Empiezas el ${dayName(st).toLowerCase()} ${fmt(st)}.</p><p>Esta noche: bolso listo y a la cama a las ${(SHIFT[Store.cfg.turno]||SHIFT["13"]).bed}. El día 1 tienes: ${p1.tasks.map(t=>esc(t.t.toLowerCase())).join(", ")}.</p><button class="btn main" data-goto="${iso(st)}">Ver el día 1</button></div>`}
@@ -1793,6 +1804,9 @@ function viewHoy(){
   if(isToday&&!(dd.partido||dd.prepartido||dd.postpartido||dd.viaje)){const y=addDays(d,-1),yk=iso(y);if(skipData().list.includes(yk)){const yd=Store.days[yk]||{},why=yd.mode==="enfermo"?"estabas enfermo":yd.mode==="dolor"?"estabas con dolor":yd.status==="fail"?"marcaste que no pudiste":"quedó sin marcar";
     h+=`<div class="card"><span class="lbl">Hoy retomas el día de ayer</span><p style="margin:0">Ayer ${why}, así que hoy toca lo mismo: ${esc(plan.title)}. Ningún día se pierde: el plan entero se corre un día.</p>${why==="quedó sin marcar"?`<button class="btn sm" data-ydone>Sí lo hice ayer: marcarlo cumplido</button>`:""}</div>`}}
   const seq=!window.__NOLOCK&&isToday,ords=orders(plan,k,isToday,dd);
+  {const dc0=isToday&&(okSt(status)||!!dd.status||closedDay(k,plan)||!!dd.urgencia),c0=seq&&!S.focus&&!dc0?curTask(plan,dd):null;
+   if(c0){const ti=plan.tasks.indexOf(c0),nx=plan.tasks.slice(ti+1).find(t=>!taskDone(dd,t)&&!isNope(dd,t)),dn=plan.tasks.filter(t=>taskDone(dd,t)).length;
+     h+=`<div class="card ahora"><div class="row" style="justify-content:space-between"><span class="lbl">Ahora</span><span class="foot">${dn} de ${plan.tasks.length} hechas</span></div><b class="at">${ti+1}. ${esc(c0.t)}</b><span class="foot">${c0.h?esc(c0.h):""}${nx?` · después: ${esc(nx.t)}${nx.h?" "+esc(nx.h):""}`:""}</span><div class="row"><button class="btn main sm" data-focus style="flex:1">🎯 Modo enfoque</button><button class="btn sm pendlink" data-open="${c0.id}">Ver abajo</button></div></div>`}}
   if(isToday&&!S.focus)h+=`<p class="frase">“${esc(fraseHoy(d))}”</p>`;
   if(diffDays(d,today())===0&&!S.focus)h+=readyHTML(d,k,dd,plan);
   if(diffDays(d,today())>=0&&!S.focus)h+=situHTML(d,k,dd,plan);
@@ -1802,7 +1816,7 @@ function viewHoy(){
   const dayClosedNow=isToday&&(okSt(status)||!!dd.status||closedDay(k,plan)||!!dd.urgencia);
   if(dayClosedNow)h+=daySummaryHTML(plan,dd,d)+`<button class="btn main" data-newday style="width:100%">Comenzar nuevo día →</button><p class="foot" style="text-align:center">Pasa a mañana: ${esc((planFor(addDays(d,1))||{}).title||"")}.</p>`;
   if(isToday&&Store.cfg.nd===k&&diffDays(parse(k),realToday())>0)h+=`<p class="foot">Empezaste este día antes de tiempo. <button class="lnk" data-backday>Volver al día anterior</button></p>`;
-  if(isToday&&seq)h+=`<button class="btn sm focusbtn" data-focus>${S.focus?"Salir del modo enfoque":"🎯 Modo enfoque: solo lo de ahora"}</button>`;
+  if(isToday&&seq&&S.focus)h+=`<button class="btn sm focusbtn" data-focus>Salir del modo enfoque</button>`;
   if(isToday&&seq&&S.focus&&!dayClosedNow){const c0=curTask(plan,dd);if(c0){const ti=plan.tasks.indexOf(c0);h+=sesHTML(Object.assign({},c0,{t:(ti+1)+". "+c0.t}),dd,true,isPend(c0,dd,d),"cur")}else h+=`<div class="order done"><p class="say">Todo marcado. Cierra el día.</p></div>`;
     h+=`<button class="btn main" data-close style="width:100%">Cerrar el día</button>`;return h}
   // hoy (en orden) lo primero es «Ahora»: el mensaje del preparador va después de las tareas, los avisos importantes quedan arriba
@@ -1949,6 +1963,11 @@ function viewPlan(){
    <div class="row"><div class="field" style="max-width:170px"><label class="lbl" for="c-trip">Casa → lago en bici (min)</label><input id="c-trip" inputmode="numeric" data-c="trip" value="${esc(c.trip===undefined?15:c.trip)}" placeholder="15"></div><p class="foot" style="flex:1;min-width:150px">Con esto calculo a qué hora sales, entras al agua y vuelves. Pon 0 si vas en auto o vives al lado.</p></div>
    <div class="field" style="max-width:170px"><label class="lbl" for="c-temp">Agua del lago (°C)</label><input id="c-temp" inputmode="decimal" data-c="temp" value="${esc(tempFor(c,td))}" placeholder="${TEMP_MES[td.getMonth()]} estimado"><span class="foot">${tempFor(c,td)?`Medida el ${fmtS(parse(c.tempK))}: vale 10 días.`:c.temp?`La de ${fmtS(parse(c.tempK||c.start))} venció: mide de nuevo.`:"Vale 10 días; después se usa la estimada."}</span></div>
    <div class="row"><div class="field"><span class="lbl">Dónde nadas</span><div class="segs">${sg("place","lago","Lago")}${sg("place","piscina","Piscina")}</div></div><div class="field"><span class="lbl">Neopreno</span><div class="segs">${sg("neo",false,"No")}${sg("neo",true,"Sí")}</div></div><div class="field"><span class="lbl">Piscina con salvavidas</span><div class="segs">${sg("pool",false,"No tengo")}${sg("pool",true,"Sí")}</div></div><div class="field"><span class="lbl">Boya de natación</span><div class="segs">${sg("boya",false,"No tengo")}${sg("boya",true,"Sí")}</div></div><div class="field"><span class="lbl">Compañero de agua</span><div class="segs">${sg("partner",false,"No")}${sg("partner",true,"Sí")}</div></div></div>`)}
+   ${OWN_HOST&&"Notification" in window?ag("avisos","🔔 Avisos en el teléfono",c.notif&&Notification.permission==="granted"?"Activados":"Apagados",`
+   <p style="margin:0">Te avisa a la hora de cada tarea (entrenar, inglés, comida, salir a la pega) con la app instalada en el inicio.</p>
+   <div class="row" style="margin-top:8px">${c.notif&&Notification.permission==="granted"?`<button class="btn sm" data-notif="off">Apagar avisos</button><button class="btn sm" data-notif="test">Probar aviso</button>`:`<button class="btn main sm" data-notif="on">Activar avisos</button>`}</div>
+   ${Notification.permission==="denied"?`<p class="foot">El teléfono los tiene bloqueados: Ajustes del iPhone → Notificaciones → Atleta híbrido → Permitir.</p>`:""}
+   <p class="foot">El iPhone a veces los atrasa si la app lleva mucho rato cerrada. Para avisos 100% seguros, descarga también los avisos de la semana al calendario (arriba en Plan).</p>`):""}
    ${ag("frases","💬 Frases y tu por qué",c.frases?"Las tuyas":"Las de siempre",`
    <div class="field"><label class="lbl" for="c-frases">Tus frases (una por línea; sale una cada día arriba de Hoy)</label><textarea id="c-frases" data-c="frases" rows="3" placeholder="${esc(FRASES0.join("\n"))}">${esc(c.frases||"")}</textarea></div>
    <div class="field"><label class="lbl" for="c-why">Tu por qué</label><textarea id="c-why" data-c="why" placeholder="Por qué quieres cambiar tu físico. La app te lo recuerda en los días duros.">${esc(c.why||"")}</textarea></div>`)}
@@ -2498,6 +2517,16 @@ function repsHTML(t,b,i){if(t.kind!=="fuerza"||b.tm||!(b.s>=2&&b.s<=8)||!/×/.te
 
 const TABS=[["hoy","Hoy"],["plan","Plan"],["registro","Registro"],["progreso","Progreso"],["guia","Guía"]];
 const ICON={hoy:'<path d="M13.0 2.0L4.0 14.0L11.0 14.0L9.0 22.0L20.0 9.0L13.0 9.0L15.0 2.0Z"/>',plan:'<path d="M3 6l6-2 6 2 6-2v14l-6 2-6-2-6 2z"/><path d="M9 4v14M15 6v14"/>',registro:'<rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 4V2h6v2M9 10h6M9 14h6M9 18h3"/>',progreso:'<path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/>',guia:'<path d="M4 4h7a3 3 0 013 3v13a2 2 0 00-2-2H4zM20 4h-5a3 3 0 00-3 3"/><path d="M20 4v14h-6"/>'};
+const OWN_HOST=!/claude\.ai|claudeusercontent|anthropic/.test(location.hostname);
+// avisos: a la hora de cada tarea (mientras el teléfono deje correr la app)
+function notify(title,body,tag){try{if(!("Notification" in window)||Notification.permission!=="granted")return;const o={body,tag,icon:"icon-192.png",badge:"icon-192.png"};
+  const plain=()=>{try{new Notification(title,o)}catch(e){}};
+  if(navigator.serviceWorker&&navigator.serviceWorker.getRegistration)navigator.serviceWorker.getRegistration().then(r=>r?r.showNotification(title,o):plain()).catch(plain);else plain()}catch(e){}}
+const NOTIFIED=new Set();
+function checkNotify(){try{if(!Store.cfg.notif||!("Notification" in window)||Notification.permission!=="granted")return;const td=today(),k=iso(td),plan=planFor(td);if(!plan)return;const dd=Store.days[k]||{},now=new Date(),m=now.getHours()*60+now.getMinutes();
+  plan.tasks.forEach(t=>{if(!t.h||taskDone(dd,t)||isNope(dd,t))return;const at=toMin(t.h),key=k+t.id;if(NOTIFIED.has(key))return;if(m>=at&&m<at+3){NOTIFIED.add(key);notify(t.t,`Es la hora (${t.h}). ${t.blocks&&t.blocks[0]?t.blocks[0].n:""}`.trim(),key)}});
+  const sh=plan.shift;if(sh&&sh.leave){const at=toMin(sh.leave)-10,key=k+"leave";if(!NOTIFIED.has(key)&&m>=at&&m<at+3){NOTIFIED.add(key);notify("En 10 minutos sales a la pega","Agua, colación y uniforme.",key)}}}catch(e){}}
+setInterval(checkNotify,30000);document.addEventListener("visibilitychange",()=>{if(!document.hidden)checkNotify()});
 function render(){
   CTX=null;PLANC={},SK=null;REPC={};RECC=null;if(S.follow&&!S.run&&diffDays(S.date,today())!==0){S.date=today()}
   // conservar el foco y el cursor si una actualización llega mientras escribes
@@ -2578,6 +2607,10 @@ document.addEventListener("click",e=>{
   if(D.nwhy){const dd=Store.day(k),w=Object.assign({},dd.nopeWhy);w[D.nwhyT]=w[D.nwhyT]===D.nwhy?"":D.nwhy;Store.setDay(k,{nopeWhy:w});render();return}
   if(D.dwhy){const dd=Store.day(k),v=dd.motivo===D.dwhy?"":D.dwhy;Store.setDay(k,{motivo:v,urgencia:v==="urgencia"});render();if(v==="urgencia")toast("Urgencia: este día se corre a mañana y la racha sigue.");return}
   if(D.share){shareDay(parse(D.share));return}
+  if(D.notif){if(D.notif==="off"){Store.setCfg({notif:false});render();toast("Avisos apagados.");return}
+    if(D.notif==="test"){notify("Así te va a avisar","Hoy: "+((planFor(today())||{}).title||"tu plan"),"prueba");return}
+    Promise.resolve(Notification.requestPermission()).then(r=>{Store.setCfg({notif:r==="granted"});render();toast(r==="granted"?"Listo: te aviso a la hora de cada tarea.":"No diste permiso: actívalo en los Ajustes del iPhone.");if(r==="granted")notify("Avisos activados","Te aviso a la hora de cada tarea.","on")});return}
+  if(D.welcome!==undefined){Store.setCfg({welcome:true});render();window.scrollTo(0,0);return}
   if(D.ready){const [f,v]=D.ready.split("|"),dd=Store.day(k),r=Object.assign({},dd.ready);r[f]=+v;const rv=readyOf({ready:r}),patch={ready:r};
     if(rv){S.readyOpen=false;if(dd.mode!=="enfermo")patch.mode=rv.mode}Store.setDay(k,patch);render();return}
   if(D.readyedit!==undefined){S.readyOpen=true;render();return}
