@@ -10,7 +10,7 @@ const exe = process.env.CHROMIUM_PATH;
 const browser = await chromium.launch(exe ? { executablePath: exe } : {});
 // la mayoría de las pruebas salta a fechas sin registros: ahí los días no se retoman (window.__NOSKIP).
 // Las pruebas de días retomados lo apagan en su propia página (window.__NOSKIP = false).
-const NOSKIP = 'window.__NOSKIP = true; window.__NOLOCK = true;';
+const NOSKIP = 'window.__NOSKIP = true; window.__NOLOCK = true; window.__OPENALL = true;';
 const newContext0 = browser.newContext.bind(browser);
 // Chromium abre cada pestaña nueva en otro proceso y a veces lee localStorage atrasado. Como en el celular (una sola
 // pestaña que se cierra y se vuelve a abrir), «cerrar» deja la pestaña en blanco y la próxima «nueva» la reutiliza.
@@ -204,8 +204,8 @@ const reload = async p => { await p.reload(); await p.waitForTimeout(200); };
   ok(seen.size === 1 && [...seen][0] === '1110', 'las series marcadas no parpadean ni se desmarcan (' + [...seen].join(', ') + ')');
   await p.click('[data-mode="cansado"]'); await p.waitForTimeout(3000);
   ok(await p.locator('[data-mode="cansado"]').evaluate(e => e.classList.contains('on')), '“Cansado” se mantiene con la nube');
-  await p.click('[data-tab="plan"]'); await p.click('[data-cset="turno|16"]'); await p.waitForTimeout(3000);
-  ok(await p.locator('[data-cset="turno|16"]').evaluate(e => e.classList.contains('on')), 'el ajuste se mantiene con la nube');
+  await p.click('[data-tab="plan"]'); await p.click('[data-cset="theme|claro"]'); await p.waitForTimeout(3000);
+  ok(await p.locator('[data-cset="theme|claro"]').evaluate(e => e.classList.contains('on')), 'el ajuste se mantiene con la nube');
   ok(errs.length === 0, 'sin errores: ' + errs.join(' | '));
   await ctx.close(); }
 
