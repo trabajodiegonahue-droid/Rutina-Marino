@@ -1083,6 +1083,30 @@ const reload = async p => { await p.reload(); await p.waitForTimeout(200); };
   ok((await text(p)).includes('Pésate hoy'), 'recordatorio de pesarse el primer día de la semana');
   await ctx.close(); }
 
+// 47. Chequeo de la mañana, calculadora de discos, series por músculo y compartir el día
+{ const { p, ctx, errs } = await page('2026-10-20T08:00:00'); // día de pecho
+  ok(await p.locator('.card.ready').count() === 1 && (await text(p)).includes('¿Cómo amaneciste?'), 'chequeo de la mañana arriba');
+  await p.click('[data-ready="sue|2"]'); await p.click('[data-ready="ene|2"]'); await p.click('[data-ready="dol|1"]'); await p.waitForTimeout(100);
+  let t = await text(p);
+  ok(t.includes('Rojo') && await p.locator('.card.ready [data-express]').count() === 1, 'mal día: semáforo rojo y ofrece la versión de 20 min');
+  await p.click('[data-readyedit]'); await p.waitForTimeout(100);
+  ok(await p.locator('[data-ready="sue|0"]').count() === 1, 'se puede cambiar');
+  await p.click('[data-ready="sue|0"]'); await p.waitForTimeout(100);
+  ok((await text(p)).includes('Amarillo'), 'con una respuesta cambiada se cierra solo: amarillo');
+  const kg = p.locator('[data-kg]').first();
+  if (await kg.count()) { await kg.scrollIntoViewIfNeeded(); await kg.fill('6,8'); await p.waitForTimeout(100);
+    const dk = await p.locator('.discos').first().textContent();
+    ok(/1 de 1,6 \+ 1 de 0,8 por lado/.test(dk), 'discos para 6,8 kg: ' + dk); }
+  else ok(false, 'hay campo de peso en pecho');
+  await p.locator('.ses:not(.done) [data-task="fa"]').first().click();
+  await p.waitForTimeout(100);
+  ok(await p.locator('[data-share]').count() === 1, 'botón para compartir el día');
+  await p.click('[data-tab="progreso"]'); await p.waitForTimeout(100);
+  t = await text(p);
+  ok(t.includes('Series por músculo esta semana') && /Pecho\s*\d+\/10/.test(t) && !/Pecho\s*0\/10/.test(t), 'series por músculo cuenta el pecho');
+  ok(errs.length === 0, 'sin errores: ' + errs.join(' | '));
+  await ctx.close(); }
+
 await browser.close();
 console.log(`\n${passes} correctas, ${fails} fallidas`);
 process.exit(fails ? 1 : 0);
