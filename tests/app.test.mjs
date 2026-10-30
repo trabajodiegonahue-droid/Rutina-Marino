@@ -513,7 +513,7 @@ const reload = async p => { await p.reload(); await p.waitForTimeout(200); };
     ok((await p.$eval('#savechip', e => e.textContent)).includes('Sin nube'), 'si la nube no carga, el indicador lo dice');
     await p.click('[data-mode="dolor"]'); await p.locator('summary', { hasText: 'Notas' }).click(); await p.fill('#f-note', 'hombro');
     await p.waitForTimeout(300); await p.goto(URL); await p.waitForTimeout(1500);
-    const c = await cloud(p);
+    let c = await cloud(p); for (let i = 0; i < 20 && !(c[dayPath] && c[dayPath].note === 'hombro'); i++) { await p.waitForTimeout(250); c = await cloud(p); }
     ok(c[dayPath] && c[dayPath].mode === 'dolor' && c[dayPath].note === 'hombro', 'al abrir con nube, lo marcado sin nube se sube: ' + JSON.stringify(c[dayPath]));
     ok(await p.locator('[data-mode="dolor"]').evaluate(e => e.classList.contains('on')), 'y sigue en pantalla');
     // otro dispositivo marca algo segundos después de tu cambio: lo ves igual
@@ -670,8 +670,8 @@ const reload = async p => { await p.reload(); await p.waitForTimeout(200); };
   // registro del día
   await p.click('[data-tab="registro"]'); await p.waitForTimeout(150);
   ok((await text(p)).includes('Comidas'), 'Registro muestra comidas');
-  await p.click('[data-meal="col"]'); await p.waitForTimeout(100);
-  ok(await p.locator('[data-meal="col"]').getAttribute('aria-pressed') === 'true', 'marcar una comida');
+  await p.click('[data-mealx="col"]'); await p.waitForTimeout(100);
+  ok(await p.locator('[data-mealx="col"]').getAttribute('aria-pressed') === 'true', 'marcar una comida');
   await p.fill('#sl-bed', '01:30'); await p.fill('#sl-wake', '07:30'); await p.waitForTimeout(100);
   ok((await p.$eval('#sl-out', e => e.textContent)).includes('6 h'), 'calcula horas de sueño: ' + await p.$eval('#sl-out', e => e.textContent));
   await p.locator('details[data-keep="reg:ahorro"] summary').click(); await p.locator('details[data-keep="reg:ingles"] summary').click();
@@ -782,7 +782,7 @@ const reload = async p => { await p.reload(); await p.waitForTimeout(200); };
 // 35. Agua en vasos: cada toque suma 250 ml y queda guardado
 { const { p, ctx, errs } = await page('2026-10-20T10:00:00');
   ok(await p.locator('.water [data-vaso]').count() >= 8, 'se ven los vasos de la meta del día');
-  ok(await p.evaluate(() => { const w = document.querySelector('.water'), all = [...document.querySelectorAll('#app > *')]; return all.indexOf(w) >= all.length - 2; }), 'el agua va al final de Hoy (antes del resumen del día)');
+  ok(await p.evaluate(() => { const w = document.querySelector('.water').closest('#app > *'), all = [...document.querySelectorAll('#app > *')]; return all.indexOf(w) >= all.length - 3; }), 'el agua va al final de Hoy (antes del resumen del día)');
   ok(!(await text(p)).includes('Agua del día'), 'el agua ya no es un paso de «Despertar»');
   await p.click('[data-water="1"]'); await p.click('[data-water="1"]'); await p.waitForTimeout(100);
   ok((await p.$eval('.water', e => e.textContent)).includes('500 /'), 'dos vasos = 500 ml');
@@ -816,7 +816,7 @@ const reload = async p => { await p.reload(); await p.waitForTimeout(200); };
   t = await text(p);
   ok(t.includes('Flexiones diamante') && t.includes('6–10') && t.includes('Ejercicio nuevo'), 'Hoy usa la rutina editada');
   await reload(p); ok((await text(p)).includes('Flexiones diamante'), 'la rutina editada queda guardada');
-  await p.click('[data-tab="plan"]'); await p.locator('details.redit summary').click(); await p.click('[data-ask="rreset"]'); await p.click('[data-rreset="fa"]'); await p.click('[data-tab="hoy"]');
+  await p.click('[data-tab="plan"]'); if (!(await p.locator('details.redit').evaluate(e => e.open))) await p.locator('details.redit summary').click(); await p.click('[data-ask="rreset"]'); await p.click('[data-rreset="fa"]'); await p.click('[data-tab="hoy"]');
   ok(!(await text(p)).includes('Flexiones diamante'), 'volver a la rutina original');
   // avisos de la semana: archivo de calendario
   await p.click('[data-tab="plan"]');
@@ -917,7 +917,7 @@ const reload = async p => { await p.reload(); await p.waitForTimeout(200); };
   const [dl] = await Promise.all([p.waitForEvent('download'), p.click('[data-csv]')]);
   const csv = fs.readFileSync(await dl.path(), 'utf8');
   ok(csv.includes('Fecha;Día;Semana') && csv.includes('Cuádriceps'), 'planilla con tus días');
-  await p.click('[data-tab="guia"]'); ok((await text(p)).includes('Cómo usar la app'), 'instructivo en la Guía');
+  await p.click('[data-tab="guia"]'); ok((await text(p)).includes('cómo usar la app'), 'instructivo en la Guía');
   ok(errs.length === 0, 'sin errores: ' + errs.join(' | '));
   await ctx.close(); }
 { const { p, ctx, errs } = await page('2026-10-15T08:00:00'); // jueves: espalda + práctica militar
@@ -1125,6 +1125,32 @@ const reload = async p => { await p.reload(); await p.waitForTimeout(200); };
   ok((await text(p)).includes('Avisos en el teléfono') && await p.locator('[data-notif="on"]').count() === 1, 'avisos en Ajustes');
   await p.reload(); await p.waitForTimeout(300);
   ok(!(await text(p)).includes('¿Vienes de la app de Claude?'), 'la bienvenida no vuelve a salir');
+  ok(errs.length === 0, 'sin errores: ' + errs.join(' | '));
+  await ctx.close(); }
+
+// 49. Comidas que se pueden marcar en Hoy (colación), sesiones con «no pude», atajos, páginas, plan de la semana y guía plegable
+{ const ctx = await browser.newContext({ viewport: { width: 390, height: 1400 } }); const errs = [];
+  await ctx.addInitScript(() => { window.__OPENALL = false; });
+  const p = await ctx.newPage(); p.on('pageerror', e => errs.push(e.message)); await p.clock.install({ time: new Date('2026-10-20T20:00:00') }); await p.goto(URL); await p.waitForTimeout(300);
+  ok(await p.locator('#sec-comidas [data-mealx="col"]').count() === 1, 'la colación se marca en Hoy');
+  await p.click('#sec-comidas [data-mealx="col"]'); await p.waitForTimeout(100);
+  ok(await p.locator('#sec-comidas [data-mealx="col"]').getAttribute('aria-pressed') === 'true', 'colación marcada');
+  await p.click('[data-tab="registro"]'); await p.waitForTimeout(100);
+  ok(await p.locator('[data-mealx="col"]').getAttribute('aria-pressed') === 'true', 'en Registro es la misma marca');
+  await p.click('[data-tab="hoy"]'); await p.waitForTimeout(100);
+  ok(await p.locator('.jump [data-jump="sec-comidas"]').count() === 1 && await p.locator('.pnav [data-tab="plan"]').count() === 1, 'atajos arriba y «Plan →» abajo');
+  const ing = p.locator('[data-nope="ingles"]'); if (await ing.count()) { await ing.first().click(); await p.waitForTimeout(100); }
+  ok(/Sesiones\s*\d\/\d · 1 no pude/.test(await p.$eval('#sec-resumen', e => e.textContent)), 'el resumen cuenta aparte lo que no pudiste');
+  await p.click('.pnav [data-tab="plan"]'); await p.waitForTimeout(100);
+  ok(await p.locator('.wc').count() === 0 && await p.locator('#pl-semana .li').count() >= 7, 'Plan muestra solo tu semana');
+  await p.click('[data-wkstep="1"]'); await p.waitForTimeout(100);
+  ok((await text(p)).includes('Volver a mi semana'), 'flechas para ver otra semana');
+  await p.click('[data-allwk]'); await p.waitForTimeout(100);
+  ok(await p.locator('.wc').count() > 40, 'botón para ver todas las semanas');
+  await p.click('[data-tab="guia"]'); await p.waitForTimeout(100);
+  ok(await p.locator('details.gsec').count() > 8 && await p.locator('details.gsec[open]').count() === 1, 'guía en temas plegables');
+  await p.reload(); await p.waitForTimeout(300); await p.click('[data-tab="plan"]'); await p.waitForTimeout(100);
+  ok(await p.locator('.wc').count() > 40, 'se recuerda que dejaste abiertas todas las semanas');
   ok(errs.length === 0, 'sin errores: ' + errs.join(' | '));
   await ctx.close(); }
 
