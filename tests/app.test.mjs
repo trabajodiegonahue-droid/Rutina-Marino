@@ -14,7 +14,7 @@ const NOSKIP = 'window.__NOSKIP = true; window.__NOLOCK = true;';
 const newContext0 = browser.newContext.bind(browser);
 // Chromium guarda localStorage de forma asíncrona entre pestañas: antes de cerrar una, se espera a que termine de escribir
 browser.newContext = async (...a) => { const c = await newContext0(...a); await c.addInitScript(NOSKIP);
-  const np = c.newPage.bind(c); c.newPage = async (...b) => { const pg = await np(...b); const cl = pg.close.bind(pg); pg.close = async (...o) => { await pg.waitForTimeout(600).catch(() => {}); return cl(...o); }; return pg; };
+  const np = c.newPage.bind(c); c.newPage = async (...b) => { const pg = await np(...b); const cl = pg.close.bind(pg); pg.close = async (...o) => { await pg.evaluate(() => new Promise(r => setTimeout(r, 50))).catch(() => {}); await pg.waitForTimeout(1500).catch(() => {}); return cl(...o); }; return pg; };
   return c; };
 let fails = 0, passes = 0;
 const ok = (cond, msg) => { if (cond) { passes++; } else { fails++; console.log('  ✗ ' + msg); } };
@@ -864,9 +864,9 @@ const reload = async p => { await p.reload(); await p.waitForTimeout(200); };
   ok((await text(p)).includes('días para el servicio'), 'cuenta regresiva al servicio militar');
   await p.click('[data-partido]'); await p.waitForTimeout(150);
   let t = await text(p);
-  ok(t.includes('Partido') && t.includes('Comida 3 h antes') && !t.includes('Pecho + core'), 'día de partido: cambia el entrenamiento por el partido');
+  ok(t.includes('Partido') && t.includes('Antes del partido') && !t.includes('Pecho + core'), 'día de partido: cambia el entrenamiento por el partido');
   ok(t.includes('Resumen del día') && t.includes('Agua'), 'resumen del día al final');
-  await reload(p); ok((await text(p)).includes('Comida 3 h antes'), 'el partido queda guardado');
+  await reload(p); ok((await text(p)).includes('Antes del partido'), 'el partido queda guardado');
   await p.click('[data-partido]'); await p.waitForTimeout(150);
   ok((await text(p)).includes('Pecho + core'), 'deshacer el partido vuelve al plan');
   ok((await text(p)).includes('Sacar al perro') && (await text(p)).includes('Pausa activa en la pega'), 'perro y pausa activa en el día');
@@ -1036,6 +1036,45 @@ const reload = async p => { await p.reload(); await p.waitForTimeout(200); };
   await ctx.addInitScript(() => { window.__NOLOCK = false; window.__NOSKIP = true; if (!localStorage.getItem('bitacora-buzo-v1')) localStorage.setItem('bitacora-buzo-v1', JSON.stringify({ cfg: { start: '2026-10-06' }, days: { '2026-10-13': { status: 'fail' }, '2026-10-14': { status: 'fail' } }, pend: {} })); });
   const p = await ctx.newPage(); await p.clock.install({ time: new Date('2026-10-15T08:00:00') }); await p.goto(URL); await p.waitForTimeout(300);
   ok((await text(p)).includes('Semana floja'), 'alerta de semana floja');
+  await ctx.close(); }
+
+// 46. Fútbol (día antes, partido con hora, día después), colores, pésate, peso por semana y emergencia en el lago
+{ const ctx = await browser.newContext({ viewport: { width: 390, height: 1400 } }); const errs = [];
+  await ctx.addInitScript(() => { window.__NOSKIP = false; if (!localStorage.getItem('bitacora-buzo-v1')) localStorage.setItem('bitacora-buzo-v1', JSON.stringify({ cfg: { start: '2026-10-06', sos: '+56912345678', sosName: 'Mamá' }, days: { '2026-10-06': { status: 'done', peso: '62' }, '2026-10-13': { peso: '62,4' } }, pend: {} })); });
+  let p = await ctx.newPage(); p.on('pageerror', e => errs.push(e.message)); await p.clock.install({ time: new Date('2026-10-07T09:00:00') }); await p.goto(URL); await p.waitForTimeout(300);
+  const plan0 = await p.$eval('#app', e => (e.textContent.match(/SEM \d+ · DÍA \d|Semana \d+ · día \d/) || [''])[0]);
+  ok(await p.locator('.situ').count() === 1, '«¿Qué pasa hoy?» arriba');
+  await p.click('[data-mpartido]'); await p.waitForTimeout(150);
+  let t = await text(p);
+  ok(t.includes('Activación (día antes del partido)') && t.includes('Preparar el partido') && !t.includes('Pierna + core ·'), 'mañana juego: hoy sin fuerza, activación y preparar el partido');
+  await p.close();
+  p = await ctx.newPage(); p.on('pageerror', e => errs.push(e.message)); await p.clock.install({ time: new Date('2026-10-08T08:00:00') }); await p.goto(URL); await p.waitForTimeout(300);
+  t = await text(p);
+  ok(t.includes('Antes del partido') && await p.locator('#ph-sel').count() === 1, 'al día siguiente es día de partido, con hora');
+  await p.selectOption('#ph-sel', '19:00'); await p.waitForTimeout(150);
+  ok((await text(p)).includes('comida 16:00'), 'la comida va 3 h antes de la hora del partido');
+  await p.close();
+  p = await ctx.newPage(); p.on('pageerror', e => errs.push(e.message)); await p.clock.install({ time: new Date('2026-10-09T08:00:00') }); await p.goto(URL); await p.waitForTimeout(300);
+  t = await text(p);
+  ok(t.includes('Ayer jugaste'), 'el día después sugiere recuperación');
+  await p.click('[data-ppartido]'); await p.waitForTimeout(150);
+  ok((await text(p)).includes('Recuperación (día después del partido)'), 'recuperación después del partido');
+  // colores claros
+  await p.click('[data-tab="plan"]'); await p.click('[data-cset="theme|claro"]'); await p.waitForTimeout(100);
+  ok(await p.evaluate(() => document.documentElement.dataset.theme) === 'light', 'modo claro');
+  await p.click('[data-cset="theme|oscuro"]');
+  await p.click('[data-tab="progreso"]'); ok((await text(p)).includes('Tu peso por semana'), 'peso por semana');
+  await p.close();
+  // lunes de lago (día 7, inicio martes 6): emergencia
+  p = await ctx.newPage(); p.on('pageerror', e => errs.push(e.message)); await p.clock.install({ time: new Date('2026-10-12T07:00:00') }); await p.goto(URL); await p.waitForTimeout(300);
+  ok(errs.length === 0, 'sin errores: ' + errs.join(' | '));
+  await ctx.close(); }
+{ const { p, ctx } = await page('2026-10-19T07:00:00'); // día de lago
+  await p.evaluate(() => { const s = JSON.parse(localStorage.getItem('bitacora-buzo-v1') || '{"cfg":{},"days":{},"pend":{}}'); s.cfg = Object.assign(s.cfg || {}, { sos: '+56912345678', sosName: 'Mamá' }); localStorage.setItem('bitacora-buzo-v1', JSON.stringify(s)); }); await reload(p);
+  ok((await text(p)).includes('Avisar que entro al lago'), 'botón de emergencia el día de lago');
+  await ctx.close(); }
+{ const { p, ctx } = await page('2026-10-13T08:00:00'); // martes = día 1 de la semana (inicio martes 6)
+  ok((await text(p)).includes('Pésate hoy'), 'recordatorio de pesarse el primer día de la semana');
   await ctx.close(); }
 
 await browser.close();
