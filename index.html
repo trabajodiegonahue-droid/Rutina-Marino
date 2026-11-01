@@ -360,6 +360,13 @@ nav.tabs button.on::after{content:"";display:block;width:22px;height:3px;border-
 .ahora{border-left:0;background:linear-gradient(135deg,color-mix(in srgb,var(--accent) 16%,var(--paper)),color-mix(in srgb,var(--accent2) 10%,var(--paper)));border:1px solid color-mix(in srgb,var(--accent) 40%,var(--line))}
 .ahora .at{font-family:var(--f-display);font-size:22px}
 .acc{display:flex;flex-wrap:wrap;gap:8px}.accb{display:flex;align-items:center;gap:6px;border:1px solid var(--line);background:var(--paper2);border-radius:999px;padding:6px 12px 6px 6px;color:var(--ink);font-size:14px}.accb i{width:22px;height:22px;border-radius:50%;background:linear-gradient(135deg,var(--a),var(--b));box-shadow:0 0 10px color-mix(in srgb,var(--a) 60%,transparent)}.accb.on{border-color:var(--accent);box-shadow:0 0 0 2px color-mix(in srgb,var(--accent) 35%,transparent)}
+.pend .plist{display:flex;flex-direction:column;gap:6px}.pitem{display:grid;grid-template-columns:30px minmax(0,1fr) 16px;gap:10px;align-items:center;text-align:left;background:var(--paper2);border:1px solid var(--line);border-radius:14px;padding:10px 12px;color:var(--ink)}.pitem .pic{font-size:20px}.pitem b{display:block;font-size:15px;font-weight:600}.pitem small{color:var(--muted);font-size:12.5px}.pitem .pgo{color:var(--accent);font-size:22px}
+.pbadge{min-width:26px;height:26px;border-radius:999px;display:grid;place-items:center;font-weight:700;font-family:var(--f-mono);background:linear-gradient(135deg,var(--accent),var(--accent2));color:var(--accent-ink)}
+.pend.ok{padding:10px 14px}.pmore>summary{cursor:pointer;color:var(--accent);font-weight:600;font-size:14px;padding:4px 2px;list-style:none}.pmore>summary::-webkit-details-marker{display:none}.pmore[open]>summary{margin-bottom:6px}.okline{font-size:15px}.pshare{border-color:var(--accent)}
+.pzrow.hab{grid-template-columns:minmax(0,1fr) 84px auto}.pzrow.hab .pzl{grid-column:1/-1}.pzmin{display:flex;align-items:center;gap:4px;font-size:13px;color:var(--muted)}.pzmin input{width:52px;padding:8px 6px;text-align:center}
+.pzrow.tg{grid-template-columns:minmax(0,1fr) auto}.pzrow.tg .pzl{grid-column:auto}.pzrow.tg .seg{min-width:76px}
+.cedit{display:flex;flex-direction:column;gap:6px;margin-top:8px}.crow{display:grid;grid-template-columns:minmax(0,1fr) 92px 74px 40px;gap:6px;align-items:center}.crow .cn{font-size:14px;overflow:hidden;text-overflow:ellipsis}.crow input{min-width:0;width:100%;background:var(--paper2);border:1px solid var(--line);color:var(--ink);border-radius:10px;padding:7px 8px;font:inherit;font-size:14px}.crow .nb{height:36px;min-width:36px;padding:0}
+#pr-metas td input.mi{width:60px;background:var(--paper2);border:1px solid var(--line);color:var(--ink);border-radius:8px;padding:5px 6px;font-family:var(--f-mono);font-size:14px}
 .recs{display:flex;flex-direction:column;gap:8px}.rec{background:var(--paper2);border:1px solid var(--line);border-radius:14px;padding:10px 12px;display:flex;flex-direction:column;gap:6px}.rec .rh{display:grid;grid-template-columns:minmax(0,1fr) auto 18px;gap:8px;align-items:center}.rec .rh b{font-weight:600;font-size:15px}.rec .rm{display:flex;align-items:center;gap:6px}.rec .rm input{width:64px;padding:5px 8px;font-family:var(--f-mono);font-size:15px}
 .gsec>summary{font-family:var(--f-display)}
 h2{font-family:var(--f-display);font-weight:700;letter-spacing:-.01em}
@@ -874,15 +881,19 @@ function tolT(w){
 // el turno es la hora de entrada («14:00», «16:00», cualquier hora) o «libre». Garzón: 8 h 30 de turno,
 // 30–40 min caminando a la pega, en la casa 30 min después de salir, a la cama 1 h después y 8 h de sueño.
 // "13" y "16" son los nombres antiguos de entrar a las 14:00 y a las 16:00.
-const SHIFT_LIBRE={lbl:"Libre",wake:"7:00",A:"7:30",B:"10:00",C:"11:15",lunch:"12:30",leave:"",bed:"22:30",back:""};
+// tu sueño (Plan → Personaliza → Sueño): horas de sueño, cuánto después de llegar te acuestas y a qué hora despiertas el día libre
+const SUENO=()=>{const c=(()=>{try{return Store.cfg}catch(e){return null}})()||{},h=+c.sueno;return {min:h>=6&&h<=10?Math.round(h*60):null,acuesto:+c.acuesto>=15&&+c.acuesto<=180?+c.acuesto:60,libre:/^\d{1,2}:\d{2}$/.test(c.despLibre||"")?c.despLibre:null}};
+const SHIFT_LIBRE0={lbl:"Libre",wake:"7:00",A:"7:30",B:"10:00",C:"11:15",lunch:"12:30",leave:"",bed:"22:30",back:""};
+function shiftLibre(){const z=SUENO();if(!z.libre&&!z.min)return SHIFT_LIBRE0;const W=toMin(z.libre||"7:00"),f=fromMin;
+  return {lbl:"Libre",wake:f(W),A:f(W+30),B:f(W+180),C:f(W+255),lunch:f(W+330),leave:"",bed:f(W-(z.min||510)),back:""}}
 // «14:00>1:30»: entraste a las 14:00 y saliste más tarde, a la 1:30
 const turnoHora=t=>{t=String(t||"").split(">")[0];return t==="13"?"14:00":t==="16"?"16:00":/^\d{1,2}:\d{2}$/.test(t)&&toMin(t)<1440?t:null};
 const turnoSalida=t=>{const x=String(t||"").split(">")[1];return x&&/^\d{1,2}:\d{2}$/.test(x)&&toMin(x)<1440?x:null};
-function shiftFor(t){if(t==="libre")return SHIFT_LIBRE;const h=turnoHora(t);if(!h)return undefined;const E=toMin(h),f=fromMin,sx=turnoSalida(t);
-  let out=E+510;if(sx){out=toMin(sx);while(out<=E)out+=1440}const back=out+30,bed=back+60;
+function shiftFor(t){if(t==="libre")return shiftLibre();const h=turnoHora(t);if(!h)return undefined;const E=toMin(h),f=fromMin,sx=turnoSalida(t),z=SUENO(),SL=z.min||480;
+  let out=E+510;if(sx){out=toMin(sx);while(out<=E)out+=1440}const back=out+30,bed=back+z.acuesto;
   // turno de mañana (entra entre 4:00 y 11:59): despierta antes de ir y entrena al volver
-  if(E>=240&&E<720){const wake=E-90;return {lbl:"Entro "+h,wake:f(wake),A:f(back+30),B:f(back+165),C:f(back+240),lunch:f(E+240),leave:f(E-45),bed:f(wake-480),back:f(back),exit:f(out)}}
-  const wake=(bed+480)%1440,leave=E-45,lunch=leave-30,A=wake+30,C=Math.max(A+120,lunch-30),Bx=Math.min(A+135,C-45);
+  if(E>=240&&E<720){const wake=E-90;return {lbl:"Entro "+h,wake:f(wake),A:f(back+30),B:f(back+165),C:f(back+240),lunch:f(E+240),leave:f(E-45),bed:f(wake-SL),back:f(back),exit:f(out)}}
+  const wake=(bed+SL)%1440,leave=E-45,lunch=leave-30,A=wake+30,C=Math.max(A+120,lunch-30),Bx=Math.min(A+135,C-45);
   return {lbl:"Entro "+h+(sx?" · salgo "+sx:""),wake:f(wake),A:f(A),B:f(Math.max(A+60,Bx)),C:f(C),lunch:f(lunch),leave:f(leave),bed:f(bed),back:f(back),exit:f(out)}}
 const HORAS=Array.from({length:24},(_,i)=>((i+1)%24)+":00");
 const SHIFT=new Proxy({},{get:(o,k)=>typeof k==="string"?shiftFor(k):undefined,has:(o,k)=>!!shiftFor(k)});
@@ -982,7 +993,7 @@ const okKg=v=>v>=35&&v<=150;
 function bodyWeight(){let w=null;const tk=iso(today());Object.keys(Store.days).sort().forEach(k=>{if(k>tk)return;const v=parseFloat(String(Store.days[k].peso||"").replace(",","."));if(okKg(v))w=v});const c=parseFloat(String(Store.cfg.peso||"").replace(",","."));return w||(okKg(c)?c:null)}
 // o.prev / o.next: turno de ayer y de mañana. Después de acostarte pasada la medianoche, hoy se despierta 8 h después
 // (y la mañana se corre); la alarma de la noche es la del turno de mañana.
-const wakeAfter=(bedT,sh)=>{const b=toMin(bedT),pb=b<300?b:b-1440;return Math.max(toMin(sh.wake),pb+480)};
+const wakeAfter=(bedT,sh)=>{const b=toMin(bedT),pb=b<300?b:b-1440;return Math.max(toMin(sh.wake),pb+(SUENO().min||480))};
 function applyShift(plan,turno,kg,o){
   o=o||{};const sh=Object.assign({},SHIFT[turno]||SHIFT["13"]),hell=plan.w===HELL,rest=plan.kind==="descanso",N=NUT(kg,!rest,hell);
   if(o.prev){const ps=SHIFT[o.prev]||sh,wk=wakeAfter(ps.bed,sh);if(wk>toMin(sh.wake)){sh.late=ps.bed;sh.wake=fromMin(wk);sh.A=fromMin(Math.max(toMin(sh.A),wk+30));if(toMin(sh.B)<toMin(sh.A)+45)sh.B=fromMin(toMin(sh.A)+45)}}
@@ -1113,7 +1124,9 @@ function applyMode(plan,mode){
 
 /* =================== METAS Y PRUEBAS =================== */
 // metas propias del plan (no son las oficiales: confírmalas en tu postulación). Nado 50 m: primero sin parar, después crol, después con tiempo.
-const GOALS={13:{sinParar:1,flex:40,barras:6,salto:210,abd:50,run:"15:30"},26:{crol:1,sinParar:1,flex:50,barras:9,salto:225,abd:60,run:"14:30"},39:{swim:"1:10",flex:60,barras:12,salto:240,abd:70,run:"13:45"},52:{swim:"1:00",flex:70,barras:15,salto:250,abd:75,run:"13:00"}};
+const GOALS0={13:{sinParar:1,flex:40,barras:6,salto:210,abd:50,run:"15:30"},26:{crol:1,sinParar:1,flex:50,barras:9,salto:225,abd:60,run:"14:30"},39:{swim:"1:10",flex:60,barras:12,salto:240,abd:70,run:"13:45"},52:{swim:"1:00",flex:70,barras:15,salto:250,abd:75,run:"13:00"}};
+// tus metas de las pruebas (Progreso → Metas → Editar) mandan sobre las propuestas
+const GOALS=new Proxy(GOALS0,{get:(o,k)=>{const g=o[k];if(!g||typeof k!=="string")return g;const m=((()=>{try{return Store.cfg.metasP}catch(e){return null}})()||{})[k];return m?Object.assign({},g,m):g}});
 const cnt=v=>{const x=String(v==null?"":v).trim().replace(/\s*(m|mts?|metros|reps?|rep\.?|barras|veces)$/i,"").replace(",",".");return /^\d+(\.\d+)?$/.test(x)?+x:NaN};
 function evalTest(w,t){
   const g=GOALS[w];if(!g||!t)return null;const n=k=>cnt(t[k]),rows=[];
@@ -1148,6 +1161,10 @@ const fixCfg=c=>{const d=defCfg();if(c.start==="2026-10-05"&&!c.startMoved){c.st
   if(c.semana!=null&&!(Array.isArray(c.semana)&&c.semana.length===7&&c.semana.every(x=>Number.isInteger(x)&&x>=0&&x<=6)))delete c.semana;
   ["aguaL","protG","pesoMeta","edad"].forEach(f=>{if(c[f]!=null&&c[f]!==""&&!(+c[f]>0&&+c[f]<400))delete c[f]});
   if(c.enfoque!=null&&!ENFOQUES.some(x=>x[0]===c.enfoque))delete c.enfoque;if(c.faltas!=null&&!["correr","doble"].includes(c.faltas))delete c.faltas;if(c.exMeta!=null){if(!isObj(c.exMeta))delete c.exMeta;else Object.keys(c.exMeta).forEach(x=>{if(!(+c.exMeta[x]>0&&+c.exMeta[x]<1000))delete c.exMeta[x]})}if(c.acento!=null&&!ACENTOS.some(x=>x[0]===c.acento))delete c.acento;
+  if(c.semTurno!=null&&!(Array.isArray(c.semTurno)&&c.semTurno.length===7&&c.semTurno.every(x=>typeof x==="string"&&(x==="libre"||/^\d{1,2}:\d{2}$/.test(x)))))delete c.semTurno;
+  ["sueno","acuesto","vaso","presu","avAntes","backupDias"].forEach(f=>{if(c[f]!=null&&c[f]!==""&&!(+c[f]>=0&&+c[f]<1e6))delete c[f]});if(c.despLibre!=null&&c.despLibre!==""&&!/^\d{1,2}:\d{2}$/.test(c.despLibre))delete c.despLibre;
+  ["dur","avQue","metasP"].forEach(f=>{if(c[f]!=null&&!isObj(c[f]))delete c[f]});if(c.hoyOff!=null&&!Array.isArray(c.hoyOff))delete c.hoyOff;
+  if(c.lista!=null){if(!isObj(c.lista))delete c.lista;else{const L=c.lista;if(!Array.isArray(L.quitar))L.quitar=[];if(!isObj(L.cant))L.cant={};if(!isObj(L.precio))L.precio={};L.extra=Array.isArray(L.extra)?L.extra.filter(x=>isObj(x)&&typeof x.n==="string"&&x.n.trim()).slice(0,40):[]}}
   if(c.comidas!=null){if(!isObj(c.comidas))delete c.comidas;else Object.keys(c.comidas).forEach(x=>{if(!isObj(c.comidas[x]))delete c.comidas[x]})}
   if(c.misProt!=null)c.misProt=Array.isArray(c.misProt)?c.misProt.filter(x=>isObj(x)&&typeof x.id==="string"&&typeof x.n==="string"&&+x.g>0&&+x.g<200).slice(0,30):[];
   if(c.maxB&&!(isObj(c.maxB)&&Number.isInteger(+c.maxB.v)&&+c.maxB.v>0&&+c.maxB.v<=40))c.maxB=null;
@@ -1349,15 +1366,19 @@ function ctxFor(date){const c=Store.cfg,dd=Store.days[iso(date)],fz=dd&&dd.ctx&&
   const base={toMeta:isISO(c.meta||"2027-04-01")?diffDays(parse(c.meta||"2027-04-01"),date):null,month:date.getMonth(),place:c.place,partner:c.partner,neo:c.neo,temp:tempFor(c,date),trip:c.trip,fins:!!c.fins,boya:!!c.boya,pool:!!c.pool,nolake:!!(dd&&dd.nolake)};
   return Object.assign({},lastTest(date),base,fz?Object.assign({place:fz.place,partner:fz.partner,neo:fz.neo,temp:fz.temp},...["fins","boya","pool"].filter(f=>f in fz).map(f=>({[f]:fz[f]}))):{})}
 // trabajas de martes a sábado: domingo y lunes son libres salvo que marques otro turno ese día
-const OFF=[0,1];const turnoOf=d=>(Store.days[iso(d)]||{}).turno||(OFF.includes(d.getDay())?"libre":Store.cfg.turno);
+const OFF=[0,1];const turnoOf=d=>{const x=(Store.days[iso(d)]||{}).turno;if(x)return x;const st=Store.cfg.semTurno;if(Array.isArray(st)){const v=st[(d.getDay()+6)%7];if(v&&SHIFT[v])return v}return OFF.includes(d.getDay())?"libre":Store.cfg.turno};
 let PLANC={};
 // tus cambios: tareas ocultas, horas que elegiste y tus tareas propias (hábitos nuevos)
 const HABITS=[["perro","🐕 Sacar al perro"],["casa","🏠 Tareas de la casa"],["ingles","🇬🇧 Inglés"],["venta","💼 Aprender a vender"],["estudio","📚 Estudio del día libre"],["pausa","🧍 Pausa activa en la pega"],["ducha","🚿 Ducha fría"],["tol","🔥 Tolerancia al dolor"],["mil","🎖️ Práctica militar"]];
 const HIDEABLE=HABITS.map(x=>x[0]);
-function customize(p,date){if(!p)return p;const c=Store.cfg,hide=c.hide||[],hr=c.horas||{},mis=c.mis||[];
-  if(!hide.length&&!Object.values(hr).some(Boolean)&&!mis.length)return p;
+const DURABLE=[["ingles","🇬🇧 Inglés",25],["venta","💼 Aprender a vender",15],["perro","🐕 Sacar al perro",20],["casa","🏠 Tareas de la casa",15],["estudio","📚 Estudio",20]];
+// alarga o acorta una tarea (los bloques con tiempo se reparten igual)
+function scaleTask(t,mn){const old=t.min||Math.round(t.blocks.reduce((a,b)=>a+(b.tm||0)*(b.tm?(b.s||1):0),0)/60);if(!old||!(mn>0)||mn===old)return t;const f=mn/old;
+  return Object.assign({},t,{min:mn,t:/\d+ min/.test(t.t)?t.t.replace(/\d+ min/,mn+" min"):t.t,blocks:t.blocks.map(b=>b.tm?Object.assign({},b,{tm:Math.max(60,Math.round(b.tm*f/30)*30),p:String(b.p).replace(/^(\d+)(–\d+)? min/,()=>Math.max(1,Math.round(b.tm*f/60))+" min")}):b)})}
+function customize(p,date){if(!p)return p;const c=Store.cfg,hide=c.hide||[],hr=c.horas||{},mis=c.mis||[],du=c.dur||{};
+  if(!hide.length&&!Object.values(hr).some(Boolean)&&!mis.length&&!Object.values(du).some(v=>+v>0))return p;
   const dow=(date.getDay()+6)%7,main=hr.__train?p.tasks.find(t=>counts(t)&&!["ingles","estudio","venta","mil","tol","prep","core","stretch","ducha"].includes(t.id)&&!/^mi-/.test(t.id)):null;
-  const tasks=p.tasks.filter(t=>!(HIDEABLE.includes(t.id)&&hide.includes(t.id))).map(t=>hr[t.id]?Object.assign({},t,{h:hr[t.id]}):t===main?Object.assign({},t,{h:hr.__train}):t);
+  const tasks=p.tasks.filter(t=>!(HIDEABLE.includes(t.id)&&hide.includes(t.id))).map(t=>hr[t.id]?Object.assign({},t,{h:hr[t.id]}):t===main?Object.assign({},t,{h:hr.__train}):t).map(t=>+du[t.id]>0?scaleTask(t,+du[t.id]):t);
   mis.forEach(m=>{if(m.dias[dow])tasks.push(T("mi-"+m.id,m.t,m.nota||"Tu hábito.",m.h,[B(m.t,m.min?m.min+" min":"hecho",Object.assign({c:m.nota||"Lo agregaste tú en Plan → Personaliza tu día."},+m.min?{tm:+m.min*60}:{}))],{kind:m.cuenta?"propia":"rutina",mine:true}))});
   return Object.assign({},p,{tasks:sortT(tasks)})}
 function planFor(date){const ck=iso(date);if(ck in PLANC)return PLANC[ck];const p=planFor0(date);const dd=Store.days[ck]||{};let q=p&&dd.viaje?travelDay(p):p&&dd.partido?matchDay(p,dd.partidoH):p&&dd.prepartido?preMatchDay(p):p&&dd.postpartido?postMatchDay(p):p;if(q&&dd.mode!=="dolor"&&dd.mode!=="enfermo")q=protectZone(q,date);if(q&&dd.express&&!dd.viaje)q=expressDay(q);q=addDoble(customize(q,date),date);return PLANC[ck]=q}
@@ -1843,14 +1864,14 @@ function daySummaryHTML(plan,dd,d){const k=iso(d),core=plan.tasks.filter(counts)
   return `<div class="card sum"><span class="lbl">Resumen del día</span><div class="list">${row("Sesiones",`${dn}/${core.length}${np?` · ${np} no pude`:""}`,dn===core.length&&core.length>0,dn+np===core.length&&np>0)}${eng?row("Inglés",taskDone(dd,eng)?"hecho":isNope(dd,eng)?"no pude":"pendiente",taskDone(dd,eng),isNope(dd,eng)):""}${row("Comidas",`${mn}/${ms.length}`,mn>=ms.length)}${row("Agua",`${w}/${g} vasos`,w>=g)}${hs!=null?row("Sueño",fmtH(hs),hs>=7):""}</div>
   ${recs.length?`<p class="rec-hoy">🏆 Récords de hoy: ${esc(recs.join(" · "))}</p>`:""}${verdict?`<p class="foot"><b>${esc(verdict)}</b></p>`:""}${tm?`<p class="foot">Mañana: ${esc(tm.title)}.</p>`:""}${dn?`<button class="btn" data-share="${k}" style="margin-top:8px">📸 Compartir mi día</button>`:""}</div>`}
 // agua del día en vasos de 250 ml: cada toque suma un vaso
-const VASO=250;
-function waterGoal(plan){const own=parseFloat(String(Store.cfg.aguaL||"").replace(",","."));return Math.round((own>0?own:plan.waterL||2.5)*1000/VASO)}
+const vasoMl=()=>{const v=+Store.cfg.vaso;return v>=100&&v<=1500?Math.round(v):250};
+function waterGoal(plan){const own=parseFloat(String(Store.cfg.aguaL||"").replace(",","."));return Math.round((own>0?own:plan.waterL||2.5)*1000/vasoMl())}
 const protGoal=()=>+Store.cfg.protG>0?Math.round(+Store.cfg.protG):NUT(bodyWeight(),true,false).prot;
 function waterHTML(plan,dd){const g=waterGoal(plan),n=Math.max(0,Math.min(40,+dd.water||0)),full=n>=g;
-  return `<div class="card water ${full?"ok":""}"><div class="row" style="justify-content:space-between;align-items:center"><span class="lbl">Agua de hoy</span><span class="mono">${nf(n*VASO)} / ${nf(g*VASO)} ml</span></div>
+  return `<div class="card water ${full?"ok":""}"><div class="row" style="justify-content:space-between;align-items:center"><span class="lbl">Agua de hoy</span><span class="mono">${nf(n*vasoMl())} / ${nf(g*vasoMl())} ml</span></div>
   <div class="vasos">${Array.from({length:Math.max(g,n)},(_,i)=>`<button class="vaso ${i<n?"on":""}" data-vaso="${i+1}" aria-label="Vaso ${i+1}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 3h14l-2 18H7z" fill="${i<n?"currentColor":"none"}" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg></button>`).join("")}</div>
   <div class="row"><button class="btn main" data-water="1" style="flex:2">+ 1 vaso</button><button class="btn" data-water="-1" style="flex:1" ${n?"":"disabled"}>− 1</button></div>
-  <p class="foot">${full?"Meta cumplida.":`Te faltan ${g-n} vasos.`} Una botella de 1 L son 4 vasos.</p></div>`}
+  <p class="foot">${full?"Meta cumplida.":`Te faltan ${g-n} ${vasoMl()===250?"vasos":"de "+vasoMl()+" ml"}.`} Cada toque = ${vasoMl()} ml${vasoMl()===250?" (una botella de 1 L son 4)":""}. Cámbialo en Plan → ✏️ Personaliza → Metas.</p></div>`}
 function sesHTML(t,dd,open,pend,st){
   const all=taskDone(dd,t),meta=[t.h,t.min?"~"+Math.round(t.min)+" min":"",t.m?nf(t.m)+" m":""].filter(Boolean).join(" · ");
   if(st==="lock")return `<div class="ses lock"><div class="sh"><span class="chk lk" aria-hidden="true"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 018 0v3"/></svg></span><button class="tog" data-locked="${t.id}"><span class="t">${esc(t.t)}</span>${meta?`<span class="m">${esc(meta)}</span>`:""}</button></div></div>`;
@@ -1908,20 +1929,24 @@ function viewHoy(){
     return h+`<div class="order"><p class="say">Empiezas el ${dayName(st).toLowerCase()} ${fmt(st)}.</p><p>Esta noche: bolso listo y a la cama a las ${(SHIFT[Store.cfg.turno]||SHIFT["13"]).bed}. El día 1 tienes: ${p1.tasks.map(t=>esc(t.t.toLowerCase())).join(", ")}.</p><button class="btn main" data-goto="${iso(st)}">Ver el día 1</button></div>`}
   if(L.after)h+=`<div class="card"><span class="lbl">Plan terminado</span><p style="margin:0">Terminaste las 52 semanas. Ahora es mantención: el mismo tipo de semana con menos carga, para no perder lo ganado. Si aún no entras a la Armada y quieres otra vuelta dura, en Plan está «Repetir etapa 4». Ya dentro: 3 sesiones de nado y 2 de fuerza continua por semana, y la etapa 4 completa 3 meses antes de postular al curso.</p></div>`;
   const dd=Store.days[k]||{},plan=planFor(d),status=dayStatus(k,plan),u=units(dd,plan);
-  if(!S.focus)h+=jumpBar([isToday&&!window.__NOLOCK&&["sec-ahora","⚡ Ahora"],["sec-tareas","📋 Tareas"],["sec-comidas","🍽 Comidas"],["sec-agua","💧 Agua"],["sec-resumen","📊 Resumen"]]);
+  const off=x=>(Store.cfg.hoyOff||[]).includes(x);
+  if(!S.focus)h+=jumpBar([isToday&&!window.__NOLOCK&&!off("ahora")&&["sec-ahora","⚡ Ahora"],isToday&&!off("pendientes")&&["sec-pend","📝 Anotar"],["sec-tareas","📋 Tareas"],!off("comidas")&&["sec-comidas","🍽 Comidas"],["sec-agua","💧 Agua"],["sec-resumen","📊 Resumen"]]);
   // ayer no se cumplió: hoy se retoma el mismo día del plan
   // con partido, viaje o recuperación activos, la tarjeta de «retomas» confunde: lo explica «¿Qué pasa hoy?»
   if(isToday&&!(dd.partido||dd.prepartido||dd.postpartido||dd.viaje)){const y=addDays(d,-1),yk=iso(y);if(skipData().list.includes(yk)){const yd=Store.days[yk]||{},why=yd.mode==="enfermo"?"estabas enfermo":yd.mode==="dolor"?"estabas con dolor":yd.status==="fail"?"marcaste que no pudiste":"quedó sin marcar";
     h+=`<div class="card"><span class="lbl">Hoy retomas el día de ayer</span><p style="margin:0">Ayer ${why}, así que hoy toca lo mismo: ${esc(plan.title)}. Ningún día se pierde: el plan entero se corre un día.</p>${why==="quedó sin marcar"?`<button class="btn sm" data-ydone>Sí lo hice ayer: marcarlo cumplido</button>`:""}${yd.mode!=="enfermo"&&yd.mode!=="dolor"&&!(dd.partido||dd.prepartido)?`<button class="btn sm" data-ydoble>🔁 Mejor hago doble hoy (el plan no se corre)</button>`:""}</div>`}}
   const seq=!window.__NOLOCK&&isToday,ords=orders(plan,k,isToday,dd);
   {const dc0=isToday&&(okSt(status)||!!dd.status||closedDay(k,plan)||!!dd.urgencia),c0=seq&&!S.focus&&!dc0?curTask(plan,dd):null;
-   if(c0){const ti=plan.tasks.indexOf(c0),nx=plan.tasks.slice(ti+1).find(t=>!taskDone(dd,t)&&!isNope(dd,t)),dn=plan.tasks.filter(t=>taskDone(dd,t)).length;
+   if(c0&&!off("ahora")){const ti=plan.tasks.indexOf(c0),nx=plan.tasks.slice(ti+1).find(t=>!taskDone(dd,t)&&!isNope(dd,t)),dn=plan.tasks.filter(t=>taskDone(dd,t)).length;
      h+=`<div class="card ahora" id="sec-ahora"><div class="row" style="justify-content:space-between"><span class="lbl">Ahora</span><span class="foot">${dn} de ${plan.tasks.length} hechas</span></div><b class="at">${ti+1}. ${esc(c0.t)}</b><span class="foot">${c0.h?esc(c0.h):""}${nx?` · después: ${esc(nx.t)}${nx.h?" "+esc(nx.h):""}`:""}</span><div class="row"><button class="btn main sm" data-focus style="flex:1">🎯 Modo enfoque</button><button class="btn sm pendlink" data-open="${c0.id}">Ver abajo</button></div></div>`}}
-  if(isToday&&!S.focus)h+=`<p class="frase">“${esc(fraseHoy(d))}”</p>`;
-  if(diffDays(d,today())===0&&!S.focus)h+=readyHTML(d,k,dd,plan);
-  if(diffDays(d,today())>=0&&!S.focus)h+=situHTML(d,k,dd,plan);
+  if(isToday&&!S.focus&&!off("pendientes"))h+=pendientesHTML(d,k,dd,plan);
+  if(isToday&&!S.focus){const lb=Store.cfg.lastBackup,nd=Object.keys(Store.days).length,ago=lb?diffDays(today(),parse(lb)):null,cada=bkDias();
+    if(nd>=3&&(ago==null||ago>=cada))h+=`<div class="card bk"><div class="row" style="justify-content:space-between;align-items:center;flex-wrap:nowrap;gap:10px"><span><span class="lbl">💾 Copia de seguridad</span><br><span style="font-size:15px">${ago==null?"Todavía no guardas ninguna copia.":`Tu última copia es de hace ${ago} días.`} Guárdala: si pierdes el teléfono, con ella recuperas todo.</span></span><button class="btn main sm" data-backup>Guardar copia</button></div></div>`}
+  if(isToday&&!S.focus&&!off("frase"))h+=`<p class="frase">“${esc(fraseHoy(d))}”</p>`;
+  if(diffDays(d,today())===0&&!S.focus&&!off("ready"))h+=readyHTML(d,k,dd,plan);
+  if(diffDays(d,today())>=0&&!S.focus&&!off("situ"))h+=situHTML(d,k,dd,plan);
   if(isToday&&plan.tasks.some(t=>t.lake&&!/ · en seco$/.test(t.t))){const c=Store.cfg;h+=`<div class="card sos"><span class="lbl">🆘 Lago</span>${c.sos?`<p style="margin:0">Antes de entrar, avísale a ${esc(c.sosName||"tu contacto")} dónde estás y a qué hora sales.</p><div class="row"><button class="btn main sm" data-sosmsg>Avisar que entro al lago</button><a class="btn sm" href="tel:${esc(c.sos)}">Llamar</a></div>`:`<p style="margin:0">Pon un contacto de emergencia en Plan → Ajustes: con un toque le avisas dónde estás antes de entrar.</p>`}</div>`}
-  if(isToday&&plan.dow===0&&!dd.peso)h+=`<div class="card"><span class="lbl">Pésate hoy</span><p style="margin:0">Primer día de la semana: en ayunas, después del baño.</p><div class="field" style="max-width:140px"><label class="lbl" for="f-peso2">Peso (kg)</label><input id="f-peso2" inputmode="decimal" data-f="peso" placeholder="70"></div></div>`;
+  if(isToday&&plan.dow===0&&!dd.peso)h+=`<div class="card" id="sec-peso"><span class="lbl">Pésate hoy</span><p style="margin:0">Primer día de la semana: en ayunas, después del baño.</p><div class="field" style="max-width:140px"><label class="lbl" for="f-peso2">Peso (kg)</label><input id="f-peso2" inputmode="decimal" data-f="peso" placeholder="70"></div></div>`;
   // día cerrado o completo: arriba va el resumen y el botón para pasar al día siguiente
   const dayClosedNow=isToday&&(okSt(status)||!!dd.status||closedDay(k,plan)||!!dd.urgencia||status==="doble");
   if(dayClosedNow)h+=`<div id="sec-resumen">${daySummaryHTML(plan,dd,d)}</div>`+`<button class="btn main" data-newday style="width:100%">Comenzar nuevo día →</button><p class="foot" style="text-align:center">Pasa a mañana: ${esc((planFor(addDays(d,1))||{}).title||"")}.</p>`;
@@ -1932,7 +1957,7 @@ function viewHoy(){
   // hoy (en orden) lo primero es «Ahora»: el mensaje del preparador va después de las tareas, los avisos importantes quedan arriba
   if(seq)ords.filter(x=>x[0]==="alert").forEach(x=>{h+=`<p class="alert">${esc(x[1])}</p>`});
   const orderHTML=`<div class="order"><div class="msg-h"><span>Tu preparador · Para: ${esc(Store.cfg.name||"crack")}</span><span>${esc(dayName(d).slice(0,3))} ${fmtS(d)}</span></div>${(seq?ords.filter(x=>x[0]!=="alert"):ords).map(([t,x])=>t==="alert"?`<p class="alert">${esc(x)}</p>`:t==="say"?`<p class="say">${esc(x)}</p>`:t==="why"?`<p class="why-q">Tu por qué: “${esc(x)}”</p>`:`<p>${esc(x)}</p>`).join("")}</div>`;
-  if(!seq)h+=orderHTML;
+  if(!seq&&!off("preparador"))h+=orderHTML;
   {const cur=turnoOf(d),sh=plan.shift;
    const kk="daycfg:"+k,curN=cur==="libre"?"libre":turnoHora(cur);
    h+=`<details class="card daycfg" data-keep="${kk}" ${S.keep[kk]?"open":""}><summary><span class="lbl">Hoy trabajo</span><span class="dcv">${esc(SHIFT[cur].lbl)} ▾</span></summary><div class="row" style="justify-content:space-between;align-items:center"><span class="lbl">Cambiar turno</span><div class="segs">${["14:00","16:00","libre"].map(t=>`<button class="seg ${curN===t?"on":""}" data-turno="${t}">${t==="libre"?"Libre":"Entro "+t}</button>`).join("")}</div></div>
@@ -1960,7 +1985,7 @@ function viewHoy(){
   else{
   if(pend.length)h+=`<div class="pendcard"><b>Pendiente${pend.length>1?"s":""}</b> ${pend.map(t=>`<button class="pendlink" data-open="${t.id}">${esc(t.t)}${t.h?" · "+esc(t.h):""}</button>`).join("")}</div>`;
   h+=plan.tasks.map((t,ti)=>sesHTML(Object.assign({},t,{t:(ti+1)+". "+t.t}),dd,S.open[k+t.id]!=null?S.open[k+t.id]:defOpen(t),pend.includes(t))).join("");}
-  if(seq)h+=orderHTML;
+  if(seq&&!off("preparador"))h+=orderHTML;
   if(isToday)h+=`<button class="btn sm pzlink" data-perso>✏️ Cambiar horas, ocultar o agregar tareas</button>`;
   if(plan.test)h+=testForm(plan,k,dd,L);
   h+=resultsHTML(plan,k,dd);
@@ -1973,8 +1998,6 @@ function viewHoy(){
     ${nw!=null?`<span class="foot">Próxima: semana ${nw}${TESTS.includes(nw)?" · semana de prueba":nw===HELL?" · SEMANA DEL INFIERNO":DELOAD.includes(nw)?" · descarga":INC[nw]?" · "+INC[nw][0]:""}.</span>`:""}</div>`}
   if(closedDay(k,plan)){const no=plan.tasks.filter(t=>counts(t)&&isNope(dd,t)).map(t=>t.t);h+=`<div class="order closed"><p class="say" style="color:var(--bad)">✗ Día cerrado</p><p>No pudiste: ${esc(no.join(", "))}. El resto quedó hecho, así que mañana sigues con el plan. No se repite.</p></div>`}
   if(status==="done")h+=`<div class="order done"><span class="stamp">CUMPLIDO</span><p class="say" style="color:var(--ok)">${esc(pick(["Día ganado. Mañana a la misma hora.","Cumplido. Un día más que el que se rinde no tiene.","Bien. Eso es lo que se espera de ti."],k))}</p></div>`;
-  if(isToday){const lb=Store.cfg.lastBackup,nd=Object.keys(Store.days).length,ago=lb?diffDays(today(),parse(lb)):null;
-    if(nd>=3&&(ago==null||ago>=7))h+=`<div class="card bk"><span class="lbl">Copia de seguridad</span><p style="margin:0">${ago==null?"Todavía no guardas ninguna copia.":`Tu última copia es de hace ${ago} días.`} Guárdala ahora: si pierdes el teléfono, con ella recuperas todo.</p><button class="btn main" data-backup>Guardar copia</button></div>`}
   h+=`<details class="card" data-keep="notes:${k}" ${S.keep["notes:"+k]?"open":""}><summary>Notas${plan.dow===0||plan.test?" y peso":""}</summary>
    ${plan.dow===0||plan.test?`<div class="field" style="max-width:140px"><label class="lbl" for="f-peso">Peso (kg)</label><input id="f-peso" inputmode="decimal" data-f="peso" value="${esc(String(dd.peso||"").replace(".",","))}" placeholder="70"></div>`:""}
    <div class="field"><label class="lbl" for="f-note">Tiempos, qué costó, sensaciones</label><textarea id="f-note" data-f="note">${esc(dd.note)}</textarea></div></details>`;
@@ -1987,7 +2010,7 @@ function viewHoy(){
    if(seqT&&!closedDay(k,plan)&&status!=="done"&&status!=="injury"&&!dd.status)h+=`<button class="btn main" data-close style="width:100%">Cerrar el día</button><p class="foot" style="text-align:center">La app revisa lo que marcaste y te dice si quedó completo, a medias o incompleto.</p>`;
    else if(!closedDay(k,plan))h+=`<div class="row">${status==="done"||status==="injury"||dd.status?"":`<button class="btn main" data-st="done" style="flex:2">Cumplí todo</button>`}${dd.status==="fail"?`<button class="btn sm" data-st="">Quitar “no cumplí”</button>`:dd.status==="part"?`<button class="btn sm" data-st="">Reabrir el día</button>`:status==="done"||status==="injury"?(S.confirm==="clear"?`<button class="btn sm main" data-st="" data-clear="1">Sí, desmarcar</button><button class="btn sm" data-cancel>No</button>`:`<button class="btn sm" data-ask="clear">Desmarcar el día</button>`):`${past?`<button class="btn" data-close style="flex:1">Cerrar el día</button>`:""}${diffDays(d,today())>0?"":`<button class="btn" data-st="fail" style="flex:1">${past?"No pude ese día":"Hoy no pude"}</button>`}`}</div>`}
   // lo que se va sumando durante el día va al final
-  {const ms=mealsOf(plan),mn=ms.filter(m=>mealDone(dd,plan,m)).length;h+=`<div class="card" id="sec-comidas"><div class="row" style="justify-content:space-between"><span class="lbl">Comidas de hoy</span><span class="mono">${mn}/${ms.length}</span></div>${mealChips(plan,dd,d)}</div>`}
+  if(!off("comidas")){const ms=mealsOf(plan),mn=ms.filter(m=>mealDone(dd,plan,m)).length;h+=`<div class="card" id="sec-comidas"><div class="row" style="justify-content:space-between"><span class="lbl">Comidas de hoy</span><span class="mono">${mn}/${ms.length}</span></div>${mealChips(plan,dd,d)}</div>`}
   h+=`<div id="sec-agua">${waterHTML(plan,dd)}</div>`;
   if(!dayClosedNow)h+=`<div id="sec-resumen">${daySummaryHTML(plan,dd,d)}</div>`;
   return h;
@@ -2255,16 +2278,18 @@ async function saveFile(filename,data,type){
   if(window.claude&&window.claude.use){let dl=null;try{dl=await window.claude.use("downloads")}catch(e){}
     if(dl){try{await dl.save({filename,data});return "ok"}catch(e){const c=e&&e.code;if(c==="declined")return "declined";if(c==="rate_limited")return "busy";return "no"}}
     return "no"}
+  // en el celular: el menú Compartir (Guardar en Archivos, Drive, correo). El calendario va directo para que el iPhone ofrezca «Agregar».
+  if(type!=="text/calendar"&&navigator.share&&navigator.canShare&&window.matchMedia&&matchMedia("(pointer:coarse)").matches){try{const f=new File([data],filename,{type});if(navigator.canShare({files:[f]})){try{await navigator.share({files:[f],title:filename});return "ok"}catch(e){if(e&&e.name==="AbortError")return "declined";if(e&&e.name==="NotAllowedError"){S.pendShare={data,filename,type};render();return "tap"}}}}catch(e){}}
   try{const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([data],{type}));a.download=filename;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},1500);return "ok"}
   catch(e){return "no"}}
 // avisos de los próximos 7 días para el calendario del teléfono: un evento por tarea, con aviso a la hora
 function icsWeek(from,days){days=days||7;const pad2=n=>String(n).padStart(2,"0"),stamp=new Date().toISOString().replace(/[-:]/g,"").replace(/\.\d+/,""),L=["BEGIN:VCALENDAR","VERSION:2.0","PRODID:-//Atleta Hibrido//ES","CALSCALE:GREGORIAN","METHOD:PUBLISH"];
   const esc2=t=>String(t).replace(/[\\;,]/g,m=>"\\"+m).replace(/\n/g,"\\n");let n=0;
   for(let i=0;i<days;i++){const d=addDays(from,i),p=planFor(d);if(!p)continue;
-    p.tasks.forEach(t=>{if(!t.h)return;let m=toMin(t.h);const day=m<240?addDays(d,1):d;const dur=Math.max(10,Math.min(120,Math.round(t.min||t.blocks.reduce((x,b)=>x+(b.tm||0)*(b.s||1),0)/60||20)));
+    p.tasks.forEach(t=>{if(!t.h||!avOn(avCat(t)))return;let m=toMin(t.h);const day=m<240?addDays(d,1):d;const dur=Math.max(10,Math.min(120,Math.round(t.min||t.blocks.reduce((x,b)=>x+(b.tm||0)*(b.s||1),0)/60||20)));
       const f=(dd,mm)=>{const x=new Date(dd);x.setHours(0,mm,0,0);return x.getFullYear()+pad2(x.getMonth()+1)+pad2(x.getDate())+"T"+pad2(x.getHours())+pad2(x.getMinutes())+"00"};
       L.push("BEGIN:VEVENT","UID:"+iso(d)+"-"+t.id+"@atleta-hibrido","DTSTAMP:"+stamp,"DTSTART:"+f(day,m),"DTEND:"+f(day,m+dur),"SUMMARY:"+esc2("▸ "+t.t),
-        "DESCRIPTION:"+esc2(t.blocks.filter(b=>!b.opt).map(b=>"• "+b.n+(b.p&&b.p!==b.n?" "+b.p:"")).join("\n")),"BEGIN:VALARM","ACTION:DISPLAY","DESCRIPTION:"+esc2(t.t),"TRIGGER:PT0M","END:VALARM","END:VEVENT");n++})}
+        "DESCRIPTION:"+esc2(t.blocks.filter(b=>!b.opt).map(b=>"• "+b.n+(b.p&&b.p!==b.n?" "+b.p:"")).join("\n")),"BEGIN:VALARM","ACTION:DISPLAY","DESCRIPTION:"+esc2(t.t),avAntes()?"TRIGGER:-PT"+avAntes()+"M":"TRIGGER:PT0M","END:VALARM","END:VEVENT");n++})}
   L.push("END:VCALENDAR");return {ics:L.join("\r\n"),n}}
 async function exportAvisos(days){const {ics,n}=icsWeek(today(),days),r=await saveFile(`avisos-${iso(today())}.ics`,ics,"text/calendar");
   if(r==="ok"){Store.setCfg({lastIcs:iso(today())});render();toast(`${n} avisos listos: abre el archivo y elige «Agregar al calendario».`)}else if(r==="declined")toast("Descarga cancelada.");else toast("No se pudo descargar en este navegador.")}
@@ -2276,6 +2301,7 @@ async function exportBackup(){
   let photos={};try{photos=await photosForBackup()}catch(e){}
   const json=backupData(photos);const r=await saveFile(filename,json,"application/json");
   if(r==="ok"){Store.setCfg({lastBackup:iso(new Date())});S.copyBackup=false;render();toast("Copia guardada: "+filename);return}
+  if(r==="tap"){S.pendShare.after=()=>{Store.setCfg({lastBackup:iso(new Date())});render();toast("Copia guardada.")};toast("Toca «Guardar ahora» arriba y elige dónde guardarla.");window.scrollTo({top:0,behavior:"smooth"});return}
   if(r==="declined"){toast("Descarga cancelada.");return}
   if(r==="busy"){toast("Ya hay una descarga abierta: acéptala o ciérrala primero.");return}
   // aquí no se pueden descargar archivos: ofrecer el texto para copiarlo (sin fotos)
@@ -2309,7 +2335,7 @@ function rescueHTML(e){let b="";try{b=backupHTML()}catch(x){}
 function viewProgreso(){
   const res=Object.keys(Store.days).filter(k=>Store.days[k].test).sort().map(k=>({k,w:locate(parse(k)).w,t:Store.days[k].test})).filter(x=>x.w!=null);
   const cp=compliance();
-  let h=`<div class="sec"><h2>Progreso</h2><div class="kpis"><div class="kpi"><span class="lbl">Racha</span><b>${streak()}</b></div><div class="kpi"><span class="lbl">Cumplido</span><b>${cp==null?"—":cp+"%"}</b></div><div class="kpi"><span class="lbl">Pruebas</span><b>${new Set(res.map(x=>x.w)).size}/5</b></div></div></div>`+jumpBar([["pr-semana","📆 Semana"],["pr-num","🎯 Tus números"],["pr-musc","💪 Músculos"],["pr-peso","⚖️ Peso"],["pr-rec","🏆 Récords"],["pr-const","🟩 Constancia"],["pr-pruebas","🏁 Pruebas"]])+comoVasHTML();
+  let h=`<div class="sec"><h2>Progreso</h2><div class="kpis"><div class="kpi"><span class="lbl">Racha</span><b>${streak()}</b></div><div class="kpi"><span class="lbl">Cumplido</span><b>${cp==null?"—":cp+"%"}</b></div><div class="kpi"><span class="lbl">Pruebas</span><b>${new Set(res.map(x=>x.w)).size}/5</b></div></div></div>`+jumpBar([["pr-semana","📆 Semana"],["pr-num","🎯 Tus números"],["pr-musc","💪 Músculos"],["pr-peso","⚖️ Peso"],["pr-rec","🏆 Récords"],["pr-const","🟩 Constancia"],["pr-pruebas","🏁 Pruebas"],["pr-metas","🎯 Metas"]])+comoVasHTML();
   // semana actual
   const L=locate(today());if(L.w!=null){const ws=weekStartOf(today()),wds=[];for(let d=ws;diffDays(d,lastOfN(Math.floor(L.n/7)*7+6))<=0;d=addDays(d,1))wds.push(d);let sm=[0,0],ua=0,ub=0;
     for(const d of wds){const p=planFor(d);if(!p)continue;const dd=Store.days[iso(d)];const u=units(dd,p);ua+=u.a;ub+=u.b;p.tasks.forEach(t=>{if(t.m){sm[1]+=t.m;if(taskDone(dd,t))sm[0]+=t.m}})}
@@ -2325,9 +2351,14 @@ function viewProgreso(){
     R.forEach(([lab,key,u])=>{h+=`<tr><td>${lab}</td>${res.map(r=>{const ev=evalTest(r.w,r.t),row=ev&&ev.rows.find(x=>x[0]===lab);return `<td class="mono ${row?(row[3]?"pass":"miss"):""}">${esc(r.t[key]||"—")}${r.t[key]?u:""}</td>`}).join("")}</tr>`});
     h+=`</tbody></table></div>`}
   else h+=`<p class="muted" style="margin:0">Todavía no hay resultados. La prueba inicial es el día 6 de la semana 0.</p>`;
-  h+=`</div><div class="sec"><h3>Metas</h3><div class="tbl"><table><thead><tr><th>Prueba</th><th>Sem 13</th><th>Sem 26</th><th>Sem 39</th><th>Sem 52</th></tr></thead><tbody>
-  <tr><td>Flexiones 2 min</td><td>40</td><td>50</td><td>60</td><td>70+</td></tr><tr><td>Barras</td><td>6</td><td>9</td><td>12</td><td>15+</td></tr><tr><td>Salto largo</td><td>210 cm</td><td>225 cm</td><td>240 cm</td><td>250 cm</td></tr><tr><td>Abdominales 2 min</td><td>50</td><td>60</td><td>70</td><td>75+</td></tr><tr><td>Carrera 3.200 m</td><td>&lt; 15:30</td><td>&lt; 14:30</td><td>&lt; 13:45</td><td>&lt; 13:00</td></tr><tr><td>Nado 50 m</td><td>sin parar</td><td>crol sin parar</td><td>&lt; 1:15</td><td>&lt; 1:00</td></tr></tbody></table></div>
-  <p class="foot">Metas propuestas para superar la mínima con holgura; no son las mínimas oficiales.</p></div>`+diaryHTML()+exportHTML();
+  {const WS=[13,26,39,52],G=w=>GOALS[w]||{},ed=S.editMetas,mine=Object.keys(Store.cfg.metasP||{}).some(w=>Object.keys(Store.cfg.metasP[w]||{}).length);
+   const FL=[["flex","Flexiones 2 min",""],["barras","Barras",""],["salto","Salto largo"," cm"],["abd","Abdominales 2 min",""],["run","Carrera 3.200 m",""]];
+   const cell=(w,f,u)=>ed?`<td><input class="mi" data-metap="${w}|${f}" value="${esc(G(w)[f]==null?"":G(w)[f])}" ${f==="run"?'placeholder="mm:ss"':'inputmode="numeric"'} aria-label="${f} semana ${w}"></td>`:`<td>${G(w)[f]==null?"—":(f==="run"?"&lt; ":"")+esc(G(w)[f])+u}</td>`;
+   h+=`</div><div class="sec" id="pr-metas"><h3>🎯 Metas de las pruebas</h3><div class="tbl"><table><thead><tr><th>Prueba</th>${WS.map(w=>`<th>Sem ${w}<br><small>${fmtS(lastOfN(Math.max(0,Store.cfg.sched.indexOf(w))*7+6))}</small></th>`).join("")}</tr></thead><tbody>
+   ${FL.map(([f,l,u])=>`<tr><td>${l}</td>${WS.map(w=>cell(w,f,u)).join("")}</tr>`).join("")}<tr><td>Nado 50 m</td><td>sin parar</td><td>crol sin parar</td><td>&lt; 1:10</td><td>&lt; 1:00</td></tr></tbody></table></div>
+   <div class="row"><button class="btn sm" data-editmetas>${ed?"✓ Listo":"✏️ Cambiar mis metas"}</button>${mine?`<button class="btn sm" data-metasreset>Volver a las propuestas</button>`:""}</div>
+   <p class="foot">${mine?"Son tus metas: la app las usa para decirte si pasaste cada prueba.":"Metas propuestas para superar la mínima con holgura; no son las mínimas oficiales. Si el servicio te pide otras, cámbialas."}</p></div>`+diaryHTML()+exportHTML();}
+
   return h;
 }
 // Mi semana: los 7 días con lo importante de cada uno
@@ -2379,7 +2410,8 @@ function viewGuia0(){return `<div class="sec prose"><h2>Guía</h2>
  <li><b>Registro</b>: comidas, agua, sueño, partido, inglés, fotos, compras y ahorro de cualquier día.</li>
  <li><b>Progreso</b>: cómo vas: series por músculo, peso, racha, récords y pruebas.</li>
  <li><b>Para moverte</b>: la fila de botones de arriba te lleva a cada parte; abajo de cada página hay «← anterior · siguiente →»; también puedes deslizar el dedo a los lados. El botón ↑ te sube.</li></ul>
- <h3>☀️ Tu día en 6 pasos</h3><ol>
+ <h3>☀️ Tu día, paso a paso</h3><ol>
+ <li>Mira <b>📝 Te falta anotar</b> arriba en Hoy: te dice qué registrar (sueño, peso, comidas, agua, repeticiones, fotos) y un toque te lleva al lugar exacto. Si dice «✅ Todo anotado», vas bien.</li>
  <li>Abre <b>Hoy</b> y responde <b>¿Cómo amaneciste?</b> (3 toques): la app ajusta el entrenamiento.</li>
  <li>Si pasa algo, toca <b>¿Qué pasa hoy?</b>: juegas, viajas, poco tiempo o <b>doble mañana</b>.</li>
  <li>Sigue la tarjeta <b>Ahora</b>: hazlo y toca <b>✓ Listo, siguiente</b>. Si no se pudo, <b>No pude</b> y elige por qué.</li>
@@ -2388,7 +2420,9 @@ function viewGuia0(){return `<div class="sec prose"><h2>Guía</h2>
  <li>En la noche toca <b>Cerrar el día</b> y después <b>Comenzar nuevo día</b>.</li></ol>
  <h3>✏️ Personalizar todo (tú solo)</h3><ul>
  <li><b>Ejercicios, series y repeticiones</b>: Plan → 🏋️ Mi rutina.</li>
- <li><b>Qué entrenas cada día</b>, <b>horas</b>, <b>ocultar tareas</b>, <b>hábitos nuevos</b> (Biblia, leer, estirar…), <b>tus comidas</b>, <b>alimentos</b>, <b>metas de agua, proteína y peso</b> y tu <b>enfoque</b> (músculo, mantener, bajar grasa, servicio): Plan → ✏️ Personaliza tu día.</li>
+ <li>En <b>Plan → ✏️ Personaliza tu día</b>, en este orden: tu <b>enfoque</b> (músculo, mantener, bajar grasa, servicio) · tu <b>horario de trabajo</b> de cada día · tu <b>sueño</b> (horas, a qué hora te acuestas, despertar el día libre) · <b>horas, minutos y tareas</b> (ocultar, alargar o acortar) · <b>hábitos nuevos</b> (Biblia, leer, estirar…) · <b>qué entrenas cada día</b> · <b>si un día no puedes</b> (correr o doble) · <b>tus comidas y alimentos</b> · <b>metas</b> de agua, proteína, peso y tu vaso · <b>qué te avisa y cuándo</b> · <b>qué ves en Hoy</b> · cada cuánto te pide la <b>copia</b>.</li>
+ <li><b>Lista de compras y presupuesto</b>: Registro → Compras → «Editar mi lista».</li>
+ <li><b>Metas de las pruebas militares</b>: Progreso → 🎯 Metas → «Cambiar mis metas».</li>
  <li><b>Colores</b>, modo claro y letra grande: Plan → Ajustes → 🎨 Colores y letra.</li>
  <li><b>Tu meta en cada ejercicio</b>: Progreso → 🏆 Récords → «Mi meta».</li>
  <li>Cada parte tiene «Volver a como estaba» por si algo no te gusta.</li></ul>
@@ -2620,14 +2654,23 @@ function viewRegistro(){
 }
 // resumen para Progreso
 // lista de compras de la semana, según tus comidas y tu peso (batido, desayuno, almuerzo, colación y comida al llegar)
-function compras(){const n=NUT(bodyWeight(),true,false);
+function compras(){const L0=compras0(),c=Store.cfg.lista||{},q=c.quitar||[],cant=c.cant||{};
+  return L0.filter(x=>!q.includes(x[0])).map(x=>[x[0],cant[x[0]]||x[1],true]).concat((c.extra||[]).map(x=>[x.n,x.q||"",false]))}
+const precioDe=n=>{const v=+(((Store.cfg.lista||{}).precio||{})[n]);return v>0?v:0};
+function compras0(){const n=NUT(bodyWeight(),true,false);
   // tu familia cocina: aquí va solo lo tuyo (batido, desayuno extra y colación), pensado para ~20.000 a la semana
   return [["Leche","4 litros"],["Plátanos","7"],["Avena","1 kg"],["Mantequilla de maní","1 frasco"],["Huevos",`${Math.ceil(n.eggs*7/6)*6}`],["Pan","para 7 colaciones"],["Atún al agua","3 latas"],["Yogur","4"],["Fruta","7"]]}
 const weekKey=()=>iso(weekStartOf(today()));
 function comprasHTML(){const L=compras(),c=Store.cfg.compras||{},ok=c.w===weekKey()?c.ok||{}:{},n=L.filter(x=>ok[x[0]]).length;
-  return `<details class="sec reg box" data-keep="reg:compras" ${S.keep["reg:compras"]?"open":""}><summary><h2>Compras</h2><span class="rs">${n}/${L.length} esta semana</span></summary>
-  <p class="foot">Solo lo tuyo para 7 días (el resto lo cocina tu familia): unos 20.000 pesos. Se reinicia cada semana.</p>
-  <div class="meals">${L.map(([x,q])=>`<button class="meal ${ok[x]?"on":""}" data-buy="${esc(x)}" aria-pressed="${!!ok[x]}"><span class="mk">${ok[x]?"✓":""}</span><span class="mn">${esc(x)}</span><span class="mh">${esc(q)}</span></button>`).join("")}</div></details>`}
+  return `<details class="sec reg box" id="reg-compras" data-keep="reg:compras" ${S.keep["reg:compras"]?"open":""}><summary><h2>Compras</h2><span class="rs">${n}/${L.length} esta semana</span></summary>
+  ${(()=>{const pr=+Store.cfg.presu>0?+Store.cfg.presu:20000,tot=L.reduce((a,x)=>a+precioDe(x[0]),0),con=L.filter(x=>precioDe(x[0])).length;return `<p class="foot">Solo lo tuyo para 7 días (el resto lo cocina tu familia). Tu presupuesto: <b>$${pr.toLocaleString("es-CL")}</b>${con?` · lo que anotaste suma <b class="${tot>pr?"pendtxt":""}">$${tot.toLocaleString("es-CL")}</b>${tot>pr?" (te pasas)":""}`:""}. Se reinicia cada semana.</p>`})()}
+  <div class="meals">${L.map(([x,q])=>`<button class="meal ${ok[x]?"on":""}" data-buy="${esc(x)}" aria-pressed="${!!ok[x]}"><span class="mk">${ok[x]?"✓":""}</span><span class="mn">${esc(x)}</span><span class="mh">${esc(q)}${precioDe(x)?" · $"+precioDe(x).toLocaleString("es-CL"):""}</span></button>`).join("")}</div>
+  <button class="btn sm" data-editcompras>${S.editCompras?"✓ Listo":"✏️ Editar mi lista"}</button>
+  ${S.editCompras?`<div class="cedit">${L.map(([x,q,base])=>`<div class="crow"><span class="cn">${esc(x)}</span><input data-lcant="${esc(x)}|${base?1:0}" value="${esc(q)}" placeholder="cantidad" aria-label="Cantidad de ${esc(x)}"><input data-lprecio="${esc(x)}" inputmode="numeric" value="${precioDe(x)||""}" placeholder="$" aria-label="Precio de ${esc(x)}"><button class="nb" data-lquitar="${esc(x)}|${base?1:0}" aria-label="Quitar ${esc(x)}">✕</button></div>`).join("")}
+    <div class="row"><div class="field" style="flex:2;min-width:120px"><label class="lbl" for="lc-n">Agregar</label><input id="lc-n" placeholder="Ej: Arroz" maxlength="30"></div><div class="field" style="flex:1;min-width:90px"><label class="lbl" for="lc-q">Cantidad</label><input id="lc-q" placeholder="1 kg" maxlength="20"></div></div>
+    <button class="btn sm" data-ladd>+ Agregar a la lista</button>
+    <div class="field" style="max-width:200px"><label class="lbl" for="lc-pr">Presupuesto semanal ($)</label><input id="lc-pr" inputmode="numeric" data-presu value="${esc(Store.cfg.presu||"")}" placeholder="20000"></div>
+    <button class="btn sm" data-lreset>Volver a la lista original</button></div>`:""}</details>`}
 // récords por ejercicio a partir de lo que anotas en cada serie («10» o «10x8kg»)
 function parseRep(v){const t=String(v||"").toLowerCase().replace(",",".").replace(/\s+/g,"");let m;
   if((m=t.match(/^(\d+)[x×*](\d+(?:\.\d+)?)k/)))return {r:+m[1],kg:+m[2]};   // 10x8kg
@@ -2711,12 +2754,17 @@ const pzBox=(id,title,sum,body)=>`<details class="ajg" data-keep="pz:${id}" ${S.
 function persoHTML(){const c=Store.cfg,hide=c.hide||[],hr=c.horas||{},mis=c.mis||[],sem=c.semana||[0,1,2,3,4,5,6],dr=S.pzDraft||{t:"",h:"21:00",min:10,dias:[1,1,1,1,1,1,1],cuenta:false},enf=enfoqueOf();
   const tp=planFor(today())||{tasks:[]},auto=id=>{const t=tp.tasks.find(x=>x.id===id);return t&&t.h?"hoy "+t.h:"según el día"};
   const ms=mealsOf0(planFor(today())||{tasks:[]}),co=c.comidas||{};
-  const habits=HABITS.map(([id,l])=>{const on=!hide.includes(id);return `<div class="pzrow"><span class="pzl">${l}</span><input type="time" data-pzh="${id}" value="${esc(hr[id]||"")}" aria-label="Hora de ${esc(l)}"><button class="seg ${on?"on":""}" data-pzhide="${id}" aria-pressed="${on}">${on?"Se muestra":"Oculta"}</button></div>`}).join("");
+  const du=c.dur||{},habits=HABITS.map(([id,l])=>{const on=!hide.includes(id),dd0=DURABLE.find(x=>x[0]===id);return `<div class="pzrow hab"><span class="pzl">${l}</span><input type="time" data-pzh="${id}" value="${esc(hr[id]||"")}" aria-label="Hora de ${esc(l)}">${dd0?`<label class="pzmin"><input inputmode="numeric" data-pzdur="${id}" value="${esc(du[id]||"")}" placeholder="${dd0[2]}" aria-label="Minutos de ${esc(l)}">min</label>`:"<span></span>"}<button class="seg ${on?"on":""}" data-pzhide="${id}" aria-pressed="${on}">${on?"Se muestra":"Oculta"}</button></div>`}).join("");
   return `<div class="card" id="pl-perso"><span class="lbl">✏️ Personaliza tu día</span><p class="foot" style="margin:4px 0 6px">Cambia lo que quieras: vale desde hoy y queda guardado en el teléfono. Si algo no te gusta, cada parte tiene «Volver a como estaba».</p>
   ${pzBox("enf","🧭 Tu enfoque",enf[1],`<div class="segs col">${ENFOQUES.map(e=>`<button class="seg ${enf[0]===e[0]?"on":""}" data-pzenf="${e[0]}">${e[1]}</button>`).join("")}</div><p class="foot">${esc(enf[2])} Cambia tus calorías, tu peso meta y lo que te dice «Tu peso» en Progreso. Puedes cambiarlo cuando quieras.</p>`)}
-  ${pzBox("faltas","🔁 Si un día no puedes entrenar",c.faltas==="doble"?"Doble al día siguiente":"Se corre el plan un día",`<div class="segs col"><button class="seg ${c.faltas!=="doble"?"on":""}" data-pzfaltas="correr">Correr el plan un día (lo de hoy pasa a mañana)</button><button class="seg ${c.faltas==="doble"?"on":""}" data-pzfaltas="doble">Hacer doble al día siguiente (el plan no se corre)</button></div><p class="foot">Esto es lo que pasa solo si no marcas nada. Igual puedes elegir cada vez en Hoy: «🔁 Hoy no puedo: doble mañana» o, al día siguiente, «Mejor hago doble hoy». Si estás enfermo o con dolor, siempre se corre (no se dobla).</p>`)}
-  ${pzBox("tareas","🕐 Horas y tareas de cada día",hide.length?hide.length+" ocultas":"Todas se muestran",`<div class="pzrow"><span class="pzl"><b>🏋️ Hora de entrenar</b></span><input type="time" data-pzh="__train" value="${esc(hr.__train||"")}" aria-label="Hora de entrenar"><span class="foot">${hr.__train?"la tuya":"la pone la app"}</span></div>
-    ${habits}<p class="foot">Hora vacía = la pone la app según tu turno. «Oculta» = no aparece en Hoy ni en los avisos.</p><button class="btn sm" data-pzreset="tareas">Volver a como estaba</button>`)}
+  ${pzBox("pega","💼 Tu horario de trabajo",Array.isArray(c.semTurno)?c.semTurno.map((x,i)=>x==="libre"?"":DLET[i]).join(" ").replace(/\s+/g," ").trim()+" trabajas":"Martes a sábado · lun y dom libres",`${DNOM.map((n,i)=>{const cur=Array.isArray(c.semTurno)?c.semTurno[i]:(i===0||i===6?"libre":turnoHora(c.turno)||"14:00");return `<div class="pzrow sem"><span class="pzl">${n}</span><select data-pzturno="${i}" aria-label="Turno del ${n.toLowerCase()}"><option value="libre" ${cur==="libre"?"selected":""}>Libre</option>${HORAS.map(x=>`<option value="${x}" ${turnoHora(cur)===x?"selected":""}>Entro ${x}</option>`).join("")}</select></div>`}).join("")}
+    <p class="foot">Con esto la app arma tu día: a qué hora despiertas, entrenas, almuerzas y sales. Si un día puntual cambia, cámbialo en Hoy → «Hoy trabajo».</p><button class="btn sm" data-pzreset="pega">Volver a como estaba</button>`)}
+  ${pzBox("sueno","😴 Tu sueño",`${(+c.sueno||8).toString().replace(".",",")} h${c.despLibre?" · libre despierto "+c.despLibre:""}`,`<div class="pzrow sem"><span class="pzl">Horas de sueño</span><select data-pzsueno="sueno">${[6,6.5,7,7.5,8,8.5,9,9.5,10].map(x=>`<option value="${x}" ${(+c.sueno||8)===x?"selected":""}>${String(x).replace(".",",")} horas</option>`).join("")}</select></div>
+    <div class="pzrow sem"><span class="pzl">Me acuesto al llegar</span><select data-pzsueno="acuesto">${[15,30,45,60,75,90,120].map(x=>`<option value="${x}" ${(+c.acuesto||60)===x?"selected":""}>${x} min después</option>`).join("")}</select></div>
+    <div class="pzrow sem"><span class="pzl">Día libre despierto a las</span><input type="time" data-pzsueno="despLibre" value="${esc(c.despLibre||"")}" aria-label="Hora de despertar el día libre"></div>
+    <p class="foot">Vacío = 7:00. Con menos de 7 horas el músculo crece menos y te lesionas más.</p><button class="btn sm" data-pzreset="sueno">Volver a como estaba</button>`)}
+  ${pzBox("tareas","🕐 Horas, minutos y tareas de cada día",hide.length?hide.length+" ocultas":"Todas se muestran",`<div class="pzrow"><span class="pzl"><b>🏋️ Hora de entrenar</b></span><input type="time" data-pzh="__train" value="${esc(hr.__train||"")}" aria-label="Hora de entrenar"><span class="foot">${hr.__train?"la tuya":"la pone la app"}</span></div>
+    ${habits}<p class="foot">Hora vacía = la pone la app según tu turno. Minutos vacíos = lo normal. «Oculta» = no aparece en Hoy ni en los avisos.</p><button class="btn sm" data-pzreset="tareas">Volver a como estaba</button>`)}
   ${pzBox("mis","➕ Hábitos nuevos (tus tareas)",mis.length?mis.length+" tuyas":"Agrega la que quieras",`${mis.length?`<div class="list">${mis.map(m=>`<div class="li"><span class="b"><b>${esc(m.t)}</b><span class="foot"> · ${esc(m.h)}${+m.min?" · "+m.min+" min":""} · ${m.dias.every(Boolean)?"todos los días":m.dias.map((x,i)=>x?DLET[i]:"").join(" ")}${m.cuenta?" · cuenta para el día":""}</span></span><button class="nb" data-pzdel="${esc(m.id)}" aria-label="Quitar ${esc(m.t)}">✕</button></div>`).join("")}</div>`:""}
     <span class="lbl">Ideas rápidas</span><div class="chips">${PLANTILLAS.map((x,i)=>`<button class="seg" data-pztpl="${i}">${x[0]}</button>`).join("")}</div>
     <div class="field"><label class="lbl" for="pz-t">Nombre</label><input id="pz-t" data-pzd="t" value="${esc(dr.t)}" placeholder="Ej: Leer la Biblia" maxlength="40"></div>
@@ -2726,6 +2774,7 @@ function persoHTML(){const c=Store.cfg,hide=c.hide||[],hr=c.horas||{},mis=c.mis|
     <button class="btn main" data-pzadd style="width:100%">+ Agregar a mi día</button>`)}
   ${pzBox("semana","📅 Qué entrenas cada día",(c.semana?"A tu manera":"Como viene el plan"),`${DNOM.map((n,i)=>`<div class="pzrow sem"><span class="pzl">${n}</span><select data-pzsem="${i}" aria-label="Qué entrenas el ${n.toLowerCase()}">${SEMT.map((x,j)=>`<option value="${j}" ${sem[i]===j?"selected":""}>${x}</option>`).join("")}</select></div>`).join("")}
     <p class="foot">Vale en las semanas normales (no en las de prueba ni en la del infierno). Para cambiar los ejercicios de cada día usa «Mi rutina», justo arriba.</p><button class="btn sm" data-pzreset="semana">Volver a como estaba</button>`)}
+  ${pzBox("faltas","🔁 Si un día no puedes entrenar",c.faltas==="doble"?"Doble al día siguiente":"Se corre el plan un día",`<div class="segs col"><button class="seg ${c.faltas!=="doble"?"on":""}" data-pzfaltas="correr">Correr el plan un día (lo de hoy pasa a mañana)</button><button class="seg ${c.faltas==="doble"?"on":""}" data-pzfaltas="doble">Hacer doble al día siguiente (el plan no se corre)</button></div><p class="foot">Esto es lo que pasa solo si no marcas nada. Igual puedes elegir cada vez en Hoy: «🔁 Hoy no puedo: doble mañana» o, al día siguiente, «Mejor hago doble hoy». Si estás enfermo o con dolor, siempre se corre (no se dobla).</p>`)}
   ${pzBox("comidas","🍽 Tus comidas",Object.keys(co).length?"A tu manera":"Como vienen",`${ms.map(m=>`<div class="pzrow meal2"><input data-pzmeal="${m.k}|n" value="${esc((co[m.k]||{}).n||"")}" placeholder="${esc(m.n)}" aria-label="Nombre de ${esc(m.n)}" maxlength="30"><input type="time" data-pzmeal="${m.k}|h" value="${esc((co[m.k]||{}).h||"")}" aria-label="Hora de ${esc(m.n)}"></div>`).join("")}
     <p class="foot">Cambia el nombre (por ejemplo «Once» o «Comida en la pega») y la hora. Vacío = como viene.</p>
     <span class="lbl">Alimentos para contar proteína</span>${(c.misProt||[]).length?`<div class="chips">${c.misProt.map(x=>`<button class="seg" data-pzpdel="${esc(x.id)}">✕ ${esc(x.n)} ${x.g} g</button>`).join("")}</div>`:""}
@@ -2736,7 +2785,14 @@ function persoHTML(){const c=Store.cfg,hide=c.hide||[],hr=c.horas||{},mis=c.mis|
     <div class="field" style="flex:1;min-width:100px"><label class="lbl" for="pz-prot">Proteína (g)</label><input id="pz-prot" inputmode="numeric" data-pzn="protG" value="${esc(c.protG||"")}" placeholder="${NUT(bodyWeight(),true,false).prot}"></div>
     <div class="field" style="flex:1;min-width:100px"><label class="lbl" for="pz-pm">Peso meta (kg)</label><input id="pz-pm" inputmode="decimal" data-pzn="pesoMeta" value="${esc(c.pesoMeta||"")}" placeholder="${pesoSug()||"—"}"></div>
     <div class="field" style="flex:1;min-width:80px"><label class="lbl" for="pz-edad">Edad</label><input id="pz-edad" inputmode="numeric" data-pzn="edad" value="${esc(c.edad||"")}" placeholder="18"></div></div>
-    <p class="foot">Vacío = lo calcula la app con tu peso y estatura (lo ves en Progreso → Tus números).</p><button class="btn sm" data-pzreset="metas">Volver a como estaba</button>`)}
+    <div class="field" style="max-width:220px"><label class="lbl" for="pz-vaso">Tu vaso o botella (ml)</label><input id="pz-vaso" inputmode="numeric" data-pzn="vaso" value="${esc(c.vaso||"")}" placeholder="250"></div>
+    <p class="foot">Vacío = lo calcula la app con tu peso y estatura (lo ves en Progreso → Tus números). El vaso es lo que suma cada toque en «Agua de hoy».</p><button class="btn sm" data-pzreset="metas">Volver a como estaba</button>`)}
+  ${pzBox("avisos","🔔 Qué te avisa y cuándo",(avAntes()?avAntes()+" min antes":"A la hora")+" · "+AVCAT.filter(x=>avOn(x[0])).length+" de "+AVCAT.length,`<span class="lbl">Avisarme de</span>${AVCAT.map(([k0,l])=>`<div class="pzrow tg"><span class="pzl">${l}</span><button class="seg ${avOn(k0)?"on":""}" data-pzav="${k0}" aria-pressed="${avOn(k0)}">${avOn(k0)?"Sí":"No"}</button></div>`).join("")}
+    <span class="lbl">Cuándo</span><div class="segs">${[[0,"A la hora"],[5,"5 min antes"],[10,"10 min antes"],[15,"15 min antes"],[30,"30 min antes"]].map(([v,l])=>`<button class="seg ${avAntes()===v?"on":""}" data-pzantes="${v}">${l}</button>`).join("")}</div>
+    <p class="foot">Vale para los avisos de la app y para los que bajas al calendario (después de cambiarlo, bájalos de nuevo en Plan → Avisos).</p>`)}
+  ${pzBox("hoy","📱 Qué ves en Hoy",(c.hoyOff||[]).length?(c.hoyOff||[]).length+" ocultas":"Todo a la vista",`${[["ahora","⚡ Tarjeta «Ahora»"],["pendientes","📝 Te falta anotar"],["frase","💬 Frase del día"],["ready","😴 ¿Cómo amaneciste?"],["situ","⚽ ¿Qué pasa hoy?"],["preparador","🎖️ Mensaje del preparador"],["comidas","🍽 Comidas de hoy"]].map(([k0,l])=>{const on=!(c.hoyOff||[]).includes(k0);return `<div class="pzrow tg"><span class="pzl">${l}</span><button class="seg ${on?"on":""}" data-pzhoy="${k0}" aria-pressed="${on}">${on?"Se ve":"Oculta"}</button></div>`}).join("")}
+    <p class="foot">Oculta lo que no uses y Hoy queda más corto. Las tareas, el agua y el resumen siempre se ven.</p>`)}
+  ${pzBox("copia","💾 Copia de seguridad","Te recuerdo cada "+bkDias()+" días",`<div class="segs">${[3,7,14].map(v=>`<button class="seg ${bkDias()===v?"on":""}" data-pzbk="${v}">Cada ${v} días</button>`).join("")}</div><p class="foot">Cuando toque, arriba en Hoy sale «Guardar copia». En el iPhone elige «Guardar en Archivos» o Drive.</p>`)}
   </div>`}
 /* =================== TUS NÚMEROS: cuánto pesar, comer, tomar y cuánto te va a tomar =================== */
 const altCm=()=>{const v=parseFloat(String(Store.cfg.alt||"").replace(",","."));return v>120&&v<230?v:null};
@@ -2777,6 +2833,28 @@ function comoVasHTML(){const td=today(),L=locate(td);if(L.before)return "";const
    pl?`⚖️ Peso: <b>${nf(pl)} kg</b>${pd!=null?` (${pd>=0?"+":""}${pd.toFixed(1).replace(".",",")} kg en las últimas semanas)`:""}.`:"⚖️ Pésate el primer día de la semana en ayunas para ver si vas bien."];
   return `<div class="card comovas"><span class="lbl">Cómo vas, en simple</span><ul class="cv">${it.map(x=>`<li>${x}</li>`).join("")}</ul></div>`}
 
+
+// 📝 Te falta anotar: lo que todavía no registras hoy, con un botón que te lleva al lugar exacto
+const bkDias=()=>[3,7,14].includes(+Store.cfg.backupDias)?+Store.cfg.backupDias:7;
+const repsAble=(t,b)=>t.kind==="fuerza"&&!b.tm&&b.s>=2&&b.s<=8&&/×/.test(b.p);
+function pendientesList(d,k,dd,plan){const now=new Date(),nm=now.getHours()*60+now.getMinutes(),sh=plan.shift||{},it=[],td=today();
+  const pas=h=>{if(!h)return false;let x=toMin(h),m=nm;if(x<240)x+=1440;if(m<240)m+=1440;return m>=x};
+  const sl=dd.sleep||{};if(pas(sh.wake)&&!(sl.bed&&sl.wake))it.push(["😴","Cómo dormiste anoche","Registro → Sueño","reg:sueno"]);
+  if(plan.dow===0&&!dd.peso)it.push(["⚖️","Tu peso de la semana (en ayunas)","aquí arriba en Hoy","sec-peso"]);
+  const ml=mealsOf(plan).filter(x=>!mealDone(dd,plan,x)&&mealLate(x,d));if(ml.length)it.push(["🍽","Marcar "+ml.map(x=>x.n.toLowerCase()).join(", "),"Comidas de hoy","sec-comidas"]);
+  const g=waterGoal(plan),w=+dd.water||0;if(nm>=15*60&&w<g/2)it.push(["💧",`Agua: llevas ${w} de ${g}`,"Agua de hoy","sec-agua"]);
+  const rp=dd.reps||{};plan.tasks.filter(t=>t.kind==="fuerza"&&taskDone(dd,t)).forEach(t=>{const ns=t.blocks.filter(b=>repsAble(t,b)).map(b=>b.n);if(ns.length&&!ns.some(n=>(rp[n]||[]).some(Boolean)))it.push(["📝","Repeticiones de "+t.t.replace(/^\d+\.\s*/,""),"así la app sube tu meta","open:"+t.id])});
+  const st0=parse(Store.cfg.start),dias=diffDays(td,st0);
+  {const ph=(Store.cfg.photos||[]).map(x=>x.k).sort(),last=ph[ph.length-1];if(dias>=7&&(!last||diffDays(td,parse(last))>=28))it.push(["📸","Fotos de progreso (cada 4 semanas)","Registro → Fotos","reg:fotos"])}
+  {const mb=Store.cfg.maxB;if(dias>=7&&(!mb||diffDays(td,parse(mb.k))>=28))it.push(["💪","Tu máximo de barras (cada 4 semanas)","Plan → Ajustes → Tú","aj:yo"])}
+  {const li=Store.cfg.lastIcs;if(Store.cfg.notifCal!==false&&(!li||diffDays(td,parse(li))>=7)&&(td.getDay()===0||!li))it.push(["🔔","Bajar los avisos de la semana al calendario","Plan → Avisos","pl-avisos"])}
+  if(pas(fromMin(toMin(sh.bed||"23:00")-45))&&!dd.status&&!closedDay(k,plan)&&!okSt(dayStatus(k,plan)))it.push(["🌙","Cerrar el día","abajo en Hoy","close"]);
+  return it}
+function pendientesHTML(d,k,dd,plan){const it=pendientesList(d,k,dd,plan);
+  if(!it.length)return `<div class="card pend ok" id="sec-pend"><span class="okline">✅ Todo anotado por ahora. Sigue con lo de <b>Ahora</b>.</span></div>`;
+  return `<div class="card pend" id="sec-pend"><div class="row" style="justify-content:space-between"><span class="lbl">📝 Te falta anotar</span><span class="pbadge">${it.length}</span></div>
+   ${(()=>{const one=([ic,t,w,go])=>`<button class="pitem" data-pend="${esc(go)}"><span class="pic">${ic}</span><span class="ptx"><b>${esc(t)}</b><small>${esc(w)}</small></span><span class="pgo">›</span></button>`;
+     return `<div class="plist">${it.slice(0,3).map(one).join("")}</div>${it.length>3?`<details class="pmore" data-keep="pend:more"${S.keep["pend:more"]?" open":""}><summary>Ver ${it.length-3} más</summary><div class="plist">${it.slice(3).map(one).join("")}</div></details>`:""}`})()}</div>`}
 // atajos de cada página: una fila fija arriba que te lleva a cada parte sin bajar a mano
 const jumpBar=items=>`<nav class="jump" aria-label="Ir a">${items.filter(Boolean).map(([id,l])=>`<button class="jb" data-jump="${id}">${l}</button>`).join("")}</nav>`;
 function pageNav(){const i=TABS.findIndex(t=>t[0]===S.tab),pv=TABS[i-1],nx=TABS[i+1];
@@ -2791,9 +2869,12 @@ function notify(title,body,tag){try{if(!("Notification" in window)||Notification
   const plain=()=>{try{new Notification(title,o)}catch(e){}};
   if(navigator.serviceWorker&&navigator.serviceWorker.getRegistration)navigator.serviceWorker.getRegistration().then(r=>r?r.showNotification(title,o):plain()).catch(plain);else plain()}catch(e){}}
 const NOTIFIED=new Set();
+const AVCAT=[["entreno","🏋️ Entrenamiento"],["estudio","🇬🇧 Inglés, estudio y vender"],["comidas","🍽 Despertar y comidas"],["habitos","✅ Perro, casa y tus hábitos"],["salir","💼 Salir a la pega"]];
+const avCat=t=>["despertar","desayuno","almuerzo","noche"].includes(t.id)?"comidas":["ingles","estudio","venta"].includes(t.id)?"estudio":t.kind==="rutina"||t.mine||t.kind==="propia"?"habitos":"entreno";
+const avOn=cat=>((Store.cfg.avQue||{})[cat])!==false;const avAntes=()=>[0,5,10,15,30].includes(+Store.cfg.avAntes)?+Store.cfg.avAntes:0;
 function checkNotify(){try{if(!Store.cfg.notif||!("Notification" in window)||Notification.permission!=="granted")return;const td=today(),k=iso(td),plan=planFor(td);if(!plan)return;const dd=Store.days[k]||{},now=new Date(),m=now.getHours()*60+now.getMinutes();
-  plan.tasks.forEach(t=>{if(!t.h||taskDone(dd,t)||isNope(dd,t))return;const at=toMin(t.h),key=k+t.id;if(NOTIFIED.has(key))return;if(m>=at&&m<at+3){NOTIFIED.add(key);notify(t.t,`Es la hora (${t.h}). ${t.blocks&&t.blocks[0]?t.blocks[0].n:""}`.trim(),key)}});
-  const sh=plan.shift;if(sh&&sh.leave){const at=toMin(sh.leave)-10,key=k+"leave";if(!NOTIFIED.has(key)&&m>=at&&m<at+3){NOTIFIED.add(key);notify("En 10 minutos sales a la pega","Agua, colación y uniforme.",key)}}}catch(e){}}
+  const an=avAntes();plan.tasks.forEach(t=>{if(!t.h||taskDone(dd,t)||isNope(dd,t)||!avOn(avCat(t)))return;const at=toMin(t.h)-an,key=k+t.id;if(NOTIFIED.has(key))return;if(m>=at&&m<at+3){NOTIFIED.add(key);notify(t.t,(an?`En ${an} min (${t.h}). `:`Es la hora (${t.h}). `)+(t.blocks&&t.blocks[0]?t.blocks[0].n:""),key)}});
+  const sh=plan.shift;if(sh&&sh.leave&&avOn("salir")){const at=toMin(sh.leave)-10,key=k+"leave";if(!NOTIFIED.has(key)&&m>=at&&m<at+3){NOTIFIED.add(key);notify("En 10 minutos sales a la pega","Agua, colación y uniforme.",key)}}}catch(e){}}
 setInterval(checkNotify,30000);
 if(document.createElement&&document.body){const up=document.createElement("button");up.className="totop";up.type="button";up.setAttribute("aria-label","Subir");up.textContent="↑";up.hidden=true;up.addEventListener("click",()=>window.scrollTo({top:0,behavior:"smooth"}));
  if(document.body&&document.body.appendChild){document.body.appendChild(up);window.addEventListener("scroll",()=>{up.hidden=window.scrollY<700},{passive:true})}}
@@ -2807,7 +2888,8 @@ function render(){
   const ae=document.activeElement,fid=ae&&app.contains(ae)&&ae.id?ae.id:null,sel=fid&&ae.selectionStart!=null?[ae.selectionStart,ae.selectionEnd]:null;
   const hqTop=()=>{const L=locate(today());return hqHTML(L.after?52:L.w,streak())};
   const v=S.tab==="hoy"&&S.run&&S.run.k===iso(S.date)?viewRun:{hoy:viewHoy,plan:viewPlan,registro:viewRegistro,progreso:viewProgreso,guia:viewGuia}[S.tab]||viewHoy;
-  let body;try{body=(S.tab!=="hoy"?hqTop():"")+v()+(v===viewRun||(v===viewHoy&&S.focus)?"":pageNav())}catch(e){console.error(e);body=rescueHTML(e)}
+  const psh=S.pendShare?`<div class="card pshare"><span class="lbl">📁 Tu archivo está listo</span><p style="margin:0">Toca y elige dónde guardarlo: «Guardar en Archivos», Drive o mándatelo por correo.</p><div class="row"><button class="btn main" data-doshare style="flex:2">Guardar ahora</button><button class="btn" data-noshare style="flex:1">Cancelar</button></div></div>`:"";
+  let body;try{body=psh+(S.tab!=="hoy"?hqTop():"")+v()+(v===viewRun||(v===viewHoy&&S.focus)?"":pageNav())}catch(e){console.error(e);body=rescueHTML(e)}
   app.innerHTML=body;
   paintSave();
   document.documentElement.classList.toggle("bigtext",!!Store.cfg.bigText);
@@ -2832,7 +2914,27 @@ document.addEventListener("click",e=>{
   const jumpy=["rdone","rgo","rto","st","task","clear","rstart"].some(x=>D[x]!==undefined);
   if(jumpy&&lastTap.j&&now-lastTap.t<350)return;lastTap={sig,t:now,j:jumpy};
   if(D.jump){jumpTo(D.jump);return}
+  if(D.doshare!==undefined){const x=S.pendShare;S.pendShare=null;if(x){try{navigator.share({files:[new File([x.data],x.filename,{type:x.type})],title:x.filename}).then(()=>{if(x.after)x.after()}).catch(()=>{})}catch(e){}}render();return}
+  if(D.noshare!==undefined){S.pendShare=null;render();return}
+  if(D.pend){const g=D.pend;
+    if(g.startsWith("reg:")){S.keep[g]=true;saveKeep();setTab("registro");setTimeout(()=>jumpTo("reg-"+g.slice(4)),40);return}
+    if(g.startsWith("aj:")){S.keep[g]=true;saveKeep();setTab("plan");setTimeout(()=>jumpTo("pl-ajustes"),40);return}
+    if(g==="pl-avisos"){setTab("plan");setTimeout(()=>jumpTo("pl-avisos"),40);return}
+    if(g.startsWith("open:")){const id=g.slice(5);S.open[k+id]=true;render();setTimeout(()=>{const el=document.querySelector(`[data-open="${id}"]`);if(el){const se=el.closest(".ses")||el;window.scrollTo({top:se.getBoundingClientRect().top+window.scrollY-70,behavior:"smooth"})}},40);return}
+    if(g==="close"){const el=document.querySelector("[data-close]");if(el)window.scrollTo({top:el.getBoundingClientRect().top+window.scrollY-120,behavior:"smooth"});return}
+    jumpTo(g);return}
   if(D.perso!==undefined){S.tab="plan";S.keep["pz:tareas"]=true;S.keep["pz:mis"]=true;saveKeep();render();setTimeout(()=>jumpTo("pl-perso"),30);return}
+  if(D.pzav){const a=Object.assign({},Store.cfg.avQue);a[D.pzav]=!avOn(D.pzav);Store.setCfg({avQue:a});render();return}
+  if(D.pzantes!==undefined){Store.setCfg({avAntes:+D.pzantes});render();toast(+D.pzantes?`Te aviso ${D.pzantes} min antes.`:"Te aviso a la hora.");return}
+  if(D.pzhoy){const a=(Store.cfg.hoyOff||[]).slice(),i=a.indexOf(D.pzhoy);if(i>=0)a.splice(i,1);else a.push(D.pzhoy);Store.setCfg({hoyOff:a});render();return}
+  if(D.pzbk){Store.setCfg({backupDias:+D.pzbk});render();toast(`Te recuerdo la copia cada ${D.pzbk} días.`);return}
+  if(D.editcompras!==undefined){S.editCompras=!S.editCompras;render();return}
+  if(D.lquitar){const [n,base]=D.lquitar.split("|"),L=Object.assign({quitar:[],cant:{},precio:{},extra:[]},Store.cfg.lista);if(base==="1")L.quitar=L.quitar.concat([n]);else L.extra=L.extra.filter(x=>x.n!==n);Store.setCfg({lista:L});render();return}
+  if(D.ladd!==undefined){const n=((document.getElementById("lc-n")||{}).value||"").trim().slice(0,30),q=((document.getElementById("lc-q")||{}).value||"").trim().slice(0,20);if(!n){toast("Escribe qué quieres agregar.");return}
+    const L=Object.assign({quitar:[],cant:{},precio:{},extra:[]},Store.cfg.lista);L.quitar=L.quitar.filter(x=>x!==n);if(!compras0().some(x=>x[0]===n))L.extra=L.extra.filter(x=>x.n!==n).concat([{n,q}]);else if(q)L.cant=Object.assign({},L.cant,{[n]:q});Store.setCfg({lista:L});render();toast(n+" agregado a tu lista.");return}
+  if(D.lreset!==undefined){Store.setCfg({lista:{quitar:[],cant:{},precio:{},extra:[]},presu:""});render();toast("Lista original.");return}
+  if(D.editmetas!==undefined){S.editMetas=!S.editMetas;render();return}
+  if(D.metasreset!==undefined){Store.setCfg({metasP:{}});render();toast("Metas propuestas de vuelta.");return}
   if(D.pzfaltas){Store.setCfg({faltas:D.pzfaltas});render();toast(D.pzfaltas==="doble"?"Si no cumples un día, al siguiente va doble.":"Si no cumples un día, el plan se corre un día.");return}
   if(D.pzenf){Store.setCfg({enfoque:D.pzenf});render();toast("Enfoque: "+enfoqueOf()[1]+".");return}
   if(D.pzhide){const h=(Store.cfg.hide||[]).slice(),i=h.indexOf(D.pzhide);if(i>=0)h.splice(i,1);else h.push(D.pzhide);Store.setCfg({hide:h});render();return}
@@ -2846,7 +2948,7 @@ document.addEventListener("click",e=>{
   if(D.pzpadd!==undefined){const n=(document.getElementById("pz-pn")||{}).value||"",g=parseInt((document.getElementById("pz-pg")||{}).value,10);if(!n.trim()||!(g>0&&g<200)){toast("Escribe el alimento y sus gramos de proteína.");return}
     Store.setCfg({misProt:(Store.cfg.misProt||[]).concat([{id:Date.now().toString(36),n:n.trim().slice(0,30),g}])});render();toast("Alimento agregado: lo ves en Registro → Comidas.");return}
   if(D.pzpdel){Store.setCfg({misProt:(Store.cfg.misProt||[]).filter(x=>x.id!==D.pzpdel)});render();return}
-  if(D.pzreset){const r={tareas:{hide:[],horas:{}},semana:{semana:null},comidas:{comidas:{},misProt:[]},metas:{aguaL:"",protG:"",pesoMeta:"",edad:""}}[D.pzreset];if(r){Store.setCfg(r);render();toast("Volvió a como estaba.")}return}
+  if(D.pzreset){const r={pega:{semTurno:null},sueno:{sueno:"",acuesto:"",despLibre:""},tareas:{hide:[],horas:{},dur:{}},semana:{semana:null},comidas:{comidas:{},misProt:[]},metas:{aguaL:"",protG:"",pesoMeta:"",edad:""}}[D.pzreset];if(r){Store.setCfg(r);render();toast("Volvió a como estaba.")}return}
   if(D.totop!==undefined){window.scrollTo({top:0,behavior:"smooth"});return}
   if(D.allwk!==undefined){S.keep.allWeeks=!S.keep.allWeeks;saveKeep();render();return}
   if(D.wkstep){const n=Store.cfg.sched.length,L0=locate(today()),cur=S.selWeek!=null?S.selWeek:(L0.idx!=null&&!L0.after?L0.idx:0);S.selWeek=Math.max(0,Math.min(n-1,cur+(+D.wkstep)));render();return}
@@ -3021,8 +3123,16 @@ document.addEventListener("input",e=>{const el=e.target;if(el&&el.dataset&&el.da
 document.addEventListener("change",e=>{const el=e.target,D=el&&el.dataset;if(!D)return;
   if(D.pzh){const v=/^\d{1,2}:\d{2}$/.test(el.value)?el.value:"";Store.setCfg({horas:Object.assign({},Store.cfg.horas,{[D.pzh]:v})});render();toast(v?"Hora guardada: "+v+".":"Vuelve a la hora de la app.")}
   else if(D.pzsem!==undefined){const a=(Store.cfg.semana||[0,1,2,3,4,5,6]).slice();a[+D.pzsem]=+el.value;Store.setCfg({semana:a.every((x,i)=>x===i)?null:a});render();toast(DNOM[+D.pzsem]+": "+SEMT[+el.value]+".")}
-  else if(D.pzn){const v=String(el.value).trim().replace(",",".");if(v&&!(+v>0&&+v<400)){toast("Revisa el número.");return}Store.setCfg({[D.pzn]:v?String(+v):""});render()}
+  else if(D.pzn){const v=String(el.value).trim().replace(",","."),lim={aguaL:[0.5,8,"litros"],protG:[30,400,"gramos"],pesoMeta:[35,200,"kg"],edad:[12,99,"años"],vaso:[100,1500,"ml"]}[D.pzn]||[0,1e6,""];
+    if(v&&!(+v>=lim[0]&&+v<=lim[1])){toast(`Escribe un número entre ${lim[0]} y ${lim[1]} ${lim[2]}.`);return}Store.setCfg({[D.pzn]:v?String(+v):""});render();if(v)toast("Guardado.")}
   else if(D.exmeta){const v=parseInt(el.value,10),m=Object.assign({},Store.cfg.exMeta);if(v>0&&v<1000)m[D.exmeta]=v;else delete m[D.exmeta];Store.setCfg({exMeta:m});render()}
+  else if(D.pzturno!==undefined){const a=(Array.isArray(Store.cfg.semTurno)?Store.cfg.semTurno:DNOM.map((x,i)=>i===0||i===6?"libre":turnoHora(Store.cfg.turno)||"14:00")).slice();a[+D.pzturno]=el.value;Store.setCfg({semTurno:a});render();toast(DNOM[+D.pzturno]+": "+(el.value==="libre"?"libre":"entras "+el.value)+".")}
+  else if(D.pzsueno){const v=el.value;Store.setCfg({[D.pzsueno]:D.pzsueno==="despLibre"?(/^\d{1,2}:\d{2}$/.test(v)?v:""):String(+v)});render();toast("Listo: tu día se ajustó.")}
+  else if(D.pzdur){const v=parseInt(el.value,10);Store.setCfg({dur:Object.assign({},Store.cfg.dur,{[D.pzdur]:v>0&&v<=240?v:""})});render()}
+  else if(D.lcant){const [n,base]=D.lcant.split("|"),L=Object.assign({quitar:[],cant:{},precio:{},extra:[]},Store.cfg.lista),q=el.value.trim().slice(0,20);if(base==="1")L.cant=Object.assign({},L.cant,{[n]:q});else L.extra=L.extra.map(x=>x.n===n?Object.assign({},x,{q}):x);Store.setCfg({lista:L});render()}
+  else if(D.lprecio){const L=Object.assign({quitar:[],cant:{},precio:{},extra:[]},Store.cfg.lista),v=parseInt(String(el.value).replace(/\D/g,""),10);L.precio=Object.assign({},L.precio,{[D.lprecio]:v>0?v:""});Store.setCfg({lista:L});render()}
+  else if(D.presu!==undefined){const v=parseInt(String(el.value).replace(/\D/g,""),10);Store.setCfg({presu:v>0?String(v):""});render()}
+  else if(D.metap){const [w,f]=D.metap.split("|"),m=Object.assign({},Store.cfg.metasP),o=Object.assign({},m[w]),v=el.value.trim();if(f==="run"){if(v&&!/^\d{1,2}:\d{2}$/.test(v)){toast("Escribe el tiempo así: 14:30");return}o[f]=v||undefined}else{const n=parseInt(v,10);o[f]=n>0?n:undefined}Object.keys(o).forEach(x=>o[x]===undefined&&delete o[x]);m[w]=o;Store.setCfg({metasP:m});render()}
   else if(D.pzmeal){const [k,f]=D.pzmeal.split("|"),co=Object.assign({},Store.cfg.comidas),o=Object.assign({},co[k]);o[f]=f==="h"?(/^\d{1,2}:\d{2}$/.test(el.value)?el.value:""):el.value.trim().slice(0,30);co[k]=o;Store.setCfg({comidas:co});render()}});
 document.addEventListener("focusin",e=>{const el=e.target;if(el&&el.dataset&&el.dataset.rp)S.recB=new Set(dayRecords(iso(S.date)))});
 document.addEventListener("change",e=>{const el=e.target;

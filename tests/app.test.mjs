@@ -1197,6 +1197,38 @@ const reload = async p => { await p.reload(); await p.waitForTimeout(200); };
   ok(errs.length === 0, 'sin errores: ' + errs.join(' | '));
   await ctx.close(); }
 
+// 51. Horario por día, sueño, minutos, avisos, qué ves en Hoy, vaso, compras, metas de pruebas y «Te falta anotar»
+{ const ctx = await browser.newContext({ viewport: { width: 390, height: 1400 } }); const errs = [];
+  await ctx.addInitScript(() => { window.__NOLOCK = false; if (!localStorage.getItem('bitacora-buzo-v1')) localStorage.setItem('bitacora-buzo-v1', JSON.stringify({ cfg: { start: '2026-10-06', welcome: true, peso: '68', alt: '176' }, days: { '2026-10-06': { status: 'done' }, '2026-10-07': { status: 'done' }, '2026-10-08': { status: 'done' } }, pend: {} })); });
+  const p = await ctx.newPage(); p.on('pageerror', e => errs.push(e.message)); await p.clock.install({ time: new Date('2026-10-20T12:00:00') }); await p.goto(URL); await p.waitForTimeout(300);
+  let t = await text(p);
+  ok(await p.locator('#sec-pend .pitem').count() >= 1 && t.includes('Te falta anotar'), 'Hoy dice qué te falta anotar');
+  ok(await p.locator('.card.bk [data-backup]').count() === 1, 'la copia de seguridad se pide arriba');
+  await p.locator('#sec-pend [data-pend="reg:sueno"]').click(); await p.waitForTimeout(250);
+  ok(await p.locator('[data-tab="registro"].on').count() === 1 && await p.locator('#reg-sueno[open]').count() === 1, 'el botón te lleva directo a anotar el sueño');
+  await p.click('[data-tab="plan"]'); await p.waitForTimeout(100);
+  await p.selectOption('[data-pzturno="1"]', '16:00'); await p.waitForTimeout(100);
+  await p.selectOption('[data-pzsueno="sueno"]', '9'); await p.waitForTimeout(100);
+  await p.fill('[data-pzdur="ingles"]', '40'); await p.dispatchEvent('[data-pzdur="ingles"]', 'change'); await p.waitForTimeout(100);
+  await p.click('[data-pzantes="10"]'); await p.click('[data-pzav="habitos"]'); await p.click('[data-pzhoy="frase"]'); await p.waitForTimeout(100);
+  await p.fill('#pz-vaso', '500'); await p.dispatchEvent('#pz-vaso', 'change'); await p.waitForTimeout(100);
+  t = await text(p);
+  ok(t.includes('10 min antes') && await p.locator('[data-pzav="habitos"][aria-pressed="false"]').count() === 1, 'avisos: cuándo y de qué');
+  await p.click('[data-tab="hoy"]'); await p.waitForTimeout(150);
+  t = await text(p);
+  ok(t.includes('Entro 16:00') && t.includes('Inglés · 40 min') && await p.locator('.frase').count() === 0 && t.includes('Cada toque = 500 ml'), 'Hoy usa tu turno del martes, tus minutos, sin la frase y con tu vaso');
+  ok(t.includes('Despiertas 11:00'), 'con 9 horas de sueño y entrada a las 16:00 despiertas a las 11:00');
+  await p.click('[data-tab="registro"]'); await p.locator('#reg-compras summary').click(); await p.click('[data-editcompras]'); await p.waitForTimeout(100);
+  await p.fill('#lc-n', 'Arroz'); await p.fill('#lc-q', '1 kg'); await p.click('[data-ladd]'); await p.waitForTimeout(100);
+  await p.click('[data-lquitar="Avena|1"]'); await p.waitForTimeout(100);
+  t = await p.$eval('#reg-compras', e => e.textContent);
+  ok(t.includes('Arroz') && !t.includes('Avena'), 'lista de compras a tu manera');
+  await p.click('[data-tab="progreso"]'); await p.click('[data-editmetas]'); await p.waitForTimeout(100);
+  await p.fill('[data-metap="13|barras"]', '8'); await p.dispatchEvent('[data-metap="13|barras"]', 'change'); await p.click('[data-editmetas]'); await p.waitForTimeout(100);
+  ok((await p.$eval('#pr-metas', e => e.textContent)).includes('Son tus metas') && (await p.$eval('#pr-metas tbody tr:nth-child(2)', e => e.textContent)).includes('8'), 'metas de las pruebas a tu manera');
+  ok(errs.length === 0, 'sin errores: ' + errs.join(' | '));
+  await ctx.close(); }
+
 await browser.close();
 console.log(`\n${passes} correctas, ${fails} fallidas`);
 process.exit(fails ? 1 : 0);
