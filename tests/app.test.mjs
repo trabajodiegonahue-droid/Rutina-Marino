@@ -770,7 +770,7 @@ const reload = async p => { await p.reload(); await p.waitForTimeout(200); };
   await ctx.addInitScript(() => { window.__NOLOCK = false; });
   const p = await ctx.newPage(); const errs = []; p.on('pageerror', e => errs.push(e.message));
   await p.clock.install({ time: new Date('2026-10-20T09:30:00') }); await p.goto(URL); await p.waitForTimeout(200);
-  ok(await p.locator('#app [data-go="-1"]').count() === 0 && (await text(p)).includes('HOY · MARTES'), 'Hoy sin flechas y dice HOY');
+  ok(await p.locator('#app [data-go="-1"]').count() === 1 && (await text(p)).includes('HOY · MARTES'), 'Hoy dice HOY y tiene flechas para ir a ayer y mañana');
   ok(!(await text(p)).includes('Mañana ·'), 'Hoy no mezcla el día de mañana');
   await p.click('[data-tab="plan"]'); await p.locator('[data-goto="2026-10-22"]').first().click(); await p.waitForTimeout(150);
   ok((await text(p)).includes('DÍA QUE VIENE') && await p.locator('[data-go="0"]').count() === 1, 'otro día se ve marcado y con «Volver a hoy»');
@@ -1151,6 +1151,49 @@ const reload = async p => { await p.reload(); await p.waitForTimeout(200); };
   ok(await p.locator('details.gsec').count() > 8 && await p.locator('details.gsec[open]').count() === 1, 'guía en temas plegables');
   await p.reload(); await p.waitForTimeout(300); await p.click('[data-tab="plan"]'); await p.waitForTimeout(100);
   ok(await p.locator('.wc').count() > 40, 'se recuerda que dejaste abiertas todas las semanas');
+  ok(errs.length === 0, 'sin errores: ' + errs.join(' | '));
+  await ctx.close(); }
+
+// 50. Personalizar todo: ocultar, horas, hábitos propios, semana, doble, metas, colores, días con flechas y tus números
+{ const ctx = await browser.newContext({ viewport: { width: 390, height: 1400 } }); const errs = [];
+  await ctx.addInitScript(() => { window.__NOLOCK = false; if (!localStorage.getItem('bitacora-buzo-v1')) localStorage.setItem('bitacora-buzo-v1', JSON.stringify({ cfg: { start: '2026-10-06', welcome: true, peso: '68', alt: '176' }, days: {}, pend: {} })); });
+  const p = await ctx.newPage(); p.on('pageerror', e => errs.push(e.message)); await p.clock.install({ time: new Date('2026-10-20T09:00:00') }); await p.goto(URL); await p.waitForTimeout(300);
+  let t = await text(p);
+  ok(t.includes('Sacar al perro'), 'el perro está antes de ocultarlo');
+  await p.click('[data-tab="plan"]'); await p.waitForTimeout(100);
+  await p.click('[data-pzhide="perro"]'); await p.waitForTimeout(100);
+  await p.click('[data-pztpl="0"]'); await p.waitForTimeout(100);
+  ok(await p.inputValue('#pz-t') === 'Leer la Biblia', 'idea rápida llena el formulario');
+  await p.click('[data-pzadd]'); await p.waitForTimeout(100);
+  await p.fill('[data-pzh="ingles"]', '19:15'); await p.dispatchEvent('[data-pzh="ingles"]', 'change'); await p.waitForTimeout(100);
+  await p.click('[data-tab="hoy"]'); await p.waitForTimeout(150);
+  t = await text(p);
+  ok(!t.includes('Sacar al perro') && t.includes('Leer la Biblia'), 'Hoy sin el perro y con tu hábito nuevo');
+  ok(/Inglés[^]*19:15/.test(await p.$eval('#app', e => e.textContent)), 'la hora del inglés es la tuya');
+  // semana a tu manera: el martes (día 1) pasa a ser espalda
+  await p.click('[data-tab="plan"]'); await p.selectOption('[data-pzsem="1"]', '2'); await p.waitForTimeout(100);
+  await p.click('[data-tab="hoy"]'); await p.waitForTimeout(150);
+  ok((await text(p)).includes('Espalda + core'), 'el martes ahora entrenas espalda');
+  // doble: hoy no puedo → mañana va doble
+  await p.click('[data-doble]'); await p.waitForTimeout(150);
+  ok((await text(p)).includes('doble'), 'hoy no puedo: doble mañana');
+  await p.click('[data-go="1"]'); await p.waitForTimeout(150);
+  t = await text(p);
+  ok(t.includes('(de ayer)') && t.includes('MAÑANA') && t.includes('Volver a hoy'), 'mañana trae lo de hoy (doble) y se puede ir con las flechas');
+  await p.click('[data-go="0"]'); await p.waitForTimeout(100);
+  ok((await text(p)).includes('HOY ·'), 'volver a hoy');
+  // colores
+  await p.click('[data-tab="plan"]'); await p.click('[data-cset="acento|naranja"]'); await p.waitForTimeout(100);
+  ok((await p.evaluate(() => getComputedStyle(document.documentElement).getPropertyValue('--accent'))).trim().toUpperCase() === '#FB923C', 'color principal naranja');
+  // tus números y meta por ejercicio
+  await p.click('[data-tab="progreso"]'); await p.waitForTimeout(150);
+  t = await text(p);
+  ok(t.includes('Cómo vas, en simple') && t.includes('Tus números') && t.includes('kcal') && /semanas/.test(t), 'Progreso: cómo vas y tus números');
+  await p.click('[data-tab="guia"]'); await p.waitForTimeout(100);
+  t = await text(p);
+  ok(t.includes('Personalizar todo') && t.includes('Cada cuánto pesarte'), 'guía práctica');
+  await p.waitForTimeout(800); await p.reload(); await p.waitForTimeout(600); await p.click('[data-tab="hoy"]'); await p.waitForTimeout(150);
+  ok(await p.evaluate(() => JSON.parse(localStorage.getItem('bitacora-buzo-v1')).cfg.mis.some(m => m.t === 'Leer la Biblia')), 'lo personalizado queda guardado');
   ok(errs.length === 0, 'sin errores: ' + errs.join(' | '));
   await ctx.close(); }
 
