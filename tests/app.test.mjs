@@ -1418,6 +1418,31 @@ const reload = async p => { await p.reload(); await p.waitForTimeout(200); };
   ok(errs.length === 0, 'sin errores: ' + errs.join(' | '));
   await ctx.close(); }
 
+// 59. Partido real aplaza el entrenamiento (también en «100% mío»); la pichanga no cambia nada
+{ const ctx = await browser.newContext({ viewport: { width: 390, height: 1400 } }); const errs = [];
+  // jueves 5 nov: día antes; viernes 6: partido. Lunes 26 oct = inicio
+  await ctx.addInitScript(() => { window.__NOLOCK = false; window.__NOSKIP = false; if (!localStorage.getItem('bitacora-buzo-v1')) localStorage.setItem('bitacora-buzo-v1', JSON.stringify({ cfg: { start: '2026-10-26', welcome: true, modoPropio: true }, days: { '2026-11-05': { prepartido: true }, '2026-11-06': { partido: true }, '2026-11-04': { pichanga: { on: true, min: '60' } } }, pend: {} })); });
+  const p = await ctx.newPage(); p.on('pageerror', e => errs.push(e.message)); await p.clock.install({ time: new Date('2026-11-04T09:00:00') }); await p.goto(URL); await p.waitForTimeout(300);
+  let t = await text(p);
+  ok(t.includes('Pichanga con amigos: se entrena igual') && /espalda/i.test(t) && !t.includes('(del partido)'), 'miércoles con pichanga: se entrena igual (espalda)');
+  await p.click('[data-go="1"]'); await p.waitForTimeout(150);
+  t = await text(p);
+  ok(t.includes('pasa al primer día libre después del partido'), '100% mío, día antes: avisa que la fuerza pasa al primer día libre');
+  await p.click('[data-go="1"]'); await p.click('[data-go="1"]'); await p.waitForTimeout(150);
+  t = await text(p);
+  ok(t.includes('(del partido)') && t.includes('que tapó el partido'), 'sábado: la fuerza del jueves va doble: ' + (t.match(/Hoy va doble[^.]*/) || [''])[0]);
+  await p.click('[data-go="1"]'); await p.waitForTimeout(150);
+  ok(!(await text(p)).includes('(del partido)'), 'domingo: ya no se repite');
+  ok(errs.length === 0, 'sin errores: ' + errs.join(' | '));
+  await ctx.close(); }
+{ const ctx = await browser.newContext({ viewport: { width: 390, height: 1400 } }); const errs = [];
+  await ctx.addInitScript(() => { window.__NOLOCK = false; window.__NOSKIP = false; if (!localStorage.getItem('bitacora-buzo-v1')) localStorage.setItem('bitacora-buzo-v1', JSON.stringify({ cfg: { start: '2026-10-26', welcome: true }, days: { '2026-10-26': { status: 'done' }, '2026-10-27': { status: 'done' }, '2026-10-28': { status: 'done', partido: true } }, pend: {} })); });
+  const p = await ctx.newPage(); p.on('pageerror', e => errs.push(e.message)); await p.clock.install({ time: new Date('2026-10-29T09:00:00') }); await p.goto(URL); await p.waitForTimeout(300);
+  const t = await text(p);
+  ok(/espalda/i.test(t) && !/hombros y brazos \+ core/i.test(t.slice(0, 600)), 'plan normal: el partido del miércoles corre la espalda al jueves');
+  ok(errs.length === 0, 'sin errores: ' + errs.join(' | '));
+  await ctx.close(); }
+
 await browser.close();
 console.log(`\n${passes} correctas, ${fails} fallidas`);
 process.exit(fails ? 1 : 0);

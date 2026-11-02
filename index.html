@@ -1406,10 +1406,21 @@ function isDoble(k){const dd=Store.days[k]||{},nd=Store.days[iso(addDays(parse(k
   if(nd.partido||nd.prepartido||nd.postpartido||nd.viaje||nd.mode==="enfermo"||nd.mode==="dolor")return false;
   if(!dd.doble&&(dd.mode==="enfermo"||dd.mode==="dolor"||dd.viaje||dd.urgencia||dd.partido||dd.prepartido||dd.postpartido||inPausa(k)))return false;
   const p=planFor(parse(k));return !!p&&p.kind!=="descanso"&&pendTrain(p,dd).length>0}
-function addDoble(q,date){if(!q)return q;const y=addDays(date,-1),yk=iso(y);if(locate(y).before||!isDoble(yk))return q;const yp=planFor(y),extra=pendTrain(yp,Store.days[yk]||{});if(!extra.length)return q;
+// «100% mío»: la semana no se corre, así que la fuerza que tapó un partido real (día antes, partido o día después)
+// se hace el primer día libre después, como doble. La pichanga no cuenta: con pichanga se entrena igual.
+const mBlk=x=>{const z=Store.days[iso(x)]||{};return !!(z.partido||z.prepartido||z.postpartido)};
+function matchCarry(date){if(!Store.cfg.modoPropio)return null;const z0=Store.days[iso(date)]||{};
+  if(mBlk(date)||z0.viaje||z0.mode==="enfermo"||z0.mode==="dolor"||!mBlk(addDays(date,-1)))return null;
+  const ds=[];for(let i=1;i<=3;i++){const y=addDays(date,-i);if(!mBlk(y)||locate(y).before)break;ds.unshift(y)}
+  for(const y of ds){const o0=planFor0(y);if(!o0||o0.kind==="descanso")continue;const o=customize(o0,y),z=Store.days[iso(y)]||{},tr=o.tasks.filter(t=>t.kind==="fuerza"&&!taskDone(z,t));if(tr.length)return {yp:o,extra:tr}}
+  return null}
+function addDoble(q,date){if(!q)return q;const y=addDays(date,-1),yk=iso(y);let yp,extra,del="de ayer";
+  if(locate(y).before)return q;
+  if(isDoble(yk)){yp=planFor(y);extra=pendTrain(yp,Store.days[yk]||{})}else{const mc=matchCarry(date);if(!mc)return q;yp=mc.yp;extra=mc.extra;del="del partido"}
+  if(!extra.length)return q;
   const main=q.tasks.find(t=>counts(t)&&!NOTRAIN.includes(t.id)&&!/^mi-/.test(t.id)),base=main&&main.h?toMin(main.h):toMin((q.shift&&q.shift.A)||"10:00");
   return Object.assign({},q,{title:q.title+" + "+yp.title.replace(/ \+ core$/,"")+" (doble)",doble:yp.title,kind:q.kind==="descanso"?"tierra":q.kind,
-    tasks:sortT(q.tasks.concat(extra.map((t,i)=>Object.assign({},t,{id:"x-"+t.id,t:"➕ "+t.t+" (de ayer)",h:fromMin(base+(main?100:0)+i*70),why:"Ayer no se pudo: hoy va doble. Entre una sesión y otra descansa 20 min y come algo. Si llegas muy cansado, haz solo una y marca «No pude» en la otra."}))))})}
+    dobleDe:del,tasks:sortT(q.tasks.concat(extra.map((t,i)=>Object.assign({},t,{id:"x-"+t.id,t:"➕ "+t.t+" ("+del+")",h:fromMin(base+(main?100:0)+i*70),why:(del==="de ayer"?"Ayer no se pudo":"El partido te tapó este entrenamiento")+": hoy va doble. Entre una sesión y otra descansa 20 min y come algo. Si llegas muy cansado, haz solo una y marca «No pude» en la otra."}))))})}
 function missedDay(k,d){if(Store.cfg.modoPropio)return false;const p=planFor(d);if(!p)return false;const dd=Store.days[k]||{};if(isDoble(k))return false;
   // partido, día antes y día después: el entrenamiento de ese día se corre al siguiente (salvo que fuera descanso)
   if(dd.partido||dd.prepartido||dd.postpartido)return !!p.orig&&p.orig!=="descanso";
@@ -1516,20 +1527,20 @@ function readyHTML(d,k,dd,plan){const r=dd.ready||{},rv=readyOf(dd),train=plan.t
   return `<div class="card ready"><div class="row" style="justify-content:space-between"><span class="lbl">¿Cómo amaneciste?</span>${sickB}</div>${RQ.map(([f,l,o])=>`<div class="srow"><span class="sl">${l}</span><div class="segs">${o.map((x,i)=>`<button class="seg ${r[f]===i?"on":""}" data-ready="${f}|${i}">${x}</button>`).join("")}</div></div>`).join("")}${sleepRow(d,dd,plan)}<p class="foot" style="margin:8px 0 0">3 toques y la app ajusta el entrenamiento de hoy.</p></div>`}
 function situHTML(d,k,dd,plan){const tk=iso(addDays(d,1)),yk=iso(addDays(d,-1)),tm=Store.days[tk]||{},ys=Store.days[yk]||{};
   const b=(on,attr,l)=>`<button class="seg ${on?"on":""}" ${attr}>${l}</button>`;
-  let msg="";
-  if(dd.partido)msg=`Hoy juegas a las ${dd.partidoH||trainH(plan)}: comida 3 h antes, calentamiento y elongación después. El entrenamiento de hoy se corre a mañana.`;
-  else if(dd.prepartido)msg="Mañana juegas: hoy sin fuerza ni pierna. Movilidad, toques de pelota, cena con carbohidratos y a dormir temprano. El entrenamiento de hoy se corre.";
-  else if(dd.postpartido)msg="Ayer jugaste: hoy recuperación suave. El entrenamiento de hoy se corre a mañana.";
-  else if(ys.partido)msg="Ayer jugaste. Si estás cargado o te duele algo, toca «Ayer jugué»: hoy recuperación.";
+  let msg="";const corre=Store.cfg.modoPropio?"La fuerza de hoy pasa al primer día libre después del partido (doble).":"El entrenamiento de hoy se corre a mañana.";
+  if(dd.partido)msg=`Hoy juegas a las ${dd.partidoH||trainH(plan)}: comida 3 h antes, calentamiento y elongación después. ${corre}`;
+  else if(dd.prepartido)msg="Mañana juegas: hoy sin fuerza ni pierna. Movilidad, toques de pelota, cena con carbohidratos y a dormir temprano. "+corre;
+  else if(dd.postpartido)msg="Ayer jugaste: hoy recuperación suave. "+corre;
+  else if(ys.partido)msg="Ayer jugaste. "+(plan.dobleDe==="del partido"?`Hoy va doble: lo tuyo + ${plan.doble} que tapó el partido. `:"")+"Si estás cargado o te duele algo, toca «Ayer jugué»: hoy recuperación.";
   else if(dd.viaje)msg="Día de viaje: el entrenamiento se corre a mañana y la racha no se corta. Si tienes 20 min, haz el circuito.";
   else if(dd.express)msg="Versión de 20 minutos: lo esencial.";
   else if(dd.doble)msg=isDoble(k)?"Hoy no entrenas: mañana haces lo de mañana y lo de hoy (doble). El plan no se corre y la racha sigue.":"Mañana tienes partido, viaje o estás mal: lo de hoy se corre un día en vez de ir doble.";
-  else if(plan.doble)msg=`Hoy va doble: lo tuyo + ${plan.doble} de ayer. Descansa 20 min y come algo entre una sesión y otra.`;
+  else if(plan.doble)msg=`Hoy va doble: lo tuyo + ${plan.doble} ${plan.dobleDe==="del partido"?"que tapó el partido":"de ayer"}. Descansa 20 min y come algo entre una sesión y otra.`;
   const horas=Array.from({length:32},(_,i)=>fromMin(7*60+i*30));
   return `<div class="card situ"><span class="lbl">¿Qué pasa hoy?</span>
    <div class="chips">${b(dd.partido,"data-partido","⚽ Hoy juego")}${b(tm.partido,"data-mpartido","⚽ Mañana juego")}${b(dd.postpartido,"data-ppartido","⚽ Ayer jugué")}${b(pichOk(dd.pichanga),"data-pich","🥅 Pichanga hoy")}${b(dd.viaje,"data-viaje","🚌 Viajo")}${b(dd.express,"data-express","⏱ Poco tiempo")}${pendTrain(plan,dd).length||dd.doble?b(dd.doble,"data-doble","🔁 Hoy no puedo: doble mañana"):""}</div>
    ${dd.partido?`<div class="srow"><label class="sl" for="ph-sel">Juego a las</label><select id="ph-sel" data-ph>${horas.map(x=>`<option value="${x}" ${(dd.partidoH||trainH(plan))===x?"selected":""}>${x}</option>`).join("")}</select></div>`:""}
-   ${pichOk(dd.pichanga)?`<div class="srow"><span class="sl">🥅 Pichanga</span><span>${Math.round(pchMin(dd.pichanga))} min · ≈ ${fkm(pchKm(dd.pichanga))} km</span><button class="lnk" data-pend="reg:pichanga">Goles y asist. ›</button></div>`:""}
+   ${pichOk(dd.pichanga)?`<div class="srow"><span class="sl">🥅 Pichanga</span><span>${Math.round(pchMin(dd.pichanga))} min · ≈ ${fkm(pchKm(dd.pichanga))} km</span><button class="lnk" data-pend="reg:pichanga">Goles y asist. ›</button></div><p class="foot" style="margin:2px 0 0">Pichanga con amigos: se entrena igual, el plan no cambia. Si es partido de verdad, toca «⚽ Hoy juego» y el entrenamiento se aplaza.</p>`:""}
    ${msg?`<p class="foot smsg">${esc(msg)}</p>`:""}</div>`}
 // FÚTBOL. Día antes, día del partido y día después: el entrenamiento de ese día no se pierde, se corre al siguiente
 // (salvo que fuera descanso). El día de partido se juega a la hora que elijas.
@@ -2930,7 +2941,7 @@ function viewRegistro(){
    const all=Object.keys(Store.days).filter(x=>matchOk(Store.days[x].match)),g=all.reduce((s,x)=>s+(numv(Store.days[x].match.goles)||0),0),as=all.reduce((s,x)=>s+(numv(Store.days[x].match.asist)||0),0);
    h+=regBox("match","Partido",matchOk(m)?`${m.min||"?"} min · ${m.goles||0} goles`:"no jugué",`<div class="rlf">${f("min","Minutos","90")}${f("goles","Goles","0")}${f("asist","Asist.","0")}</div><span class="lbl">Cómo me sentí</span><div class="segs">${[1,2,3,4,5].map(i=>`<button class="seg ${+m.sens===i?"on":""}" data-sens="${i}">${i}</button>`).join("")}</div><p class="foot">Solo partidos (las pichangas van aparte): ${all.length} jugados · ${g} goles · ${as} asistencias.</p>${all.length?`<div class="temp">${all.sort().slice(-10).map(x=>{const mm=Store.days[x].match,gg=numv(mm.goles)||0,aa=numv(mm.asist)||0;return `<div class="tm"><div class="tmb"><i class="g" style="height:${Math.min(100,gg*25)}%"></i><i class="a" style="height:${Math.min(100,aa*25)}%"></i></div><small>${fmtS(parse(x))}</small></div>`}).join("")}</div><p class="foot"><span class="dotg"></span> goles · <span class="dota"></span> asistencias (últimos 10 partidos)</p>`:""}`,!!dd.partido)}
   {const m=dd.pichanga||{},o=pchOf(m),T=pchTot(),df=pchDef(),f=(x,l,ph,im)=>`<div class="field"><label class="lbl" for="pc-${x}">${l}</label><input id="pc-${x}" inputmode="${im||"numeric"}" data-r="pichanga|${x}" value="${esc(m[x]||"")}" placeholder="${ph}"></div>`,f1=x=>(Math.round(x*10)/10).toLocaleString("es-CL");
-   h+=regBox("pichanga","Pichanga",pichOk(m)?`${pchN(m)>1?pchN(m)+" pichangas · ":""}${Math.round(pchMin(m))} min · ~${fkm(pchKm(m))} km · ${numv(m.goles)>0?numv(m.goles):0} goles`:"no jugué",`<p class="foot" style="margin:0">Aparte de los partidos: así no se mezclan goles, asistencias ni minutos.</p>
+   h+=regBox("pichanga","Pichanga",pichOk(m)?`${pchN(m)>1?pchN(m)+" pichangas · ":""}${Math.round(pchMin(m))} min · ~${fkm(pchKm(m))} km · ${numv(m.goles)>0?numv(m.goles):0} goles`:"no jugué",`<p class="foot" style="margin:0">Aparte de los partidos: así no se mezclan goles, asistencias ni minutos. Con pichanga se entrena igual; el partido de verdad sí aplaza el entrenamiento.</p>
    <div class="rlf c4">${f("min","Minutos",df.min)}${f("goles","Goles","0")}${f("asist","Asist.","0")}${f("n","Cuántas","1")}</div>
    <span class="lbl">Cancha</span><div class="segs">${PCH_CANCHA.map(([v,l])=>`<button class="seg ${o.cancha===v?"on":""}" data-pcset="cancha|${v}">${l}</button>`).join("")}</div>
    <span class="lbl">Dónde juegas</span><div class="segs">${PCH_POS.map(([v,l])=>`<button class="seg ${o.pos===v?"on":""}" data-pcset="pos|${v}">${l}</button>`).join("")}</div>
