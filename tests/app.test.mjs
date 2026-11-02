@@ -811,7 +811,7 @@ const reload = async p => { await p.reload(); await p.waitForTimeout(200); };
   let t = await text(p);
   ok(t.includes('Récords por ejercicio') && t.includes('12 × 8 kg'), 'récord por ejercicio con peso');
   // rutina editable
-  await p.click('[data-tab="plan"]'); if (!(await p.locator('details.redit').evaluate(e => e.open))) await p.locator('details.redit > summary').click(); await p.waitForTimeout(100);
+  await p.click('[data-tab="rutina"]'); await p.waitForTimeout(100);
   ok(await p.locator('.rrow').count() === 8, 'el editor muestra los 8 ejercicios de pecho');
   await p.fill('#rx-fa-1-n', 'Flexiones diamante'); await p.fill('#rx-fa-1-reps', '6–10');
   await p.click('[data-radd="fa"]'); await p.waitForTimeout(100);
@@ -820,7 +820,7 @@ const reload = async p => { await p.reload(); await p.waitForTimeout(200); };
   t = await text(p);
   ok(t.includes('Flexiones diamante') && t.includes('6–10') && t.includes('Ejercicio nuevo'), 'Hoy usa la rutina editada');
   await reload(p); ok((await text(p)).includes('Flexiones diamante'), 'la rutina editada queda guardada');
-  await p.click('[data-tab="plan"]'); if (!(await p.locator('details.redit').evaluate(e => e.open))) if (!(await p.locator('details.redit').evaluate(e => e.open))) await p.locator('details.redit > summary').click(); await p.click('[data-ask="rreset"]'); await p.click('[data-rreset="fa"]'); await p.click('[data-tab="hoy"]');
+  await p.click('[data-tab="rutina"]'); await p.click('[data-ask="rreset"]'); await p.click('[data-rreset="fa"]'); await p.click('[data-tab="hoy"]');
   ok(!(await text(p)).includes('Flexiones diamante'), 'volver a la rutina original');
   // avisos de la semana: archivo de calendario
   await p.click('[data-tab="plan"]');
@@ -1038,7 +1038,7 @@ const reload = async p => { await p.reload(); await p.waitForTimeout(200); };
   await p.click('[data-tab="registro"]'); await p.click('[data-prot="huevo"]'); await p.click('[data-prot="atun"]'); await p.waitForTimeout(100);
   ok((await text(p)).includes('31 /'), 'proteína: huevo + atún = 31 g');
   await p.click('[data-tab="progreso"]'); ok((await text(p)).includes('Medallas de racha'), 'medallas de racha');
-  await p.click('[data-tab="plan"]'); if (!(await p.locator('details.redit').evaluate(e => e.open))) await p.locator('details.redit > summary').click(); await p.click('[data-rday="fb"]'); await p.waitForTimeout(100);
+  await p.click('[data-tab="rutina"]'); await p.click('[data-rday="fb"]'); await p.waitForTimeout(100);
   ok((await text(p)).includes('Remo invertido') || await p.locator('input[value="Remo invertido en barra baja"]').count() === 1, 'espalda con remo invertido en la barra');
   ok(errs.length === 0, 'sin errores: ' + errs.join(' | '));
   await ctx.close(); }
@@ -1142,10 +1142,10 @@ const reload = async p => { await p.reload(); await p.waitForTimeout(200); };
   await p.click('[data-tab="registro"]'); await p.waitForTimeout(100);
   ok(await p.locator('[data-mealx="col"]').getAttribute('aria-pressed') === 'true', 'en Registro es la misma marca');
   await p.click('[data-tab="hoy"]'); await p.waitForTimeout(100);
-  ok(await p.locator('.jump [data-jump="sec-comidas"]').count() === 1 && await p.locator('.pnav [data-tab="plan"]').count() === 1, 'atajos arriba y «Plan →» abajo');
+  ok(await p.locator('.jump [data-jump="sec-comidas"]').count() === 1 && await p.locator('.pnav [data-tab="rutina"]').count() === 1, 'atajos arriba y «Rutina →» abajo');
   const ing = p.locator('[data-nope="ingles"]'); if (await ing.count()) { await ing.first().click(); await p.waitForTimeout(100); }
   ok(/Sesiones\s*\d\/\d · 1 no pude/.test(await p.$eval('#sec-resumen', e => e.textContent)), 'el resumen cuenta aparte lo que no pudiste');
-  await p.click('.pnav [data-tab="plan"]'); await p.waitForTimeout(100);
+  await p.click('#tabs [data-tab="plan"]'); await p.waitForTimeout(100);
   ok(await p.locator('.wc').count() === 0 && await p.locator('#pl-semana .li').count() >= 7, 'Plan muestra solo tu semana');
   await p.click('[data-wkstep="1"]'); await p.waitForTimeout(100);
   ok((await text(p)).includes('Volver a mi semana'), 'flechas para ver otra semana');
@@ -1175,7 +1175,7 @@ const reload = async p => { await p.reload(); await p.waitForTimeout(200); };
   ok(!t.includes('Sacar al perro') && t.includes('Leer la Biblia'), 'Hoy sin el perro y con tu hábito nuevo');
   ok(/Inglés[^]*19:15/.test(await p.$eval('#app', e => e.textContent)), 'la hora del inglés es la tuya');
   // semana a tu manera: el martes (día 1) pasa a ser espalda
-  await p.click('[data-tab="plan"]'); await p.selectOption('[data-pzsem="1"]', '2'); await p.waitForTimeout(100);
+  await p.click('[data-tab="rutina"]'); await p.selectOption('[data-pzsem="1"]', '2'); await p.waitForTimeout(100);
   await p.click('[data-tab="hoy"]'); await p.waitForTimeout(150);
   ok((await text(p)).includes('Espalda + core'), 'el martes ahora entrenas espalda');
   // doble: hoy no puedo → mañana va doble
@@ -1237,7 +1237,7 @@ const reload = async p => { await p.reload(); await p.waitForTimeout(200); };
 { const ctx = await browser.newContext({ viewport: { width: 390, height: 1400 } }); const errs = [];
   await ctx.addInitScript(() => { if (!localStorage.getItem('bitacora-buzo-v1')) localStorage.setItem('bitacora-buzo-v1', JSON.stringify({ cfg: { start: '2026-10-06', welcome: true, peso: '68', alt: '176' }, days: { '2026-10-13': { reps: { 'Flexiones con déficit': ['12', '11', '10', '9'] } }, '2026-10-16': { reps: { 'Flexiones con déficit': ['14', '12', '12', '10'] } } }, pend: {} })); });
   const p = await ctx.newPage(); p.on('pageerror', e => errs.push(e.message)); await p.clock.install({ time: new Date('2026-10-20T09:00:00') }); await p.goto(URL); await p.waitForTimeout(300);
-  await p.click('[data-tab="plan"]'); if (!(await p.locator('details.redit').evaluate(e => e.open))) if (!(await p.locator('details.redit').evaluate(e => e.open))) await p.locator('details.redit > summary').click(); await p.waitForTimeout(100);
+  await p.click('[data-tab="rutina"]'); await p.waitForTimeout(100);
   await p.click('[data-obj="fuerza"]'); await p.waitForTimeout(150);
   ok(await p.inputValue('#rx-fa-0-s') === '5' && /^3–6/.test(await p.inputValue('#rx-fa-0-reps')) && await p.inputValue('#rx-fa-0-r') === '180', 'fuerza: 5 × 3–6 con 3 min de descanso');
   await p.click('[data-obj="velocidad"]'); await p.click('[data-rday="legs"]'); await p.waitForTimeout(150);
@@ -1250,7 +1250,7 @@ const reload = async p => { await p.reload(); await p.waitForTimeout(200); };
   await p.click('[data-equipo="casa"]'); await p.waitForTimeout(150);
   await p.fill('#cal-fa', 'Saltar la cuerda 3 min'); await p.dispatchEvent('#cal-fa', 'change');
   await p.click('[data-stadd="fa"]'); await p.waitForTimeout(100);
-  await p.click('[data-cardio="sprints"]'); await p.fill('#pz-mot', 'Lluvia'); await p.click('[data-motadd]'); await p.waitForTimeout(100);
+  await p.click('[data-cardio="sprints"]'); await p.click('[data-tab="plan"]'); await p.fill('#pz-mot', 'Lluvia'); await p.click('[data-motadd]'); await p.waitForTimeout(100);
   await p.click('[data-tab="hoy"]'); await p.waitForTimeout(150);
   let t = await text(p);
   ok(t.includes('Saltar la cuerda 3 min') || t.includes('Estiramiento nuevo') || t.includes('Pecho'), 'tu calentamiento y estiramientos van al día');
@@ -1297,7 +1297,7 @@ const reload = async p => { await p.reload(); await p.waitForTimeout(200); };
   await ctx.addInitScript(() => { window.__NOLOCK = false; if (!localStorage.getItem('bitacora-buzo-v1')) localStorage.setItem('bitacora-buzo-v1', JSON.stringify({ cfg: { start: '2026-10-26', welcome: true, peso: '68', alt: '176' }, days: {}, pend: {} })); });
   const p = await ctx.newPage(); p.on('pageerror', e => errs.push(e.message)); await p.clock.install({ time: new Date('2026-11-09T09:00:00') }); await p.goto(URL); await p.waitForTimeout(300);
   ok((await text(p)).includes('1 vaso') || true, 'agua de la mañana: un vaso');
-  await p.click('[data-tab="plan"]'); await p.waitForTimeout(100);
+  await p.click('[data-tab="rutina"]'); await p.waitForTimeout(100);
   await p.click('[data-rnew]'); await p.waitForTimeout(150);
   await p.fill('#rt-name', 'Full body'); await p.dispatchEvent('#rt-name', 'change'); await p.waitForTimeout(100);
   await p.fill('[data-rx$="|0|n"]', 'Burpees'); await p.dispatchEvent('[data-rx$="|0|n"]', 'input'); await p.waitForTimeout(100);
@@ -1311,7 +1311,7 @@ const reload = async p => { await p.reload(); await p.waitForTimeout(200); };
   await p.click('[data-go="7"]').catch(() => {}); for (let i = 0; i < 7; i++) { await p.click('[data-go="1"]'); await p.waitForTimeout(60); }
   t = await text(p);
   ok(t.includes('Full body') && t.includes('(extra)'), 'la semana siguiente también: ' + (t.match(/(LUNES|MARTES|MIÉRCOLES|JUEVES|VIERNES|SÁBADO|DOMINGO)[^·]*/) || [''])[0]);
-  await p.click('[data-tab="plan"]'); await p.click('[data-espec="semInfierno|no"]'); await p.waitForTimeout(100);
+  await p.click('[data-tab="rutina"]'); await p.click('[data-espec="semInfierno|no"]'); await p.waitForTimeout(100);
   ok(await p.locator('[data-espec="semInfierno|si"]').count() === 1, 'semana del infierno se puede apagar');
   ok(errs.length === 0, 'sin errores: ' + errs.join(' | '));
   await ctx.close(); }
