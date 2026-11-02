@@ -1229,6 +1229,43 @@ const reload = async p => { await p.reload(); await p.waitForTimeout(200); };
   ok(errs.length === 0, 'sin errores: ' + errs.join(' | '));
   await ctx.close(); }
 
+// 52. Objetivo de entrenamiento, gimnasio, calentamiento y estiramientos, cardio, motivos, lesiones, listas, moneda y gráficos
+{ const ctx = await browser.newContext({ viewport: { width: 390, height: 1400 } }); const errs = [];
+  await ctx.addInitScript(() => { if (!localStorage.getItem('bitacora-buzo-v1')) localStorage.setItem('bitacora-buzo-v1', JSON.stringify({ cfg: { start: '2026-10-06', welcome: true, peso: '68', alt: '176' }, days: { '2026-10-13': { reps: { 'Flexiones con déficit': ['12', '11', '10', '9'] } }, '2026-10-16': { reps: { 'Flexiones con déficit': ['14', '12', '12', '10'] } } }, pend: {} })); });
+  const p = await ctx.newPage(); p.on('pageerror', e => errs.push(e.message)); await p.clock.install({ time: new Date('2026-10-20T09:00:00') }); await p.goto(URL); await p.waitForTimeout(300);
+  await p.click('[data-tab="plan"]'); if (!(await p.locator('details.redit').evaluate(e => e.open))) await p.locator('details.redit summary').click(); await p.waitForTimeout(100);
+  await p.click('[data-obj="fuerza"]'); await p.waitForTimeout(150);
+  ok(await p.inputValue('#rx-fa-0-s') === '5' && /^3–6/.test(await p.inputValue('#rx-fa-0-reps')) && await p.inputValue('#rx-fa-0-r') === '180', 'fuerza: 5 × 3–6 con 3 min de descanso');
+  await p.click('[data-obj="velocidad"]'); await p.click('[data-rday="legs"]'); await p.waitForTimeout(150);
+  ok((await p.inputValue('#rx-legs-0-n')).startsWith('Salto vertical'), 'velocidad: agrega saltos al día de pierna');
+  await p.click('[data-objundo]'); await p.waitForTimeout(100);
+  await p.click('[data-rday="fa"]'); await p.waitForTimeout(100);
+  ok(await p.inputValue('#rx-fa-0-s') === '4', 'deshacer vuelve a la rutina anterior');
+  await p.click('[data-equipo="gimnasio"]'); await p.waitForTimeout(150);
+  ok((await p.inputValue('#rx-fa-0-n')).includes('banca'), 'modo gimnasio: press de banca');
+  await p.click('[data-equipo="casa"]'); await p.waitForTimeout(150);
+  await p.fill('#cal-fa', 'Saltar la cuerda 3 min'); await p.dispatchEvent('#cal-fa', 'change');
+  await p.click('[data-stadd="fa"]'); await p.waitForTimeout(100);
+  await p.click('[data-cardio="sprints"]'); await p.fill('#pz-mot', 'Lluvia'); await p.click('[data-motadd]'); await p.waitForTimeout(100);
+  await p.click('[data-tab="hoy"]'); await p.waitForTimeout(150);
+  let t = await text(p);
+  ok(t.includes('Saltar la cuerda 3 min') || t.includes('Estiramiento nuevo') || t.includes('Pecho'), 'tu calentamiento y estiramientos van al día');
+  await p.locator('[data-nope]').first().click(); await p.waitForTimeout(100);
+  ok((await text(p)).includes('Lluvia'), 'tu motivo aparece al tocar «No pude»');
+  await p.click('[data-tab="registro"]'); await p.waitForTimeout(100);
+  await p.locator('#reg-lesiones summary').click(); await p.click('[data-lesz="tobillo"]'); await p.click('[data-lesd="7"]'); await p.click('[data-lesadd]'); await p.waitForTimeout(100);
+  ok((await p.$eval('#reg-lesiones', e => e.textContent)).includes('Tobillo') && (await p.$eval('#reg-lesiones', e => e.textContent)).includes('ve al médico'), 'diario de lesiones con alerta');
+  await p.locator('#reg-listas summary').click(); await p.locator('#reg-listas [data-lok]').first().click(); await p.waitForTimeout(100);
+  ok(/1\/\d+/.test(await p.$eval('#reg-listas summary', e => e.textContent)), 'listas para tus metas');
+  await p.locator('details[data-keep="reg:ahorro"] summary').click(); await p.click('[data-cset="moneda|CLP"]'); await p.waitForTimeout(100);
+  ok((await p.$eval('#reg-ahorro', e => e.textContent)).includes('CLP'), 'moneda del ahorro');
+  await p.click('[data-tab="progreso"]'); await p.waitForTimeout(150);
+  ok(await p.locator('#pr-sueno').count() === 1, 'sueño y energía en Progreso');
+  await p.click('[data-recg="Flexiones con déficit"]'); await p.waitForTimeout(100);
+  ok(await p.locator('svg.exch').count() === 1, 'gráfico del ejercicio');
+  ok(errs.length === 0, 'sin errores: ' + errs.join(' | '));
+  await ctx.close(); }
+
 await browser.close();
 console.log(`\n${passes} correctas, ${fails} fallidas`);
 process.exit(fails ? 1 : 0);
