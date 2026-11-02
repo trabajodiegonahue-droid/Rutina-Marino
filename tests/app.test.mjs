@@ -15,13 +15,21 @@ const newContext0 = browser.newContext.bind(browser);
 // Chromium abre cada pestaña nueva en otro proceso y a veces lee localStorage atrasado. Como en el celular (una sola
 // pestaña que se cierra y se vuelve a abrir), «cerrar» deja la pestaña en blanco y la próxima «nueva» la reutiliza.
 browser.newContext = async (...a) => { const c = await newContext0(...a); await c.addInitScript(NOSKIP);
+  // Datos de ejemplo «si el teléfono está vacío»: se siembran una sola vez por pestaña. Chromium guarda en segundo plano
+  // y al cambiar de día la página nueva a veces ve el almacenamiento vacío un instante: sin esto, se volvía a sembrar encima.
+  const ais = c.addInitScript.bind(c);
+  c.addInitScript = (fn, arg) => typeof fn !== 'function' || !/bitacora-buzo-v1/.test(fn.toString()) ? ais(fn, arg) :
+    ais(`(() => { if (location.protocol === 'about:') { try { (${fn.toString()})(${arg === undefined ? '' : JSON.stringify(arg)}); } catch (e) {} return; }
+      const seeded = /seeded/.test(window.name), real = Storage.prototype.getItem;
+      if (seeded) Storage.prototype.getItem = function (k) { const v = real.call(this, k); return v === null && k === 'bitacora-buzo-v1' ? '{}' : v; };
+      try { (${fn.toString()})(${arg === undefined ? '' : JSON.stringify(arg)}); } finally { Storage.prototype.getItem = real; if (!seeded) window.name = (window.name || '') + ' seeded'; } })()`);
   const np = c.newPage.bind(c); let spare = null;
   c.newPage = async (...b) => { if (spare) { const pg = spare; spare = null; return pg; }
     const pg = await np(...b); const cl = pg.close.bind(pg); let inst = false; const ci = pg.clock.install.bind(pg.clock);
     // Chromium guarda localStorage en segundo plano: antes de recargar o volver a abrir, un respiro para que quede escrito
     const rl = pg.reload.bind(pg), gt = pg.goto.bind(pg);
     pg.reload = async (...o) => { await pg.waitForTimeout(350); return rl(...o); };
-    pg.goto = async (...o) => { if (pg.url() && pg.url() !== 'about:blank') await pg.waitForTimeout(350); return gt(...o); };
+    pg.goto = async (...o) => { if (pg.url() && pg.url() !== 'about:blank') await pg.waitForTimeout(800); return gt(...o); };
     pg.clock.install = async o => { if (!inst) { inst = true; return ci(o); } return pg.clock.setSystemTime(o && o.time); };
     pg.close = async (...o) => { if (spare) return cl(...o); await pg.evaluate(() => sessionStorage.clear()).catch(() => {}); spare = pg; };
     return pg; };
@@ -1084,7 +1092,7 @@ const reload = async p => { await p.reload(); await p.waitForTimeout(200); };
   ok((await text(p)).includes('Avisar que entro al lago'), 'botón de emergencia el día de lago');
   await ctx.close(); }
 { const { p, ctx } = await page('2026-10-13T08:00:00'); // martes = día 1 de la semana (inicio martes 6)
-  ok((await text(p)).includes('Pésate hoy'), 'recordatorio de pesarse el primer día de la semana');
+  ok((await text(p)).includes('Hoy toca pesarte'), 'recordatorio de pesarse el primer día de la semana');
   await ctx.close(); }
 
 // 47. Chequeo de la mañana, calculadora de discos, series por músculo y compartir el día
@@ -1332,6 +1340,27 @@ const reload = async p => { await p.reload(); await p.waitForTimeout(200); };
   t = await text(p);
   ok(t.includes('Sentadilla búlgara') && t.includes('Peso muerto rumano'), 'el martes sale la pierna pegada');
   ok(t.includes('Sprints (extra)'), 'cardio del martes: sprints');
+  ok(errs.length === 0, 'sin errores: ' + errs.join(' | '));
+  await ctx.close(); }
+
+// 56. Cada cuánto pesarse y medirse (en ayunas) y comparar semanas
+{ const ctx = await browser.newContext({ viewport: { width: 390, height: 1400 } }); const errs = [];
+  const days = {}; for (let i = 0; i < 14; i++) { const d = new Date(Date.UTC(2026, 9, 26 + i)), k = d.toISOString().slice(0, 10); days[k] = { status: (i < 7 ? i % 2 === 0 : true) ? 'done' : '', water: i < 7 ? 6 : 12, reps: { 'Flexiones con déficit': i < 7 ? ['10', '10'] : ['13', '12'] } }; }
+  days['2026-10-26'].peso = '68'; days['2026-11-02'].peso = '68,4';
+  await ctx.addInitScript(([dd]) => { window.__NOLOCK = false; if (!localStorage.getItem('bitacora-buzo-v1')) localStorage.setItem('bitacora-buzo-v1', JSON.stringify({ cfg: { start: '2026-10-26', welcome: true, modoPropio: true }, days: dd, pend: {} })); }, [days]);
+  const p = await ctx.newPage(); p.on('pageerror', e => errs.push(e.message)); await p.clock.install({ time: new Date('2026-11-09T08:00:00') }); await p.goto(URL); await p.waitForTimeout(300);
+  let t = await text(p);
+  ok(t.includes('Hoy toca pesarte') && t.includes('En ayunas'), 'el lunes toca pesarse en ayunas');
+  await p.fill('#f-peso2', '68,7'); await p.waitForTimeout(100);
+  await p.click('[data-tab="registro"]'); await p.locator('#reg-control > summary').click(); await p.waitForTimeout(100);
+  t = await p.$eval('#reg-control', e => e.textContent);
+  ok(t.includes('Próximo pesaje') && t.includes('próximas medidas') && t.includes('Cintura'), 'Registro: peso y medidas con cada cuánto');
+  await p.fill('[data-med="cintura"]', '76'); await p.dispatchEvent('[data-med="cintura"]', 'change'); await p.waitForTimeout(100);
+  await p.click('[data-pesocada="2semanas"]'); await p.click('[data-medcada="2"]'); await p.waitForTimeout(100);
+  ok(await p.locator('[data-pesocada="2semanas"].on').count() === 1 && await p.locator('[data-medcada="2"].on').count() === 1, 'frecuencia elegida');
+  await p.click('[data-tab="progreso"]'); await p.waitForTimeout(150); await p.click('[data-cmpmode="completas"]'); await p.waitForTimeout(150);
+  t = await p.$eval('#pr-cmp', e => e.textContent);
+  ok(t.includes('Días cumplidos') && t.includes('4 → 7') && t.includes('Mejoraste en'), 'compara semanas completas: ' + t.slice(0, 200));
   ok(errs.length === 0, 'sin errores: ' + errs.join(' | '));
   await ctx.close(); }
 

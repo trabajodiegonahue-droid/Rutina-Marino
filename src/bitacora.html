@@ -369,6 +369,8 @@ nav.tabs button.on::after{content:"";display:block;width:22px;height:3px;border-
 nav.tabs button{min-width:0;flex:1 1 0;padding-left:2px;padding-right:2px;font-size:11.5px}.editrut{display:block;margin:10px 0 4px;font-size:14px}.rhead{padding:12px 14px}
 .pgday{border:1px solid var(--line);border-radius:14px;padding:10px;margin:8px 0;background:var(--paper2)}.pgday select{max-width:140px}.pgex{margin:8px 0 0;padding-left:18px;font-size:14px}.pgex li{margin:3px 0}#pg-txt{width:100%;background:var(--paper2);border:1px solid var(--line);color:var(--ink);border-radius:12px;padding:10px;font:inherit;font-size:14px}
 .cxrow{display:grid;grid-template-columns:86px 64px minmax(0,1fr) 78px;gap:6px;align-items:center;padding:6px 0;border-bottom:1px solid var(--line)}.cxrow:not(.on){grid-template-columns:minmax(0,1fr) 84px}.cxrow.on{grid-template-columns:minmax(0,1fr) 84px}.cxrow .seg{padding:6px 0;text-align:center;font-size:13px}.cxrow select{min-width:0;width:100%;font-size:14px;padding:7px 6px}.cxm{display:flex;align-items:center;gap:3px;font-size:12px;color:var(--muted)}.cxm input{width:46px;padding:7px 4px;text-align:center;background:var(--paper2);border:1px solid var(--line);color:var(--ink);border-radius:10px;font:inherit;font-size:14px}
+.ctrl{display:grid;grid-template-columns:1fr 1fr;gap:8px 10px}.ctrl .field small{display:block;font-size:11.5px;line-height:1.3;margin-top:2px}.ctrlcard{border-color:color-mix(in srgb,var(--accent) 45%,var(--line))}
+.cmpl{display:flex;flex-direction:column}.cmpr{display:grid;grid-template-columns:minmax(0,1fr) auto 64px;gap:8px;align-items:center;padding:8px 0;border-top:1px solid var(--line);font-size:14.5px}.cmpr:first-child{border-top:0}.cmpr .cv{font-size:14px;white-space:nowrap}.cmpr small{color:var(--muted);font-size:11px}.cmpr .cd{text-align:right;font-size:13.5px;color:var(--muted)}.cmpr .cd.up{color:var(--ok);font-weight:700}.cmpr .cd.down{color:var(--bad);font-weight:700}
 .rsec{display:flex;flex-direction:column;gap:6px;padding:10px 0;border-bottom:1px solid var(--line)}.rsec textarea{background:var(--paper2);border:1px solid var(--line);color:var(--ink);border-radius:12px;padding:9px 10px;font:inherit;font-size:14px;width:100%}
 .objs{display:grid;grid-template-columns:1fr 1fr;gap:8px}.objb{display:flex;flex-direction:column;gap:2px;text-align:left;background:var(--paper2);border:1px solid var(--line);border-radius:14px;padding:10px;color:var(--ink)}.objb b{font-size:14.5px}.objb small{color:var(--muted);font-size:12px;font-family:var(--f-mono)}.objb.on{background:linear-gradient(135deg,color-mix(in srgb,var(--accent) 22%,var(--paper2)),color-mix(in srgb,var(--accent2) 18%,var(--paper2)));border-color:var(--accent)}
 .crow.st{grid-template-columns:minmax(0,1fr) 60px 92px 40px}.crow.st .seg{padding:6px 8px;font-size:13px;min-width:0}
@@ -1222,14 +1224,14 @@ const fixCfg=c=>{const d=defCfg();if(c.start==="2026-10-05"&&!c.startMoved){c.st
   if(c.intensidad!=null&&!["suave","normal","dura"].includes(c.intensidad))delete c.intensidad;if(c.semInfierno!=null&&!["si","no"].includes(c.semInfierno))delete c.semInfierno;
   if(c.cardioExtra!=null&&!(isObj(c.cardioExtra)&&Array.isArray(c.cardioExtra.dias)&&c.cardioExtra.dias.length===7))delete c.cardioExtra;if(c.cardioExtra&&c.cardioExtra.pd!=null&&!(Array.isArray(c.cardioExtra.pd)&&c.cardioExtra.pd.length===7&&c.cardioExtra.pd.every(isObj)))delete c.cardioExtra.pd;
   ["aguaL","protG","pesoMeta","edad"].forEach(f=>{if(c[f]!=null&&c[f]!==""&&!(+c[f]>0&&+c[f]<400))delete c[f]});
-  if(c.enfoque!=null&&!ENFOQUES.some(x=>x[0]===c.enfoque))delete c.enfoque;if(c.faltas!=null&&!["correr","doble"].includes(c.faltas))delete c.faltas;if(c.exMeta!=null){if(!isObj(c.exMeta))delete c.exMeta;else Object.keys(c.exMeta).forEach(x=>{if(!(+c.exMeta[x]>0&&+c.exMeta[x]<1000))delete c.exMeta[x]})}if(c.acento!=null&&!ACENTOS.some(x=>x[0]===c.acento))delete c.acento;
+  if(c.enfoque!=null&&!ENFOQUES.some(x=>x[0]===c.enfoque))delete c.enfoque;if(c.pesoCada!=null&&!["diario","semana","2semanas"].includes(c.pesoCada))delete c.pesoCada;if(c.faltas!=null&&!["correr","doble"].includes(c.faltas))delete c.faltas;if(c.exMeta!=null){if(!isObj(c.exMeta))delete c.exMeta;else Object.keys(c.exMeta).forEach(x=>{if(!(+c.exMeta[x]>0&&+c.exMeta[x]<1000))delete c.exMeta[x]})}if(c.acento!=null&&!ACENTOS.some(x=>x[0]===c.acento))delete c.acento;
   if(c.objetivo!=null&&!OBJETIVOS.some(x=>x[0]===c.objetivo))delete c.objetivo;if(c.equipo!=null&&!["casa","gimnasio"].includes(c.equipo))delete c.equipo;
   ["calent","estira","cardio","listas"].forEach(f=>{if(c[f]!=null&&!isObj(c[f]))delete c[f]});if(c.estira)Object.keys(c.estira).forEach(k=>{const a=c.estira[k];if((!RUTINA[k]&&!(Array.isArray(c.rutinasMias)&&c.rutinasMias.some(r=>r&&r.id===k)))||!Array.isArray(a))delete c.estira[k];else c.estira[k]=a.filter(x=>Array.isArray(x)&&typeof x[0]==="string"&&x[0].trim()&&+x[1]>0)});
   if(c.lesiones!=null)c.lesiones=Array.isArray(c.lesiones)?c.lesiones.filter(x=>isObj(x)&&isISO(x.k)&&+x.d>=0&&+x.d<=10).slice(-300):[];
   if(c.motivosMios!=null)c.motivosMios=Array.isArray(c.motivosMios)?c.motivosMios.filter(x=>isObj(x)&&typeof x.id==="string"&&typeof x.l==="string"&&x.l.trim()).slice(0,20):[];
   if(c.moneda!=null&&!MONEDAS.includes(c.moneda))delete c.moneda;
   if(c.semTurno!=null&&!(Array.isArray(c.semTurno)&&c.semTurno.length===7&&c.semTurno.every(x=>typeof x==="string"&&(x==="libre"||/^\d{1,2}:\d{2}$/.test(x)))))delete c.semTurno;
-  ["sueno","acuesto","vaso","botella","presu","avAntes","backupDias"].forEach(f=>{if(c[f]!=null&&c[f]!==""&&!(+c[f]>=0&&+c[f]<1e6))delete c[f]});if(c.despLibre!=null&&c.despLibre!==""&&!/^\d{1,2}:\d{2}$/.test(c.despLibre))delete c.despLibre;
+  ["sueno","acuesto","vaso","botella","presu","avAntes","backupDias","medCada"].forEach(f=>{if(c[f]!=null&&c[f]!==""&&!(+c[f]>=0&&+c[f]<1e6))delete c[f]});if(c.despLibre!=null&&c.despLibre!==""&&!/^\d{1,2}:\d{2}$/.test(c.despLibre))delete c.despLibre;
   ["dur","avQue","metasP","pendSnooze"].forEach(f=>{if(c[f]!=null&&!isObj(c[f]))delete c[f]});if(c.hoyOff!=null&&!Array.isArray(c.hoyOff))delete c.hoyOff;
   if(c.lista!=null){if(!isObj(c.lista))delete c.lista;else{const L=c.lista;if(!Array.isArray(L.quitar))L.quitar=[];if(!isObj(L.cant))L.cant={};if(!isObj(L.precio))L.precio={};L.extra=Array.isArray(L.extra)?L.extra.filter(x=>isObj(x)&&typeof x.n==="string"&&x.n.trim()).slice(0,40):[]}}
   if(c.comidas!=null){if(!isObj(c.comidas))delete c.comidas;else Object.keys(c.comidas).forEach(x=>{if(!isObj(c.comidas[x]))delete c.comidas[x]})}
@@ -1238,7 +1240,7 @@ const fixCfg=c=>{const d=defCfg();if(c.start==="2026-10-05"&&!c.startMoved){c.st
   return c};
 const MODES=["","ok","cansado","dolor","enfermo"];
 const fixDay=x=>{if(!isObj(x))return {};if(x.turno!=null&&!SHIFT[String(x.turno)])delete x.turno;if(x.mode!=null&&!MODES.includes(x.mode))delete x.mode;
-  ["checks","sets","test","sim","mini","runlog","ctx","undo","tprev","meals","sleep","match","reps","nope","kg","nopeWhy","banda","bandaS","ready"].forEach(f=>{if(x[f]!=null&&!isObj(x[f]))delete x[f]});if(x.ready)Object.keys(x.ready).forEach(f=>{if(!RQ.some(q=>q[0]===f)||![0,1,2].includes(x.ready[f]))delete x.ready[f]});
+  ["checks","sets","test","sim","mini","runlog","ctx","undo","tprev","meals","sleep","match","reps","nope","kg","nopeWhy","banda","bandaS","ready","medidas"].forEach(f=>{if(x[f]!=null&&!isObj(x[f]))delete x[f]});if(x.ready)Object.keys(x.ready).forEach(f=>{if(!RQ.some(q=>q[0]===f)||![0,1,2].includes(x.ready[f]))delete x.ready[f]});
   if(x.runlog)Object.keys(x.runlog).forEach(t=>{if(!isObj(x.runlog[t]))delete x.runlog[t]});
   if(x.ctx&&x.ctx.temp!==""&&x.ctx.temp!=null&&!okTemp(x.ctx.temp))x.ctx.temp="";if(typeof x.note!=="string"&&x.note!=null)delete x.note;if(x.water!=null&&!(Number.isInteger(+x.water)&&+x.water>=0&&+x.water<=40))delete x.water;if(x.partido!=null&&typeof x.partido!=="boolean")delete x.partido;if(x.prot!=null&&!Array.isArray(x.prot))delete x.prot;if(x.viaje!=null&&typeof x.viaje!=="boolean")delete x.viaje;["prepartido","postpartido"].forEach(f=>{if(x[f]!=null&&typeof x[f]!=="boolean")delete x[f]});if(x.partidoH!=null&&!/^\d{1,2}:\d{2}$/.test(x.partidoH))delete x.partidoH;if(x.zona!=null&&x.zona!==""&&!ZONAS[x.zona])delete x.zona;if(x.motivo!=null&&x.motivo!==""&&!MOT[x.motivo])delete x.motivo;["urgencia","express","doble","cerrado"].forEach(f=>{if(x[f]!=null&&typeof x[f]!=="boolean")delete x[f]});return x};
 const fixDays=o=>{Object.keys(o).forEach(k=>{if(!isISO(k))delete o[k];else o[k]=fixDay(o[k])});return o};
@@ -1247,7 +1249,7 @@ const isObj=x=>!!x&&typeof x==="object"&&!Array.isArray(x);
 // errores de la nube que no se arreglan reintentando
 const HARD_ERR=["invalid_argument","quota_exceeded","revoked","not_granted","capability_disabled","capability_removed","transform_error"];
 // JSON con las claves ordenadas: para comparar sin que importe el orden
-const DEEP=["sets","checks","runlog","test","mini","sim","tprev","meals","sleep","match","reps","nope","kg","nopeWhy","banda","bandaS","ready"],dc=v=>v===undefined?undefined:JSON.parse(JSON.stringify(v));
+const DEEP=["sets","checks","runlog","test","mini","sim","tprev","meals","sleep","match","reps","nope","kg","nopeWhy","banda","bandaS","ready","medidas"],dc=v=>v===undefined?undefined:JSON.parse(JSON.stringify(v));
 const canon=o=>JSON.stringify(o,(k,v)=>v&&typeof v==="object"&&!Array.isArray(v)?Object.keys(v).sort().reduce((a,x)=>(a[x]=v[x],a),{}):v);
 // Cómo se guarda: cada cambio queda como “pendiente” (solo los campos que tocaste) en este teléfono hasta que la
 // nube lo confirma. Lo que llega de la nube se mezcla con lo pendiente: nunca se pisa un cambio tuyo ni se borra
@@ -2047,7 +2049,7 @@ function viewHoy(){
   if(diffDays(d,today())===0&&!S.focus&&!off("ready"))h+=readyHTML(d,k,dd,plan);
   if(diffDays(d,today())>=0&&!S.focus&&!off("situ"))h+=situHTML(d,k,dd,plan);
   if(isToday&&plan.tasks.some(t=>t.lake&&!/ · en seco$/.test(t.t))){const c=Store.cfg;h+=`<div class="card sos"><span class="lbl">🆘 Lago</span>${c.sos?`<p style="margin:0">Antes de entrar, avísale a ${esc(c.sosName||"tu contacto")} dónde estás y a qué hora sales.</p><div class="row"><button class="btn main sm" data-sosmsg>Avisar que entro al lago</button><a class="btn sm" href="tel:${esc(c.sos)}">Llamar</a></div>`:`<p style="margin:0">Pon un contacto de emergencia en Plan → Ajustes: con un toque le avisas dónde estás antes de entrar.</p>`}</div>`}
-  if(isToday&&plan.dow===0&&!dd.peso)h+=`<div class="card" id="sec-peso"><span class="lbl">Pésate hoy</span><p style="margin:0">Primer día de la semana: en ayunas, después del baño.</p><div class="field" style="max-width:140px"><label class="lbl" for="f-peso2">Peso (kg)</label><input id="f-peso2" inputmode="decimal" data-f="peso" placeholder="70"></div></div>`;
+  if(isToday)h+=controlHoyHTML(d,k,dd,plan);
   // día cerrado o completo: arriba va el resumen y el botón para pasar al día siguiente
   const dayClosedNow=isToday&&(okSt(status)||!!dd.status||closedDay(k,plan)||!!dd.urgencia||status==="doble"||!!dd.cerrado);
   if(dayClosedNow)h+=`<div id="sec-resumen">${daySummaryHTML(plan,dd,d)}</div>`+`<button class="btn main" data-newday style="width:100%">Comenzar nuevo día →</button><p class="foot" style="text-align:center">Pasa a mañana: ${esc((planFor(addDays(d,1))||{}).title||"")}.</p>`;
@@ -2196,6 +2198,57 @@ function parseRutina(txt){const lines=String(txt||"").replace(/\r/g,"").split("\
   const dias=out.filter(d=>d.ex.length);
   if(dias.length&&dias.every(d=>d.dow==null)){let k=0;dias.forEach(d=>{d.dow=k<7?k:null;k++})}
   return {dias,skip}}
+
+/* =================== PESO Y MEDIDAS: cada cuánto, en ayunas, y cuándo toca =================== */
+const PESO_CADA=[["diario","Todos los días","la app usa el promedio de cada semana"],["semana","1 vez por semana","recomendado: el primer día de tu semana"],["2semanas","Cada 2 semanas",""]];
+const MEDS=[["brazo","Brazo","contraído, en la parte más gruesa"],["pecho","Pecho","a la altura de los pezones, después de botar el aire"],["cintura","Cintura","a la altura del ombligo, relajado, sin apretar ni inflar la guata"],["muslo","Muslo","en la parte más gruesa, de pie y relajado"]];
+const AYUNAS="En ayunas: apenas te levantas, después de ir al baño y antes de tomar agua o comer. Misma balanza, mismo lugar y con poca ropa.";
+const pesoCada=()=>PESO_CADA.some(x=>x[0]===Store.cfg.pesoCada)?Store.cfg.pesoCada:"semana",medCada=()=>[2,4].includes(+Store.cfg.medCada)?+Store.cfg.medCada:4;
+const medOf=dd=>{const o={};MEDS.forEach(([m])=>{const v=numv(((dd||{}).medidas||{})[m])||numv(((dd||{}).test||{})[m]);if(v>0)o[m]=v});return o};
+const lastKey=(before,fn)=>Object.keys(Store.days).filter(x=>x<before&&fn(Store.days[x])).sort().pop()||null;
+function pesoToca(d,plan){const k=iso(d),dd=Store.days[k]||{};if(okKg(numv(dd.peso)))return false;const f=pesoCada();if(f==="diario")return true;if(!plan||plan.dow!==0)return false;
+  if(f==="2semanas"){const lp=lastKey(k,x=>okKg(numv(x.peso)));return !lp||diffDays(d,parse(lp))>=10}return true}
+function medToca(d,plan){const k=iso(d);if(Object.keys(medOf(Store.days[k])).length)return false;const lm=lastKey(k,x=>Object.keys(medOf(x)).length>0);
+  if(lm&&diffDays(d,parse(lm))<medCada()*7-3)return false;if(!lm&&diffDays(d,parse(Store.cfg.start))<0)return false;return !!plan&&(plan.dow===0||turnoOf(d)==="libre")}
+function proxControl(){const td=today();let np=null,nm=null;for(let i=0;i<40&&(!np||!nm);i++){const d=addDays(td,i),p=planFor(d);if(!np&&(i>0||!okKg(numv((Store.days[iso(d)]||{}).peso)))&&pesoToca(d,p))np=d;if(!nm&&medToca(d,p))nm=d}return {np,nm}}
+function controlInputs(k){const dd=Store.days[k]||{},md=dd.medidas||{};
+  return `<div class="ctrl"><div class="field"><label class="lbl" for="cp-${k}">⚖️ Peso (kg)</label><input id="cp-${k}" inputmode="decimal" data-f="peso" value="${esc(String(dd.peso||"").replace(".",","))}" placeholder="70,5"></div>
+   ${MEDS.map(([m,l,how])=>`<div class="field"><label class="lbl" for="cm-${m}-${k}">${l} (cm)</label><input id="cm-${m}-${k}" inputmode="decimal" data-med="${m}" value="${esc(String(md[m]||"").replace(".",","))}" placeholder="—"><small class="foot">${esc(how)}</small></div>`).join("")}</div>`}
+function controlCadaHTML(){const {np,nm}=proxControl(),f=pesoCada(),mc=medCada();
+  return `<span class="lbl">Cada cuánto</span><div class="segs col">${PESO_CADA.map(([v,l,x])=>`<button class="seg ${f===v?"on":""}" data-pesocada="${v}">⚖️ Pesarme: ${l}${x?` <small>(${x})</small>`:""}</button>`).join("")}</div>
+   <div class="segs">${[2,4].map(v=>`<button class="seg ${mc===v?"on":""}" data-medcada="${v}">📏 Medirme cada ${v} semanas${v===4?" (recomendado)":""}</button>`).join("")}</div>
+   <p class="foot">Próximo pesaje: <b>${np?(diffDays(np,today())===0?"hoy":dayName(np).toLowerCase()+" "+fmtS(np)):"—"}</b> · próximas medidas: <b>${nm?(diffDays(nm,today())===0?"hoy":dayName(nm).toLowerCase()+" "+fmtS(nm)):"—"}</b>. Las dos cosas, siempre en ayunas.</p>`}
+// tarjeta en Hoy cuando toca pesarse o medirse
+function controlHoyHTML(d,k,dd,plan){const tp=pesoToca(d,plan),tm=medToca(d,plan);if(!tp&&!tm)return "";
+  return `<div class="card ctrlcard" id="sec-peso"><span class="lbl">⚖️ ${tp&&tm?"Hoy toca pesarte y medirte":tp?"Hoy toca pesarte":"Hoy toca medirte"}</span><p style="margin:0">${esc(AYUNAS)}</p>
+   ${tp?`<div class="field" style="max-width:160px"><label class="lbl" for="f-peso2">Peso (kg)</label><input id="f-peso2" inputmode="decimal" data-f="peso" placeholder="70,5"></div>`:""}
+   ${tm?`<div class="ctrl">${MEDS.map(([m,l,how])=>`<div class="field"><label class="lbl" for="hm-${m}">${l} (cm)</label><input id="hm-${m}" inputmode="decimal" data-med="${m}" value="${esc(String((dd.medidas||{})[m]||"").replace(".",","))}" placeholder="—"><small class="foot">${esc(how)}</small></div>`).join("")}</div><p class="foot">Con una huincha de medir, sin apretar, siempre en el mismo lugar del cuerpo.</p>`:""}
+   <p class="foot">Pesarte: ${PESO_CADA.find(x=>x[0]===pesoCada())[1].toLowerCase()} · medirte: cada ${medCada()} semanas. Cámbialo en Registro → Peso y medidas.</p></div>`}
+/* =================== COMPARAR SEMANAS: cuánto mejoraste o empeoraste =================== */
+function statsRange(d0,d1){let dias=0,ok=0,ser=0,reps=0,vol=0,rec=0,cmin=0,resp=0,verdes=0;const ag=[],sl=[],ps=[],med={};
+  for(let d=d0;diffDays(d,d1)<=0;d=addDays(d,1)){const k=iso(d),p=planFor(d),dd=Store.days[k]||{};if(!p)continue;dias++;if(okSt(dayStatus(k,p)))ok++;ser+=units(dd,p).a;
+    Object.keys(dd.reps||{}).forEach(n=>{const kd=parseFloat(String((dd.kg||{})[n]||"").replace(",","."))||0;(dd.reps[n]||[]).forEach(v=>{const x=parseRep(v);if(x){reps+=x.r;vol+=x.r*(x.kg||kd||0)}})});
+    rec+=dayRecords(k).length;p.tasks.forEach(t=>{if(t.kind==="carrera"&&taskDone(dd,t))cmin+=Math.round(t.min||t.blocks.reduce((a,b)=>a+(b.tm||0)*(b.s||1),0)/60)});
+    if(+dd.water)ag.push(+dd.water*vasoMl()/1000);const h=sleepH(dd.sleep);if(h!=null)sl.push(h);const pw=numv(dd.peso);if(okKg(pw))ps.push(pw);
+    const rv=readyOf(dd);if(rv){resp++;if(rv.c==="grn")verdes++}Object.assign(med,medOf(dd))}
+  const avg=a=>a.length?a.reduce((x,y)=>x+y,0)/a.length:null;return {dias,ok,ser,reps,vol:Math.round(vol),rec,cmin,agua:avg(ag),sueno:avg(sl),peso:avg(ps),verdes:resp?Math.round(verdes/resp*100):null,med}}
+function cmpWeeksHTML(){const td=today(),L=locate(td);if(L.before)return "";const lun=parse(lunesDe(td)),tk=iso(td),tdp=planFor(td),tdd=Store.days[tk]||{};
+  // solo cuentan los días terminados: hoy entra cuando ya lo cumpliste o lo cerraste
+  const hoyListo=okSt(dayStatus(tk,tdp))||!!tdd.status||!!tdd.cerrado||closedDay(tk,tdp),fin=hoyListo?td:addDays(td,-1),n=diffDays(fin,lun);
+  let mode=S.cmpMode||"semana",aviso="";if(mode==="semana"&&n<0){mode="completas";aviso="La semana recién empieza: te muestro las semanas completas."}
+  const finM=hoyListo?td:addDays(td,-1),R=mode==="mes"?[addDays(finM,-55),addDays(finM,-28),addDays(finM,-27),finM]:mode==="completas"?[addDays(lun,-14),addDays(lun,-8),addDays(lun,-7),addDays(lun,-1)]:[addDays(lun,-7),addDays(lun,-7+n),lun,fin];
+  const A=statsRange(R[0],R[1]),B=statsRange(R[2],R[3]),enf=enfoqueOf()[0],pb=enf==="musculo"?1:enf==="definir"?-1:0;
+  const f1=x=>x==null?"—":(Math.round(x*10)/10).toLocaleString("es-CL"),fi=x=>x==null?"—":Math.round(x).toLocaleString("es-CL");
+  const rows=[["✅ Días cumplidos",A.ok,B.ok,fi,1,`de ${A.dias}`,`de ${B.dias}`],["💪 Series hechas",A.ser,B.ser,fi,1],["🔁 Repeticiones anotadas",A.reps,B.reps,fi,1],["🏋️ Volumen (reps × kg)",A.vol,B.vol,fi,1],["🏆 Récords nuevos",A.rec,B.rec,fi,1],["🏃 Cardio (min)",A.cmin,B.cmin,fi,1],
+    ["💧 Agua por día (L)",A.agua,B.agua,f1,1],["😴 Sueño por noche (h)",A.sueno,B.sueno,f1,1],["🟢 Días en verde (%)",A.verdes,B.verdes,fi,1],["⚖️ Peso promedio (kg)",A.peso,B.peso,f1,pb],
+    ...MEDS.map(([m,l])=>[(m==="cintura"?"📏 ":"💪 ")+l+" (cm)",A.med[m]??null,B.med[m]??null,f1,m==="cintura"?-1:1])].filter(r=>(r[1]!=null&&r[1]!==0)||(r[2]!=null&&r[2]!==0));
+  let up=0,down=0;const body=rows.map(([l,a,b,fm,dir,sa,sb])=>{let cls="",ar="=";if(a!=null&&b!=null&&a!==b){const better=dir===0?null:(b-a)*dir>0;ar=b>a?"↑":"↓";cls=better==null?"":better?"up":"down";if(better===true)up++;if(better===false)down++}
+    const dl=a!=null&&b!=null&&a!==b?(b>a?"+":"")+fm(b-a):"";return `<div class="cmpr"><span class="cl">${l}</span><span class="mono cv">${fm(a)} → <b>${fm(b)}</b>${sb?` <small>${sb}</small>`:""}</span><span class="mono cd ${cls}">${ar}${dl?" "+dl:""}</span></div>`}).join("");
+  const lbl={semana:["Semana pasada (mismos días)","Esta semana"],completas:["Antepasada","Semana pasada"],mes:["4 semanas antes","Últimas 4 semanas"]}[mode];
+  return `<div class="card" id="pr-cmp"><span class="lbl">📊 ¿Mejoras o empeoras? Comparar</span><div class="segs">${[["semana","Esta semana"],["completas","Semanas completas"],["mes","4 semanas"]].map(([v,l])=>`<button class="seg ${(S.cmpMode||"semana")===v?"on":""}" data-cmpmode="${v}">${l}</button>`).join("")}</div>
+   ${aviso?`<p class="foot" style="margin:0">${aviso}</p>`:""}${rows.length?`<p class="foot" style="margin:0">${lbl[0]} → <b>${lbl[1]}</b></p><div class="cmpl">${body}</div>
+   <p style="margin:0">${up+down?`Mejoraste en <b>${up}</b> ${up===1?"cosa":"cosas"}${down?` y empeoraste en <b>${down}</b>`:""}. ${up>=down?"Vas bien: sigue así.":"Revisa qué cambió (sueño, horario, motivación) y ajusta la próxima."}`:"Todavía no hay diferencias para comparar."}</p>
+   <p class="foot">Verde = mejoraste · rojo = empeoraste. ${mode==="semana"?"Esta semana (días ya terminados) se compara con los mismos días de la semana pasada, para que sea justo.":""} ${pb===0?"El peso no se marca como mejor o peor con tu enfoque.":""}</p>`:`<p class="foot" style="margin:0">Cuando lleves una semana anotando, aquí ves si subes o bajas en cada cosa.</p>`}</div>`}
 // botón dentro de cada entrenamiento en Hoy: lleva a sus ejercicios en Rutina
 function editRutLink(t){const id=t.id.replace(/^x-/,""),rid=RUTINA[id]?id:/^c-/.test(id)?id.slice(2):["run","int","cx"].includes(id)?"cardio":null;if(!rid)return "";
   return `<button class="lnk editrut" data-editrut="${esc(rid)}">✏️ ${rid==="cardio"?"Cambiar el cardio":"Cambiar estos ejercicios"}</button>`}
@@ -2347,14 +2400,16 @@ function updateResults(kind){const el=document.getElementById("xv-"+kind);if(!el
 // series para los gráficos: pruebas + simulacros (+ peso)
 function seriesData(){
   // x = semana del plan (si repites semanas, la prueba queda junto a su meta); el peso va por semana de calendario
-  const st=parse(Store.cfg.start),pts={barras:[],run:[],swim:[],abd:[],flex:[],salto:[],brazo:[],peso:[]};
+  const st=parse(Store.cfg.start),pts={barras:[],run:[],swim:[],abd:[],flex:[],salto:[],brazo:[],peso:[],cintura:[]};
   Object.keys(Store.days).sort().forEach(k=>{const d=Store.days[k],cx=diffDays(parse(k),st)/7;if(cx<0)return;const L=locate(parse(k)),x=L.w!=null?L.w+L.dow/7:cx,w=L.w;
     [d.test,d.sim].forEach(t=>{if(!t)return;["barras","abd","flex","salto","brazo"].forEach(f=>{const raw=t[f];if(raw===""||raw==null||raw===true)return;const v=cnt(raw);if(v>=0&&!isNaN(v))pts[f].push({x,v,k,w})});["run","swim"].forEach(f=>{const v=toSec(t[f]);if(v>0)pts[f].push({x,v,k,w})})});
-    const pw=parseFloat(String(d.peso||"").replace(",","."));if(pw>30)pts.peso.push({x:cx,v:pw,k})});
+    const pw=parseFloat(String(d.peso||"").replace(",","."));if(pw>30)pts.peso.push({x:cx,v:pw,k});
+    // medidas anotadas fuera de las pruebas (Registro → Peso y medidas)
+    ["brazo","cintura"].forEach(f=>{const v=numv((d.medidas||{})[f]);if(v>0&&!(f==="brazo"&&d.test&&d.test.brazo))pts[f].push({x:cx,v,k,w})})});
   Object.values(pts).forEach(a=>a.sort((p,q)=>p.x-q.x||(p.k<q.k?-1:1)));
   return pts;
 }
-const CHARTS=[["brazo","Brazo (cm)","más es mejor",null,0],["peso","Peso en ayunas (kg)","",null,0],["barras","Barras seguidas","más es mejor",w=>GOALS[w].barras,0],["flex","Flexiones en 2 min","más es mejor",w=>GOALS[w].flex,0],["salto","Salto largo (cm)","más es mejor",w=>GOALS[w].salto,0],["run","Carrera 3.200 m","menos tiempo es mejor",w=>toSec(GOALS[w].run),1],["swim","Nado 50 m","menos tiempo es mejor",w=>GOALS[w].swim?toSec(GOALS[w].swim):null,1]];
+const CHARTS=[["brazo","Brazo (cm)","más es mejor",null,0],["cintura","Cintura (cm)","menos es mejor",null,0],["peso","Peso en ayunas (kg)","",null,0],["barras","Barras seguidas","más es mejor",w=>GOALS[w].barras,0],["flex","Flexiones en 2 min","más es mejor",w=>GOALS[w].flex,0],["salto","Salto largo (cm)","más es mejor",w=>GOALS[w].salto,0],["run","Carrera 3.200 m","menos tiempo es mejor",w=>toSec(GOALS[w].run),1],["swim","Nado 50 m","menos tiempo es mejor",w=>GOALS[w].swim?toSec(GOALS[w].swim):null,1]];
 function lineChart(pts,goalFn,isTime){
   const W=320,H=150,L=40,R=14,T=14,B=24,fx=v=>isTime?fmtT(v):(Math.round(v*100)/100).toLocaleString("es-CL",{maximumFractionDigits:2});
   const goals=goalFn?[13,26,39,52].map(g=>({x:g,v:goalFn(g)})).filter(g=>g.v!=null):[];
@@ -2524,7 +2579,7 @@ function rescueHTML(e){let b="";try{b=backupHTML()}catch(x){}
 function viewProgreso(){
   const res=Object.keys(Store.days).filter(k=>Store.days[k].test).sort().map(k=>({k,w:locate(parse(k)).w,t:Store.days[k].test})).filter(x=>x.w!=null);
   const cp=compliance();
-  let h=`<div class="sec"><h2>Progreso</h2><div class="kpis"><div class="kpi"><span class="lbl">Racha</span><b>${streak()}</b></div><div class="kpi"><span class="lbl">Cumplido</span><b>${cp==null?"—":cp+"%"}</b></div><div class="kpi"><span class="lbl">Pruebas</span><b>${new Set(res.map(x=>x.w)).size}/5</b></div></div>${comodinHTML()}</div>`+jumpBar([["pr-semana","📆 Semana"],["pr-num","🎯 Tus números"],["pr-musc","💪 Músculos"],["pr-peso","⚖️ Peso"],["pr-sueno","😴 Sueño"],["pr-rec","🏆 Récords"],["pr-const","🟩 Constancia"],["pr-pruebas","🏁 Pruebas"],["pr-metas","🎯 Metas"]])+comoVasHTML();
+  let h=`<div class="sec"><h2>Progreso</h2><div class="kpis"><div class="kpi"><span class="lbl">Racha</span><b>${streak()}</b></div><div class="kpi"><span class="lbl">Cumplido</span><b>${cp==null?"—":cp+"%"}</b></div><div class="kpi"><span class="lbl">Pruebas</span><b>${new Set(res.map(x=>x.w)).size}/5</b></div></div>${comodinHTML()}</div>`+jumpBar([["pr-cmp","📊 Comparar"],["pr-semana","📆 Semana"],["pr-num","🎯 Tus números"],["pr-musc","💪 Músculos"],["pr-peso","⚖️ Peso"],["pr-sueno","😴 Sueño"],["pr-rec","🏆 Récords"],["pr-const","🟩 Constancia"],["pr-pruebas","🏁 Pruebas"],["pr-metas","🎯 Metas"]])+comoVasHTML()+cmpWeeksHTML();
   // semana actual
   const L=locate(today());if(L.w!=null){const ws=weekStartOf(today()),wds=[];for(let d=ws;diffDays(d,lastOfN(Math.floor(L.n/7)*7+6))<=0;d=addDays(d,1))wds.push(d);let sm=[0,0],ua=0,ub=0;
     for(const d of wds){const p=planFor(d);if(!p)continue;const dd=Store.days[iso(d)];const u=units(dd,p);ua+=u.a;ub+=u.b;p.tasks.forEach(t=>{if(t.m){sm[1]+=t.m;if(taskDone(dd,t))sm[0]+=t.m}})}
@@ -2629,8 +2684,9 @@ function viewGuia0(){return `<div class="sec prose"><h2>Guía</h2>
  <li>Lo que pasa si no marcas nada lo eliges en Plan → ✏️ Personaliza → «Si un día no puedes entrenar».</li>
  <li>Enfermo o con dolor: nunca se dobla, se corre. Primero sanar.</li></ul>
  <h3>⚖️ Cada cuánto pesarte, medirte y sacarte fotos</h3><ul>
- <li><b>Peso</b>: el primer día de cada semana, en ayunas, después del baño. La app te lo recuerda.</li>
- <li><b>Medidas</b> (brazo, pecho, cintura, muslo): cada 4 semanas, en la prueba. Siempre en el mismo lugar del cuerpo.</li>
+ <li><b>Peso</b>: 1 vez por semana, el primer día de tu semana, <b>en ayunas</b> (apenas te levantas, después del baño, antes de tomar agua o comer). Puedes elegir todos los días o cada 2 semanas en Registro → ⚖️ Peso y medidas. Ese día sale arriba en Hoy.</li>
+ <li><b>Medidas</b> (brazo, pecho, cintura, muslo): cada 4 semanas (o cada 2, tú eliges), también <b>en ayunas</b>, con huincha y siempre en el mismo lugar del cuerpo. La app te dice dónde medir cada una y te avisa el día que toca.</li>
+ <li><b>Comparar</b>: en Progreso → 📊 Comparar ves esta semana contra la anterior (o las últimas 4 semanas) en todo: días, series, repeticiones, peso levantado, cardio, agua, sueño, energía, peso y medidas.</li>
  <li><b>Fotos</b>: cada 4 semanas (Registro → Fotos): misma luz, misma hora, mismo lugar; de frente, de lado y de espalda.</li>
  <li><b>Prueba física</b>: semanas 0, 13, 26, 39 y 52. Barras: cada 3–4 semanas anota tu máximo en Ajustes.</li>
  <li><b>Sueño</b>: cada mañana en Registro (a qué hora te acostaste y despertaste).</li>
@@ -2813,7 +2869,7 @@ const regBox=(key,title,status,body,open,warn)=>`<details class="sec reg box" id
 function viewRegistro(){
   const d=S.date,k=iso(d),dd=Store.days[k]||{},plan=planFor(d),isT=diffDays(d,today())===0;
   let h=`<div class="day"><button class="nb" data-go="-1" aria-label="Día anterior">◀</button><div class="mid"><div class="big">REGISTRO</div><div class="sub">${dayName(d)} ${fmt(d)}</div></div><button class="nb ${isT?"on":""}" data-go="0">Hoy</button><button class="nb" data-go="1" aria-label="Día siguiente">▶</button></div>`;
-  h+=jumpBar([["reg-comidas","🍽 Comidas"],["reg-agua","💧 Agua"],["reg-sueno","😴 Sueño"],["reg-match","⚽ Partido"],["reg-lesiones","🩹 Lesiones"],["reg-listas","✅ Listas"],["reg-seg","📌 Más"]]);
+  h+=jumpBar([["reg-comidas","🍽 Comidas"],["reg-agua","💧 Agua"],["reg-control","⚖️ Peso"],["reg-sueno","😴 Sueño"],["reg-match","⚽ Partido"],["reg-lesiones","🩹 Lesiones"],["reg-listas","✅ Listas"],["reg-seg","📌 Más"]]);
   h+=`<details class="card cadacuanto" data-keep="reg:cada"${S.keep["reg:cada"]?" open":""}><summary class="sum2"><span class="lbl">📋 Qué anotar y cada cuánto</span></summary><ul class="cv">
    <li>🍽 <b>Comidas y 💧 agua</b>: todos los días, a medida que comes y tomas.</li><li>😴 <b>Sueño</b>: cada mañana.</li>
    <li>⚖️ <b>Peso</b>: el primer día de la semana, en ayunas (en Hoy o en Plan → Ajustes).</li><li>📸 <b>Fotos</b> y 📏 <b>medidas</b>: cada 4 semanas.</li>
@@ -2823,6 +2879,8 @@ function viewRegistro(){
     h+=regBox("comidas","Comidas",`${n}/${ms.length}`,`<p class="foot">Son las mismas casillas de Hoy: márcalas donde quieras.</p>${protHTML(dd)}${mealChips(plan,dd,d)}`,isT,n<ms.length&&!isT);
     const g=waterGoal(plan),w=+dd.water||0;
     h+=regBox("agua","Agua",`${w}/${g} vasos`,waterHTML(plan,dd),isT,w<g&&!isT)}
+  {const mo=medOf(dd),pw=numv(dd.peso),st=[okKg(pw)?nf(pw)+" kg":"",mo.cintura?"cintura "+nf(mo.cintura):""].filter(Boolean).join(" · ")||"sin anotar";
+   h+=regBox("control","⚖️ Peso y medidas",st,`<p class="foot" style="margin:0">${esc(AYUNAS)}</p>${controlInputs(k)}${controlCadaHTML()}`,false,false)}
   {const sl=dd.sleep||{},hs=sleepH(sl);
    h+=regBox("sueno","Sueño",hs==null?"sin anotar":fmtH(hs),`<div class="rlf"><div class="field"><label class="lbl" for="sl-bed">Me acosté</label><input id="sl-bed" type="time" data-r="sleep|bed" value="${esc(sl.bed||"")}"></div><div class="field"><label class="lbl" for="sl-wake">Desperté</label><input id="sl-wake" type="time" data-r="sleep|wake" value="${esc(sl.wake||"")}"></div></div>
    <p class="foot" id="sl-out">${hs==null?"Anota la noche que pasó.":hs<7?`${fmtH(hs)}: poco. Hoy marca «Cansado» en Hoy.`:`${fmtH(hs)}. Bien.`}</p>`,isT,hs!=null&&hs<7)}
@@ -3044,7 +3102,7 @@ const repsAble=(t,b)=>t.kind==="fuerza"&&!b.tm&&b.s>=2&&b.s<=8&&/×/.test(b.p);
 function pendientesList(d,k,dd,plan){const now=new Date(),nm=now.getHours()*60+now.getMinutes(),sh=plan.shift||{},it=[],td=today();
   const pas=h=>{if(!h)return false;let x=toMin(h),m=nm;if(x<240)x+=1440;if(m<240)m+=1440;return m>=x};
   const sl=dd.sleep||{};if(pas(sh.wake)&&!(sl.bed&&sl.wake))it.push(["😴","Cómo dormiste anoche","Registro → Sueño","reg:sueno"]);
-  if(plan.dow===0&&!dd.peso)it.push(["⚖️","Tu peso de la semana (en ayunas)","aquí arriba en Hoy","sec-peso"]);
+  if(pesoToca(d,plan))it.push(["⚖️","Tu peso (en ayunas)","aquí arriba en Hoy","sec-peso"]);if(medToca(d,plan))it.push(["📏","Tus medidas (en ayunas)","aquí arriba en Hoy","sec-peso"]);
   const ml=mealsOf(plan).filter(x=>!mealDone(dd,plan,x)&&mealLate(x,d));if(ml.length)it.push(["🍽","Marcar "+ml.map(x=>x.n.toLowerCase()).join(", "),"Comidas de hoy","sec-comidas"]);
   const g=waterGoal(plan),w=+dd.water||0;if(nm>=15*60&&w<g/2)it.push(["💧",`Agua: llevas ${w} de ${g}`,"Agua de hoy","sec-agua"]);
   const rp=dd.reps||{};plan.tasks.filter(t=>t.kind==="fuerza"&&taskDone(dd,t)).forEach(t=>{const ns=t.blocks.filter(b=>repsAble(t,b)).map(b=>b.n);if(ns.length&&!ns.some(n=>(rp[n]||[]).some(Boolean)))it.push(["📝","Repeticiones de "+t.t.replace(/^\d+\.\s*/,""),"así la app sube tu meta","open:"+t.id])});
@@ -3227,6 +3285,9 @@ document.addEventListener("click",e=>{
   if(D.lnew){const kk=D.lnew,v=((document.getElementById("ln-"+kk)||{}).value||"").trim().slice(0,80);if(!v){toast("Escribe qué agregar.");return}Store.setCfg({listas:Object.assign({},Store.cfg.listas,{[kk]:listaOf(kk).concat([{id:kk+"-"+Date.now().toString(36),t:v,ok:false}])})});render();return}
   if(D.recg){S.recOpen=S.recOpen===D.recg?null:D.recg;render();return}
   if(D.monthimg!==undefined){monthImage();return}
+  if(D.pesocada){Store.setCfg({pesoCada:D.pesocada});render();toast("Pesarte: "+PESO_CADA.find(x=>x[0]===D.pesocada)[1].toLowerCase()+", en ayunas.");return}
+  if(D.medcada){Store.setCfg({medCada:+D.medcada});render();toast(`Medirte cada ${D.medcada} semanas, en ayunas.`);return}
+  if(D.cmpmode){S.cmpMode=D.cmpmode;render();return}
   if(D.pzav){const a=Object.assign({},Store.cfg.avQue);a[D.pzav]=!avOn(D.pzav);Store.setCfg({avQue:a});render();return}
   if(D.pzantes!==undefined){Store.setCfg({avAntes:+D.pzantes});render();toast(+D.pzantes?`Te aviso ${D.pzantes} min antes.`:"Te aviso a la hora.");return}
   if(D.pzhoy){const a=(Store.cfg.hoyOff||[]).slice(),i=a.indexOf(D.pzhoy);if(i>=0)a.splice(i,1);else a.push(D.pzhoy);Store.setCfg({hoyOff:a});render();return}
@@ -3439,6 +3500,7 @@ document.addEventListener("change",e=>{const el=e.target,D=el&&el.dataset;if(!D)
   else if(D.calent){Store.setCfg({calent:Object.assign({},Store.cfg.calent,{[D.calent]:el.value.slice(0,800)})});toast("Calentamiento guardado.")}
   else if(D.st){const [id,i,f]=D.st.split("|");stSet(id,a=>{if(!a[+i])return;if(f==="n"){const v=el.value.trim().slice(0,50);if(v)a[+i][0]=v}else{const v=parseInt(el.value,10);if(v>0&&v<=300)a[+i][1]=v}});render()}
   else if(D.cmin!==undefined){const v=parseInt(el.value,10);Store.setCfg({cardio:Object.assign({},Store.cfg.cardio,{min:v>0&&v<=180?v:""})});render()}
+  else if(D.med){const v=String(el.value).trim().replace(",",".");if(v&&!(+v>=10&&+v<=200)){toast("Escribe la medida en centímetros, por ejemplo 34,5.");return}const dd=Store.day(iso(S.date));Store.setDay(iso(S.date),{medidas:Object.assign({},dd.medidas,{[D.med]:v?v.replace(".",","):""})});toast("Medida guardada.")}
   else if(D.exmeta){const v=parseInt(el.value,10),m=Object.assign({},Store.cfg.exMeta);if(v>0&&v<1000)m[D.exmeta]=v;else delete m[D.exmeta];Store.setCfg({exMeta:m});render()}
   else if(D.pzturno!==undefined){const a=(Array.isArray(Store.cfg.semTurno)?Store.cfg.semTurno:DNOM.map((x,i)=>i===0||i===6?"libre":turnoHora(Store.cfg.turno)||"14:00")).slice();a[+D.pzturno]=el.value;Store.setCfg({semTurno:a});render();toast(DNOM[+D.pzturno]+": "+(el.value==="libre"?"libre":"entras "+el.value)+".")}
   else if(D.pzsueno){const v=el.value;Store.setCfg({[D.pzsueno]:D.pzsueno==="despLibre"?(/^\d{1,2}:\d{2}$/.test(v)?v:""):String(+v)});render();toast("Listo: tu día se ajustó.")}
