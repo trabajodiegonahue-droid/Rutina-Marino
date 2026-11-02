@@ -1316,6 +1316,25 @@ const reload = async p => { await p.reload(); await p.waitForTimeout(200); };
   ok(errs.length === 0, 'sin errores: ' + errs.join(' | '));
   await ctx.close(); }
 
+// 55. Pegar una rutina (de ChatGPT) y cardio día por día
+{ const ctx = await browser.newContext({ viewport: { width: 390, height: 1400 } }); const errs = [];
+  await ctx.addInitScript(() => { window.__NOLOCK = false; if (!localStorage.getItem('bitacora-buzo-v1')) localStorage.setItem('bitacora-buzo-v1', JSON.stringify({ cfg: { start: '2026-10-26', welcome: true }, days: {}, pend: {} })); });
+  const p = await ctx.newPage(); p.on('pageerror', e => errs.push(e.message)); await p.clock.install({ time: new Date('2026-11-10T09:00:00') }); await p.goto(URL); await p.waitForTimeout(300);
+  await p.click('[data-tab="rutina"]'); await p.waitForTimeout(100);
+  await p.fill('#pg-txt', 'Lunes – Pecho\n- Press de banca: 4x8-10 (descanso 90s)\n- Plancha: 3 x 30-45 segundos\n\nMartes: Pierna\n1. Sentadilla búlgara 4 x 10 por pierna\n2. Peso muerto rumano – 3 series x 12 reps, descanso 2 min\n\n## Día 3 – Espalda\n| Ejercicio | Series | Reps |\n|---|---|---|\n| Dominadas | 4 | 6-8 |');
+  await p.click('[data-pgleer]'); await p.waitForTimeout(150);
+  let t = await p.$eval('#rt-pegar', e => e.textContent);
+  ok(t.includes('Entendí 3 días') && t.includes('Press de banca') && t.includes('4 × 8–10') && t.includes('30–45 s') && t.includes('10 por lado') && t.includes('Dominadas'), 'lee la rutina pegada: ' + t.slice(0, 160));
+  await p.click('[data-pgusar]'); await p.waitForTimeout(150);
+  await p.click('[data-cxdia="1"]'); await p.waitForTimeout(80); await p.selectOption('[data-cxpt="1"]', 'sprints'); await p.fill('[data-cxpm="1"]', '15'); await p.dispatchEvent('[data-cxpm="1"]', 'change'); await p.waitForTimeout(100);
+  await p.click('[data-tab="hoy"]'); await p.waitForTimeout(150);
+  await p.locator('.ses [data-open^="c-"]').first().click(); await p.waitForTimeout(150);
+  t = await text(p);
+  ok(t.includes('Sentadilla búlgara') && t.includes('Peso muerto rumano'), 'el martes sale la pierna pegada');
+  ok(t.includes('Sprints (extra)'), 'cardio del martes: sprints');
+  ok(errs.length === 0, 'sin errores: ' + errs.join(' | '));
+  await ctx.close(); }
+
 await browser.close();
 console.log(`\n${passes} correctas, ${fails} fallidas`);
 process.exit(fails ? 1 : 0);

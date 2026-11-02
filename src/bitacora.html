@@ -367,6 +367,8 @@ nav.tabs button.on::after{content:"";display:block;width:22px;height:3px;border-
 #pr-metas td input.mi{width:60px;background:var(--paper2);border:1px solid var(--line);color:var(--ink);border-radius:8px;padding:5px 6px;font-family:var(--f-mono);font-size:14px}
 .redit .ajg>summary{font-family:var(--f-body);text-transform:none;letter-spacing:0;font-weight:600;font-size:16px;align-items:center}.redit .ajg>summary .foot{text-transform:none;letter-spacing:0;font-family:var(--f-body)}.redit[open] .ajg>summary{margin-bottom:0}
 nav.tabs button{min-width:0;flex:1 1 0;padding-left:2px;padding-right:2px;font-size:11.5px}.editrut{display:block;margin:10px 0 4px;font-size:14px}.rhead{padding:12px 14px}
+.pgday{border:1px solid var(--line);border-radius:14px;padding:10px;margin:8px 0;background:var(--paper2)}.pgday select{max-width:140px}.pgex{margin:8px 0 0;padding-left:18px;font-size:14px}.pgex li{margin:3px 0}#pg-txt{width:100%;background:var(--paper2);border:1px solid var(--line);color:var(--ink);border-radius:12px;padding:10px;font:inherit;font-size:14px}
+.cxrow{display:grid;grid-template-columns:86px 64px minmax(0,1fr) 78px;gap:6px;align-items:center;padding:6px 0;border-bottom:1px solid var(--line)}.cxrow:not(.on){grid-template-columns:minmax(0,1fr) 84px}.cxrow.on{grid-template-columns:minmax(0,1fr) 84px}.cxrow .seg{padding:6px 0;text-align:center;font-size:13px}.cxrow select{min-width:0;width:100%;font-size:14px;padding:7px 6px}.cxm{display:flex;align-items:center;gap:3px;font-size:12px;color:var(--muted)}.cxm input{width:46px;padding:7px 4px;text-align:center;background:var(--paper2);border:1px solid var(--line);color:var(--ink);border-radius:10px;font:inherit;font-size:14px}
 .rsec{display:flex;flex-direction:column;gap:6px;padding:10px 0;border-bottom:1px solid var(--line)}.rsec textarea{background:var(--paper2);border:1px solid var(--line);color:var(--ink);border-radius:12px;padding:9px 10px;font:inherit;font-size:14px;width:100%}
 .objs{display:grid;grid-template-columns:1fr 1fr;gap:8px}.objb{display:flex;flex-direction:column;gap:2px;text-align:left;background:var(--paper2);border:1px solid var(--line);border-radius:14px;padding:10px;color:var(--ink)}.objb b{font-size:14.5px}.objb small{color:var(--muted);font-size:12px;font-family:var(--f-mono)}.objb.on{background:linear-gradient(135deg,color-mix(in srgb,var(--accent) 22%,var(--paper2)),color-mix(in srgb,var(--accent2) 18%,var(--paper2)));border-color:var(--accent)}
 .crow.st{grid-template-columns:minmax(0,1fr) 60px 92px 40px}.crow.st .seg{padding:6px 8px;font-size:13px;min-width:0}
@@ -1218,7 +1220,7 @@ const fixCfg=c=>{const d=defCfg();if(c.start==="2026-10-05"&&!c.startMoved){c.st
   if(c.rutinasMias!=null)c.rutinasMias=Array.isArray(c.rutinasMias)?c.rutinasMias.filter(r=>isObj(r)&&typeof r.id==="string"&&/^[a-z0-9]+$/i.test(r.id)&&typeof r.t==="string").slice(0,20):[];
   if(c.semana!=null&&!(Array.isArray(c.semana)&&c.semana.length===7&&c.semana.every(x=>(Number.isInteger(x)&&x>=0&&x<=6)||(typeof x==="string"&&x.startsWith("c:")&&(c.rutinasMias||[]).some(r=>"c:"+r.id===x)))))delete c.semana;
   if(c.intensidad!=null&&!["suave","normal","dura"].includes(c.intensidad))delete c.intensidad;if(c.semInfierno!=null&&!["si","no"].includes(c.semInfierno))delete c.semInfierno;
-  if(c.cardioExtra!=null&&!(isObj(c.cardioExtra)&&Array.isArray(c.cardioExtra.dias)&&c.cardioExtra.dias.length===7))delete c.cardioExtra;
+  if(c.cardioExtra!=null&&!(isObj(c.cardioExtra)&&Array.isArray(c.cardioExtra.dias)&&c.cardioExtra.dias.length===7))delete c.cardioExtra;if(c.cardioExtra&&c.cardioExtra.pd!=null&&!(Array.isArray(c.cardioExtra.pd)&&c.cardioExtra.pd.length===7&&c.cardioExtra.pd.every(isObj)))delete c.cardioExtra.pd;
   ["aguaL","protG","pesoMeta","edad"].forEach(f=>{if(c[f]!=null&&c[f]!==""&&!(+c[f]>0&&+c[f]<400))delete c[f]});
   if(c.enfoque!=null&&!ENFOQUES.some(x=>x[0]===c.enfoque))delete c.enfoque;if(c.faltas!=null&&!["correr","doble"].includes(c.faltas))delete c.faltas;if(c.exMeta!=null){if(!isObj(c.exMeta))delete c.exMeta;else Object.keys(c.exMeta).forEach(x=>{if(!(+c.exMeta[x]>0&&+c.exMeta[x]<1000))delete c.exMeta[x]})}if(c.acento!=null&&!ACENTOS.some(x=>x[0]===c.acento))delete c.acento;
   if(c.objetivo!=null&&!OBJETIVOS.some(x=>x[0]===c.objetivo))delete c.objetivo;if(c.equipo!=null&&!["casa","gimnasio"].includes(c.equipo))delete c.equipo;
@@ -1454,8 +1456,8 @@ function customize(p,date){if(!p)return p;const c=Store.cfg,hide=c.hide||[],hr=c
   const it=c.intensidad,cx=c.cardioExtra,dw=(date.getDay()+6)%7;
   if(it==="dura"||it==="suave"){const f=it==="dura"?1:-1,adj=b=>{const lado=/por (lado|pierna)/.test(b.p),st=lado?2:1,ns=Math.max(st,b.s+f*st);return Object.assign({},b,{s:ns,p:String(b.p).replace(/^(\d+)(\s*×)/,(m0,x,y)=>(lado?ns/2:ns)+y)})},sc=it==="dura"?1.25:0.8;
     p=Object.assign({},p,{tasks:p.tasks.map(t=>t.kind==="fuerza"?Object.assign({},t,{blocks:t.blocks.map((b,i)=>i===0||b.opt||b.tm||!(b.s>=2)||/^(Estirar|Prevención|Calentamiento)/.test(b.n)?b:adj(b))}):t.kind==="carrera"?Object.assign({},t,{blocks:t.blocks.map(b=>b.tm&&b.tm>=300&&!/Calentamiento|calma/.test(b.n)?Object.assign({},b,{tm:Math.round(b.tm*sc/60)*60,p:String(b.p).replace(/(\d+) min/,(m0,x)=>Math.round(+x*sc)+" min")}):b)}):t)})}
-  if(cx&&cx.dias&&cx.dias[dw]){const bl=cardioBlocks(cx.tipo||"trote",cx.min),main=p.tasks.find(t=>counts(t)&&!NOTRAIN.includes(t.id)),base=/^\d{1,2}:\d{2}$/.test(cx.h||"")?toMin(cx.h):main&&main.h?toMin(main.h)+100:toMin((p.shift&&p.shift.A)||"9:00");
-    if(bl)p=Object.assign({},p,{tasks:p.tasks.concat([T("cx",(CARDIO.find(x=>x[0]===(cx.tipo||"trote"))||[,"Cardio"])[1].replace(/^\S+\s/,"")+" (extra)","Cardio extra que agregaste en Rutina.",fromMin(base),bl,{kind:"carrera",min:bl.reduce((a,b)=>a+(b.tm||0)*(b.s||1),0)/60})])})}
+  if(cx&&cx.dias&&cx.dias[dw]){const pdx=(cx.pd||[])[dw]||{},ctp=pdx.t||cx.tipo||"trote",bl=cardioBlocks(ctp,pdx.m||cx.min),main=p.tasks.find(t=>counts(t)&&!NOTRAIN.includes(t.id)),base=/^\d{1,2}:\d{2}$/.test(cx.h||"")?toMin(cx.h):main&&main.h?toMin(main.h)+100:toMin((p.shift&&p.shift.A)||"9:00");
+    if(bl)p=Object.assign({},p,{tasks:p.tasks.concat([T("cx",(CARDIO.find(x=>x[0]===ctp)||[,"Cardio"])[1].replace(/^\S+\s/,"")+" (extra)","Cardio extra que agregaste en Rutina.",fromMin(base),bl,{kind:"carrera",min:bl.reduce((a,b)=>a+(b.tm||0)*(b.s||1),0)/60})])})}
   if(!hide.length&&!Object.values(hr).some(Boolean)&&!mis.length&&!Object.values(du).some(v=>+v>0))return (it==="dura"||it==="suave"||(cx&&cx.dias&&cx.dias[dw]))?Object.assign({},p,{tasks:sortT(p.tasks)}):p;
   const dow=(date.getDay()+6)%7,main=hr.__train?p.tasks.find(t=>counts(t)&&!["ingles","estudio","venta","mil","tol","prep","core","stretch","ducha"].includes(t.id)&&!/^mi-/.test(t.id)):null;
   const tasks=p.tasks.filter(t=>!(HIDEABLE.includes(t.id)&&hide.includes(t.id))).map(t=>hr[t.id]?Object.assign({},t,{h:hr[t.id]}):t===main?Object.assign({},t,{h:hr.__train}):t).map(t=>+du[t.id]>0?scaleTask(t,+du[t.id]):t);
@@ -2153,6 +2155,47 @@ function verdictHTML(plan,dd,L){
 }
 function updateVerdict(){const el=document.getElementById("verdict");if(!el)return;const d=S.date,L=locate(d),p=planFor(d);if(p)el.innerHTML=verdictHTML(p,Store.days[iso(d)]||{},L)}
 // Mi rutina: cambiar ejercicios, series, repeticiones y descanso sin pedírselo a nadie
+// lee una rutina pegada (ChatGPT, notas, tablas): días, ejercicios, series, repeticiones y descanso
+const DIAS_RE=[/\blunes\b/i,/\bmartes\b/i,/\bmi[eé]rcoles\b/i,/\bjueves\b/i,/\bviernes\b/i,/\bs[aá]bado\b/i,/\bdomingo\b/i];
+const pgClean=x=>String(x).replace(/\*\*|__|`/g,"").replace(/[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}\u{FE0F}]/gu,"").replace(/^[\s>#\-*•·▪◦–—+]+/,"").replace(/^\d{1,2}[.)]\s+/,"").replace(/\s+/g," ").trim();
+const pgReps=r=>String(r).replace(/\s*(?:-|–|—|\ba\b|\bal\b)\s*/i,"–").replace(/\s+/g,"");
+function pgRest(t){let m=String(t).match(/descanso[^0-9]{0,12}(\d+(?:[.,]\d+)?)\s*(s\b|seg\w*|min\w*|'|"|”)?/i)||String(t).match(/(\d+(?:[.,]\d+)?)\s*(s\b|seg\w*|min\w*|'|"|”)\s*(?:de\s*)?descanso/i);
+  if(!m)return null;let v=parseFloat(m[1].replace(",","."));const u=(m[2]||"s").toLowerCase();if(/^min|'/.test(u))v*=60;return v>=10&&v<=600?Math.round(v):null}
+function pgEx(name,s,reps,tail,full){name=pgClean(name).replace(/[\s:–—\-(,]+$/,"").replace(/^ejercicio\s*\d*\s*[:.-]?\s*/i,"").trim();
+  if(!/[a-záéíóúñ]{3}/i.test(name)||name.length>60)return null;s=+s;if(!(s>=1&&s<=10))return null;
+  let r=pgReps(reps);const tl=String(tail||"").toLowerCase();let time=false;
+  if(/^(s\b|seg|segundos|"|”)/.test(tl.trim())){r+=" s";time=true}else if(/^(m\b|mts|metros)/.test(tl.trim())){r+=" m";time=true}else if(/^min/.test(tl.trim())){const a=r.split("–").map(Number);if(a.every(x=>x<=5)){r=a.map(x=>x*60).join("–")+" s";time=true}else r+=" min"}
+  if(!time&&/por\s*(lado|pierna|brazo)|cada\s*(lado|pierna|brazo)|c\/l/.test(String(full).toLowerCase()))r+=" por lado";
+  const rest=pgRest(full);const top=+((r.match(/(\d+)(?!.*\d)/)||[,10])[1]);
+  return {n:name.charAt(0).toUpperCase()+name.slice(1),s,reps:r,r:rest||(time?45:top<=6?150:top<=12?90:60),c:""}}
+function pgLine(c){let m;
+  // «Press banca 4x8-10», «Plancha: 3 × 30 s», «Sentadilla – 4 series x 10 reps»
+  if((m=c.match(/^(.*?)[\s:–—\-(]+(\d{1,2})\s*(?:series|sets|serie|rondas?)?\s*[x×X*]\s*(\d{1,3}(?:\s*(?:-|–|—)\s*\d{1,3}|\s+a\s+\d{1,3})?)\s*(.*)$/i)))return pgEx(m[1],m[2],m[3],m[4],c);
+  // «Remo: 3 series de 12 repeticiones»
+  if((m=c.match(/^(.*?)[\s:–—\-(]+(\d{1,2})\s*(?:series|sets|serie|rondas?)\s*(?:de|x|×|con)?\s*(\d{1,3}(?:\s*(?:-|–|—)\s*\d{1,3}|\s+a\s+\d{1,3})?)\s*(.*)$/i)))return pgEx(m[1],m[2],m[3],m[4],c);
+  // «Curl: 12 repeticiones x 3 series»
+  if((m=c.match(/^(.*?)[\s:–—\-(]+(\d{1,3}(?:\s*(?:-|–|—)\s*\d{1,3}|\s+a\s+\d{1,3})?)\s*(?:reps?|repeticiones)\s*[x×]\s*(\d{1,2})\s*(?:series|sets)?(.*)$/i)))return pgEx(m[1],m[3],m[2],m[4],c);
+  return null}
+function pgCells(cells){const name=cells[0];if(!name)return null;const rest=cells.slice(1);
+  const joined=rest.join(" ");let ex=pgLine(name+" "+joined);if(ex)return ex;
+  const si=rest.findIndex(x=>/^\d{1,2}$/.test(x));if(si<0)return null;const rp=rest.slice(si+1).find(x=>/^\d{1,3}(\s*(-|–|—|a)\s*\d{1,3})?\s*(reps?|repeticiones|s|seg\w*|segundos|min\w*|"|”)?(\s*(por|cada)\s*\w+)?$/i.test(x));if(!rp)return null;
+  const mm=rp.match(/^(\d{1,3}(?:\s*(?:-|–|—|a)\s*\d{1,3})?)\s*(.*)$/i);return pgEx(name,rest[si],mm[1],mm[2],cells.join(" ")+" "+(rest.find(x=>/descanso|^\d+\s*(s|seg|min)/i.test(x)&&x!==rp)?"descanso "+rest.find(x=>/descanso|^\d+\s*(s|seg|min)/i.test(x)&&x!==rp):""))}
+function parseRutina(txt){const lines=String(txt||"").replace(/\r/g,"").split("\n"),out=[];let cur=null,skip=0;
+  const newDay=(t,dow)=>{cur={t:(t||"Día "+(out.length+1)).slice(0,30),dow,ex:[]};out.push(cur)};
+  for(const raw of lines){const l=raw.trim();if(!l)continue;
+    if(/^\|/.test(l)){const cells=l.split("|").slice(1,-1).map(pgClean);if(!cells.length||cells.every(x=>!x||/^:?-{2,}:?$/.test(x)))continue;
+      if(!cells.some(x=>/\d/.test(x))&&/ejercicio|series|reps|repeticiones|descanso/i.test(cells.join(" ")))continue;
+      const ex=pgCells(cells);if(ex){if(!cur)newDay("Rutina",null);cur.ex.push(ex)}else skip++;continue}
+    const c=pgClean(l),dw=DIAS_RE.findIndex(r=>r.test(c)),ex=pgLine(c);
+    if(ex&&!(dw>=0&&c.length<40&&!/\d\s*[x×]/i.test(c))){if(!cur)newDay("Rutina",null);cur.ex.push(ex);continue}
+    if(c.length<=70&&(dw>=0||/^d[ií]a\s*\d+/i.test(c)||/:$/.test(c)||/^#{1,4}\s/.test(l)||/^\*\*[^*]+\*\*:?$/.test(l))){
+      let tt=c.replace(/:$/,"").replace(/^d[ií]a\s*\d+\s*[-–—:.)]?\s*/i,"").replace(/^(lunes|martes|mi[eé]rcoles|jueves|viernes|s[aá]bado|domingo)\s*[-–—:.(]?\s*/i,"").replace(/[()]/g,"").trim();
+      if(!tt)tt=["Lunes","Martes","Miércoles","Jueves","Viernes","Sábado","Domingo"][dw]||c.replace(/:$/,"");
+      newDay(tt,dw>=0?dw:null);continue}
+    skip++}
+  const dias=out.filter(d=>d.ex.length);
+  if(dias.length&&dias.every(d=>d.dow==null)){let k=0;dias.forEach(d=>{d.dow=k<7?k:null;k++})}
+  return {dias,skip}}
 // botón dentro de cada entrenamiento en Hoy: lleva a sus ejercicios en Rutina
 function editRutLink(t){const id=t.id.replace(/^x-/,""),rid=RUTINA[id]?id:/^c-/.test(id)?id.slice(2):["run","int","cx"].includes(id)?"cardio":null;if(!rid)return "";
   return `<button class="lnk editrut" data-editrut="${esc(rid)}">✏️ ${rid==="cardio"?"Cambiar el cardio":"Cambiar estos ejercicios"}</button>`}
@@ -2161,6 +2204,9 @@ const semOpts=()=>SEMT.map((x,j)=>[j,x]).concat(misRutinas().map(r=>["c:"+r.id,"
 function rutinaEditor(){const ids=rutinaIds(),id=ids.includes(S.redit)?S.redit:"fa",rows=rutinaOf(id),custom=Array.isArray((Store.cfg.rutina||{})[id]),c=Store.cfg,O=objOf(),st=stOf(id),stc=Array.isArray((c.estira||{})[id]),mia=!RUTINA[id],sem=c.semana||[0,1,2,3,4,5,6],cx=c.cardioExtra||{dias:[0,0,0,0,0,0,0],tipo:"trote",min:""};
   const semLbl=v=>(semOpts().find(o=>String(o[0])===String(v))||[,"—"])[1];
   return `<div class="card redit">
+  ${rtBox("pegar","📋 Pegar una rutina",S.pegar?"Revisa y confirma":"De ChatGPT o de donde sea",S.pegar?pegarPreview():`<p class="foot" style="margin:0">Copia una rutina (de ChatGPT, una nota o un mensaje) y pégala aquí. La app arma cada día con sus ejercicios, series, repeticiones y descanso. Antes de guardar te muestra lo que entendió.</p>
+    <textarea id="pg-txt" rows="7" placeholder="Lunes – Pecho&#10;- Press banca: 4x8-10 (descanso 90 s)&#10;- Flexiones 3 × 15&#10;Martes – Pierna&#10;- Sentadilla 4 series de 10&#10;- Plancha 3 x 30 s">${esc(S.pegarTxt||"")}</textarea>
+    <button class="btn main" data-pgleer style="width:100%">Leer rutina</button>`)}
   ${rtBox("obj","🎯 Objetivo",O?O[1]:"Sin elegir",`<div class="objs">${OBJETIVOS.map(o=>`<button class="objb ${O&&O[0]===o[0]?"on":""}" data-obj="${o[0]}"><b>${o[1]}</b><small>${o[2].c[0]} × ${o[2].c[1]}–${o[2].c[2]} · descanso ${fromSecS(o[2].c[3])}</small></button>`).join("")}</div>
     <p class="foot">${O?`<b>${esc(O[1])}</b>: ${esc(O[3])} Peso: ${Math.round(O[2].pct*100)}% de tu máximo estimado · ${esc(O[2].rir)}.`:"Toca uno: la app cambia series, repeticiones y descansos de todas tus rutinas y te recomienda el peso. Después puedes ajustar cada ejercicio."}</p>
     ${c.rutinaAntes?`<button class="btn sm" data-objundo>↩ Deshacer (volver a tu rutina anterior)</button>`:""}`)}
@@ -2181,9 +2227,9 @@ function rutinaEditor(){const ids=rutinaIds(),id=ids.includes(S.redit)?S.redit:"
     <p class="foot">Reps: «8–12», «10 por lado» o un tiempo como «30–45 s». En semanas de descarga la app baja las series sola. Vale para todos los días con esta rutina, todas las semanas.</p>`)}
   ${rtBox("cardio","🏃 Cardio",(CARDIO.find(x=>x[0]===((c.cardio||{}).tipo||"auto"))||CARDIO[0])[1]+(cx.dias.some(Boolean)?" · + extra":""),`<span class="lbl">Cardio del sábado</span><div class="segs col">${CARDIO.map(([k0,l])=>`<button class="seg ${((c.cardio||{}).tipo||"auto")===k0?"on":""}" data-cardio="${k0}">${l}</button>`).join("")}</div>
     <div class="field" style="max-width:200px"><label class="lbl" for="pz-cmin">Minutos (aprox.)</label><input id="pz-cmin" inputmode="numeric" data-cmin value="${esc((c.cardio||{}).min||"")}" placeholder="auto"></div>
-    <span class="lbl">➕ Más cardio (días extra)</span><div class="row"><button class="btn sm" data-cxall="1">Todos los días</button><button class="btn sm" data-cxall="0">Ninguno</button></div><div class="segs dias">${DLET.map((l,i)=>`<button class="seg ${cx.dias[i]?"on":""}" data-cxdia="${i}" aria-label="${DNOM[i]}" aria-pressed="${!!cx.dias[i]}">${l}</button>`).join("")}</div>
-    <div class="segs">${CARDIO.filter(x=>x[0]!=="auto").map(([k0,l])=>`<button class="seg ${(cx.tipo||"trote")===k0?"on":""}" data-cxtipo="${k0}">${l}</button>`).join("")}</div>
-    <div class="row"><div class="field" style="max-width:140px"><label class="lbl" for="cx-min">Minutos</label><input id="cx-min" inputmode="numeric" data-cxmin value="${esc(cx.min||"")}" placeholder="25"></div><div class="field" style="max-width:150px"><label class="lbl" for="cx-h">Hora</label><input id="cx-h" type="time" data-cxh value="${esc(cx.h||"")}"></div></div>
+    <span class="lbl">➕ Cardio extra, día por día</span><div class="row"><button class="btn sm" data-cxall="1">Todos los días</button><button class="btn sm" data-cxall="0">Ninguno</button></div>
+    ${DNOM.map((n,i)=>{const on=!!cx.dias[i],pd=(cx.pd||[])[i]||{};return `<div class="cxrow ${on?"on":""}"><span class="pzl">${n}</span><button class="seg ${on?"on":""}" data-cxdia="${i}" aria-pressed="${on}">${on?"Sí":"No"}</button>${on?`<select data-cxpt="${i}" aria-label="Tipo de cardio del ${n.toLowerCase()}">${CARDIO.filter(x=>x[0]!=="auto").map(([k0,l])=>`<option value="${k0}" ${(pd.t||cx.tipo||"trote")===k0?"selected":""}>${l}</option>`).join("")}</select><label class="cxm"><input inputmode="numeric" data-cxpm="${i}" value="${esc(pd.m||"")}" placeholder="${esc(cx.min||25)}" aria-label="Minutos del ${n.toLowerCase()}">min</label>`:""}</div>`}).join("")}
+    <div class="field" style="max-width:150px"><label class="lbl" for="cx-h">Hora</label><input id="cx-h" type="time" data-cxh value="${esc(cx.h||"")}"></div>
     <p class="foot">Los días que marques aparece «(extra)» en Hoy, con su hora. Hora vacía = después de tu entrenamiento.${cx.dias.filter(Boolean).length>=5?` <b>Cardio casi diario:</b> que sea trote suave de 20–30 min (puedes hablar mientras corres). Así ganas resistencia sin cansarte para la fuerza ni lesionarte; los intervalos o sprints, máximo 2 veces por semana.`:""}</p>`)}
   ${rtBox("int","🔥 Intensidad y semanas especiales",({suave:"Suave",dura:"Dura"}[c.intensidad]||"Normal")+(c.modoPropio?" · 100% mío":""),`<span class="lbl">Intensidad</span><div class="segs"><button class="seg ${c.intensidad==="suave"?"on":""}" data-int="suave">🟢 Suave</button><button class="seg ${!c.intensidad||c.intensidad==="normal"?"on":""}" data-int="normal">🟡 Normal</button><button class="seg ${c.intensidad==="dura"?"on":""}" data-int="dura">🔴 Dura</button></div>
     <p class="foot">Dura: +1 serie en cada ejercicio y 25% más de cardio, todas las semanas. Suave: −1 serie y 20% menos.</p>
@@ -2191,6 +2237,16 @@ function rutinaEditor(){const ids=rutinaIds(),id=ids.includes(S.redit)?S.redit:"
     ${[["semInfierno","🔥 Semana del infierno (semana 48)",c.semInfierno!=="no","si","no"],["descargas","😮‍💨 Semanas de descarga (cada 4–5 semanas)",c.descargas!==false,"1","0"],["pruebas","🎯 Pruebas cada 13 semanas",c.pruebas!==false,"1","0"]].map(([k0,l,on,yes,no])=>`<div class="pzrow tg"><span class="pzl">${l}</span><button class="seg ${on?"on":""}" data-espec="${k0}|${on?no:yes}" aria-pressed="${on}">${on?"Sí":"No"}</button></div>`).join("")}
     <p class="foot">Las descargas bajan la carga para que el cuerpo se recupere y no te lesiones: si las quitas, escucha a tu cuerpo. Si quitas una semana especial, esa semana se arma como una normal.</p>`)}
   </div>`}
+function pegarPreview(){const P=S.pegar;if(!P.dias.length)return `<p class="alert">No encontré ejercicios. Escribe cada uno así: «Press banca 4x8-10» o «Sentadilla: 3 series de 12», con el día arriba («Lunes – Pecho»).</p><div class="row"><button class="btn sm" data-pgcancel>Volver a pegar</button></div>`;
+  const used=P.dias.map(d=>d.dow);
+  return `<p class="foot" style="margin:0">Entendí ${P.dias.length} ${P.dias.length===1?"día":"días"}${P.skip?` (${P.skip} líneas no eran ejercicios y las salté)`:""}. Revisa el nombre y qué día va cada uno:</p>
+   ${P.dias.map((d,i)=>`<div class="pgday"><div class="row" style="gap:8px"><input class="lin" data-pgname="${i}" value="${esc(d.t)}" maxlength="30" aria-label="Nombre del día ${i+1}"><select data-pgdia="${i}" aria-label="Qué día de la semana">${DNOM.map((n,j)=>`<option value="${j}" ${d.dow===j?"selected":""}>${n}</option>`).join("")}<option value="" ${d.dow==null?"selected":""}>Sin día fijo</option></select></div>
+     <ul class="pgex">${d.ex.map(e=>`<li><b>${esc(e.n)}</b> <span class="mono">${e.s} × ${esc(e.reps)}</span> <span class="foot">· descanso ${fromSecS(e.r)}</span></li>`).join("")}</ul></div>`).join("")}
+   ${used.filter(x=>x!=null).length!==new Set(used.filter(x=>x!=null)).size?`<p class="alert">Hay dos rutinas el mismo día: queda la última.</p>`:""}
+   <div class="pzrow tg"><span class="pzl">Días que no están en la rutina = descanso</span><button class="seg ${P.descanso?"on":""}" data-pgopt="descanso">${P.descanso?"Sí":"No"}</button></div>
+   <div class="pzrow tg"><span class="pzl">⭐ Usar solo esta rutina (lunes es siempre lunes)</span><button class="seg ${P.propio?"on":""}" data-pgopt="propio">${P.propio?"Sí":"No"}</button></div>
+   <div class="row"><button class="btn main" data-pgusar style="flex:2">✓ Usar esta rutina</button><button class="btn" data-pgcancel style="flex:1">Cancelar</button></div>
+   <p class="foot">Después puedes cambiar cualquier ejercicio en «💪 Rutinas y ejercicios». Tus rutinas anteriores no se borran.</p>`}
 function viewRutina(){const O=objOf(),c=Store.cfg;
   return `<div class="sec"><h2>Rutina</h2><p class="foot" style="margin:0">Todo tu entrenamiento. Toca una sección para abrirla; lo que cambies vale desde hoy y todas las semanas.</p></div>
   <div class="card rhead"><div class="row" style="justify-content:space-between;align-items:center"><span><b>${esc(O?O[1]:"Sin objetivo elegido")}</b><br><span class="foot">${gymMode()?"Gimnasio":"Casa y plaza"} · ${({suave:"intensidad suave",dura:"intensidad dura"}[c.intensidad]||"intensidad normal")}${c.modoPropio?" · ⭐ 100% mío":" · plan de 52 semanas"}</span></span></div></div>`+rutinaEditor()}
@@ -2554,9 +2610,10 @@ function viewGuia0(){return `<div class="sec prose"><h2>Guía</h2>
  <li>En la noche toca <b>Cerrar el día</b> y después <b>Comenzar nuevo día</b>.</li></ol>
  <h3>✏️ Personalizar todo (tú solo)</h3><ul>
  <li><b>Tu entrenamiento</b>: pestaña <b>🏋️ Rutina</b> (abajo, al lado de Hoy), o en Hoy dentro de cada entrenamiento «✏️ Cambiar estos ejercicios». Ahí eliges tu <b>objetivo</b> (músculo, fuerza, velocidad y potencia, resistencia, pruebas del servicio o bajar grasa) y la app cambia series, repeticiones y descansos y te recomienda el peso; eliges si entrenas en <b>casa y plaza o en el gimnasio</b>; y cambias el <b>calentamiento</b>, cada <b>ejercicio</b>, la <b>prevención</b> y los <b>estiramientos</b> de cada día. «Deshacer» vuelve a tu rutina anterior.</li>
+ <li><b>📋 Pegar una rutina</b> (Rutina → arriba): copias una rutina de ChatGPT o de donde sea, la pegas y la app arma cada día con sus ejercicios, series, repeticiones y descanso. Te muestra lo que entendió y eliges qué día va cada una antes de usarla. Escríbela así: «Lunes – Pecho» y debajo «Press banca 4x8-10» o «Sentadilla: 3 series de 12».</li>
  <li><b>Tus propias rutinas</b>: Rutina → «💪 Rutinas y ejercicios» → «+ Nueva rutina» (por ejemplo «Full body» o «Pecho 2») con tus ejercicios, series y repeticiones. En «📅 Tu semana» eliges qué rutina va cada día y se repite sola todas las semanas.</li>
  <li><b>⭐ 100% mío</b> (Rutina → «🔥 Intensidad y semanas especiales»): solo tu semana, igual todas las semanas, y lunes es siempre lunes. Ahí también: <b>intensidad</b> suave, normal o dura, y prender o apagar la <b>semana del infierno</b>, las <b>descargas</b> y las <b>pruebas</b>.</li>
- <li><b>Cardio</b> (Rutina → «🏃 Cardio»): el del sábado y <b>cardio extra</b> los días que quieras, hasta todos los días. Si es diario, que la mayoría sea trote suave.</li>
+ <li><b>Cardio</b> (Rutina → «🏃 Cardio»): el del sábado y <b>cardio extra día por día</b>: cada día eliges sí o no, qué tipo (trote, trote largo, intervalos, sprints, 400 m) y cuántos minutos. Si es diario, que la mayoría sea trote suave.</li>
  <li><b>Motivos de «No pude»</b> propios: Plan → ✏️ Personaliza tu día.</li>
  <li><b>Lesiones</b> (dónde y cuánto duele) y <b>listas</b> para el servicio y la working holiday: Registro → Seguimiento. La <b>moneda del ahorro</b> se elige en Registro → Ahorro.</li>
  <li><b>Gráfico de cada ejercicio</b>: Progreso → 🏆 Récords → toca el ejercicio. <b>Sueño y energía</b> y <b>resumen del mes</b> (imagen): en Progreso.</li>
@@ -3134,6 +3191,14 @@ document.addEventListener("click",e=>{
     jumpTo(g);return}
   if(D.perso!==undefined){S.tab="plan";S.keep["pz:tareas"]=true;S.keep["pz:mis"]=true;saveKeep();render();setTimeout(()=>jumpTo("pl-perso"),30);return}
   if(D.editrut){const r=D.editrut;if(r==="cardio")S.keep["rt:cardio"]=true;else{S.redit=r;S.keep["rt:ej"]=true}saveKeep();setTab("rutina");setTimeout(()=>jumpTo(r==="cardio"?"rt-cardio":"rt-ej"),40);return}
+  if(D.pgleer!==undefined){const t=(document.getElementById("pg-txt")||{}).value||"";S.pegarTxt=t;const r=parseRutina(t);S.pegar={dias:r.dias,skip:r.skip,descanso:true,propio:true};S.keep["rt:pegar"]=true;render();setTimeout(()=>jumpTo("rt-pegar"),30);return}
+  if(D.pgcancel!==undefined){S.pegar=null;render();return}
+  if(D.pgopt){S.pegar[D.pgopt]=!S.pegar[D.pgopt];render();return}
+  if(D.pgusar!==undefined){const P=S.pegar;if(!P||!P.dias.length)return;const base=Date.now().toString(36),mias=misRutinas().slice(),ru=Object.assign({},Store.cfg.rutina);
+    let sem=(Array.isArray(Store.cfg.semana)?Store.cfg.semana:[0,1,2,3,4,5,6]).slice();if(P.descanso)sem=sem.map(()=>4);
+    P.dias.forEach((d,i)=>{const id="p"+base+i;mias.push({id,t:d.t||"Día "+(i+1)});ru[id]=d.ex.map(e=>({n:e.n,s:e.s,reps:e.reps,r:e.r,c:e.c||""}));if(d.dow!=null&&d.dow!=="")sem[+d.dow]="c:"+id});
+    Store.setCfg(Object.assign({rutinasMias:mias,rutina:ru,semana:sem.every((x,i)=>x===i)?null:sem},P.propio?{modoPropio:true}:{}));
+    S.redit="p"+base+"0";S.pegar=null;S.pegarTxt="";S.keep["rt:ej"]=true;S.keep["rt:semana"]=true;render();toast(`Listo: ${P.dias.length} ${P.dias.length===1?"rutina":"rutinas"} en tu semana. Revísalas abajo.`);setTimeout(()=>jumpTo("rt-semana"),40);return}
   if(D.rnew!==undefined){const id="m"+Date.now().toString(36);Store.setCfg({rutinasMias:misRutinas().concat([{id,t:"Rutina nueva"}]),rutina:Object.assign({},Store.cfg.rutina,{[id]:[{n:"Ejercicio nuevo",s:3,reps:"10–12",r:60,c:""}]})});S.redit=id;S.keep["rt:ej"]=true;render();const el=document.getElementById("rt-name");if(el){el.focus();el.select()}toast("Rutina nueva: ponle nombre y tus ejercicios.");return}
   if(D.rtdel){const id=D.rtdel,ru=Object.assign({},Store.cfg.rutina);delete ru[id];const sem=Array.isArray(Store.cfg.semana)?Store.cfg.semana.map((x,i)=>x==="c:"+id?i:x):null;Store.setCfg({rutinasMias:misRutinas().filter(r=>r.id!==id),rutina:ru,semana:sem&&sem.every((x,i)=>x===i)?null:sem});S.redit="fa";S.confirm=null;render();toast("Rutina borrada.");return}
   if(D.int){Store.setCfg({intensidad:D.int});render();toast({suave:"Intensidad suave.",normal:"Intensidad normal.",dura:"Intensidad dura: +1 serie y más cardio."}[D.int]);return}
@@ -3362,7 +3427,11 @@ document.addEventListener("input",e=>{const el=e.target;if(el&&el.dataset&&el.da
 document.addEventListener("change",e=>{const el=e.target,D=el&&el.dataset;if(!D)return;
   if(D.pzh){const v=/^\d{1,2}:\d{2}$/.test(el.value)?el.value:"";Store.setCfg({horas:Object.assign({},Store.cfg.horas,{[D.pzh]:v})});render();toast(v?"Hora guardada: "+v+".":"Vuelve a la hora de la app.")}
   else if(D.pzsem!==undefined){const a=(Store.cfg.semana||[0,1,2,3,4,5,6]).slice(),v=/^c:/.test(el.value)?el.value:+el.value;a[+D.pzsem]=v;Store.setCfg({semana:a.every((x,i)=>x===i)?null:a});render();toast(DNOM[+D.pzsem]+": "+((semOpts().find(o=>String(o[0])===String(v))||[,""])[1])+", todas las semanas.")}
+  else if(D.pgname!==undefined){if(S.pegar&&S.pegar.dias[+D.pgname])S.pegar.dias[+D.pgname].t=el.value.trim().slice(0,30)}
+  else if(D.pgdia!==undefined){if(S.pegar&&S.pegar.dias[+D.pgdia]){S.pegar.dias[+D.pgdia].dow=el.value===""?null:+el.value;render()}}
   else if(D.rtname){const v=el.value.trim().slice(0,30);if(v)Store.setCfg({rutinasMias:misRutinas().map(r=>r.id===D.rtname?Object.assign({},r,{t:v}):r)});render()}
+  else if(D.cxpt!==undefined||D.cxpm!==undefined){const i=+(D.cxpt!==undefined?D.cxpt:D.cxpm),x=Object.assign({dias:[0,0,0,0,0,0,0],tipo:"trote"},Store.cfg.cardioExtra),pd=(Array.isArray(x.pd)?x.pd:[{},{},{},{},{},{},{}]).map(o=>Object.assign({},o));
+    if(D.cxpt!==undefined)pd[i].t=el.value;else{const v=parseInt(el.value,10);pd[i].m=v>0&&v<=180?v:""}Store.setCfg({cardioExtra:Object.assign(x,{pd})});render()}
   else if(D.cxmin!==undefined){const v=parseInt(el.value,10);Store.setCfg({cardioExtra:Object.assign({dias:[0,0,0,0,0,0,0],tipo:"trote"},Store.cfg.cardioExtra,{min:v>0&&v<=180?v:""})});render()}
   else if(D.cxh!==undefined){Store.setCfg({cardioExtra:Object.assign({dias:[0,0,0,0,0,0,0],tipo:"trote"},Store.cfg.cardioExtra,{h:/^\d{1,2}:\d{2}$/.test(el.value)?el.value:""})});render()}
   else if(D.pzn){const v=String(el.value).trim().replace(",","."),lim={aguaL:[0.5,8,"litros"],protG:[30,400,"gramos"],pesoMeta:[35,200,"kg"],edad:[12,99,"años"],vaso:[100,1500,"ml"],botella:[200,3000,"ml"]}[D.pzn]||[0,1e6,""];
