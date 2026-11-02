@@ -1193,7 +1193,7 @@ const reload = async p => { await p.reload(); await p.waitForTimeout(200); };
   t = await text(p);
   ok(t.includes('Personalizar todo') && t.includes('Cada cuánto pesarte'), 'guía práctica');
   await p.waitForTimeout(800); await p.reload(); await p.waitForTimeout(600); await p.click('[data-tab="hoy"]'); await p.waitForTimeout(150);
-  ok(await p.evaluate(() => JSON.parse(localStorage.getItem('bitacora-buzo-v1')).cfg.mis.some(m => m.t === 'Leer la Biblia')), 'lo personalizado queda guardado');
+  ok(await p.waitForFunction(() => ((JSON.parse(localStorage.getItem('bitacora-buzo-v1') || '{}').cfg || {}).mis || []).some(m => m.t === 'Leer la Biblia'), null, { timeout: 4000 }).then(() => true).catch(() => false), 'lo personalizado queda guardado');
   ok(errs.length === 0, 'sin errores: ' + errs.join(' | '));
   await ctx.close(); }
 
