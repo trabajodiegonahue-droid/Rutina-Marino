@@ -1391,6 +1391,33 @@ const reload = async p => { await p.reload(); await p.waitForTimeout(200); };
   ok(errs.length === 0, 'sin errores: ' + errs.join(' | '));
   await ctx.close(); }
 
+// 58. Pichangas aparte de los partidos, con km según cancha y posición
+{ const ctx = await browser.newContext({ viewport: { width: 390, height: 1400 } }); const errs = [];
+  await ctx.addInitScript(() => { window.__NOLOCK = false; if (!localStorage.getItem('bitacora-buzo-v1')) localStorage.setItem('bitacora-buzo-v1', JSON.stringify({ cfg: { start: '2026-10-26', welcome: true }, days: { '2026-10-28': { match: { min: '90', goles: '1', asist: '0' } }, '2026-10-30': { pichanga: { min: '60', goles: '2', asist: '1' } } }, pend: {} })); });
+  const p = await ctx.newPage(); p.on('pageerror', e => errs.push(e.message)); await p.clock.install({ time: new Date('2026-11-02T19:00:00') }); await p.goto(URL); await p.waitForTimeout(300);
+  await p.click('[data-pich]'); await p.waitForTimeout(150);
+  let t = await p.$eval('.situ', e => e.textContent);
+  ok(t.includes('60 min') && t.includes('≈ 7 km'), 'Hoy: «Pichanga hoy» anota 60 min ≈ 7 km (fútbol 7, mediocampo): ' + t.slice(-60));
+  await p.click('.situ [data-pend="reg:pichanga"]'); await p.waitForTimeout(200);
+  await p.fill('#pc-min', '90'); await p.dispatchEvent('#pc-min', 'input'); await p.fill('#pc-goles', '3'); await p.dispatchEvent('#pc-goles', 'input'); await p.waitForTimeout(100);
+  ok((await p.$eval('#pc-out', e => e.textContent)).includes('10,5 km en 90 min'), '90 min de mediocampo ≈ 10,5 km');
+  await p.fill('#pc-km', '9,2'); await p.dispatchEvent('#pc-km', 'input'); await p.waitForTimeout(100);
+  ok((await p.$eval('#pc-out', e => e.textContent)).includes('9,2 km (de tu reloj)'), 'km reales del reloj mandan');
+  await p.fill('#pc-km', ''); await p.dispatchEvent('#pc-km', 'input'); await p.click('[data-pcset="pos|defensa"]'); await p.waitForTimeout(150);
+  ok((await p.$eval('#pc-out', e => e.textContent)).includes('8,3 km'), 'defensa corre menos (5,5 km/h)');
+  await p.click('[data-pcset="pos|medio"]'); await p.waitForTimeout(150);
+  t = await p.$eval('#reg-pichanga', e => e.textContent.replace(/\s+/g, ' '));
+  ok(/Pichangas\s*2/.test(t) && /Goles\s*5/.test(t) && /Asist\.\s*1/.test(t) && /Minutos\s*150/.test(t), 'totales de pichangas: ' + t.slice(t.indexOf('Pichangas'), t.indexOf('Pichangas') + 80));
+  t = await p.$eval('#reg-match', e => e.textContent);
+  ok(t.includes('1 jugados · 1 goles · 0 asistencias'), 'los partidos no suman las pichangas');
+  await p.click('[data-tab="progreso"]'); await p.waitForTimeout(150);
+  t = await p.$eval('.kpis.sum', e => e.textContent.replace(/\s+/g, ' '));
+  ok(/Partidos\s*1/.test(t) && /Pichangas\s*2/.test(t), 'Progreso: partidos y pichangas por separado: ' + t);
+  await p.click('[data-tab="hoy"]'); await p.waitForTimeout(100); await p.click('[data-pich]'); await p.waitForTimeout(100);
+  ok(await p.locator('[data-pich].on').count() === 0 && !(await p.$eval('.situ', e => e.textContent)).includes('≈'), 'se puede quitar');
+  ok(errs.length === 0, 'sin errores: ' + errs.join(' | '));
+  await ctx.close(); }
+
 await browser.close();
 console.log(`\n${passes} correctas, ${fails} fallidas`);
 process.exit(fails ? 1 : 0);

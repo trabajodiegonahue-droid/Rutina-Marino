@@ -80,7 +80,7 @@ details.hw p{margin:6px 0 0;font-size:14px}
 .glance{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:6px;font-size:15px}
 .glance b{font-family:var(--f-mono);font-size:13px}
 .runlog{margin-top:10px;padding:10px 12px;border:1px dashed var(--line);border-radius:6px;display:flex;flex-direction:column;gap:8px}
-.rlf{display:grid;grid-template-columns:repeat(auto-fit,minmax(90px,1fr));gap:8px}
+.rlf{display:grid;grid-template-columns:repeat(auto-fit,minmax(90px,1fr));gap:8px}.rlf.c4{grid-template-columns:repeat(4,minmax(0,1fr))}.rlf.c4 .lbl{font-size:10.5px;letter-spacing:.06em}.pckm{display:flex;flex-direction:column;gap:2px;background:var(--paper2);border:1px solid var(--line);border-radius:14px;padding:10px 12px;margin:10px 0}.pckm b{font-family:var(--f-mono);font-size:20px;color:var(--accent)}.pckm small{color:var(--muted);font-size:12.5px}
 .rlv{margin:0;font-size:14px;color:var(--muted)}
 .rlv.ok{color:var(--ok);font-weight:600}.rlv.warn{color:var(--warn);font-weight:600}.rlv.bad{color:var(--bad);font-weight:600}
 .savechip{display:block;margin-top:4px;font-family:var(--f-label);font-size:12px;letter-spacing:.04em;text-transform:none;color:var(--muted);white-space:nowrap}
@@ -1214,7 +1214,7 @@ function evalTest(w,t){
 const LS="bitacora-buzo-v1";
 const defCfg=()=>({name:"Diego",start:"2026-10-06",sched:Array.from({length:53},(_,i)=>i),repeats:[],place:"lago",partner:false,neo:false,temp:"",turno:"14:00",trip:15,fins:false,boya:false,pool:false,bigText:false});
 // ajustes guardados: si algo viene dañado (copia editada, datos viejos) se usa el valor por defecto
-const fixCfg=c=>{const d=defCfg();if(c.start==="2026-10-05"&&!c.startMoved){c.start="2026-10-06";c.startMoved=true}
+const fixCfg=c=>{const d=defCfg();if(c.pich!=null){if(!isObj(c.pich))delete c.pich;else{if(c.pich.cancha!=null&&!["5","7","11"].includes(c.pich.cancha))delete c.pich.cancha;if(c.pich.pos!=null&&!["medio","defensa","delantero","arquero"].includes(c.pich.pos))delete c.pich.pos;if(c.pich.min!=null&&!(+c.pich.min>=10&&+c.pich.min<=240))delete c.pich.min}}if(c.start==="2026-10-05"&&!c.startMoved){c.start="2026-10-06";c.startMoved=true}
   if(typeof c.start!=="string"||!/^\d{4}-\d{2}-\d{2}$/.test(c.start)||isNaN(parse(c.start)))c.start=d.start;
   if(!Array.isArray(c.sched)||!c.sched.length||!c.sched.every(w=>Number.isInteger(w)&&w>=0&&w<=52))c.sched=d.sched;
   if(!Array.isArray(c.repeats))c.repeats=[];
@@ -1253,7 +1253,7 @@ const fixCfg=c=>{const d=defCfg();if(c.start==="2026-10-05"&&!c.startMoved){c.st
   return c};
 const MODES=["","ok","cansado","dolor","enfermo"];
 const fixDay=x=>{if(!isObj(x))return {};if(x.turno!=null&&!SHIFT[String(x.turno)])delete x.turno;if(x.mode!=null&&!MODES.includes(x.mode))delete x.mode;
-  ["checks","sets","test","sim","mini","runlog","ctx","undo","tprev","meals","sleep","match","reps","nope","kg","nopeWhy","banda","bandaS","ready","medidas"].forEach(f=>{if(x[f]!=null&&!isObj(x[f]))delete x[f]});if(x.ready)Object.keys(x.ready).forEach(f=>{if(!RQ.some(q=>q[0]===f)||![0,1,2].includes(x.ready[f]))delete x.ready[f]});
+  ["checks","sets","test","sim","mini","runlog","ctx","undo","tprev","meals","sleep","match","reps","nope","kg","nopeWhy","banda","bandaS","ready","medidas","pichanga"].forEach(f=>{if(x[f]!=null&&!isObj(x[f]))delete x[f]});if(x.ready)Object.keys(x.ready).forEach(f=>{if(!RQ.some(q=>q[0]===f)||![0,1,2].includes(x.ready[f]))delete x.ready[f]});
   if(x.runlog)Object.keys(x.runlog).forEach(t=>{if(!isObj(x.runlog[t]))delete x.runlog[t]});
   if(x.ctx&&x.ctx.temp!==""&&x.ctx.temp!=null&&!okTemp(x.ctx.temp))x.ctx.temp="";if(typeof x.note!=="string"&&x.note!=null)delete x.note;if(x.water!=null&&!(Number.isInteger(+x.water)&&+x.water>=0&&+x.water<=40))delete x.water;if(x.partido!=null&&typeof x.partido!=="boolean")delete x.partido;if(x.prot!=null&&!Array.isArray(x.prot))delete x.prot;if(x.viaje!=null&&typeof x.viaje!=="boolean")delete x.viaje;["prepartido","postpartido"].forEach(f=>{if(x[f]!=null&&typeof x[f]!=="boolean")delete x[f]});if(x.partidoH!=null&&!/^\d{1,2}:\d{2}$/.test(x.partidoH))delete x.partidoH;if(x.zona!=null&&x.zona!==""&&!ZONAS[x.zona])delete x.zona;if(x.motivo!=null&&x.motivo!==""&&!MOT[x.motivo])delete x.motivo;["urgencia","express","doble","cerrado"].forEach(f=>{if(x[f]!=null&&typeof x[f]!=="boolean")delete x[f]});return x};
 const fixDays=o=>{Object.keys(o).forEach(k=>{if(!isISO(k))delete o[k];else o[k]=fixDay(o[k])});return o};
@@ -1262,7 +1262,7 @@ const isObj=x=>!!x&&typeof x==="object"&&!Array.isArray(x);
 // errores de la nube que no se arreglan reintentando
 const HARD_ERR=["invalid_argument","quota_exceeded","revoked","not_granted","capability_disabled","capability_removed","transform_error"];
 // JSON con las claves ordenadas: para comparar sin que importe el orden
-const DEEP=["sets","checks","runlog","test","mini","sim","tprev","meals","sleep","match","reps","nope","kg","nopeWhy","banda","bandaS","ready","medidas"],dc=v=>v===undefined?undefined:JSON.parse(JSON.stringify(v));
+const DEEP=["sets","checks","runlog","test","mini","sim","tprev","meals","sleep","match","reps","nope","kg","nopeWhy","banda","bandaS","ready","medidas","pichanga"],dc=v=>v===undefined?undefined:JSON.parse(JSON.stringify(v));
 const canon=o=>JSON.stringify(o,(k,v)=>v&&typeof v==="object"&&!Array.isArray(v)?Object.keys(v).sort().reduce((a,x)=>(a[x]=v[x],a),{}):v);
 // Cómo se guarda: cada cambio queda como “pendiente” (solo los campos que tocaste) en este teléfono hasta que la
 // nube lo confirma. Lo que llega de la nube se mezcla con lo pendiente: nunca se pisa un cambio tuyo ni se borra
@@ -1527,8 +1527,9 @@ function situHTML(d,k,dd,plan){const tk=iso(addDays(d,1)),yk=iso(addDays(d,-1)),
   else if(plan.doble)msg=`Hoy va doble: lo tuyo + ${plan.doble} de ayer. Descansa 20 min y come algo entre una sesión y otra.`;
   const horas=Array.from({length:32},(_,i)=>fromMin(7*60+i*30));
   return `<div class="card situ"><span class="lbl">¿Qué pasa hoy?</span>
-   <div class="chips">${b(dd.partido,"data-partido","⚽ Hoy juego")}${b(tm.partido,"data-mpartido","⚽ Mañana juego")}${b(dd.postpartido,"data-ppartido","⚽ Ayer jugué")}${b(dd.viaje,"data-viaje","🚌 Viajo")}${b(dd.express,"data-express","⏱ Poco tiempo")}${pendTrain(plan,dd).length||dd.doble?b(dd.doble,"data-doble","🔁 Hoy no puedo: doble mañana"):""}</div>
+   <div class="chips">${b(dd.partido,"data-partido","⚽ Hoy juego")}${b(tm.partido,"data-mpartido","⚽ Mañana juego")}${b(dd.postpartido,"data-ppartido","⚽ Ayer jugué")}${b(pichOk(dd.pichanga),"data-pich","🥅 Pichanga hoy")}${b(dd.viaje,"data-viaje","🚌 Viajo")}${b(dd.express,"data-express","⏱ Poco tiempo")}${pendTrain(plan,dd).length||dd.doble?b(dd.doble,"data-doble","🔁 Hoy no puedo: doble mañana"):""}</div>
    ${dd.partido?`<div class="srow"><label class="sl" for="ph-sel">Juego a las</label><select id="ph-sel" data-ph>${horas.map(x=>`<option value="${x}" ${(dd.partidoH||trainH(plan))===x?"selected":""}>${x}</option>`).join("")}</select></div>`:""}
+   ${pichOk(dd.pichanga)?`<div class="srow"><span class="sl">🥅 Pichanga</span><span>${Math.round(pchMin(dd.pichanga))} min · ≈ ${fkm(pchKm(dd.pichanga))} km</span><button class="lnk" data-pend="reg:pichanga">Goles y asist. ›</button></div>`:""}
    ${msg?`<p class="foot smsg">${esc(msg)}</p>`:""}</div>`}
 // FÚTBOL. Día antes, día del partido y día después: el entrenamiento de ese día no se pierde, se corre al siguiente
 // (salvo que fuera descanso). El día de partido se juega a la hora que elijas.
@@ -2238,13 +2239,13 @@ function controlHoyHTML(d,k,dd,plan){const tp=pesoToca(d,plan),tm=medToca(d,plan
    ${tm?`<div class="ctrl">${MEDS.map(([m,l,how])=>`<div class="field"><label class="lbl" for="hm-${m}">${l} (cm)</label><input id="hm-${m}" inputmode="decimal" data-med="${m}" value="${esc(String((dd.medidas||{})[m]||"").replace(".",","))}" placeholder="—"><small class="foot">${esc(how)}</small></div>`).join("")}</div><p class="foot">Con una huincha de medir, sin apretar, siempre en el mismo lugar del cuerpo.</p>`:""}
    <p class="foot">Pesarte: ${PESO_CADA.find(x=>x[0]===pesoCada())[1].toLowerCase()} · medirte: cada ${medCada()} semanas. Cámbialo en Registro → Peso y medidas.</p></div>`}
 /* =================== COMPARAR SEMANAS: cuánto mejoraste o empeoraste =================== */
-function statsRange(d0,d1){let dias=0,ok=0,ser=0,reps=0,vol=0,rec=0,cmin=0,resp=0,verdes=0;const ag=[],sl=[],ps=[],med={};
+function statsRange(d0,d1){let dias=0,ok=0,ser=0,reps=0,vol=0,rec=0,cmin=0,resp=0,verdes=0;const ag=[],sl=[],ps=[],med={},pks=[];
   for(let d=d0;diffDays(d,d1)<=0;d=addDays(d,1)){const k=iso(d),p=planFor(d),dd=Store.days[k]||{};if(!p)continue;dias++;if(okSt(dayStatus(k,p)))ok++;ser+=units(dd,p).a;
     Object.keys(dd.reps||{}).forEach(n=>{const kd=parseFloat(String((dd.kg||{})[n]||"").replace(",","."))||0;(dd.reps[n]||[]).forEach(v=>{const x=parseRep(v);if(x){reps+=x.r;vol+=x.r*(x.kg||kd||0)}})});
     rec+=dayRecords(k).length;p.tasks.forEach(t=>{if(t.kind==="carrera"&&taskDone(dd,t))cmin+=Math.round(t.min||t.blocks.reduce((a,b)=>a+(b.tm||0)*(b.s||1),0)/60)});
     if(+dd.water)ag.push(+dd.water*vasoMl()/1000);const h=sleepH(dd.sleep);if(h!=null)sl.push(h);const pw=numv(dd.peso);if(okKg(pw))ps.push(pw);
-    const rv=readyOf(dd);if(rv){resp++;if(rv.c==="grn")verdes++}Object.assign(med,medOf(dd))}
-  const avg=a=>a.length?a.reduce((x,y)=>x+y,0)/a.length:null;return {dias,ok,ser,reps,vol:Math.round(vol),rec,cmin,agua:avg(ag),sueno:avg(sl),peso:avg(ps),verdes:resp?Math.round(verdes/resp*100):null,med}}
+    const rv=readyOf(dd);if(rv){resp++;if(rv.c==="grn")verdes++}Object.assign(med,medOf(dd));pks.push(k)}
+  const avg=a=>a.length?a.reduce((x,y)=>x+y,0)/a.length:null;return {dias,ok,ser,reps,vol:Math.round(vol),rec,cmin,agua:avg(ag),sueno:avg(sl),peso:avg(ps),verdes:resp?Math.round(verdes/resp*100):null,med,pch:pchTot(pks)}}
 function cmpWeeksHTML(){const td=today(),L=locate(td);if(L.before)return "";const lun=parse(lunesDe(td)),tk=iso(td),tdp=planFor(td),tdd=Store.days[tk]||{};
   // solo cuentan los días terminados: hoy entra cuando ya lo cumpliste o lo cerraste
   const hoyListo=okSt(dayStatus(tk,tdp))||!!tdd.status||!!tdd.cerrado||closedDay(tk,tdp),fin=hoyListo?td:addDays(td,-1),n=diffDays(fin,lun);
@@ -2252,7 +2253,7 @@ function cmpWeeksHTML(){const td=today(),L=locate(td);if(L.before)return "";cons
   const finM=hoyListo?td:addDays(td,-1),R=mode==="mes"?[addDays(finM,-55),addDays(finM,-28),addDays(finM,-27),finM]:mode==="completas"?[addDays(lun,-14),addDays(lun,-8),addDays(lun,-7),addDays(lun,-1)]:[addDays(lun,-7),addDays(lun,-7+n),lun,fin];
   const A=statsRange(R[0],R[1]),B=statsRange(R[2],R[3]),enf=enfoqueOf()[0],pb=enf==="musculo"?1:enf==="definir"?-1:0;
   const f1=x=>x==null?"—":(Math.round(x*10)/10).toLocaleString("es-CL"),fi=x=>x==null?"—":Math.round(x).toLocaleString("es-CL");
-  const rows=[["✅ Días cumplidos",A.ok,B.ok,fi,1,`de ${A.dias}`,`de ${B.dias}`],["💪 Series hechas",A.ser,B.ser,fi,1],["🔁 Repeticiones anotadas",A.reps,B.reps,fi,1],["🏋️ Volumen (reps × kg)",A.vol,B.vol,fi,1],["🏆 Récords nuevos",A.rec,B.rec,fi,1],["🏃 Cardio (min)",A.cmin,B.cmin,fi,1],
+  const rows=[["✅ Días cumplidos",A.ok,B.ok,fi,1,`de ${A.dias}`,`de ${B.dias}`],["💪 Series hechas",A.ser,B.ser,fi,1],["🔁 Repeticiones anotadas",A.reps,B.reps,fi,1],["🏋️ Volumen (reps × kg)",A.vol,B.vol,fi,1],["🏆 Récords nuevos",A.rec,B.rec,fi,1],["🏃 Cardio (min)",A.cmin,B.cmin,fi,1],["🥅 Pichangas",A.pch.n,B.pch.n,fi,1],["🥅 Km en pichangas",A.pch.km,B.pch.km,f1,1],["🥅 Goles + asist. en pichangas",A.pch.g+A.pch.a,B.pch.g+B.pch.a,fi,1],
     ["💧 Agua por día (L)",A.agua,B.agua,f1,1],["😴 Sueño por noche (h)",A.sueno,B.sueno,f1,1],["🟢 Días en verde (%)",A.verdes,B.verdes,fi,1],["⚖️ Peso promedio (kg)",A.peso,B.peso,f1,pb],
     ...MEDS.map(([m,l])=>[(m==="cintura"?"📏 ":"💪 ")+l+" (cm)",A.med[m]??null,B.med[m]??null,f1,m==="cintura"?-1:1])].filter(r=>(r[1]!=null&&r[1]!==0)||(r[2]!=null&&r[2]!==0));
   let up=0,down=0;const body=rows.map(([l,a,b,fm,dir,sa,sb])=>{let cls="",ar="=";if(a!=null&&b!=null&&a!==b){const better=dir===0?null:(b-a)*dir>0;ar=b>a?"↑":"↓";cls=better==null?"":better?"up":"down";if(better===true)up++;if(better===false)down++}
@@ -2665,18 +2666,18 @@ function whyStatsHTML(){const td=today(),c={};for(let i=0;i<30;i++){const x=Stor
 // planilla con todo tu historial (se abre en Excel o Google Sheets)
 function exportHTML(){return `<div class="card"><span class="lbl">Exportar</span><p style="margin:0">Descarga una planilla con todos tus días: estado, peso, agua, comidas, sueño, repeticiones y pruebas.</p><button class="btn" data-csv>Descargar planilla</button></div>`}
 async function exportCSV(){const q=v=>{const t=String(v==null?"":v);return /[";\n]/.test(t)?'"'+t.replace(/"/g,'""')+'"':t};
-  const head=["Fecha","Día","Semana","Plan","Estado","Motivo","Cómo amaneciste","Dolor en","Peso (kg)","Agua (vasos)","Comidas","Sueño (h)","Partido","Viaje","Repeticiones","Prueba","Notas"],L=[head.join(";")];
+  const head=["Fecha","Día","Semana","Plan","Estado","Motivo","Cómo amaneciste","Dolor en","Peso (kg)","Agua (vasos)","Comidas","Sueño (h)","Partido","Pichangas","Pichanga (min)","Pichanga goles","Pichanga asist.","Pichanga km","Viaje","Repeticiones","Prueba","Notas"],L=[head.join(";")];
   Object.keys(Store.days).filter(isISO).sort().forEach(k=>{const d=parse(k),p=planFor(d),dd=Store.days[k]||{},lc=locate(d);if(!p)return;const ms=mealsOf(p),hs=sleepH(dd.sleep);
     const reps=Object.keys(dd.reps||{}).map(n=>`${n}: ${(dd.reps[n]||[]).filter(Boolean).join("-")}${(dd.kg||{})[n]?" con "+dd.kg[n]+" kg":""}`).join(" | ");
     const test=Object.keys(dd.test||{}).filter(x=>dd.test[x]!==""&&dd.test[x]!=null).map(x=>`${x} ${dd.test[x]}`).join(" | ");
-    L.push([k,dayName(d),lc.w,p.title,dayStatus(k,p)||"",[dd.motivo,...Object.values(dd.nopeWhy||{})].filter(w=>MOT[w]).map(w=>MOT[w]).join(", "),dd.mode||"",dd.zona?ZONAS[dd.zona][0]:"",dd.peso||"",dd.water||"",ms.filter(m=>mealDone(dd,p,m)).length,hs==null?"":String(Math.round(hs*10)/10).replace(".",","),dd.partido?"sí":"",dd.viaje?"sí":"",reps,test,dd.note||""].map(q).join(";"))});
+    L.push([k,dayName(d),lc.w,p.title,dayStatus(k,p)||"",[dd.motivo,...Object.values(dd.nopeWhy||{})].filter(w=>MOT[w]).map(w=>MOT[w]).join(", "),dd.mode||"",dd.zona?ZONAS[dd.zona][0]:"",dd.peso||"",dd.water||"",ms.filter(m=>mealDone(dd,p,m)).length,hs==null?"":String(Math.round(hs*10)/10).replace(".",","),dd.partido?"sí":"",...(pc=>pichOk(pc)?[pchN(pc),Math.round(pchMin(pc)),numv(pc.goles)>0?numv(pc.goles):0,numv(pc.asist)>0?numv(pc.asist):0,String(pchKm(pc)).replace(".",",")]:["","","","",""])(dd.pichanga),dd.viaje?"sí":"",reps,test,dd.note||""].map(q).join(";"))});
   const r=await saveFile(`atleta-hibrido-${iso(today())}.csv`,"\ufeff"+L.join("\r\n"),"text/csv");toast(r==="ok"?"Planilla descargada.":r==="declined"?"Descarga cancelada.":"No se pudo descargar en este navegador.")}
 function viewGuia0(){return `<div class="sec prose"><h2>Guía</h2>
  <h3>🧭 Dónde está cada cosa</h3><ul>
  <li><b>Hoy</b>: lo que toca ahora, tus tareas en orden, comidas, agua y el resumen del día.</li>
  <li><b>Rutina</b>: tu entrenamiento completo: objetivo, tu semana, ejercicios, series, repeticiones, cardio e intensidad.</li>
  <li><b>Plan</b>: tu semana del plan, los avisos para el calendario, <b>✏️ Personaliza tu día</b> (horario, sueño, tareas, comidas, metas, avisos), ajustes y la copia de seguridad.</li>
- <li><b>Registro</b>: comidas, agua, sueño, partido, inglés, fotos, compras y ahorro de cualquier día.</li>
+ <li><b>Registro</b>: comidas, agua, sueño, partido, pichangas (aparte), inglés, fotos, compras y ahorro de cualquier día.</li>
  <li><b>Progreso</b>: cómo vas: series por músculo, peso, racha, récords y pruebas.</li>
  <li><b>Para moverte</b>: la fila de botones de arriba te lleva a cada parte; abajo de cada página hay «← anterior · siguiente →»; también puedes deslizar el dedo a los lados. El botón ↑ te sube.</li></ul>
  <h3>☀️ Tu día, paso a paso</h3><ol>
@@ -2854,6 +2855,23 @@ function engStreak(){let d=today(),n=0;for(let i=0;i<800;i++){const p=planFor(d)
 function engTotal(){let n=0;Object.keys(Store.days).forEach(k=>{const dd=Store.days[k];if(!dd||!dd.checks&&!dd.sets)return;const p=planFor(parse(k)),t=p&&p.tasks.find(x=>x.id==="ingles");if(t&&taskDone(dd,t))n++});return n}
 const cefr=s=>s>=71?"C2":s>=61?"C1":s>=51?"B2":s>=41?"B1":s>=31?"A2":"A1";
 const matchOk=m=>m&&(numv(m.min)>0||m.goles||m.asist||m.sens);
+// PICHANGAS: se cuentan aparte de los partidos (goles, asistencias y minutos no se mezclan).
+// Km por hora de juego según cancha y posición. Fútbol 7: ~106–108 m por minuto de juego en promedio (≈6,4 km/h, todas las posiciones);
+// el mediocampista que va y vuelve corre más que el promedio → ~7 km/h (rango 6–8). Adultos sin entrenar en 7 contra 7: ~4,5 km/h.
+const PCH_CANCHA=[["5","Fútbol 5"],["7","Fútbol 7"],["11","Fútbol 11"]];
+const PCH_POS=[["medio","Mediocampo (toda la cancha)"],["defensa","Defensa"],["delantero","Delantero"],["arquero","Arquero"]];
+const PCH_KMH={"5":{medio:6,defensa:4.5,delantero:5,arquero:1.5},"7":{medio:7,defensa:5.5,delantero:6,arquero:2},"11":{medio:7.5,defensa:6,delantero:6.5,arquero:2.5}};
+const pchDef=()=>Object.assign({cancha:"7",pos:"medio",min:"60"},Store.cfg.pich||{});
+const pichOk=m=>!!(m&&(numv(m.min)>0||numv(m.goles)>0||numv(m.asist)>0||m.sens||m.on));
+const pchOf=m=>{const d=pchDef();m=m||{};return {cancha:PCH_KMH[m.cancha]?m.cancha:d.cancha,pos:PCH_KMH["7"][m.pos]!=null?m.pos:d.pos}};
+const pchMin=m=>numv(m&&m.min)>0?numv(m.min):(numv(pchDef().min)||60);
+const pchN=m=>pichOk(m)?Math.max(1,Math.min(5,parseInt(m.n,10)||1)):0;
+const pchKmh=m=>{const o=pchOf(m);return PCH_KMH[o.cancha][o.pos]};
+function pchKm(m){if(!pichOk(m))return 0;const r=numv(m.km);if(r>0&&r<40)return Math.round(r*10)/10;return Math.round(pchMin(m)/60*pchKmh(m)*10)/10}
+const fkm=x=>(Math.round(x*10)/10).toLocaleString("es-CL");
+function pchTot(ks){ks=(ks||Object.keys(Store.days)).filter(x=>pichOk((Store.days[x]||{}).pichanga)).sort();let n=0,g=0,a=0,min=0,km=0;
+  ks.forEach(x=>{const m=Store.days[x].pichanga;n+=pchN(m);g+=numv(m.goles)>0?numv(m.goles):0;a+=numv(m.asist)>0?numv(m.asist):0;min+=pchMin(m);km+=pchKm(m)});return {ks,n,g,a,min:Math.round(min),km:Math.round(km*10)/10}}
+const pchOut=m=>pichOk(m)?`≈ ${fkm(pchKm(m))} km${numv(m.km)>0?" (de tu reloj)":` en ${Math.round(pchMin(m))} min`}`:`≈ ${fkm(pchKmh(m))} km por hora de juego`;
 const MONEDAS=["AUD","NZD","CLP","USD","EUR","CAD"],moneda=()=>MONEDAS.includes(Store.cfg.moneda)?Store.cfg.moneda:"AUD";
 const ahorroOf=()=>{const a=Store.cfg.ahorro||{};const log=Array.isArray(a.log)?a.log:[];return {meta:numv(a.meta)>0?numv(a.meta):5000,log,tot:log.reduce((s,x)=>s+(numv(x.v)||0),0)}};
 const money=v=>Math.round(v).toLocaleString("es-CL");
@@ -2893,11 +2911,11 @@ const regBox=(key,title,status,body,open,warn)=>`<details class="sec reg box" id
 function viewRegistro(){
   const d=S.date,k=iso(d),dd=Store.days[k]||{},plan=planFor(d),isT=diffDays(d,today())===0;
   let h=`<div class="day"><button class="nb" data-go="-1" aria-label="Día anterior">◀</button><div class="mid"><div class="big">REGISTRO</div><div class="sub">${dayName(d)} ${fmt(d)}</div></div><button class="nb ${isT?"on":""}" data-go="0">Hoy</button><button class="nb" data-go="1" aria-label="Día siguiente">▶</button></div>`;
-  h+=jumpBar([["reg-comidas","🍽 Comidas"],["reg-agua","💧 Agua"],["reg-control","⚖️ Peso"],["reg-sueno","😴 Sueño"],["reg-match","⚽ Partido"],["reg-lesiones","🩹 Lesiones"],["reg-listas","✅ Listas"],["reg-seg","📌 Más"]]);
+  h+=jumpBar([["reg-comidas","🍽 Comidas"],["reg-agua","💧 Agua"],["reg-control","⚖️ Peso"],["reg-sueno","😴 Sueño"],["reg-match","⚽ Partido"],["reg-pichanga","🥅 Pichanga"],["reg-lesiones","🩹 Lesiones"],["reg-listas","✅ Listas"],["reg-seg","📌 Más"]]);
   h+=`<details class="card cadacuanto" data-keep="reg:cada"${S.keep["reg:cada"]?" open":""}><summary class="sum2"><span class="lbl">📋 Qué anotar y cada cuánto</span></summary><ul class="cv">
    <li>🍽 <b>Comidas y 💧 agua</b>: todos los días, a medida que comes y tomas.</li><li>😴 <b>Sueño</b>: cada mañana.</li>
    <li>⚖️ <b>Peso</b>: el primer día de la semana, en ayunas (en Hoy o en Plan → Ajustes).</li><li>📸 <b>Fotos</b> y 📏 <b>medidas</b>: cada 4 semanas.</li>
-   <li>⚽ <b>Partido</b>: el día que juegas. 🇬🇧 <b>Inglés</b>: la prueba EF SET cada 3 meses.</li><li>🛒 <b>Compras</b>: una vez por semana. 💰 <b>Ahorro</b>: cuando guardes plata.</li></ul></details>`;
+   <li>⚽ <b>Partido</b>: el día que juegas. 🥅 <b>Pichanga</b>: aparte, con sus goles, asistencias y km. 🇬🇧 <b>Inglés</b>: la prueba EF SET cada 3 meses.</li><li>🛒 <b>Compras</b>: una vez por semana. 💰 <b>Ahorro</b>: cuando guardes plata.</li></ul></details>`;
   h+=`<h3 class="reg-g">Este día</h3>`;
   if(plan){const ms=mealsOf(plan),n=ms.filter(m=>mealDone(dd,plan,m)).length;
     h+=regBox("comidas","Comidas",`${n}/${ms.length}`,`<p class="foot">Son las mismas casillas de Hoy: márcalas donde quieras.</p>${protHTML(dd)}${mealChips(plan,dd,d)}`,isT,n<ms.length&&!isT);
@@ -2910,7 +2928,18 @@ function viewRegistro(){
    <p class="foot" id="sl-out">${hs==null?"Anota la noche que pasó.":hs<7?`${fmtH(hs)}: poco. Hoy marca «Cansado» en Hoy.`:`${fmtH(hs)}. Bien.`}</p>`,isT,hs!=null&&hs<7)}
   {const m=dd.match||{},f=(x,l,ph)=>`<div class="field"><label class="lbl" for="mt-${x}">${l}</label><input id="mt-${x}" inputmode="numeric" data-r="match|${x}" value="${esc(m[x]||"")}" placeholder="${ph}"></div>`;
    const all=Object.keys(Store.days).filter(x=>matchOk(Store.days[x].match)),g=all.reduce((s,x)=>s+(numv(Store.days[x].match.goles)||0),0),as=all.reduce((s,x)=>s+(numv(Store.days[x].match.asist)||0),0);
-   h+=regBox("match","Partido",matchOk(m)?`${m.min||"?"} min · ${m.goles||0} goles`:"no jugué",`<div class="rlf">${f("min","Minutos","90")}${f("goles","Goles","0")}${f("asist","Asist.","0")}</div><span class="lbl">Cómo me sentí</span><div class="segs">${[1,2,3,4,5].map(i=>`<button class="seg ${+m.sens===i?"on":""}" data-sens="${i}">${i}</button>`).join("")}</div><p class="foot">En total: ${all.length} jugados · ${g} goles · ${as} asistencias.</p>${all.length?`<div class="temp">${all.sort().slice(-10).map(x=>{const mm=Store.days[x].match,gg=numv(mm.goles)||0,aa=numv(mm.asist)||0;return `<div class="tm"><div class="tmb"><i class="g" style="height:${Math.min(100,gg*25)}%"></i><i class="a" style="height:${Math.min(100,aa*25)}%"></i></div><small>${fmtS(parse(x))}</small></div>`}).join("")}</div><p class="foot"><span class="dotg"></span> goles · <span class="dota"></span> asistencias (últimos 10 partidos)</p>`:""}`,!!dd.partido)}
+   h+=regBox("match","Partido",matchOk(m)?`${m.min||"?"} min · ${m.goles||0} goles`:"no jugué",`<div class="rlf">${f("min","Minutos","90")}${f("goles","Goles","0")}${f("asist","Asist.","0")}</div><span class="lbl">Cómo me sentí</span><div class="segs">${[1,2,3,4,5].map(i=>`<button class="seg ${+m.sens===i?"on":""}" data-sens="${i}">${i}</button>`).join("")}</div><p class="foot">Solo partidos (las pichangas van aparte): ${all.length} jugados · ${g} goles · ${as} asistencias.</p>${all.length?`<div class="temp">${all.sort().slice(-10).map(x=>{const mm=Store.days[x].match,gg=numv(mm.goles)||0,aa=numv(mm.asist)||0;return `<div class="tm"><div class="tmb"><i class="g" style="height:${Math.min(100,gg*25)}%"></i><i class="a" style="height:${Math.min(100,aa*25)}%"></i></div><small>${fmtS(parse(x))}</small></div>`}).join("")}</div><p class="foot"><span class="dotg"></span> goles · <span class="dota"></span> asistencias (últimos 10 partidos)</p>`:""}`,!!dd.partido)}
+  {const m=dd.pichanga||{},o=pchOf(m),T=pchTot(),df=pchDef(),f=(x,l,ph,im)=>`<div class="field"><label class="lbl" for="pc-${x}">${l}</label><input id="pc-${x}" inputmode="${im||"numeric"}" data-r="pichanga|${x}" value="${esc(m[x]||"")}" placeholder="${ph}"></div>`,f1=x=>(Math.round(x*10)/10).toLocaleString("es-CL");
+   h+=regBox("pichanga","Pichanga",pichOk(m)?`${pchN(m)>1?pchN(m)+" pichangas · ":""}${Math.round(pchMin(m))} min · ~${fkm(pchKm(m))} km · ${numv(m.goles)>0?numv(m.goles):0} goles`:"no jugué",`<p class="foot" style="margin:0">Aparte de los partidos: así no se mezclan goles, asistencias ni minutos.</p>
+   <div class="rlf c4">${f("min","Minutos",df.min)}${f("goles","Goles","0")}${f("asist","Asist.","0")}${f("n","Cuántas","1")}</div>
+   <span class="lbl">Cancha</span><div class="segs">${PCH_CANCHA.map(([v,l])=>`<button class="seg ${o.cancha===v?"on":""}" data-pcset="cancha|${v}">${l}</button>`).join("")}</div>
+   <span class="lbl">Dónde juegas</span><div class="segs">${PCH_POS.map(([v,l])=>`<button class="seg ${o.pos===v?"on":""}" data-pcset="pos|${v}">${l}</button>`).join("")}</div>
+   <div class="pckm"><span class="lbl">🏃 Km recorridos</span><b id="pc-out">${pchOut(m)}</b><small>${o.pos==="medio"?"Mediocampo, ida y vuelta":esc(PCH_POS.find(x=>x[0]===o.pos)[1])} en ${esc(PCH_CANCHA.find(x=>x[0]===o.cancha)[1].toLowerCase())}: unos ${fkm(PCH_KMH[o.cancha][o.pos])} km por hora.</small></div>
+   <div class="rlf">${f("km","Km reales (si usas reloj)","—","decimal")}</div>
+   <span class="lbl">Cómo me sentí</span><div class="segs">${[1,2,3,4,5].map(i=>`<button class="seg ${+m.sens===i?"on":""}" data-psens="${i}">${i}</button>`).join("")}</div>
+   <div class="kpis" style="margin-top:12px"><div class="kpi"><span class="lbl">Pichangas</span><b>${T.n}</b></div><div class="kpi"><span class="lbl">Goles</span><b>${T.g}</b></div><div class="kpi"><span class="lbl">Asist.</span><b>${T.a}</b></div><div class="kpi"><span class="lbl">Minutos</span><b>${T.min.toLocaleString("es-CL")}</b></div><div class="kpi"><span class="lbl">Km</span><b>${fkm(T.km)}</b></div><div class="kpi"><span class="lbl">G + A</span><b>${T.n?f1((T.g+T.a)/T.n):"—"}</b><small>por pichanga</small></div></div>
+   ${T.ks.length?`<div class="temp">${T.ks.slice(-10).map(x=>{const mm=Store.days[x].pichanga,gg=numv(mm.goles)>0?numv(mm.goles):0,aa=numv(mm.asist)>0?numv(mm.asist):0;return `<div class="tm"><div class="tmb"><i class="g" style="height:${Math.min(100,gg*25)}%"></i><i class="a" style="height:${Math.min(100,aa*25)}%"></i></div><small>${fmtS(parse(x))}</small></div>`}).join("")}</div><p class="foot"><span class="dotg"></span> goles · <span class="dota"></span> asistencias (últimas 10 pichangas)</p>`:""}
+   <p class="foot">Cancha de 7 ≈ 50–65 m de largo y 30–45 m de ancho. Un mediocampista que va y vuelve recorre unos 6–8 km por hora de juego; la app usa 7. Es aproximado: si usas reloj o app con GPS, anota los km reales y se usan esos.</p>`,pichOk(m))}
   h+=`<h3 class="reg-g" id="reg-seg">Seguimiento</h3>`;
   h+=lesionesHTML()+listasHTML();
   {const st=engStreak(),tot=engTotal(),tests=((Store.cfg.eng||{}).tests||[]),last=tests[tests.length-1],due=last?addDays(parse(last.k),91):null,late=!last||diffDays(due,today())<=0;
@@ -2972,7 +3001,7 @@ function summaryHTML(){
   const ks=Object.keys(Store.days).sort(),pw=ks.map(k=>numv(Store.days[k].peso)).filter(v=>okKg(v)),tb=ks.map(k=>numv((Store.days[k].test||{}).brazo)).filter(v=>v>15&&v<70);
   const dlt=(a,u)=>a.length>1?`${a[a.length-1].toLocaleString("es-CL")} ${u} <small>(${a[a.length-1]-a[0]>=0?"+":""}${(Math.round((a[a.length-1]-a[0])*10)/10).toLocaleString("es-CL")})</small>`:a.length?`${a[0].toLocaleString("es-CL")} ${u}`:"—";
   const pj=ks.filter(k=>matchOk(Store.days[k].match)).length,a=ahorroOf();
-  return `<div class="card"><span class="lbl">Resumen</span><div class="kpis sum"><div class="kpi"><span class="lbl">Peso</span><b>${dlt(pw,"kg")}</b></div><div class="kpi"><span class="lbl">Brazo</span><b>${dlt(tb,"cm")}</b></div><div class="kpi"><span class="lbl">Racha inglés</span><b>${engStreak()}</b></div><div class="kpi"><span class="lbl">Partidos</span><b>${pj}</b></div><div class="kpi"><span class="lbl">Ahorro</span><b>${Math.round(Math.min(100,a.tot/a.meta*100))}%</b></div></div></div>`}
+  return `<div class="card"><span class="lbl">Resumen</span><div class="kpis sum"><div class="kpi"><span class="lbl">Peso</span><b>${dlt(pw,"kg")}</b></div><div class="kpi"><span class="lbl">Brazo</span><b>${dlt(tb,"cm")}</b></div><div class="kpi"><span class="lbl">Racha inglés</span><b>${engStreak()}</b></div><div class="kpi"><span class="lbl">Partidos</span><b>${pj}</b></div><div class="kpi"><span class="lbl">Pichangas</span><b>${pchTot().n}</b></div><div class="kpi"><span class="lbl">Ahorro</span><b>${Math.round(Math.min(100,a.tot/a.meta*100))}%</b></div></div></div>`}
 // repeticiones por serie: la semana pasada aparece de guía
 let REPC={};
 function prevReps(name,k){const ck=name+"|"+k;if(REPC[ck]!==undefined)return REPC[ck];let r=null;const ks=Object.keys(Store.days).filter(x=>x<k).sort().reverse();
@@ -3429,6 +3458,11 @@ document.addEventListener("click",e=>{
   if(D.mealx){const p=planFor(S.date),dd=Store.day(k),m=p&&mealsOf(p).find(x=>x.k===D.mealx);if(!m)return;const on=mealDone(dd,p,m),patch={meals:Object.assign({},dd.meals,{[m.k]:false})};
     if(m.r){const {t,i}=m.r,sets=Object.assign({},dd.sets),c=Object.assign({},dd.checks);sets[setKey(t,i)]=on?0:t.blocks[i].s;if(on&&c[t.id]&&!t.blocks[i].opt)c[t.id]=false;patch.sets=sets;patch.checks=c}else if(!on)patch.meals[m.k]=true;
     Store.setDay(k,patch);render();return}
+  if(D.psens){const m=Object.assign({},(Store.days[k]||{}).pichanga);m.sens=m.sens===D.psens?"":D.psens;Store.setDay(k,{pichanga:m});render();return}
+  if(D.pcset){const [f,v]=D.pcset.split("|"),m=Object.assign({},(Store.days[k]||{}).pichanga);m[f]=v;Store.setDay(k,{pichanga:m});Store.setCfg({pich:Object.assign({},Store.cfg.pich,{[f]:v})});render();return}
+  if(D.pich!==undefined){const m=Object.assign({},(Store.days[k]||{}).pichanga),on=!pichOk(m);
+    Store.setDay(k,{pichanga:on?Object.assign(m,{on:true,min:m.min||pchDef().min}):Object.assign(m,{on:false,min:"",goles:"",asist:"",sens:"",n:"",km:""})});render();
+    toast(on?`🥅 Pichanga anotada: ${Math.round(pchMin(m))} min ≈ ${fkm(pchKm(m))} km. Goles y asistencias en Registro.`:"Pichanga quitada.");return}
   if(D.sens){const m=Object.assign({},(Store.days[k]||{}).match);m.sens=m.sens===D.sens?"":D.sens;Store.setDay(k,{match:m});render();return}
   if(D.engadd!==undefined){const el=document.getElementById("eng-s"),v=parseInt(el&&el.value,10);if(!(v>=0&&v<=100)){toast("Escribe el puntaje de EF SET: de 0 a 100.");return}
     const e=Object.assign({},Store.cfg.eng),ts=(e.tests||[]).filter(x=>x.k!==iso(today())).concat([{k:iso(today()),s:v}]);Store.setCfg({eng:Object.assign(e,{tests:ts})});render();toast(`Nivel ${cefr(v)} guardado.`);return}
@@ -3484,6 +3518,7 @@ document.addEventListener("input",e=>{
     else{val=v.trim().slice(0,f==="n"?60:20);if(!val)return}
     rutinaSet(id,r=>{if(!r[+i])return;r[+i][f]=val;if(f!=="n")delete r[+i].bar})}
   else if(D.r){const [kind,f]=D.r.split("|"),r=Object.assign({},(Store.days[k]||{})[kind]);r[f]=el.value.trim();Store.setDay(k,{[kind]:r});
+    if(kind==="pichanga"){const o=document.getElementById("pc-out");if(o)o.textContent=pchOut(r)}
     if(kind==="sleep"){const o=document.getElementById("sl-out"),hs=sleepH(r);if(o)o.textContent=hs==null?"Anota la noche que pasó.":hs<7?`${fmtH(hs)}: poco. Hoy marca «Cansado» en Hoy.`:`${fmtH(hs)}. Bien.`}}
   else if(D.rp){const i=D.rp.lastIndexOf("|"),name=D.rp.slice(0,i),j=+D.rp.slice(i+1),dd0=Store.days[k]||{},rp=Object.assign({},dd0.reps),a=(rp[name]||[]).slice();while(a.length<=j)a.push("");a[j]=el.value.trim().slice(0,12);rp[name]=a;
     const patch={reps:rp};
