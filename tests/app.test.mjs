@@ -18,6 +18,10 @@ browser.newContext = async (...a) => { const c = await newContext0(...a); await 
   const np = c.newPage.bind(c); let spare = null;
   c.newPage = async (...b) => { if (spare) { const pg = spare; spare = null; return pg; }
     const pg = await np(...b); const cl = pg.close.bind(pg); let inst = false; const ci = pg.clock.install.bind(pg.clock);
+    // Chromium guarda localStorage en segundo plano: antes de recargar o volver a abrir, un respiro para que quede escrito
+    const rl = pg.reload.bind(pg), gt = pg.goto.bind(pg);
+    pg.reload = async (...o) => { await pg.waitForTimeout(350); return rl(...o); };
+    pg.goto = async (...o) => { if (pg.url() && pg.url() !== 'about:blank') await pg.waitForTimeout(350); return gt(...o); };
     pg.clock.install = async o => { if (!inst) { inst = true; return ci(o); } return pg.clock.setSystemTime(o && o.time); };
     pg.close = async (...o) => { if (spare) return cl(...o); await pg.evaluate(() => sessionStorage.clear()).catch(() => {}); spare = pg; };
     return pg; };
@@ -1216,7 +1220,7 @@ const reload = async p => { await p.reload(); await p.waitForTimeout(200); };
   ok(t.includes('10 min antes') && await p.locator('[data-pzav="habitos"][aria-pressed="false"]').count() === 1, 'avisos: cuándo y de qué');
   await p.click('[data-tab="hoy"]'); await p.waitForTimeout(150);
   t = await text(p);
-  ok(t.includes('Entro 16:00') && t.includes('Inglés · 40 min') && await p.locator('.frase').count() === 0 && t.includes('Cada toque = 500 ml'), 'Hoy usa tu turno del martes, tus minutos, sin la frase y con tu vaso');
+  ok(t.includes('Entro 16:00') && t.includes('Inglés · 40 min') && await p.locator('.frase').count() === 0 && t.includes('Vaso 500 ml'), 'Hoy usa tu turno del martes, tus minutos, sin la frase y con tu vaso');
   ok(t.includes('Despiertas 11:00'), 'con 9 horas de sueño y entrada a las 16:00 despiertas a las 11:00');
   await p.click('[data-tab="registro"]'); await p.locator('#reg-compras summary').click(); await p.click('[data-editcompras]'); await p.waitForTimeout(100);
   await p.fill('#lc-n', 'Arroz'); await p.fill('#lc-q', '1 kg'); await p.click('[data-ladd]'); await p.waitForTimeout(100);
@@ -1263,6 +1267,28 @@ const reload = async p => { await p.reload(); await p.waitForTimeout(200); };
   ok(await p.locator('#pr-sueno').count() === 1, 'sueño y energía en Progreso');
   await p.click('[data-recg="Flexiones con déficit"]'); await p.waitForTimeout(100);
   ok(await p.locator('svg.exch').count() === 1, 'gráfico del ejercicio');
+  ok(errs.length === 0, 'sin errores: ' + errs.join(' | '));
+  await ctx.close(); }
+
+// 53. Uso diario más rápido: «Hice la meta», + botella, sueño de un toque, pendientes sin ruido y comodín de racha
+{ const ctx = await browser.newContext({ viewport: { width: 390, height: 1400 } }); const errs = [];
+  const days = {}; ['2026-10-26','2026-10-27','2026-10-28','2026-10-29','2026-10-30','2026-10-31','2026-11-01','2026-11-02','2026-11-03','2026-11-05','2026-11-06','2026-11-07','2026-11-08'].forEach(k => days[k] = { status: 'done' });
+  await ctx.addInitScript(([dd]) => { window.__NOLOCK = false; if (!localStorage.getItem('bitacora-buzo-v1')) localStorage.setItem('bitacora-buzo-v1', JSON.stringify({ cfg: { start: '2026-10-26', welcome: true, peso: '68', alt: '176' }, days: dd, pend: {} })); }, [days]);
+  const p = await ctx.newPage(); p.on('pageerror', e => errs.push(e.message)); await p.clock.install({ time: new Date('2026-11-09T10:00:00') }); await p.goto(URL); await p.waitForTimeout(300);
+  let t = await text(p);
+  ok(t.includes('Racha 13'), 'el comodín cubre el día fallado de la semana: ' + (t.match(/Racha \d+/) || [''])[0]);
+  await p.click('[data-sleepplan]'); await p.waitForTimeout(100);
+  ok((await text(p)).includes('Anoche:'), 'sueño anotado de un toque');
+  await p.click('#sec-agua [data-water="4"]'); await p.waitForTimeout(100);
+  ok((await p.$eval('#sec-agua', e => e.textContent)).includes('1.000 /'), '+ botella suma 1 litro');
+  await p.locator('.ses [data-open="fa"]').first().click(); await p.waitForTimeout(150);
+  const hm = p.locator('[data-hm]').first(); ok(await hm.count() === 1, 'botón «Hice la meta»');
+  await hm.click(); await p.waitForTimeout(150);
+  const v = await p.locator('[data-rp]').first().inputValue(); ok(/^\d+$/.test(v), 'la meta queda anotada en las series: ' + v);
+  // día libre con fotos pendientes: «Después» las esconde hasta la próxima semana
+  const ph = p.locator('[data-psnz="fotos"]'); if (await ph.count()) { await ph.click(); await p.waitForTimeout(100); ok(await p.locator('[data-psnz="fotos"]').count() === 0, '«Después» deja las fotos para la próxima semana'); } else ok(true, 'sin fotos pendientes hoy');
+  await p.click('[data-tab="plan"]'); await p.click('[data-pzcmd="0"]'); await p.waitForTimeout(100); await p.click('[data-tab="hoy"]'); await p.waitForTimeout(100);
+  ok((await text(p)).includes('Racha 4'), 'racha estricta: el día fallado la corta: ' + ((await text(p)).match(/Racha \d+/) || [''])[0]);
   ok(errs.length === 0, 'sin errores: ' + errs.join(' | '));
   await ctx.close(); }
 
