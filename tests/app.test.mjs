@@ -1364,6 +1364,33 @@ const reload = async p => { await p.reload(); await p.waitForTimeout(200); };
   ok(errs.length === 0, 'sin errores: ' + errs.join(' | '));
   await ctx.close(); }
 
+// 57. «Mejorar todo»: series, repeticiones y descanso según el ejercicio, Rutina más visual
+{ const ctx = await browser.newContext({ viewport: { width: 390, height: 1400 } }); const errs = [];
+  await ctx.addInitScript(() => { window.__NOLOCK = false; window.__OPENALL = false; if (!localStorage.getItem('bitacora-buzo-v1')) localStorage.setItem('bitacora-buzo-v1', JSON.stringify({ cfg: { start: '2026-10-26', welcome: true }, days: {}, pend: {} })); });
+  const p = await ctx.newPage(); p.on('pageerror', e => errs.push(e.message)); await p.clock.install({ time: new Date('2026-11-09T09:00:00') }); await p.goto(URL); await p.waitForTimeout(300);
+  await p.click('[data-tab="rutina"]'); await p.waitForTimeout(100);
+  ok(await p.locator('.rhero').count() === 1 && await p.locator('.wstrip .wday').count() === 7, 'Rutina: resumen arriba y tu semana en 7 días');
+  ok(await p.locator('.exr').count() > 3 && await p.locator('.rrow').count() === 0, 'ejercicios en lista corta (sin campos a la vista)');
+  await p.locator('#rt-obj > summary').click(); await p.click('[data-obj="todo"]'); await p.waitForTimeout(150);
+  let t = await p.$eval('.rhero', e => e.textContent);
+  ok(t.includes('Mejorar todo') && t.includes('4 × 4–6') && t.includes('3 × 8–12') && t.includes('3 × 12–20'), 'resumen muestra fuerza, músculo y aislamiento: ' + t.slice(0, 160));
+  const rows = await p.$$eval('.exr', es => es.map(e => e.textContent.replace(/\s+/g, ' ')));
+  ok(rows.filter(r => /4 × 4–6/.test(r)).length === 1, 'un solo ejercicio principal de fuerza (4 × 4–6): ' + rows.join(' / '));
+  ok(rows.some(r => /Aperturas.*3 × 12–20.*0:45/.test(r)), 'aislamiento 3 × 12–20 con 0:45');
+  ok(rows.some(r => /Fondos.*3 × 8–12.*1:30/.test(r)), 'grandes 3 × 8–12 con 1:30');
+  await p.locator('.exr [data-rxe]').nth(1).click(); await p.waitForTimeout(100);
+  ok(await p.locator('.rrow').count() === 1, '✏️ abre solo ese ejercicio');
+  await p.click('[data-rxe=""]'); await p.waitForTimeout(100);
+  ok(await p.locator('.rrow').count() === 0, '✓ lo cierra');
+  await p.click('[data-rxall]'); await p.waitForTimeout(100);
+  ok(await p.locator('.rrow').count() === rows.length, 'Editar todos abre todos');
+  await p.click('[data-rxall]'); await p.click('[data-wkday="1"]'); await p.waitForTimeout(150);
+  ok((await p.$eval('[data-rday].on', e => e.textContent)).includes('Pierna'), 'tocar el martes abre la pierna');
+  const leg = await p.$$eval('.exr', es => es.map(e => e.textContent.replace(/\s+/g, ' ')));
+  ok(leg.filter(r => /⚡/.test(r)).length === 1 && leg.some(r => /4 × 4–6/.test(r)), 'pierna: 1 salto y un principal de fuerza: ' + leg.join(' / '));
+  ok(errs.length === 0, 'sin errores: ' + errs.join(' | '));
+  await ctx.close(); }
+
 await browser.close();
 console.log(`\n${passes} correctas, ${fails} fallidas`);
 process.exit(fails ? 1 : 0);
