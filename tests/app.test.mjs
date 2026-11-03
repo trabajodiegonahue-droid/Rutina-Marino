@@ -1513,6 +1513,59 @@ const reload = async p => { await p.reload(); await p.waitForTimeout(200); };
   ok(errs.length === 0, 'sin errores: ' + errs.join(' | '));
   await ctx.close(); srv.close(); }
 
+// 63. Asistente: le cuentas lo que hiciste y lo anota donde va; le preguntas y responde con tus datos
+{ const ctx = await browser.newContext({ viewport: { width: 390, height: 1400 } }); const errs = [];
+  // el 9 nov es el día 7 desde el 3 nov: «Prueba inicial»; ya subió la captura de adidas (3,29 km en 14:49)
+  await ctx.addInitScript(() => { window.__NOLOCK = false; if (!localStorage.getItem('bitacora-buzo-v1')) localStorage.setItem('bitacora-buzo-v1', JSON.stringify({ cfg: { start: '2026-11-03', welcome: true }, days: { '2026-11-09': { runlog: { libre: { km: '3,29', t: '14:49' } } } }, pend: {} })); });
+  const p = await ctx.newPage(); p.on('pageerror', e => errs.push(e.message)); await p.clock.install({ time: new Date('2026-11-09T13:00:00') }); await p.goto(URL); await p.waitForTimeout(300);
+  const day = () => p.evaluate(() => JSON.parse(localStorage.getItem('bitacora-buzo-v1')).days['2026-11-09'] || {});
+  await p.fill('#as-in-hoy', 'Ahora, mira, hice 40 flexiones en 2 minutos, hice 60 abdominales en 2 minutos e hice ese tiempo en los 3 kilómetros 2.'); await p.click('[data-assend="hoy"]'); await p.waitForTimeout(200);
+  let d = await day();
+  ok(d.test && d.test.flex === '40' && d.test.abd === '60' && d.test.run === '14:25', 'la frase de Diego queda en la prueba: ' + JSON.stringify(d.test));
+  let t = await p.$eval('.aslast', e => e.textContent);
+  ok(t.includes('Prueba inicial') && t.includes('14:49 en 3,29 km = 14:25') && t.includes('meta de la semana 13'), 'responde dónde lo anotó y compara con la meta');
+  await p.click('.aslast [data-asundo]'); await p.waitForTimeout(150); d = await day();
+  ok(!d.test || !d.test.flex, 'Deshacer lo quita');
+  await p.fill('#as-in-hoy', '3,2 km en 14:30'); await p.keyboard.press('Enter'); await p.waitForTimeout(150); d = await day();
+  ok(d.test && d.test.run === '14:30', 'Enter envía; «3,2 km en 14:30» va al 3.200 m');
+  await p.fill('#as-in-hoy', 'me pesé 68,4 y llevo 6 vasos de agua'); await p.click('[data-assend="hoy"]'); await p.waitForTimeout(150); d = await day();
+  ok(d.peso === '68,4' && d.water === 6, 'peso con decimal y agua: ' + d.peso + ' / ' + d.water);
+  await p.fill('#as-in-hoy', 'jugué pichanga 60 min, 2 goles y 1 asistencia'); await p.click('[data-assend="hoy"]'); await p.waitForTimeout(150); d = await day();
+  ok(d.pichanga && d.pichanga.min === '60' && d.pichanga.goles === '2' && d.pichanga.asist === '1', 'pichanga con goles y asistencias');
+  ok((await p.$eval('.aslast', e => e.textContent)).split('Pichanga:').length === 2, 'la pichanga sale una sola vez en la respuesta');
+  await p.click('.chatfab'); await p.waitForTimeout(100);
+  ok(await p.locator('#chat:not([hidden])').count() === 1, 'el botón 🤖 abre el asistente');
+  await p.click('[data-asq="¿Qué me toca mañana?"]'); await p.waitForTimeout(150);
+  t = await p.$eval('#chl', e => e.lastElementChild.textContent);
+  ok(/martes 10 te toca/i.test(t) && t.includes('Pecho'), 'responde qué toca mañana: ' + t.slice(0, 80));
+  await p.fill('#as-in', '¿mi récord de flexiones?'); await p.keyboard.press('Enter'); await p.waitForTimeout(150);
+  t = await p.$eval('#chl', e => e.lastElementChild.textContent);
+  ok(t.includes('Todavía no tienes flexiones') && t.includes('3.200 m: 14:30'), 'récords: no hay flexiones (se deshizo) y muestra las otras: ' + t.slice(0, 120));
+  await p.fill('#as-in', 'cuéntame un chiste'); await p.keyboard.press('Enter'); await p.waitForTimeout(150);
+  ok((await p.$eval('#chl', e => e.lastElementChild.textContent)).includes('No te entendí'), 'sin IA explica qué entiende');
+  await p.click('[data-chatclose]'); await p.waitForTimeout(80);
+  ok(await p.locator('#chat[hidden]').count() === 1, 'se cierra');
+  ok(errs.length === 0, 'sin errores: ' + errs.join(' | '));
+  await ctx.close(); }
+// con Claude (en la app de Claude): lo que no entiende se lo pregunta, y Claude puede anotar
+{ const ctx = await browser.newContext({ viewport: { width: 390, height: 1400 } }); const errs = [];
+  await ctx.addInitScript(() => { window.__NOLOCK = false; window.__asked = [];
+    const sample = Object.assign(async () => ({ text: 'x' }), { json: async (turns) => { window.__asked.push(turns); return { respuesta: 'Bien ahí, Diego: sigue así.', anotar: { barras: 7 } }; } });
+    window.claude = { use: async n => n === 'sample' ? sample : null };
+    if (!localStorage.getItem('bitacora-buzo-v1')) localStorage.setItem('bitacora-buzo-v1', JSON.stringify({ cfg: { start: '2026-11-03', welcome: true }, days: {}, pend: {} })); });
+  const p = await ctx.newPage(); p.on('pageerror', e => errs.push(e.message)); await p.clock.install({ time: new Date('2026-11-09T13:00:00') }); await p.goto(URL); await p.waitForTimeout(400);
+  await p.click('.chatfab'); await p.waitForTimeout(100);
+  ok((await p.$eval('.chd', e => e.textContent)).includes('Con Claude'), 'dice que usa Claude');
+  await p.fill('#as-in', 'hoy me salieron siete dominadas seguidas, ¿voy bien para la prueba?'); await p.keyboard.press('Enter'); await p.waitForTimeout(400);
+  const last = await p.$eval('#chl', e => e.lastElementChild.textContent);
+  const asked = await p.evaluate(() => window.__asked.length && window.__asked[0][0].content);
+  ok(last.includes('Bien ahí') && last.includes('Barras: 7'), 'responde Claude y anota lo que entendió: ' + last.slice(0, 120));
+  ok(asked && asked.includes('Metas de la próxima prueba') && asked.includes('nunca apnea solo'), 'a Claude le llegan tus datos y las reglas de seguridad');
+  const d = await p.evaluate(() => JSON.parse(localStorage.getItem('bitacora-buzo-v1')).days['2026-11-09']);
+  ok(d && d.test && d.test.barras === '7', 'quedó en la prueba');
+  ok(errs.length === 0, 'sin errores: ' + errs.join(' | '));
+  await ctx.close(); }
+
 await browser.close();
 console.log(`\n${passes} correctas, ${fails} fallidas`);
 process.exit(fails ? 1 : 0);

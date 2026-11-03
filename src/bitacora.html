@@ -78,7 +78,12 @@ details.hw p{margin:6px 0 0;font-size:14px}
 .glance{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:6px;font-size:15px}
 .glance b{font-family:var(--f-mono);font-size:13px}
 .runlog{margin-top:10px;padding:10px 12px;border:1px dashed var(--line);border-radius:6px;display:flex;flex-direction:column;gap:8px}
-.rlf{display:grid;grid-template-columns:repeat(auto-fit,minmax(90px,1fr));gap:8px}.rlf.c4{grid-template-columns:repeat(4,minmax(0,1fr))}.rlf.c4 .lbl{font-size:10.5px;letter-spacing:.06em}.foto .row{margin-top:8px}.foto .fbtns{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px;margin-top:10px}.foto .fbtns .btn{display:flex;align-items:center;justify-content:center;white-space:nowrap;margin:0}.ocrlib{display:flex;justify-content:space-between;align-items:center;gap:10px}.runlog label.btn{white-space:nowrap}.ocrtxt{white-space:pre-wrap;font-size:12px;color:var(--muted);margin:6px 0;font-family:var(--f-mono)}.ocrlib{margin-top:10px}.spin{display:inline-block;width:12px;height:12px;border:2px solid var(--line);border-top-color:var(--accent);border-radius:50%;animation:spin .8s linear infinite;vertical-align:-1px;margin-right:4px}@keyframes spin{to{transform:rotate(360deg)}}.pckm{display:flex;flex-direction:column;gap:2px;background:var(--paper2);border:1px solid var(--line);border-radius:14px;padding:10px 12px;margin:10px 0}.pckm b{font-family:var(--f-mono);font-size:20px;color:var(--accent)}.pckm small{color:var(--muted);font-size:12.5px}
+.rlf{display:grid;grid-template-columns:repeat(auto-fit,minmax(90px,1fr));gap:8px}.rlf.c4{grid-template-columns:repeat(4,minmax(0,1fr))}.rlf.c4 .lbl{font-size:10.5px;letter-spacing:.06em}.ascard{margin-top:8px}.asrow{display:flex;gap:8px;align-items:flex-end}.asrow textarea,.chi textarea{flex:1;min-height:46px;max-height:140px;resize:none;font-size:16px;font-family:var(--f-body);background:var(--paper2);border:1px solid var(--line);color:var(--ink);border-radius:14px;padding:11px 13px;line-height:1.35}.asrow textarea::placeholder,.chi textarea::placeholder{color:var(--muted)}.asrow .btn,.chi .btn{min-width:48px;height:44px;margin:0}.aslast{margin-top:10px;background:var(--paper2);border:1px solid var(--line);border-radius:14px;padding:10px 12px;font-size:14.5px;line-height:1.45}.aslast small{color:var(--muted)}.ascard>.lnk{margin-top:8px;display:inline-block}
+.chatfab{position:fixed;right:16px;bottom:calc(138px + env(safe-area-inset-bottom));z-index:30;width:46px;height:46px;border-radius:50%;border:1px solid var(--line);background:color-mix(in srgb,var(--paper) 85%,transparent);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);font-size:24px;box-shadow:0 4px 14px rgba(0,0,0,.35)}
+.chat{position:fixed;inset:0;z-index:60;background:var(--bg);display:flex;flex-direction:column;padding:env(safe-area-inset-top) 0 env(safe-area-inset-bottom)}.chat[hidden]{display:none}.chd{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:14px 16px;border-bottom:1px solid var(--line)}.chd .foot{display:block;margin:2px 0 0}.chl{flex:1;overflow-y:auto;padding:14px 16px;display:flex;flex-direction:column;gap:10px}
+.cmsg{max-width:88%;display:flex;flex-direction:column;gap:4px}.cmsg.me{align-self:flex-end;align-items:flex-end}.cmsg .chb{padding:10px 13px;border-radius:16px;font-size:15px;line-height:1.45;background:var(--paper2);border:1px solid var(--line);overflow-wrap:anywhere}.cmsg.me .chb{background:color-mix(in srgb,var(--accent) 22%,var(--paper2));border-color:color-mix(in srgb,var(--accent) 45%,var(--line))}.cmsg small{color:var(--muted)}.chat .chq .seg{font-size:14px}.cmsg .lnk{font-size:13px}
+.chq{display:flex;gap:6px;overflow-x:auto;padding:6px 16px;scrollbar-width:none}.chq .seg{white-space:nowrap;flex:none}.chi{display:flex;gap:8px;padding:8px 16px 12px;border-top:1px solid var(--line);align-items:flex-end}
+.foto .row{margin-top:8px}.foto .fbtns{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px;margin-top:10px}.foto .fbtns .btn{display:flex;align-items:center;justify-content:center;white-space:nowrap;margin:0}.ocrlib{display:flex;justify-content:space-between;align-items:center;gap:10px}.runlog label.btn{white-space:nowrap}.ocrtxt{white-space:pre-wrap;font-size:12px;color:var(--muted);margin:6px 0;font-family:var(--f-mono)}.ocrlib{margin-top:10px}.spin{display:inline-block;width:12px;height:12px;border:2px solid var(--line);border-top-color:var(--accent);border-radius:50%;animation:spin .8s linear infinite;vertical-align:-1px;margin-right:4px}@keyframes spin{to{transform:rotate(360deg)}}.pckm{display:flex;flex-direction:column;gap:2px;background:var(--paper2);border:1px solid var(--line);border-radius:14px;padding:10px 12px;margin:10px 0}.pckm b{font-family:var(--f-mono);font-size:20px;color:var(--accent)}.pckm small{color:var(--muted);font-size:12.5px}
 .rlv{margin:0;font-size:14px;color:var(--muted)}
 .rlv.ok{color:var(--ok);font-weight:600}.rlv.warn{color:var(--warn);font-weight:600}.rlv.bad{color:var(--bad);font-weight:600}
 .savechip{display:block;margin-top:4px;font-family:var(--f-label);font-size:12px;letter-spacing:.04em;text-transform:none;color:var(--muted);white-space:nowrap}
@@ -1973,7 +1978,7 @@ function runVerdict(g,r){
 const OCR_LBL=[["km",/distan|kil[oó]metr|kilometers|\bkms?\b(?!\s*\/)|^km$/i],["t",/duraci|duration|tiempo|\btime\b|moving|transcurr/i],["pace",/ritmo|pace|min\s*\/\s*km|\/\s*km/i],["kcal",/calor|kcal|\bcal\b/i],["hr",/frecuencia|heart|\bbpm\b|\bppm\b|\blpm\b|\bfc\b|pulso|pulsaciones/i],["elev",/elevaci|elevation|desnivel|altitud|ascenso/i]];
 const OCR_TOK=/(\d{1,2}:\d{2}:\d{2})|(\d{1,2}\s?['’′]\s?\d{2}\s?(?:["”″]|'')?)|(\d{1,3}:\d{2})|(\d{1,3}[.,]\d{1,2})(?!\d)|(\d{1,5})/g;
 function parseWorkout(raw){
-  let lines=String(raw||"").replace(/\r/g,"").split("\n").map(l=>l.replace(/(?<=\d)[oO]|[oO](?=\d)/g,"0").replace(/(?<=\d)\s*[;](?=\d{2}\b)/g,":").trim()).filter(Boolean);
+  let lines=String(raw||"").replace(/\r/g,"").split("\n").map(l=>l.replace(/(\d)[oO]/g,"$10").replace(/[oO](\d)/g,"0$1").replace(/(\d)\s*;(?=\d{2}\b)/g,"$1:").trim()).filter(Boolean);
   // barra de estado del teléfono (hora, señal, batería): fuera
   if(lines.length>2&&/^\d{1,2}:\d{2}\b/.test(lines[0])&&!/[a-zá-ú]{4,}/i.test(lines[0].replace(/^\d{1,2}:\d{2}/,"")))lines=lines.slice(1);
   const toS=s=>{const m=String(s).replace(/\s/g,"").match(/^(\d+)[:'’′](\d{2})(?::(\d{2}))?/);return m?(m[3]!=null?+m[1]*3600+ +m[2]*60+ +m[3]:+m[1]*60+ +m[2]):NaN};
@@ -2031,7 +2036,7 @@ const kmS=x=>x==null||x===""?"":String(Math.round(+x*100)/100).replace(".",",");
 function fotoHTML(d,k,dd,plan){const o=S.ocr&&S.ocr.k===k?S.ocr:null,lib=(dd.runlog||{}).libre;
   const fin=`<input type="file" accept="image/*" id="ocr-file" data-ocrfile="" hidden>`;
   const libre=lib&&(lib.km||lib.t)?`<div class="srow ocrlib"><span>🏃 <b>Carrera extra</b>: ${esc(lib.km?lib.km+" km":"")}${lib.km&&lib.t?" · ":""}${esc(lib.t||"")}${(()=>{const t=parseDur(lib.t),km=numv(lib.km);return t>0&&km>0?" · "+fmtT(Math.round(t/km))+"/km":""})()}${lib.kcal?" · "+esc(lib.kcal)+" kcal":""}</span><button class="lnk" data-libredel>Quitar</button></div>`:"";
-  if(!o)return `<div class="card foto" id="sec-foto"><div class="row" style="justify-content:space-between;align-items:center;flex-wrap:nowrap;gap:8px"><span><span class="lbl">📷 Anotar con foto</span><br><span class="foot">La captura de adidas, Strava o el reloj: la app lee km, tiempo y ritmo y los anota sola.</span></span></div>
+  if(!o)return `<div class="card foto" id="sec-foto"><span class="lbl">💬 Cuéntale o pregúntale a la app</span>${asCardHTML(k)}<span class="foot" style="display:block;margin-top:10px">📷 ¿Tienes la captura de adidas, Strava o el reloj? Súbela y se anota sola.</span>
     <div class="fbtns"><label class="btn main sm" for="ocr-file">📷 Subir captura</label><button class="btn sm" data-ocrpaste>✍️ Pegar texto</button></div>${fin}${libre}</div>`;
   if(o.stage==="leyendo")return `<div class="card foto" id="sec-foto"><span class="lbl">📷 Leyendo tu foto…</span><p class="foot" style="margin:6px 0 0"><span class="spin"></span> La primera vez tarda un poco más (baja el lector, unos 10 MB, y queda guardado). Después es al tiro.</p></div>`;
   const paste=`<div class="field"><label class="lbl" for="ocr-txt">Pega aquí el texto de la captura</label><textarea id="ocr-txt" rows="4" placeholder="En Fotos abre la captura, mantén apretado un número → «Seleccionar todo» → «Copiar», y pégalo aquí."></textarea></div><div class="row"><button class="btn main sm" data-ocrtxt>Leer texto</button><button class="btn sm" data-ocrcancel>Cancelar</button></div>`;
@@ -2047,14 +2052,168 @@ function fotoHTML(d,k,dd,plan){const o=S.ocr&&S.ocr.k===k?S.ocr:null,lib=(dd.run
    <div class="row" style="margin-top:10px"><button class="btn main" data-ocrsave style="flex:2">✓ Guardar</button><button class="btn" data-ocrcancel style="flex:1">Cancelar</button></div>
    ${o.dest&&o.dest!=="libre"&&o.dest!=="pichanga"?`<p class="foot" style="margin:6px 0 0">Se anotan los km y el tiempo en esa sesión y queda marcada como hecha.</p>`:o.dest==="pichanga"?`<p class="foot" style="margin:6px 0 0">Los km pasan a la pichanga (km reales); goles y asistencias los anotas tú.</p>`:`<p class="foot" style="margin:6px 0 0">Queda como carrera extra del día y suma a tus minutos de cardio.</p>`}
    ${o.txt?`<details class="rsub"><summary>Texto que leí</summary><pre class="ocrtxt">${esc(o.txt.trim())}</pre></details>`:""}</div>`}
-function ocrSave(){const o=S.ocr;if(!o)return;const k=o.k,d=parse(k),p=planFor(d),dd=Store.days[k]||{},v=o.v||{};
-  if(!(v.km>0||v.t>0)){toast("Falta el tiempo o los km.");return}
-  const km=v.km>0?kmS(v.km):"",t=v.t>0?fmtDur(v.t):"",ex={};if(v.kcal>0)ex.kcal=String(v.kcal);if(v.hr>0)ex.hr=String(v.hr);
-  if(o.dest==="pichanga"){const m=Object.assign({},dd.pichanga);if(km)m.km=km;if(v.t>0&&!(numv(m.min)>0))m.min=String(Math.round(v.t/60));Store.setDay(k,{pichanga:m});S.ocr=null;render();toast(`🥅 Pichanga: ${km?km+" km":""}${km&&t?" · ":""}${t} anotado.`);return}
-  const rl=Object.assign({},dd.runlog),dest=o.dest||"libre";rl[dest]=Object.assign({},rl[dest],km?{km}:{},t?{t}:{},ex);const patch={runlog:rl};
+// una carrera (km, tiempo, calorías) al lugar que le toca: el trote del día (queda hecho), la pichanga o carrera extra
+function runPatch(k,p,dd,dest,v){const km=v.km>0?kmS(v.km):"",t=v.t>0?fmtDur(v.t):"",ex={};if(v.kcal>0)ex.kcal=String(v.kcal);if(v.hr>0)ex.hr=String(v.hr);
+  if(dest==="pichanga"){const m=Object.assign({},dd.pichanga);if(km)m.km=km;if(v.t>0&&!(numv(m.min)>0))m.min=String(Math.round(v.t/60));return {patch:{pichanga:m},donde:"la pichanga de hoy",tk:null}}
+  dest=dest||"libre";const rl=Object.assign({},dd.runlog);rl[dest]=Object.assign({},rl[dest],km?{km}:{},t?{t}:{},ex);const patch={runlog:rl};
   const tk=dest!=="libre"&&p?p.tasks.find(x=>x.id===dest):null;
   if(tk&&!taskDone(dd,tk)){const c=Object.assign({},dd.checks),sets=Object.assign({},dd.sets),tp=Object.assign({},dd.tprev);tp[tk.id]={};tk.blocks.forEach((bb,i)=>{tp[tk.id][setKey(tk,i)]=sets[setKey(tk,i)]||0;sets[setKey(tk,i)]=bb.s});c[tk.id]=true;Object.assign(patch,{checks:c,sets,tprev:tp});if((dd.nope||{})[tk.id])patch.nope=Object.assign({},dd.nope,{[tk.id]:false});if(dd.status==="fail")patch.status=""}
-  Store.setDay(k,patch);S.ocr=null;render();toast(`✅ ${km?km+" km":""}${km&&t?" en ":""}${t} anotado${tk?" en «"+tk.t+"» y marcado como hecho":" como carrera extra"}.`)}
+  return {patch,donde:tk?`«${tk.t}» (queda hecho)`:"carrera extra de hoy",tk}}
+function ocrSave(){const o=S.ocr;if(!o)return;const k=o.k,d=parse(k),p=planFor(d),dd=Store.days[k]||{},v=o.v||{};
+  if(!(v.km>0||v.t>0)){toast("Falta el tiempo o los km.");return}
+  const km=v.km>0?kmS(v.km):"",t=v.t>0?fmtDur(v.t):"",r=runPatch(k,p,dd,o.dest,v);Store.setDay(k,r.patch);S.ocr=null;render();
+  toast(o.dest==="pichanga"?`🥅 Pichanga: ${km?km+" km":""}${km&&t?" · ":""}${t} anotado.`:`✅ ${km?km+" km":""}${km&&t?" en ":""}${t} anotado${r.tk?" en «"+r.tk.t+"» y marcado como hecho":" como carrera extra"}.`)}
+/* =================== ASISTENTE: le cuentas lo que hiciste (lo anota solo) o le preguntas (responde con tus datos) =================== */
+// Sin internet entiende lo más común; en la app de Claude, lo que no entiende se lo pregunta a Claude (con tus datos).
+const ASK_LS="bit-chat";
+let CHAT=(()=>{try{const v=JSON.parse(localStorage.getItem(ASK_LS)||"[]");return Array.isArray(v)?v.filter(m=>m&&typeof m.t==="string").slice(-40):[]}catch(e){return []}})();
+const chatSave=()=>{try{localStorage.setItem(ASK_LS,JSON.stringify(CHAT.slice(-40).map(m=>({r:m.r,t:m.t,k:m.k,ts:m.ts}))))}catch(e){}};
+const noAc=s=>String(s||"").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,"").replace(/[¿?¡!]/g," ");
+let AI=null,AIOFF=false;
+if(typeof window!=="undefined"&&window.claude&&typeof window.claude.use==="function")window.claude.use("sample").then(s=>{AI=s||null;if(AI&&S.chatOpen)renderChat()}).catch(()=>{});
+const aiOn=()=>!!AI&&!AIOFF;
+// tiempo dentro de una frase: 14:49 · 1:05:10 · 14 minutos 49 segundos · 25 min
+function asTime(c,minOk){let m=c.match(/(\d{1,2}):(\d{2}):(\d{2})/);if(m)return +m[1]*3600+ +m[2]*60+ +m[3];
+  m=c.match(/(\d{1,2})\s*[:'’]\s*(\d{2})(?!\d)/);if(m)return +m[1]*60+ +m[2];
+  m=c.match(/(\d{1,3})\s*min(?:utos?)?\s*(?:y\s*|con\s*)?(\d{1,2})\s*(?:s\b|seg)/);if(m)return +m[1]*60+ +m[2];
+  if(minOk){m=c.match(/(\d{1,3})\s*min(?:utos?)?\b/);if(m)return +m[1]*60}return null}
+// distancia dentro de una frase: 3,2 km · 3 kilómetros 2 · 3.200 m · 5 km
+function asKm(c){let m=c.match(/(\d{1,2})\s*(?:km|kms|kilometros?)\s*(?:y\s*)?(\d{1,3})\b(?!\s*(?:min|seg|s\b|:|goles?|asist))/);if(m)return +m[1]+ +m[2]/Math.pow(10,m[2].length);
+  m=c.match(/(\d{1,2}[.,]\d{1,3})\s*(?:km|k\b|kms|kilometros?)/);if(m)return parseFloat(m[1].replace(",","."));
+  m=c.match(/(\d{1,2})\s*(?:km|kms|kilometros?)\b/);if(m)return +m[1];
+  m=c.match(/\b(\d[.,]\d{3}|\d{3,5})\s*(?:m|mts|metros)\b/);if(m){const v=+m[1].replace(/[.,]/,"");if(v>=400)return v/1000}
+  return /\b3[.,]?200\b/.test(c)?3.2:null}
+// número de repeticiones sin confundirlo con «en 2 minutos»
+const asNum=c=>{const x=c.replace(/(?:en\s*)?\d{1,3}\s*(?:min(?:utos?)?|seg(?:undos?)?)\b/g," ").replace(/\d{1,2}:\d{2}/g," ").match(/\b(\d{1,3})\b/);return x?+x[1]:null};
+const asDec=c=>{const x=c.match(/\b(\d{1,3}(?:[.,]\d{1,2})?)\b/);return x?parseFloat(x[1].replace(",",".")):null};
+// lo que hiciste hoy en adidas (si dices «ese tiempo» se usa la carrera anotada hoy)
+function runToday(k){const rl=(Store.days[k]||{}).runlog||{};let best=null;Object.keys(rl).forEach(id=>{const r=rl[id]||{},t=parseDur(r.t),km=numv(r.km);if(t>0&&km>0&&(!best||Math.abs(km-3.2)<Math.abs(best.km-3.2)))best={t,km}});return best}
+// a dónde va cada número: prueba del plan, simulacro, mini-prueba o (en un día normal) prueba libre
+function asTestKind(p){return p&&p.test?"test":p?(resultsKind(p)||"sim"):"sim"}
+const ASL={flex:"Flexiones",abd:"Abdominales",barras:"Barras",salto:"Salto largo",run:"3.200 m",swim:"Nado 50 m",sent:"Sentadillas",burp:"Burpees"};
+function asParse(txt,k){const raw=String(txt||""),items=[];let ctx="";const p=planFor(parse(k)),kind=asTestKind(p);
+  const cls=noAc(raw).replace(/(\d),(\d)/g,"$1#$2").split(/[,;\n]+|\.\s+|\s+(?:y|e|ademas|tambien|despues)\s+/).map(s=>s.trim().replace(/#/g,",")).filter(Boolean);
+  cls.forEach(c=>{const one=/\b1\s*min(uto)?\b/.test(c);
+    if(/pichanga/.test(c))ctx="pichanga";else if(/partido/.test(c))ctx="match";
+    if(/flexion|lagartija|push ?up/.test(c)){const n=asNum(c);if(n>0&&n<300)items.push({f:"test",kind,key:"flex",v:n,one})}
+    else if(/abdominal|abdos?\b|\babs\b/.test(c)){const n=asNum(c);if(n>0&&n<400)items.push({f:"test",kind,key:"abd",v:n,one})}
+    else if(/barras?\b|dominada|pull ?up/.test(c)&&!/\bkg\b/.test(c)){const n=asNum(c);if(n>0&&n<80)items.push({f:"test",kind,key:"barras",v:n})}
+    else if(/sentadilla/.test(c)){const n=asNum(c);if(n>0&&n<300)items.push({f:"test",kind,key:"sent",v:n})}
+    else if(/burpee/.test(c)){const n=asNum(c);if(n>0&&n<200)items.push({f:"test",kind,key:"burp",v:n})}
+    else if(/salto/.test(c)){let n=asDec(c);if(n!=null){if(n<4)n=Math.round(n*100);if(n>50&&n<400)items.push({f:"test",kind,key:"salto",v:Math.round(n)})}}
+    else if(/\bnad|natacion|piscina/.test(c)){const t=asTime(c,false);if(t)items.push({f:"test",kind,key:"swim",v:fmtT(t)})}
+    else if(/corr|trote|trot|\bkm\b|kms|kilometr|carrera|3[.,]?200|\d\s*metros/.test(c)&&!/gol|asist/.test(c)){let km=asKm(c),t=asTime(c,true),fromRun=false;
+      if(!t&&(/ese tiempo|el tiempo|la foto|captura|adidas|lo que corri|reloj/.test(c)||km)){const r=runToday(k);if(r){t=r.t;if(!km||Math.abs(r.km-km)>0.25)km=km||r.km;fromRun=r}}
+      if(t&&km&&Math.abs(km-3.2)<=0.25&&(kind==="test"||kind==="sim")){const src=fromRun||{t,km};const t32=Math.round(src.t*3.2/src.km);items.push({f:"test",kind,key:"run",v:fmtT(t32),nota:Math.abs(src.km-3.2)>0.01?`${fmtT(src.t)} en ${kmS(src.km)} km = ${fmtT(t32)} los 3,2 km a tu ritmo`:""})}
+      else if(!t&&km&&Math.abs(km-3.2)<=0.25&&(kind==="test"||kind==="sim"))items.push({f:"ask",msg:"Me falta el tiempo de los 3,2 km: sube la captura de adidas con 📷 (y después dime «ese tiempo») o escríbeme «3,2 km en 14:24»."})
+      else if(t||km)items.push({f:"run",km,t})}
+    else if(/pes[eo]|peso|pesaba|balanza/.test(c)){const n=asDec(c);if(n>=30&&n<=200)items.push({f:"peso",v:n})}
+    else if(/vaso|agua|litro/.test(c)){let n=asDec(c);if(n!=null){if(/litro|\bl\b/.test(c))n=Math.round(n*1000/vasoMl());if(n>0&&n<=40)items.push({f:"agua",v:Math.round(n),suma:/otro|mas\b|llevo/.test(c)?0:1})}}
+    else if(/acoste|dormi|desperte|levante/.test(c)){const hh=[...c.matchAll(/(\d{1,2})(?::(\d{2}))?/g)].map(m=>(+m[1])+":"+(m[2]||"00"));
+      if(/acoste|dormi a las/.test(c)&&hh[0])items.push({f:"sleep",bed:hh[0]});if(/desperte|levante/.test(c)){const w=/acoste|dormi a las/.test(c)?hh[1]:hh[0];if(w)items.push({f:"sleep",wake:w})}}
+    else if(/cintura|brazo|pecho|muslo/.test(c)){const re=/(cintura|brazo|pecho|muslo)[^\d]{0,12}(\d{2,3}(?:[.,]\d)?)/g;let m;while((m=re.exec(c)))items.push({f:"med",key:m[1],v:parseFloat(m[2].replace(",","."))})}
+    if(ctx&&/gol|asist|min/.test(c)&&!/flexion|abdominal|corr|trote/.test(c)){const g=c.match(/(\d{1,2})\s*gol/),a=c.match(/(\d{1,2})\s*asist/),mn=c.match(/(\d{1,3})\s*min/),o={f:ctx};if(g)o.goles=+g[1];if(a)o.asist=+a[1];if(mn)o.min=+mn[1];if(g||a||mn||/pichanga|partido/.test(c)){const lst=items.find(x=>x.f===ctx);if(lst)Object.assign(lst,o);else items.push(o)}}
+    else if(ctx&&/pichanga|partido/.test(c)&&!items.some(x=>x.f===ctx))items.push({f:ctx})});
+  return items}
+// guarda todo junto y devuelve qué se guardó, dónde, y cómo deshacerlo
+function asApply(items,k){const d=parse(k),p=planFor(d),dd=Store.days[k]||{},patch={},lines=[],why=[];const T=(n)=>{if(!patch[n])patch[n]=Object.assign({},dd[n]);return patch[n]};
+  const nombre={test:p&&p.test?`la ${p.title||"prueba"} de ${diffDays(d,today())===0?"hoy":fmt(d)}`:"la prueba",sim:p&&resultsKind(p)==="sim"?"el simulacro de hoy":"tus pruebas (prueba libre de hoy)",mini:"la mini-prueba de hoy"};
+  items.forEach(it=>{
+    if(it.f==="test"){let kk=it.kind;if(kk==="mini"&&!["barras","flex","abd","sent","burp","run"].includes(it.key))kk="sim";const r=T(kk);r[it.key]=String(it.v);lines.push(`${ASL[it.key]}${kk!=="mini"&&(it.key==="flex"||it.key==="abd")?" 2 min":kk==="mini"&&(it.key==="flex"||it.key==="abd")?" 1 min":""}: <b>${esc(it.v)}${it.key==="salto"?" cm":""}</b>${it.nota?` <small>(${esc(it.nota)})</small>`:""} → ${esc(nombre[kk])}`);why.push(asJudge(it.key,it.v,p,k))}
+    else if(it.f==="run"){const dest=ocrDestDef(p,dd),v={km:it.km,t:it.t},rp=runPatch(k,p,Object.assign({},dd,patch),dest,v);Object.assign(patch,rp.patch);lines.push(`Carrera: <b>${esc([it.km?kmS(it.km)+" km":"",it.t?fmtDur(it.t):""].filter(Boolean).join(" en "))}</b>${it.km&&it.t?` · ${fmtT(Math.round(it.t/it.km))}/km`:""} → ${esc(rp.donde)}`)}
+    else if(it.f==="peso"){patch.peso=String(it.v).replace(".",",");lines.push(`Peso: <b>${esc(patch.peso)} kg</b> → Peso y medidas`)}
+    else if(it.f==="agua"){const cur=+(patch.water!=null?patch.water:dd.water)||0,n=it.suma===0?Math.min(40,cur+it.v):it.v;patch.water=n;lines.push(`Agua: <b>${n} vasos</b> en total hoy`)}
+    else if(it.f==="sleep"){const s=T("sleep");if(it.bed)s.bed=it.bed.padStart(5,"0");if(it.wake)s.wake=it.wake.padStart(5,"0");lines.push(`Sueño: ${it.bed?"me acosté "+esc(it.bed):""}${it.bed&&it.wake?" · ":""}${it.wake?"desperté "+esc(it.wake):""}`)}
+    else if(it.f==="med"){if(p&&p.test){T("test")[it.key]=String(it.v).replace(".",",")}else{T("medidas")[it.key]=String(it.v).replace(".",",")}lines.push(`${it.key[0].toUpperCase()+it.key.slice(1)}: <b>${esc(String(it.v).replace(".",","))} cm</b>`)}
+    else if(it.f==="pichanga"){const m=T("pichanga");m.on=true;if(it.min)m.min=String(it.min);else if(!(numv(m.min)>0))m.min=pchDef().min;if(it.goles!=null)m.goles=String(it.goles);if(it.asist!=null)m.asist=String(it.asist);lines.push(`Pichanga: <b>${esc(m.min)} min</b>${m.goles?` · ${esc(m.goles)} goles`:""}${m.asist?` · ${esc(m.asist)} asist.`:""} · ≈ ${fkm(pchKm(m))} km`)}
+    else if(it.f==="match"){const m=T("match");if(it.min)m.min=String(it.min);if(it.goles!=null)m.goles=String(it.goles);if(it.asist!=null)m.asist=String(it.asist);if(!m.min&&!m.goles&&!m.asist)m.min="90";lines.push(`Partido: ${m.min?esc(m.min)+" min":""}${m.goles?` · ${esc(m.goles)} goles`:""}${m.asist?` · ${esc(m.asist)} asist.`:""}`)}});
+  if(!lines.length)return null;
+  const prev={};Object.keys(patch).forEach(f=>{prev[f]=dd[f]===undefined?null:JSON.parse(JSON.stringify(dd[f]))});
+  Store.setDay(k,patch);return {lines,why:why.filter(Boolean),prev}}
+// razonamiento: compara con la meta de la próxima prueba y con tu mejor marca anterior
+function asJudge(key,v,p,k){const w=p&&p.w!=null?p.w:(locate(parse(k)).w||0),gw=nextGoalWeek(w===0?1:w+(p&&p.test?1:0)),g=(GOALS[gw]||{})[key];let prevB=null;
+  Object.keys(Store.days).filter(x=>x<k).forEach(x=>{[Store.days[x].test,Store.days[x].sim].forEach(t=>{if(!t||!t[key])return;const n=key==="run"||key==="swim"?toSec(t[key]):cnt(t[key]);if(!(n>0))return;if(prevB==null||(key==="run"||key==="swim"?n<prevB:n>prevB))prevB=n})});
+  const tm=key==="run"||key==="swim",val=tm?toSec(v):+v;if(!(val>0))return "";let s="";
+  if(g!=null){const gv=tm?toSec(g):+g;s=tm?(val<=gv?`✅ ${ASL[key]} ${fmtT(val)}: ya estás bajo la meta de la semana ${gw} (${g}).`:`${ASL[key]} ${fmtT(val)}: te faltan ${Math.round(val-gv)} s para la meta de la semana ${gw} (${g}).`):(val>=gv?`✅ ${ASL[key]} ${val}: ya cumples la meta de la semana ${gw} (${gv}).`:`${ASL[key]} ${val}: te faltan ${gv-val} para la meta de la semana ${gw} (${gv}).`)}
+  if(prevB!=null){const d=tm?prevB-val:val-prevB;s+=d>0?` Mejoraste ${tm?d+" s":d} sobre tu mejor marca (${tm?fmtT(prevB):prevB}). 🏆`:d<0?` Tu mejor marca sigue siendo ${tm?fmtT(prevB):prevB}.`:" Igualaste tu mejor marca."}
+  return s.trim()}
+// preguntas que la app responde sola con tus datos
+const DIAS_N=["lunes","martes","miercoles","jueves","viernes","sabado","domingo"];
+function asDate(c){const td=today();if(/pasado manana/.test(c))return addDays(td,2);if(/manana/.test(c))return addDays(td,1);if(/ayer/.test(c))return addDays(td,-1);const i=DIAS_N.findIndex(n=>c.includes(n));if(i>=0){const cur=(td.getDay()+6)%7;return addDays(td,(i-cur+7)%7||7)}return td}
+function planTxt(d){const p=planFor(d);if(!p)return "Ese día no está en el plan.";const dd=Store.days[iso(d)]||{},isT=diffDays(d,today())===0;
+  const tr=p.tasks.filter(t=>t.kind==="fuerza"||t.kind==="carrera"||t.lake||t.kind==="prueba"||t.id==="fri"||/prueba|simulacro/i.test(t.t));
+  const det=tr.slice(0,4).map(t=>{const ex=t.kind==="fuerza"?t.blocks.filter((b,i)=>i>0&&!b.opt&&!/^Estirar|^Prevenci/.test(b.n)).slice(0,5).map(b=>`${b.n} ${b.p}`).join(", "):"";return `• <b>${esc(t.t)}</b>${t.h?" ("+esc(t.h)+")":""}${ex?": "+esc(ex):""}${isT&&taskDone(dd,t)?" ✅":""}`}).join("<br>");
+  return `${isT?"Hoy":dayName(d)+" "+d.getDate()} te toca <b>${esc(p.title)}</b>.${det?"<br>"+det:""}`}
+function asBest(key){let b=null,bk="";const tm=key==="run"||key==="swim";Object.keys(Store.days).forEach(x=>{[Store.days[x].test,Store.days[x].sim].forEach(t=>{if(!t||!t[key])return;const n=tm?toSec(t[key]):cnt(t[key]);if(n>0&&(b==null||(tm?n<b:n>b))){b=n;bk=x}})});return b==null?null:{v:tm?fmtT(b):b,k:bk}}
+function asAnswer(q){const c=noAc(q),td=today(),tk=iso(td),p=planFor(td)||{tasks:[]},dd=Store.days[tk]||{};
+  if(/(que|q)\s+(me\s+)?toca|que (hago|entreno)|que (hay|tengo) (hoy|manana|el)|plan de (hoy|manana)|entrenamiento de (hoy|manana)/.test(c))return planTxt(asDate(c));
+  if(/record|mejor marca|mi mejor|maximo|cuantas? .*(he hecho|hice) mas/.test(c)){const ks=Object.keys(ASL).filter(x=>new RegExp({flex:"flexion",abd:"abdominal",barras:"barra|dominada",salto:"salto",run:"3\\.?200|corr|carrera|3 ?km",swim:"nado|natacion",sent:"sentadilla",burp:"burpee"}[x]).test(c));
+    const row=x=>{const b=asBest(x);return b?`• ${ASL[x]}: <b>${b.v}</b> (${fmt(parse(b.k))})`:null},all=["flex","abd","barras","salto","run","swim"].map(row).filter(Boolean),list=(ks.length?ks:[]).map(row).filter(Boolean);
+    if(list.length)return "Tus mejores marcas:<br>"+list.join("<br>");if(!ks.length&&all.length)return "Tus mejores marcas:<br>"+all.join("<br>");
+    return `Todavía no tienes ${ks.length?ks.map(x=>ASL[x].toLowerCase()).join(" ni "):"pruebas"} anotadas. Cuéntame cuando lo hagas, por ejemplo: «hice 40 flexiones en 2 minutos».${all.length?"<br>Tus otras marcas:<br>"+all.join("<br>"):""}`}
+  if(/meta|cuanto me falta|proxima prueba|siguiente prueba/.test(c)){const L=locate(td),w=L.w||0,gw=nextGoalWeek(w+1),g=GOALS[gw]||{},rows=["flex","abd","barras","salto","run"].map(x=>{const b=asBest(x);return `• ${ASL[x]}: meta <b>${g[x]}</b>${b?` · tu mejor ${b.v}`:""}`});return `Próxima prueba: semana ${gw}.<br>${rows.join("<br>")}`}
+  if(/como voy|resumen|como va|como ando|mi semana/.test(c)){const ws=weekStartOf(td);let ok=0,tot=0;for(let d=ws;diffDays(d,td)<=0;d=addDays(d,1)){const pp=planFor(d);if(!pp)continue;const st=dayStatus(iso(d),pp);if(diffDays(d,td)===0&&!okSt(st))continue;tot++;if(okSt(st))ok++}
+    const kg=bodyWeight(),P=pchTot();return `Esta semana llevas <b>${ok} de ${tot}</b> días cumplidos y tu racha es de <b>${streak()}</b> días.${kg?` Tu último peso: ${nf(kg)} kg.`:""}${P.n?` Pichangas: ${P.n} (${P.g} goles).`:""} ${ok>=tot?"Vas bien: sigue así.":"Cumple el día de hoy completo y la semana se salva."}`}
+  if(/agua|vasos/.test(c)){const g=waterGoal(p.waterL?p:{waterL:2.5});return `Hoy llevas <b>${+dd.water||0} de ${g}</b> vasos (${vasoMl()} ml).`}
+  if(/proteina|calorias|cuanto (debo |tengo que )?comer/.test(c))return `Tu proteína del día: <b>${protGoal()} g</b>, repartida en tus comidas. Las calorías y el peso meta están en Progreso → «🎯 Tus números».`;
+  if(/peso|pesar|kilos/.test(c)){const kg=bodyWeight(),m=+Store.cfg.pesoMeta;return kg?`Tu último peso es <b>${nf(kg)} kg</b>${m?`; tu meta, ${nf(m)} kg`:""}. Pésate siempre en ayunas, después del baño.`:"Todavía no anotas tu peso. Dime «me pesé 68,5» y lo guardo."}
+  if(/racha/.test(c))return `Tu racha es de <b>${streak()}</b> días.`;
+  if(/pichanga|goles|asistencia/.test(c)){const P=pchTot();return P.n?`Llevas <b>${P.n}</b> pichangas: ${P.g} goles, ${P.a} asistencias, ${P.min} min y unos ${fkm(P.km)} km.`:"Todavía no anotas pichangas. Dime «jugué pichanga 60 min, 2 goles y 1 asistencia»."}
+  if(/kilometr|\bkm\b|corri|cuanto he corrido/.test(c)){const ws=weekStartOf(td);let km=0,n=0;for(let d=ws;diffDays(d,td)<=0;d=addDays(d,1)){const rl=(Store.days[iso(d)]||{}).runlog||{};Object.values(rl).forEach(r=>{const v=numv(r&&r.km);if(v>0){km+=v;n++}})}return n?`Esta semana corriste <b>${fkm(km)} km</b> en ${n} ${n===1?"salida":"salidas"}.`:"Esta semana no tienes carreras anotadas con km. Sube la captura de adidas o dime «corrí 5 km en 26:14»."}
+  if(/ayuda|que puedes|como (te )?uso|que sabes/.test(c))return ASHELP;
+  return null}
+const ASHELP=`Escríbeme (o díctame con el 🎤 del teclado) lo que hiciste y lo anoto donde va:<br>• «hice 40 flexiones en 2 minutos y 60 abdominales»<br>• «3,2 km en 14:24» o «hice ese tiempo en los 3 km 2» (uso la captura de hoy)<br>• «me pesé 68,4», «llevo 6 vasos», «me acosté a la 1:20 y desperté 8:30»<br>• «jugué pichanga 60 min, 2 goles y 1 asistencia», «cintura 76»<br>Y pregúntame: «¿qué me toca mañana?», «¿cómo voy?», «¿mi récord de flexiones?», «¿cuánto me falta para la meta?»`;
+// contexto para Claude: lo justo para responder bien (sin datos de más)
+function aiContext(){const td=today(),tk=iso(td),c=Store.cfg,L=locate(td),p=planFor(td);const lines=[];
+  lines.push(`Fecha: ${dayName(td)} ${tk}. Usuario: ${c.name||"Diego"}, ${c.edad||18} años, ${c.alt||"?"} cm, último peso ${bodyWeight()||"?"} kg, enfoque ${enfoqueOf()[1]||""}. Mesero, trabaja por turnos. Se prepara para las pruebas físicas del servicio (plan de 52 semanas, semana ${L.w??"?"}).`);
+  if(p)lines.push(`Hoy: ${p.title}. Tareas: ${p.tasks.map(t=>t.t+(taskDone(Store.days[tk]||{},t)?" (hecha)":"")).join("; ")}.`);
+  for(let i=1;i<=6;i++){const d=addDays(td,i),q=planFor(d);if(q)lines.push(`${dayName(d)} ${iso(d)}: ${q.title}`)}
+  const gw=nextGoalWeek((L.w||0)+1),g=GOALS[gw]||{};lines.push(`Metas de la próxima prueba (semana ${gw}): flexiones 2 min ${g.flex}, abdominales 2 min ${g.abd}, barras ${g.barras}, salto ${g.salto} cm, 3.200 m ${g.run}.`);
+  const best=["flex","abd","barras","salto","run","swim"].map(x=>{const b=asBest(x);return b?`${ASL[x]} ${b.v}`:null}).filter(Boolean);if(best.length)lines.push("Mejores marcas: "+best.join(", ")+".");
+  const last=Object.keys(Store.days).filter(x=>x<=tk).sort().slice(-7).map(x=>{const D=Store.days[x],q=planFor(parse(x));return `${x}: ${q?q.title:""} ${dayStatus(x,q)||""}${D.peso?" peso "+D.peso:""}${D.water?" agua "+D.water+" vasos":""}${(()=>{const h=sleepH(D.sleep);return h!=null?" sueño "+fmtH(h):""})()}`});
+  lines.push("Últimos días: "+last.join(" | "));lines.push(`Racha ${streak()} días. Proteína meta ${protGoal()} g. Agua meta ${waterGoal(p||{waterL:2.5})} vasos de ${vasoMl()} ml.`);
+  return lines.join("\n")}
+const AIRULES=`Eres el asistente de entrenamiento dentro de la app de Diego (18 años, Puerto Varas, Chile). Responde en español de Chile, cercano y directo, en máximo 120 palabras, usando sus datos de abajo. No inventes datos. Seguridad: nunca apnea solo, en el lago donde haga pie y con tiempo límite, no entrenar fuerte con poco sueño, dolor agudo = parar y consultar. Si su mensaje trae números para anotar (flexiones, abdominales, barras, salto en cm, tiempo de 3.200 m, nado 50 m, carrera con km y tiempo, peso, vasos de agua, medidas en cm, pichanga con minutos/goles/asistencias), ponlos en "anotar"; si no, "anotar" va vacío.
+Responde SOLO con JSON: {"respuesta":"texto","anotar":{"flex":null,"abd":null,"barras":null,"salto":null,"run":null,"swim":null,"carrera_km":null,"carrera_tiempo":null,"peso":null,"agua_vasos":null,"cintura":null,"brazo":null,"pecho":null,"muslo":null,"pichanga_min":null,"goles":null,"asistencias":null}} (tiempos como "mm:ss").`;
+function aiItems(a,k){const p=planFor(parse(k)),kind=asTestKind(p),it=[];if(!a||typeof a!=="object")return it;const n=x=>x==null||x===""?null:+String(x).replace(",",".");
+  ["flex","abd","barras","salto"].forEach(x=>{const v=n(a[x]);if(v>0&&v<500)it.push({f:"test",kind,key:x,v:Math.round(v)})});
+  ["run","swim"].forEach(x=>{const v=a[x]&&toSec(String(a[x]));if(v>0)it.push({f:"test",kind,key:x,v:fmtT(v)})});
+  const ck=n(a.carrera_km),ct=a.carrera_tiempo?parseDur(String(a.carrera_tiempo)):null;if(ck>0||ct>0)it.push({f:"run",km:ck>0?ck:null,t:ct>0?ct:null});
+  const pe=n(a.peso);if(pe>=30&&pe<=200)it.push({f:"peso",v:pe});const ag=n(a.agua_vasos);if(ag>0&&ag<=40)it.push({f:"agua",v:Math.round(ag),suma:1});
+  ["cintura","brazo","pecho","muslo"].forEach(x=>{const v=n(a[x]);if(v>10&&v<200)it.push({f:"med",key:x,v})});
+  const pm=n(a.pichanga_min),go=n(a.goles),as=n(a.asistencias);if(pm>0||(go!=null&&go>=0&&a.pichanga_min!=null))it.push({f:"pichanga",min:pm>0?pm:null,goles:go,asist:as});
+  return it}
+let ASID=0;const ASUNDO={};
+function chatPush(r,t,extra){const m=Object.assign({r,t,k:iso(S.date),ts:Date.now(),id:++ASID},extra||{});CHAT.push(m);chatSave();return m}
+async function asSend(text,from){text=String(text||"").trim();if(!text)return;const k=iso(S.date);chatPush("u",esc(text));
+  const its=asParse(text,k),asks=its.filter(i=>i.f==="ask").map(i=>i.msg);let reply="";
+  if(its.length){const r=asApply(its.filter(i=>i.f!=="ask"),k);if(r){const id=ASID+1;ASUNDO[id]={k,prev:r.prev};reply=`Listo, anoté:<br>${r.lines.map(x=>"• "+x).join("<br>")}${r.why.length?"<br><br>"+r.why.map(esc).join("<br>"):""}${asks.length?"<br><br>"+asks.map(esc).join("<br>"):""}`;chatPush("a",reply,{undo:id});render();if(S.chatOpen)renderChat();toast("✅ Anotado: "+r.lines.length+(r.lines.length===1?" dato":" datos")+".");return}
+    if(asks.length){chatPush("a",asks.map(esc).join("<br>"));render();if(S.chatOpen)renderChat();return}}
+  // texto copiado de una captura (adidas, Strava…): se revisa como la foto
+  const pw=/\n/.test(text)?parseWorkout(text):{};if(pw.km&&pw.t){S.ocr={k,dest:"",stage:"listo"};ocrDone(text);chatPush("a","Eso parece el resumen de una carrera: lo dejé listo en Hoy para que toques <b>✓ Guardar</b>.");if(S.chatOpen)renderChat();return}
+  const ans=asAnswer(text);if(ans){chatPush("a",ans,{deeper:aiOn()?text:""});render();if(S.chatOpen)renderChat();return}
+  if(aiOn()){await asAI(text,k);return}
+  chatPush("a",`No te entendí 🤔. ${ASHELP}`);render();if(S.chatOpen)renderChat()}
+async function asAI(text,k){const m=chatPush("a","Pensando…",{busy:1});render();if(S.chatOpen)renderChat();
+  const turns=[{role:"user",content:AIRULES+"\n\nDATOS DE LA APP:\n"+aiContext()}];CHAT.slice(-9,-2).filter(x=>!x.busy).forEach(x=>turns.push({role:x.r==="u"?"user":"assistant",content:String(x.t).replace(/<br>/g,"\n").replace(/<[^>]+>/g,"")}));turns.push({role:"user",content:text});
+  try{const j=await AI.json(turns,{cache:false});const its=aiItems(j&&j.anotar,k);let extra="";
+    if(its.length){const r=asApply(its,k);if(r){ASUNDO[m.id]={k,prev:r.prev};m.undo=m.id;extra=`<br><br>Anoté:<br>${r.lines.map(x=>"• "+x).join("<br>")}`}}
+    m.t=esc(String((j&&j.respuesta)||"Listo.")).replace(/\n/g,"<br>")+extra;delete m.busy}
+  catch(e){delete m.busy;const code=e&&e.code;if(["not_granted","sampling_disabled","not_declared","capability_disabled","capability_removed"].includes(code))AIOFF=true;
+    m.t=code==="rate_limited"?"Claude está ocupado o llegaste al límite de uso. Prueba en un rato.":code==="not_granted"?"Sin permiso para usar Claude: respondo solo con lo que sé de la app.":`No pude preguntarle a Claude ahora. ${ASHELP}`}
+  chatSave();render();if(S.chatOpen)renderChat()}
+function asUndo(id){const u=ASUNDO[id];if(!u)return;Store.setDay(u.k,u.prev);delete ASUNDO[id];const m=CHAT.find(x=>x.id===+id);if(m){m.undo=0;m.t+="<br><i>(deshecho)</i>"}chatSave();render();if(S.chatOpen)renderChat();toast("Deshecho.")}
+const chatMsgHTML=m=>`<div class="cmsg ${m.r==="u"?"me":"ai"}${m.busy?" busy":""}"><div class="chb">${m.busy?`<span class="spin"></span> `:""}${m.t}</div>${m.undo&&ASUNDO[m.undo]?`<button class="lnk" data-asundo="${m.undo}">Deshacer</button>`:""}${m.deeper?`<button class="lnk" data-asdeep="${m.id}">Preguntarle más a Claude ›</button>`:""}</div>`;
+function renderChat(){let el=document.getElementById("chat");if(!el){el=document.createElement("div");el.id="chat";el.className="chat";document.body.appendChild(el)}
+  el.hidden=!S.chatOpen;if(!S.chatOpen)return;const ms=CHAT.slice(-30);
+  el.innerHTML=`<div class="chd"><div><b>🤖 Tu asistente</b><span class="foot">${aiOn()?"Con Claude · tus datos se usan solo para responderte":"Anota y responde con tus datos · funciona sin internet"}</span></div><button class="nb" data-chatclose aria-label="Cerrar">✕</button></div>
+   <div class="chl" id="chl">${ms.length?ms.map(chatMsgHTML).join(""):`<div class="cmsg ai"><div class="chb">${ASHELP}</div></div>`}</div>
+   <div class="chq">${["¿Qué me toca hoy?","¿Qué me toca mañana?","¿Cómo voy?","¿Mis récords?","¿Cuánto me falta para la meta?"].map(x=>`<button class="seg" data-asq="${esc(x)}">${esc(x)}</button>`).join("")}</div>
+   <div class="chi"><textarea id="as-in" rows="1" placeholder="Escribe o dicta…" aria-label="Mensaje"></textarea><button class="btn main" data-assend="chat" aria-label="Enviar">➤</button></div>`;
+  const l=document.getElementById("chl");if(l)l.scrollTop=l.scrollHeight}
+function asCardHTML(k){const last=[...CHAT].reverse().find(m=>m.r==="a"&&m.k===k&&!m.busy);
+  return `<div class="ascard"><div class="asrow"><textarea id="as-in-hoy" rows="1" placeholder="Ej.: hice 40 flexiones…" aria-label="Cuéntale a la app"></textarea><button class="btn main" data-assend="hoy" aria-label="Enviar">➤</button></div>${last?`<div class="aslast">${last.t}${last.undo&&ASUNDO[last.undo]?` <button class="lnk" data-asundo="${last.undo}">Deshacer</button>`:""}</div>`:""}<button class="lnk" data-chatopen>🤖 Abrir el asistente${aiOn()?" (con Claude)":""} ›</button></div>`}
+
 function runLogHTML(t,dd){
   const r=((dd.runlog||{})[t.id])||{},g=t.goal,v=runVerdict(g,r);
   const f=(k,lab,ph,mode)=>`<div class="field"><label class="lbl" for="rl-${t.id}-${k}">${lab}</label><input id="rl-${t.id}-${k}" data-rl="${t.id}|${k}" inputmode="${mode}" value="${esc(r[k]||"")}" placeholder="${ph}"></div>`;
@@ -2810,7 +2969,7 @@ function viewGuia0(){return `<div class="sec prose"><h2>Guía</h2>
  <li><b>Hoy</b>: lo que toca ahora, tus tareas en orden, comidas, agua y el resumen del día.</li>
  <li><b>Rutina</b>: tu entrenamiento completo: objetivo, tu semana, ejercicios, series, repeticiones, cardio e intensidad.</li>
  <li><b>Plan</b>: tu semana del plan, los avisos para el calendario, <b>✏️ Personaliza tu día</b> (horario, sueño, tareas, comidas, metas, avisos), ajustes y la copia de seguridad.</li>
- <li><b>Registro</b>: comidas, agua, sueño, partido, pichangas (aparte), inglés, fotos, compras y ahorro de cualquier día.</li><li><b>📷 Anotar con foto</b> (en Hoy y en cada trote): sube la captura de adidas Running, Strava o el reloj y la app lee km, tiempo, ritmo y calorías y los anota en el trote del día (o como carrera extra). La foto se lee en el mismo teléfono.</li>
+ <li><b>Registro</b>: comidas, agua, sueño, partido, pichangas (aparte), inglés, fotos, compras y ahorro de cualquier día.</li><li><b>💬 Cuéntale o pregúntale</b> (en Hoy o con el botón 🤖): escribe o dicta «hice 40 flexiones en 2 minutos y 60 abdominales» o «me pesé 68,4» y la app lo anota donde va (prueba, simulacro, trote, peso, agua, pichanga…), con «Deshacer». También responde «¿qué me toca mañana?», «¿cómo voy?» o «¿mi récord de flexiones?». En la app de Claude, lo que no sabe se lo pregunta a Claude con tus datos.</li><li><b>📷 Anotar con foto</b> (en Hoy y en cada trote): sube la captura de adidas Running, Strava o el reloj y la app lee km, tiempo, ritmo y calorías y los anota en el trote del día (o como carrera extra). La foto se lee en el mismo teléfono.</li>
  <li><b>Progreso</b>: cómo vas: series por músculo, peso, racha, récords y pruebas.</li>
  <li><b>Para moverte</b>: la fila de botones de arriba te lleva a cada parte; abajo de cada página hay «← anterior · siguiente →»; también puedes deslizar el dedo a los lados. El botón ↑ te sube.</li></ul>
  <h3>☀️ Tu día, paso a paso</h3><ol>
@@ -3239,7 +3398,7 @@ function persoHTML(){const c=Store.cfg,hide=c.hide||[],hr=c.horas||{},mis=c.mis|
   ${pzBox("avisos","🔔 Qué te avisa y cuándo",(avAntes()?avAntes()+" min antes":"A la hora")+" · "+AVCAT.filter(x=>avOn(x[0])).length+" de "+AVCAT.length,`<span class="lbl">Avisarme de</span>${AVCAT.map(([k0,l])=>`<div class="pzrow tg"><span class="pzl">${l}</span><button class="seg ${avOn(k0)?"on":""}" data-pzav="${k0}" aria-pressed="${avOn(k0)}">${avOn(k0)?"Sí":"No"}</button></div>`).join("")}
     <span class="lbl">Cuándo</span><div class="segs">${[[0,"A la hora"],[5,"5 min antes"],[10,"10 min antes"],[15,"15 min antes"],[30,"30 min antes"]].map(([v,l])=>`<button class="seg ${avAntes()===v?"on":""}" data-pzantes="${v}">${l}</button>`).join("")}</div>
     <p class="foot">Vale para los avisos de la app y para los que bajas al calendario (después de cambiarlo, bájalos de nuevo en Plan → Avisos).</p>`)}
-  ${pzBox("hoy","📱 Qué ves en Hoy",(c.hoyOff||[]).length?(c.hoyOff||[]).length+" ocultas":"Todo a la vista",`${[["ahora","⚡ Tarjeta «Ahora»"],["pendientes","📝 Te falta anotar"],["foto","📷 Anotar con foto"],["frase","💬 Frase del día"],["ready","😴 ¿Cómo amaneciste?"],["situ","⚽ ¿Qué pasa hoy?"],["preparador","🎖️ Mensaje del preparador"],["comidas","🍽 Comidas de hoy"]].map(([k0,l])=>{const on=!(c.hoyOff||[]).includes(k0);return `<div class="pzrow tg"><span class="pzl">${l}</span><button class="seg ${on?"on":""}" data-pzhoy="${k0}" aria-pressed="${on}">${on?"Se ve":"Oculta"}</button></div>`}).join("")}
+  ${pzBox("hoy","📱 Qué ves en Hoy",(c.hoyOff||[]).length?(c.hoyOff||[]).length+" ocultas":"Todo a la vista",`${[["ahora","⚡ Tarjeta «Ahora»"],["pendientes","📝 Te falta anotar"],["foto","💬 Cuéntale a la app y 📷 foto"],["frase","💬 Frase del día"],["ready","😴 ¿Cómo amaneciste?"],["situ","⚽ ¿Qué pasa hoy?"],["preparador","🎖️ Mensaje del preparador"],["comidas","🍽 Comidas de hoy"]].map(([k0,l])=>{const on=!(c.hoyOff||[]).includes(k0);return `<div class="pzrow tg"><span class="pzl">${l}</span><button class="seg ${on?"on":""}" data-pzhoy="${k0}" aria-pressed="${on}">${on?"Se ve":"Oculta"}</button></div>`}).join("")}
     <p class="foot">Oculta lo que no uses y Hoy queda más corto. Las tareas, el agua y el resumen siempre se ven.</p>`)}
   ${pzBox("copia","💾 Copia de seguridad","Te recuerdo cada "+bkDias()+" días",`<div class="segs">${[3,7,14].map(v=>`<button class="seg ${bkDias()===v?"on":""}" data-pzbk="${v}">Cada ${v} días</button>`).join("")}</div><p class="foot">Cuando toque, arriba en Hoy sale «Guardar copia». En el iPhone elige «Guardar en Archivos» o Drive.</p>`)}
   </div>`}
@@ -3378,6 +3537,8 @@ function checkNotify(){try{if(!Store.cfg.notif||!("Notification" in window)||Not
   const an=avAntes();plan.tasks.forEach(t=>{if(!t.h||taskDone(dd,t)||isNope(dd,t)||!avOn(avCat(t)))return;const at=toMin(t.h)-an,key=k+t.id;if(NOTIFIED.has(key))return;if(m>=at&&m<at+3){NOTIFIED.add(key);notify(t.t,(an?`En ${an} min (${t.h}). `:`Es la hora (${t.h}). `)+(t.blocks&&t.blocks[0]?t.blocks[0].n:""),key)}});
   const sh=plan.shift;if(sh&&sh.leave&&avOn("salir")){const at=toMin(sh.leave)-10,key=k+"leave";if(!NOTIFIED.has(key)&&m>=at&&m<at+3){NOTIFIED.add(key);notify("En 10 minutos sales a la pega","Agua, colación y uniforme.",key)}}}catch(e){}}
 setInterval(checkNotify,30000);
+document.addEventListener("keydown",e=>{const t=e.target;if(e.key==="Enter"&&!e.shiftKey&&t&&(t.id==="as-in"||t.id==="as-in-hoy")){e.preventDefault();const v=t.value;if(!v.trim())return;t.value="";asSend(v,t.id==="as-in"?"chat":"hoy")}});
+if(document.createElement&&document.body&&document.body.appendChild){const fab=document.createElement("button");fab.className="chatfab";fab.type="button";fab.setAttribute("data-chatopen","");fab.setAttribute("aria-label","Abrir el asistente");fab.textContent="🤖";document.body.appendChild(fab)}
 if(document.createElement&&document.body){const up=document.createElement("button");up.className="totop";up.type="button";up.setAttribute("aria-label","Subir");up.textContent="↑";up.hidden=true;up.addEventListener("click",()=>window.scrollTo({top:0,behavior:"smooth"}));
  if(document.body&&document.body.appendChild){document.body.appendChild(up);window.addEventListener("scroll",()=>{up.hidden=window.scrollY<700},{passive:true})}}
 // deslizar a la izquierda o derecha cambia de página (no sobre campos, gráficos ni filas que se mueven solas)
@@ -3597,6 +3758,12 @@ document.addEventListener("click",e=>{
   if(D.mealx){const p=planFor(S.date),dd=Store.day(k),m=p&&mealsOf(p).find(x=>x.k===D.mealx);if(!m)return;const on=mealDone(dd,p,m),patch={meals:Object.assign({},dd.meals,{[m.k]:false})};
     if(m.r){const {t,i}=m.r,sets=Object.assign({},dd.sets),c=Object.assign({},dd.checks);sets[setKey(t,i)]=on?0:t.blocks[i].s;if(on&&c[t.id]&&!t.blocks[i].opt)c[t.id]=false;patch.sets=sets;patch.checks=c}else if(!on)patch.meals[m.k]=true;
     Store.setDay(k,patch);render();return}
+  if(D.assend){const el=document.getElementById(D.assend==="hoy"?"as-in-hoy":"as-in"),v=el?el.value:"";if(!v.trim()){toast("Escribe primero qué hiciste o qué quieres saber.");return}if(el)el.value="";asSend(v,D.assend);return}
+  if(D.asq){asSend(D.asq,"chat");return}
+  if(D.asundo){asUndo(D.asundo);return}
+  if(D.asdeep){const m=CHAT.find(x=>x.id===+D.asdeep);if(m&&m.deeper&&aiOn()){const q=m.deeper;m.deeper="";asAI(q,iso(S.date))}return}
+  if(D.chatopen!==undefined){S.chatOpen=true;renderChat();setTimeout(()=>{const t=document.getElementById("as-in");if(t)t.focus()},60);return}
+  if(D.chatclose!==undefined){S.chatOpen=false;renderChat();return}
   if(D.ocrpaste!==undefined){S.ocr={k,dest:"",stage:"pegar"};render();setTimeout(()=>{jumpTo("sec-foto");const t=document.getElementById("ocr-txt");if(t)t.focus()},40);return}
   if(D.ocrtxt!==undefined){const t=document.getElementById("ocr-txt"),v=t?t.value.trim():"";if(!v){toast("Pega primero el texto.");return}ocrDone(v);return}
   if(D.ocrcancel!==undefined){S.ocr=null;render();return}
