@@ -245,6 +245,8 @@ details.reg summary::-webkit-details-marker{display:none}
 .ex.full .n{color:var(--ok)}
 .ex .p{font-family:var(--f-mono);font-size:15px;font-weight:600}
 .ex .note{font-size:13px;color:var(--muted)}
+.ex.pasa .n{color:var(--muted)}
+.pasab{display:flex;flex-direction:column;gap:6px}.pasab .row{display:flex;justify-content:space-between;align-items:center;gap:8px}.pasab .foot{margin:0}
 .ctl{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
 .dot{width:36px;height:36px;border:2px solid var(--ink);border-radius:50%;background:transparent;font-family:var(--f-mono);font-size:13px;padding:0}
 .dot.on{background:var(--ok);border-color:var(--ok);color:var(--paper)}
@@ -1252,9 +1254,11 @@ const fixCfg=c=>{const d=defCfg();if(c.pich!=null){if(!isObj(c.pich))delete c.pi
   if(c.maxB&&!(isObj(c.maxB)&&Number.isInteger(+c.maxB.v)&&+c.maxB.v>0&&+c.maxB.v<=40))c.maxB=null;
   return c};
 const MODES=["","ok","cansado","dolor","enfermo"];
+// motivos de «⏭️ Mañana» (un ejercicio suelto pasa al día siguiente)
+const PASAM=[["clima","Lluvia o clima"],["equipo","Me falta equipo"],["tiempo","Sin tiempo"],["lugar","Sin lugar"],["cansado","Cansado"],["otro","Otro"]],PASAM0=Object.fromEntries(PASAM);
 const fixDay=x=>{if(!isObj(x))return {};if(x.turno!=null&&!SHIFT[String(x.turno)])delete x.turno;if(x.mode!=null&&!MODES.includes(x.mode))delete x.mode;
-  ["checks","sets","test","sim","mini","runlog","ctx","undo","tprev","meals","sleep","match","reps","nope","kg","nopeWhy","banda","bandaS","ready","medidas","pichanga"].forEach(f=>{if(x[f]!=null&&!isObj(x[f]))delete x[f]});if(x.ready)Object.keys(x.ready).forEach(f=>{if(!RQ.some(q=>q[0]===f)||![0,1,2].includes(x.ready[f]))delete x.ready[f]});
-  if(x.runlog)Object.keys(x.runlog).forEach(t=>{if(!isObj(x.runlog[t]))delete x.runlog[t]});
+  ["checks","sets","test","sim","mini","runlog","ctx","undo","tprev","meals","sleep","match","reps","nope","kg","nopeWhy","banda","bandaS","ready","medidas","pichanga","pasa"].forEach(f=>{if(x[f]!=null&&!isObj(x[f]))delete x[f]});if(x.ready)Object.keys(x.ready).forEach(f=>{if(!RQ.some(q=>q[0]===f)||![0,1,2].includes(x.ready[f]))delete x.ready[f]});
+  if(x.runlog)Object.keys(x.runlog).forEach(t=>{if(!isObj(x.runlog[t]))delete x.runlog[t]});if(x.pasa)Object.keys(x.pasa).forEach(f=>{if(typeof x.pasa[f]!=="string"||x.pasa[f]&&!PASAM0[x.pasa[f]])delete x.pasa[f]});
   if(x.ctx&&x.ctx.temp!==""&&x.ctx.temp!=null&&!okTemp(x.ctx.temp))x.ctx.temp="";if(typeof x.note!=="string"&&x.note!=null)delete x.note;if(x.water!=null&&!(Number.isInteger(+x.water)&&+x.water>=0&&+x.water<=40))delete x.water;if(x.partido!=null&&typeof x.partido!=="boolean")delete x.partido;if(x.prot!=null&&!Array.isArray(x.prot))delete x.prot;if(x.viaje!=null&&typeof x.viaje!=="boolean")delete x.viaje;["prepartido","postpartido"].forEach(f=>{if(x[f]!=null&&typeof x[f]!=="boolean")delete x[f]});if(x.partidoH!=null&&!/^\d{1,2}:\d{2}$/.test(x.partidoH))delete x.partidoH;if(x.zona!=null&&x.zona!==""&&!ZONAS[x.zona])delete x.zona;if(x.motivo!=null&&x.motivo!==""&&!MOT[x.motivo])delete x.motivo;["urgencia","express","doble","cerrado"].forEach(f=>{if(x[f]!=null&&typeof x[f]!=="boolean")delete x[f]});return x};
 const fixDays=o=>{Object.keys(o).forEach(k=>{if(!isISO(k))delete o[k];else o[k]=fixDay(o[k])});return o};
 const clone=o=>JSON.parse(JSON.stringify(o||{}));
@@ -1421,6 +1425,15 @@ function addDoble(q,date){if(!q)return q;const y=addDays(date,-1),yk=iso(y);let 
   const main=q.tasks.find(t=>counts(t)&&!NOTRAIN.includes(t.id)&&!/^mi-/.test(t.id)),base=main&&main.h?toMin(main.h):toMin((q.shift&&q.shift.A)||"10:00");
   return Object.assign({},q,{title:q.title+" + "+yp.title.replace(/ \+ core$/,"")+" (doble)",doble:yp.title,kind:q.kind==="descanso"?"tierra":q.kind,
     dobleDe:del,tasks:sortT(q.tasks.concat(extra.map((t,i)=>Object.assign({},t,{id:"x-"+t.id,t:"➕ "+t.t+" ("+del+")",h:fromMin(base+(main?100:0)+i*70),why:(del==="de ayer"?"Ayer no se pudo":"El partido te tapó este entrenamiento")+": hoy va doble. Entre una sesión y otra descansa 20 min y come algo. Si llegas muy cansado, haz solo una y marca «No pude» en la otra."}))))})}
+// lo que ayer pasaste con «⏭️ Mañana» aparece hoy como una sesión aparte; si hoy tampoco se puede, se pasa otra vez
+function pasaCarry(q,date){if(!q)return q;const y=addDays(date,-1),yd=Store.days[iso(y)];
+  if(!yd||!isObj(yd.pasa)||!Object.keys(yd.pasa).length||locate(y).before)return q;const yp=planFor(y);if(!yp)return q;
+  const bl=[],ws=[];let kind="";yp.tasks.forEach(t=>t.blocks.forEach((b,i)=>{if(!isPasa(yd,t,i))return;kind=kind||t.kind;const w=yd.pasa[setKey(t,i)];if(w&&!ws.includes(w))ws.push(w);
+    const de=t.id==="pa-ayer"?(b.de||""):t.t.replace(/^[^\p{L}\d]+/u,"");bl.push(Object.assign({},b,{de,opt:0,c:t.id==="pa-ayer"?b.c:(b.c?b.c+"\n\n":"")+(de?"Era parte de: "+de+".":"")}))}));
+  if(!bl.length)return q;
+  const main=q.tasks.find(t=>counts(t)&&!NOTRAIN.includes(t.id)&&!/^mi-/.test(t.id)),h=main&&main.h?fromMin(toMin(main.h)+60):((q.shift&&q.shift.A)||"10:00");
+  const why="Ayer lo pasaste para hoy"+(ws.length?" ("+ws.map(w=>PASAM0[w].toLowerCase()).join(", ")+")":"")+". Hazlo junto con lo de hoy. Si otra vez no se puede, tócale «⏭️ Mañana» de nuevo o marca «No pude».";
+  return Object.assign({},q,{kind:q.kind==="descanso"?"tierra":q.kind,pasaDe:bl.length,tasks:sortT(q.tasks.concat([T("pa-ayer","⏭️ Pendiente de ayer",why,h,bl,{kind:kind==="rutina"?"tierra":kind||"tierra"})]))})}
 function missedDay(k,d){if(Store.cfg.modoPropio)return false;const p=planFor(d);if(!p)return false;const dd=Store.days[k]||{};if(isDoble(k))return false;
   // partido, día antes y día después: el entrenamiento de ese día se corre al siguiente (salvo que fuera descanso)
   if(dd.partido||dd.prepartido||dd.postpartido)return !!p.orig&&p.orig!=="descanso";
@@ -1489,7 +1502,7 @@ function customize(p,date){if(!p)return p;const c=Store.cfg,hide=c.hide||[],hr=c
   const tasks=p.tasks.filter(t=>!(HIDEABLE.includes(t.id)&&hide.includes(t.id))).map(t=>hr[t.id]?Object.assign({},t,{h:hr[t.id]}):t===main?Object.assign({},t,{h:hr.__train}):t).map(t=>+du[t.id]>0?scaleTask(t,+du[t.id]):t);
   mis.forEach(m=>{if(m.dias[dow])tasks.push(T("mi-"+m.id,m.t,m.nota||"Tu hábito.",m.h,[B(m.t,m.min?m.min+" min":"hecho",Object.assign({c:m.nota||"Lo agregaste tú en Plan → Personaliza tu día."},+m.min?{tm:+m.min*60}:{}))],{kind:m.cuenta?"propia":"rutina",mine:true}))});
   return Object.assign({},p,{tasks:sortT(tasks)})}
-function planFor(date){const ck=iso(date);if(ck in PLANC)return PLANC[ck];const p=planFor0(date);const dd=Store.days[ck]||{};let q=p&&dd.viaje?travelDay(p):p&&dd.partido?matchDay(p,dd.partidoH):p&&dd.prepartido?preMatchDay(p):p&&dd.postpartido?postMatchDay(p):p;if(q&&dd.mode!=="dolor"&&dd.mode!=="enfermo")q=protectZone(q,date);if(q&&dd.express&&!dd.viaje)q=expressDay(q);q=addDoble(customize(q,date),date);return PLANC[ck]=q}
+function planFor(date){const ck=iso(date);if(ck in PLANC)return PLANC[ck];const p=planFor0(date);const dd=Store.days[ck]||{};let q=p&&dd.viaje?travelDay(p):p&&dd.partido?matchDay(p,dd.partidoH):p&&dd.prepartido?preMatchDay(p):p&&dd.postpartido?postMatchDay(p):p;if(q&&dd.mode!=="dolor"&&dd.mode!=="enfermo")q=protectZone(q,date);if(q&&dd.express&&!dd.viaje)q=expressDay(q);q=pasaCarry(addDoble(customize(q,date),date),date);return PLANC[ck]=q}
 // poco tiempo: lo esencial en ~20 min (calentamiento corto, 3 ejercicios × 2 series, 1 estiramiento; trote de 15 min)
 function expressDay(p){const two=b=>{const l=b.s>=2&&/por (lado|pierna)/.test(b.p)?2:1;return Object.assign({},b,{s:2*l,p:String(b.p).replace(/^\d+(\s*×)/,"2$1")})};
   return Object.assign({},p,{title:p.title+" · exprés",express:true,tasks:p.tasks.filter(t=>!["tol","ducha","mil","casa","venta"].includes(t.id)).map(t=>{
@@ -1574,12 +1587,14 @@ function planFor0(date){const L=locate(date);
   if(Store.cfg.sched.indexOf(L.w)!==L.idx)p=Object.assign({},p,{tasks:p.tasks.filter(t=>t.kind!=="admin")});
   return p}
 const setKey=(t,i)=>t.id+"."+i;
+// «⏭️ Mañana»: un ejercicio suelto que hoy no se puede (lluvia, falta equipo, tiempo…) pasa al día siguiente sin correr el plan
+const isPasa=(dd,t,i)=>!!dd&&!!dd.pasa&&typeof dd.pasa[setKey(t,i)]==="string";
 function markAllDone(k,p){const dd0=Store.day(k),c={},sets={};p.tasks.forEach(t=>{c[t.id]=true;t.blocks.forEach((x,i)=>sets[setKey(t,i)]=x.s)});Store.setDay(k,{checks:c,sets,status:"",undo:{checks:Object.assign({},dd0.checks),sets:Object.assign({},dd0.sets)}})}
 const blockDone=(dd,t,i)=>Math.min(((dd&&dd.sets)||{})[setKey(t,i)]||0,t.blocks[i].s);
-const taskDone=(dd,t)=>!!dd&&(((dd.checks||{})[t.id])||(t.blocks.length>0&&t.blocks.every((b,i)=>b.opt||blockDone(dd,t,i)>=b.s)));
+const taskDone=(dd,t)=>!!dd&&(((dd.checks||{})[t.id])||(t.blocks.length>0&&t.blocks.every((b,i)=>b.opt||isPasa(dd,t,i)||blockDone(dd,t,i)>=b.s)));
 // para cerrar el día cuentan las sesiones, no las rutinas (despertar, comidas, noche)
 const counts=t=>t.kind!=="rutina"&&!["despertar","desayuno","almuerzo","noche"].includes(t.id);
-function units(dd,plan){let a=0,b=0;plan.tasks.filter(counts).forEach(t=>{const all=taskDone(dd,t);t.blocks.forEach((x,i)=>{if(x.opt)return;b+=x.s;a+=all?x.s:blockDone(dd,t,i)})});return {a,b}}
+function units(dd,plan){let a=0,b=0;plan.tasks.filter(counts).forEach(t=>{const all=taskDone(dd,t);t.blocks.forEach((x,i)=>{if(x.opt||isPasa(dd,t,i))return;b+=x.s;a+=all?x.s:blockDone(dd,t,i)})});return {a,b}}
 // “No pude”: el bloque queda con ✗ rojo y deja de estar pendiente; si todo lo demás está hecho, el día se cierra
 const isNope=(dd,t)=>!!dd&&!!(dd.nope||{})[t.id]&&!taskDone(dd,t);
 function closedDay(k,plan){const d=Store.days[k];if(!plan||!d||d.status)return false;const core=plan.tasks.filter(counts);return core.every(t=>taskDone(d,t)||isNope(d,t))&&core.some(t=>isNope(d,t))}
@@ -1667,7 +1682,7 @@ function orders(plan,k,isToday,dd){
 /* =================== MODO PASO A PASO =================== */
 const ORD=["Primero","Segundo","Tercero","Cuarto","Quinto","Sexto","Séptimo","Octavo"];
 function steps(plan){const out=[];plan.tasks.forEach((t,ti)=>t.blocks.forEach((b,bi)=>{if(b.s>1&&b.s<=12)for(let k=1;k<=b.s;k++)out.push({t,ti,bi,b,set:k});else out.push({t,ti,bi,b,set:0})}));return out}
-function stepDone(dd,st){if(isNope(dd,st.t))return true;const n=taskDone(dd,st.t)?st.b.s:blockDone(dd,st.t,st.bi);return st.set?n>=st.set:n>=st.b.s}
+function stepDone(dd,st){if(isNope(dd,st.t)||isPasa(dd,st.t,st.bi))return true;const n=taskDone(dd,st.t)?st.b.s:blockDone(dd,st.t,st.bi);return st.set?n>=st.set:n>=st.b.s}
 function firstPending(plan,dd){const ss=steps(plan);const i=ss.findIndex(x=>!stepDone(dd,x));return i<0?ss.length:i}
 function stepTitle(st){const b=st.b;
   if(st.set){let w=b.p.replace(/^\d+\s*×\s*/,"")||b.p;if(/^\d+$/.test(w))w+=" repeticiones";if(/^\d+ por lado/.test(w))w=w.replace(/^(\d+)/,"$1 repeticiones");
@@ -1914,13 +1929,25 @@ try{const t=sessionStorage.getItem("bit-tab");if(t&&["hoy","plan","registro","pr
 let toastT;function toast(m){const el=document.getElementById("toast");el.textContent=m;el.hidden=false;clearTimeout(toastT);toastT=setTimeout(()=>{el.hidden=true},3500)}
 function chip(s){const m={done:"Cumplido",fail:"No cumplido",injury:"Recuperación",part:"A medias",viaje:"Viaje",urgencia:"Urgencia",pausa:"En pausa",doble:"Doble mañana"};return `<span class="chip ${s||""}">${s?m[s]:"Pendiente"}</span>`}
 
+// plan B: lo que sí puedes hacer hoy en vez de pasarlo, según el ejercicio
+function planB(b,w){const n=b.n+" "+(b.p||"");
+  if(/barra|dominad/i.test(n))return w==="clima"?"Barra mojada resbala: no te cuelgues. Plan B bajo techo: remo invertido bajo una mesa firme (4 × máximo, cuerpo recto) o remo con la mochila cargada (4 × 12). Las barras quedan para mañana.":"Plan B sin barra: remo invertido bajo una mesa firme (4 × máximo, cuerpo recto) o remo con la mochila cargada (4 × 12). Las barras quedan para mañana.";
+  if(/salto/i.test(n))return "Sin huincha igual puedes saltar: marca la línea y dónde cae tu talón con cinta adhesiva o una piedra, y mide después con la app Medidas del celular o con una hoja carta (28 cm de largo). Con lluvia, salta bajo techo o en pasto que no resbale.";
+  if(/trote|carrera|corre|sprint|intervalo|cuesta|fartlek|marcha/i.test(n))return w==="clima"?"Con lluvia suave se trota igual (gorro y ropa que seque rápido). Con tormenta o piso resbaloso: 20 min del circuito de la casa y la carrera pasa a mañana.":"";
+  if(/nado|nada|lago|piscina|apnea en agua/i.test(n))return w==="clima"?"Con tormenta, viento fuerte o truenos no se entra al agua. Mañana se nada.":"";
+  if(w==="equipo")return "Si te falta el equipo, piensa con qué lo reemplazas: mochila con libros o botellas de agua como peso, una mesa firme como barra baja, una toalla en el suelo como colchoneta.";
+  return ""}
+function pasaHTML(t,b,i,dd){const w=dd.pasa[setKey(t,i)],pb=planB(b,w),key=t.id+"|"+i;
+  return `<div class="pasab"><div class="row"><b>⏭️ Pasa a mañana</b><button class="nopebtn on" data-pasa="${key}" aria-label="Deshacer: ${esc(b.n)} vuelve a hoy">Deshacer</button></div><span class="lbl">¿Por qué?</span><div class="segs why">${PASAM.map(([v,l])=>`<button class="seg ${w===v?"on":""}" data-pwhy="${v}" data-pwhy-k="${key}">${l}</button>`).join("")}</div>${pb?`<p class="foot">💡 ${esc(pb)}</p>`:""}</div>`}
 function exHTML(t,b,i,dd,all){
+  if(!all&&isPasa(dd,t,i))return `<div class="ex pasa"><div class="top"><span class="n">${esc(b.n)}</span><span class="p">${esc(b.p)}</span></div>${pasaHTML(t,b,i,dd)}</div>`;
   const n=all?b.s:blockDone(dd,t,i);let ctl="";
   if(b.s>1&&b.s<=12)ctl=Array.from({length:b.s},(_,j)=>`<button class="dot ${j<n?"on":""}" data-set="${t.id}|${i}|${j+1}" aria-label="Serie ${j+1} de ${esc(b.n)}">${j+1}</button>`).join("");
   else if(b.s>12)ctl=`<button class="dot" data-set="${t.id}|${i}|${Math.max(0,n-1)}" aria-label="Restar">−</button><span class="cnt">${n}/${b.s}</span><button class="dot" data-set="${t.id}|${i}|${Math.min(b.s,n+1)}" aria-label="Sumar">+</button>`;
   else ctl=`<button class="dot ${n?"on":""}" data-set="${t.id}|${i}|${n?0:1}" aria-label="Hecho: ${esc(b.n)}">✓</button>`;
   if(b.tm)ctl+=`<button class="tmr" data-timer="${b.tm}" data-tl="${esc(b.n)}">▶ ${fmtT(b.tm)}</button>`;
   if(b.r)ctl+=`<button class="tmr rest" data-timer="${b.r}" data-tl="Descanso · ${esc(b.n)}">descanso ${fmtT(b.r)}</button>`;
+  if(!all&&n<b.s&&counts(t)&&!b.opt&&diffDays(S.date,today())>=0)ctl+=`<button class="tmr pasabtn" data-pasa="${t.id}|${i}" aria-label="Pasar ${esc(b.n)} a mañana">⏭️ Mañana</button>`;
   return `<div class="ex ${n>=b.s?"full":""}"><div class="top"><span class="n">${esc(b.n)}</span><span class="p">${esc(b.p)}</span></div>${b.c?`<details class="hw" data-keep="hw:${esc(t.id)}.${i}" ${S.keep["hw:"+t.id+"."+i]?"open":""}><summary>Detalle</summary><p style="white-space:pre-line">${esc(b.c)}</p></details>`:""}<div class="ctl">${ctl}</div>${repsHTML(t,b,i)}</div>`;
 }
 /* ---- registro de carrera (lo que marca adidas Running u otra app) ---- */
@@ -2004,9 +2031,9 @@ function sesHTML(t,dd,open,pend,st){
   if(st==="lock")return `<div class="ses lock"><div class="sh"><span class="chk lk" aria-hidden="true"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 018 0v3"/></svg></span><button class="tog" data-locked="${t.id}"><span class="t">${esc(t.t)}</span>${meta?`<span class="m">${esc(meta)}</span>`:""}</button></div></div>`;
   const no=isNope(dd,t),cur=st==="cur";
   if(cur)return `<div class="ses cur ${pend?"pend":""}"><div class="sh"><button class="chk" data-task="${t.id}" aria-pressed="false" aria-label="Marcar ${esc(t.t)} completa"></button><button class="tog" data-open="${t.id}" aria-expanded="${open}"><span class="t"><b class="nowb">Ahora</b> ${esc(t.t)}${pend?' <b class="pendb">Atrasado</b>':""}</span>${meta?`<span class="m">${esc(meta)}</span>`:""}</button><span></span><button class="chev" data-open="${t.id}" aria-label="${open?"Cerrar":"Abrir"}">${open?"▴":"▾"}</button></div>
-   ${open?`<div class="sb">${t.lake&&t.safe?`<p class="safe">${esc(t.safe)}</p>`:""}${t.blocks.map((b,i)=>exHTML(t,b,i,dd,all)).join("")}${editRutLink(t)}${(t.kind==="carrera"||t.goal)&&t.id!=="sprint"?runLogHTML(t,dd):""}<div class="row nextrow"><button class="btn main" data-task="${t.id}" style="flex:2">✓ Listo, siguiente</button><button class="btn" data-nope="${t.id}" style="flex:1">No pude</button></div></div>`:""}</div>`;
+   ${open?`<div class="sb">${t.lake&&t.safe?`<p class="safe">${esc(t.safe)}</p>`:""}${t.id==="pa-ayer"?`<p class="foot">${esc(t.why)}</p>`:""}${t.blocks.map((b,i)=>exHTML(t,b,i,dd,all)).join("")}${editRutLink(t)}${(t.kind==="carrera"||t.goal)&&t.id!=="sprint"?runLogHTML(t,dd):""}<div class="row nextrow"><button class="btn main" data-task="${t.id}" style="flex:2">✓ Listo, siguiente</button><button class="btn" data-nope="${t.id}" style="flex:1">No pude</button></div></div>`:""}</div>`;
   return `<div class="ses ${all?"done":no?"nope":pend?"pend":""}"><div class="sh"><button class="chk" data-task="${t.id}" aria-pressed="${all}" aria-label="Marcar ${esc(t.t)} completa">${no?"✗":""}</button><button class="tog" data-open="${t.id}" aria-expanded="${open}"><span class="t">${esc(t.t)}${no?' <b class="nopeb">No pude</b>':pend?' <b class="pendb">Pendiente</b>':""}</span>${meta?`<span class="m">${esc(meta)}</span>`:""}</button>${all?"<span></span>":`<button class="nopebtn ${no?"on":""}" data-nope="${t.id}" aria-label="${no?"Deshacer no pude":"No pude: "+esc(t.t)}">${no?"Deshacer":"No pude"}</button>`}<button class="chev" data-open="${t.id}" aria-label="${open?"Cerrar":"Abrir"}">${open?"▴":"▾"}</button></div>
-   ${open?`<div class="sb">${t.lake&&t.safe?`<p class="safe">${esc(t.safe)}</p>`:""}${t.blocks.map((b,i)=>exHTML(t,b,i,dd,all)).join("")}${editRutLink(t)}${(t.kind==="carrera"||t.goal)&&t.id!=="sprint"?runLogHTML(t,dd):""}</div>`:""}${no?nopeWhyHTML(t,dd):""}</div>`;
+   ${open?`<div class="sb">${t.lake&&t.safe?`<p class="safe">${esc(t.safe)}</p>`:""}${t.id==="pa-ayer"?`<p class="foot">${esc(t.why)}</p>`:""}${t.blocks.map((b,i)=>exHTML(t,b,i,dd,all)).join("")}${editRutLink(t)}${(t.kind==="carrera"||t.goal)&&t.id!=="sprint"?runLogHTML(t,dd):""}</div>`:""}${no?nopeWhyHTML(t,dd):""}</div>`;
 }
 // pausa del plan (vacaciones, enfermedad larga, mudanza): esos días no cuentan y el plan sigue donde quedó
 const inPausa=k=>{const z=Store.cfg.pausa;return !!(z&&isISO(z.desde)&&isISO(z.hasta)&&k>=z.desde&&k<=z.hasta)};
@@ -2726,6 +2753,7 @@ function viewGuia0(){return `<div class="sec prose"><h2>Guía</h2>
  <li>Cada parte tiene «Volver a como estaba» por si algo no te gusta.</li></ul>
  <h3>🔁 Si un día no puedes</h3><ul>
  <li><b>Correr el plan</b> (lo normal): lo de hoy pasa a mañana y nada se pierde.</li>
+ <li><b>Un ejercicio a mañana</b>: si llueve, te falta equipo (barra, huincha) o no te da el tiempo para <i>un</i> ejercicio, abre la sesión y toca «⏭️ Mañana» en ese ejercicio. Eliges por qué, la app te da un plan B para hoy y mañana aparece en «⏭️ Pendiente de ayer». Lo demás del día sigue igual y la racha no se corta.</li>
  <li><b>Doble</b>: en Hoy toca «🔁 Hoy no puedo: doble mañana», o al otro día «Mejor hago doble hoy». Mañana haces lo tuyo + lo pendiente, con 20 min de descanso y algo de comer entre medio.</li>
  <li>Lo que pasa si no marcas nada lo eliges en Plan → ✏️ Personaliza → «Si un día no puedes entrenar».</li>
  <li>Enfermo o con dolor: nunca se dobla, se corre. Primero sanar.</li></ul>
@@ -3440,6 +3468,10 @@ document.addEventListener("click",e=>{
   if(D.bset){const pr=D.bset.split("|"),n=+pr.pop(),j=+pr.pop(),name=pr.join("|"),dd=Store.day(k),base=bandaOf(name,k);
     const a=Array.from({length:n},(_,x)=>bandaSet(name,k,x)||base),cur=a[j];a[j]=BNEXT[cur]||"sin";Store.setDay(k,{bandaS:Object.assign({},dd.bandaS,{[name]:a})});render();return}
   if(D.tbanda){const t=Object.assign({},(Store.days[k]||{}).test||{});t.barrasBanda=D.tbanda;Store.setDay(k,{test:t});render();return}
+  if(D.pasa){const p=planFor(S.date),[tid,bi]=D.pasa.split("|"),t=p&&p.tasks.find(x=>x.id===tid),i=+bi;if(!t||!t.blocks[i])return;const dd=Store.day(k),ps=Object.assign({},dd.pasa),key=setKey(t,i),on=typeof ps[key]!=="string";
+    if(on)ps[key]="";else delete ps[key];const patch={pasa:ps};if(dd.status==="fail")patch.status="";Store.setDay(k,patch);render();
+    toast(on?t.blocks[i].n+" pasa a mañana. Elige por qué y mira el plan B.":t.blocks[i].n+" vuelve a hoy.");return}
+  if(D.pwhy){const dd=Store.day(k),ps=Object.assign({},dd.pasa);if(typeof ps[D.pwhyK.replace("|",".")]!=="string")return;const key=D.pwhyK.replace("|",".");ps[key]=ps[key]===D.pwhy?"":D.pwhy;Store.setDay(k,{pasa:ps});render();return}
   if(D.nwhy){const dd=Store.day(k),w=Object.assign({},dd.nopeWhy);w[D.nwhyT]=w[D.nwhyT]===D.nwhy?"":D.nwhy;Store.setDay(k,{nopeWhy:w});render();return}
   if(D.dwhy){const dd=Store.day(k),v=dd.motivo===D.dwhy?"":D.dwhy;Store.setDay(k,{motivo:v,urgencia:v==="urgencia"});render();if(v==="urgencia")toast("Urgencia: este día se corre a mañana y la racha sigue.");return}
   if(D.share){shareDay(parse(D.share));return}
