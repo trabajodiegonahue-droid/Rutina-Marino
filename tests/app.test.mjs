@@ -1457,7 +1457,29 @@ const reload = async p => { await p.reload(); await p.waitForTimeout(200); };
   ok(errs.length === 0, 'sin errores: ' + errs.join(' | '));
   await ctx.close(); }
 
-// 61. Anotar con foto: pegar el texto o subir la captura (adidas Running) y que se anote sola
+// 61. «⏭️ Mañana»: un ejercicio suelto (lluvia, sin barra, sin huincha) pasa al día siguiente con su motivo y un plan B
+{ const { p, ctx, errs } = await page('2026-10-13T09:00:00');
+  const btn = p.locator('[data-pasa="fa|1"]');
+  ok(await btn.count() === 1, 'cada ejercicio pendiente tiene «⏭️ Mañana»');
+  await btn.click(); await p.waitForTimeout(150);
+  ok(await p.locator('.ex.pasa').count() === 1 && (await text(p)).includes('Pasa a mañana'), 'el ejercicio queda marcado para mañana');
+  await p.click('[data-pwhy="equipo"][data-pwhy-k="fa|1"]'); await p.waitForTimeout(150);
+  ok(await p.locator('[data-pwhy="equipo"].on').count() === 1 && (await text(p)).includes('💡'), 'elige el motivo y muestra un plan B');
+  await reload(p);
+  ok(await p.locator('.ex.pasa').count() === 1 && await p.locator('[data-pwhy="equipo"].on').count() === 1, 'queda guardado al recargar');
+  // al día siguiente aparece como «Pendiente de ayer»
+  const q = await ctx.newPage(); q.on('pageerror', e => errs.push(e.message)); await q.clock.install({ time: new Date('2026-10-14T09:00:00') }); await q.goto(URL); await q.waitForTimeout(200);
+  await q.locator('.chev[data-open="pa-ayer"]').click(); await q.waitForTimeout(150);
+  const tq = await text(q);
+  ok(tq.includes('Pendiente de ayer') && tq.includes('me falta equipo'), 'mañana aparece «⏭️ Pendiente de ayer» con el motivo');
+  ok(tq.includes('Pierna'), 'el plan no se corre: mañana sigue siendo pierna');
+  await q.close();
+  // deshacer
+  await p.click('[data-pasa="fa|1"]'); await p.waitForTimeout(150);
+  ok(await p.locator('.ex.pasa').count() === 0, 'deshacer: el ejercicio vuelve a hoy');
+  ok(errs.length === 0, 'sin errores: ' + errs.join(' | '));
+  await ctx.close(); }
+// 62. Anotar con foto: pegar el texto o subir la captura (adidas Running) y que se anote sola
 { const ctx = await browser.newContext({ viewport: { width: 390, height: 1400 } }); const errs = [];
   await ctx.addInitScript(() => { window.__NOLOCK = false; if (!localStorage.getItem('bitacora-buzo-v1')) localStorage.setItem('bitacora-buzo-v1', JSON.stringify({ cfg: { start: '2026-10-26', welcome: true }, days: {}, pend: {} })); });
   const p = await ctx.newPage(); p.on('pageerror', e => errs.push(e.message)); await p.clock.install({ time: new Date('2026-10-31T09:00:00') }); await p.goto(URL); await p.waitForTimeout(300);
