@@ -1,13 +1,20 @@
 // Guarda la app en el teléfono para que abra sin internet (en el lago o en la plaza).
 // La página se pide primero a la red (así llegan las actualizaciones) y, si no hay señal, se usa la guardada.
 const CACHE = 'atleta-v3';
+// el lector de fotos (vendor/ocr, ~11 MB) se guarda aparte y no se borra al actualizar la app
+const OCR_CACHE = 'atleta-ocr-v1';
 const FILES = ['./', './index.html', './manifest.webmanifest', './icon-192.png', './icon-512.png', './icon-180.png'];
 self.addEventListener('install', e => { e.waitUntil(caches.open(CACHE).then(c => c.addAll(FILES)).then(() => self.skipWaiting())); });
-self.addEventListener('activate', e => { e.waitUntil(caches.keys().then(ks => Promise.all(ks.filter(k => k !== CACHE).map(k => caches.delete(k)))).then(() => self.clients.claim())); });
+self.addEventListener('activate', e => { e.waitUntil(caches.keys().then(ks => Promise.all(ks.filter(k => k !== CACHE && k !== OCR_CACHE).map(k => caches.delete(k)))).then(() => self.clients.claim())); });
 self.addEventListener('fetch', e => {
   const r = e.request; if (r.method !== 'GET') return;
   const url = new URL(r.url);
   // página y archivos propios: red primero, si no hay señal la copia guardada
+  if (url.origin === location.origin && url.pathname.includes('/vendor/')) {
+    // lector de fotos: la copia guardada primero (no cambia y pesa mucho)
+    e.respondWith(caches.open(OCR_CACHE).then(c => c.match(r).then(m => m || fetch(r).then(res => { if (res.ok) c.put(r, res.clone()); return res; }))));
+    return;
+  }
   if (url.origin === location.origin) {
     e.respondWith(fetch(r).then(res => { if (res.ok) { const cp = res.clone(); caches.open(CACHE).then(c => c.put(r, cp)); } return res; })
       .catch(() => caches.match(r).then(m => m || caches.match('./index.html'))));

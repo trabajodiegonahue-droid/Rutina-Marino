@@ -1457,6 +1457,40 @@ const reload = async p => { await p.reload(); await p.waitForTimeout(200); };
   ok(errs.length === 0, 'sin errores: ' + errs.join(' | '));
   await ctx.close(); }
 
+// 61. Anotar con foto: pegar el texto o subir la captura (adidas Running) y que se anote sola
+{ const ctx = await browser.newContext({ viewport: { width: 390, height: 1400 } }); const errs = [];
+  await ctx.addInitScript(() => { window.__NOLOCK = false; if (!localStorage.getItem('bitacora-buzo-v1')) localStorage.setItem('bitacora-buzo-v1', JSON.stringify({ cfg: { start: '2026-10-26', welcome: true }, days: {}, pend: {} })); });
+  const p = await ctx.newPage(); p.on('pageerror', e => errs.push(e.message)); await p.clock.install({ time: new Date('2026-10-31T09:00:00') }); await p.goto(URL); await p.waitForTimeout(300);
+  await p.click('[data-ocrpaste]'); await p.waitForTimeout(100);
+  await p.fill('#ocr-txt', 'Distancia 5,02 km\nTiempo 26:14\nRitmo medio 5:13 /km\nCalorías 380\nFC media 152 ppm'); await p.click('[data-ocrtxt]'); await p.waitForTimeout(150);
+  const vals = await p.evaluate(() => ['km', 't', 'kcal', 'hr'].map(f => document.getElementById('ocr-' + f).value).join(' '));
+  ok(vals === '5,02 26:14 380 152', 'pegar texto (Garmin): km, tiempo, calorías y pulso: ' + vals);
+  ok((await p.$eval('#ocr-pace', e => e.textContent)).includes('5:13'), 'calcula el ritmo');
+  ok(await p.locator('[data-ocrdest].on').count() === 1 && (await p.$eval('[data-ocrdest].on', e => e.dataset.ocrdest)) === 'run', 'elige solo el trote del día');
+  await p.fill('#ocr-km', '5,1'); await p.dispatchEvent('#ocr-km', 'input'); await p.click('[data-ocrsave]'); await p.waitForTimeout(150);
+  const dd = await p.evaluate(() => JSON.parse(localStorage.getItem('bitacora-buzo-v1')).days['2026-10-31']);
+  ok(dd.runlog.run.km === '5,1' && dd.runlog.run.t === '26:14' && dd.runlog.run.kcal === '380' && dd.checks.run === true, 'queda anotado en el trote (con la corrección) y marcado hecho');
+  await p.click('[data-ocrpaste]'); await p.fill('#ocr-txt', '3,29 206 04:30\nDISTANCE (KM) CALORIES (CAL) AVG. PACE (MIN/KM)\n00:14:49'); await p.click('[data-ocrtxt]'); await p.waitForTimeout(100);
+  ok((await p.$eval('[data-ocrdest].on', e => e.dataset.ocrdest)) === 'libre', 'si el trote ya está anotado, va como carrera extra');
+  await p.click('[data-ocrsave]'); await p.waitForTimeout(100);
+  ok((await p.$eval('#sec-foto', e => e.textContent)).includes('Carrera extra: 3,29 km · 14:49 · 4:30/km · 206 kcal'), 'la carrera extra se ve en Hoy');
+  ok(errs.length === 0, 'sin errores: ' + errs.join(' | '));
+  await ctx.close(); }
+// la captura real se lee con el lector de la app (servida por http como en GitHub Pages)
+{ const http = await import('node:http'); const root = path.join(here, '..');
+  const types = { '.html': 'text/html', '.js': 'text/javascript', '.png': 'image/png', '.gz': 'application/gzip', '.json': 'application/json', '.webmanifest': 'application/manifest+json' };
+  const srv = http.createServer((q, r) => { const f = path.join(root, decodeURIComponent(q.url.split('?')[0])); if (!f.startsWith(root) || !fs.existsSync(f) || fs.statSync(f).isDirectory()) { r.writeHead(404); r.end(); return; } r.writeHead(200, { 'Content-Type': types[path.extname(f)] || 'application/octet-stream' }); fs.createReadStream(f).pipe(r); });
+  await new Promise(res => srv.listen(0, '127.0.0.1', res)); const port = srv.address().port;
+  const ctx = await browser.newContext({ viewport: { width: 390, height: 1400 } }); const errs = [];
+  await ctx.addInitScript(() => { window.__NOLOCK = false; if (!localStorage.getItem('bitacora-buzo-v1')) localStorage.setItem('bitacora-buzo-v1', JSON.stringify({ cfg: { start: '2026-10-26', welcome: true }, days: {}, pend: {} })); });
+  const p = await ctx.newPage(); p.on('pageerror', e => errs.push(e.message)); await p.clock.install({ time: new Date('2026-10-31T09:00:00') }); await p.goto(`http://127.0.0.1:${port}/index.html`); await p.waitForTimeout(400);
+  await p.setInputFiles('#ocr-file', path.join(here, 'fixtures', 'adidas-running.png'));
+  await p.waitForSelector('#sec-foto [data-ocrsave], #sec-foto [data-ocrtxt]', { timeout: 120000 }).catch(() => {});
+  const vals = await p.evaluate(() => ['km', 't', 'kcal'].map(f => (document.getElementById('ocr-' + f) || {}).value).join(' '));
+  ok(vals === '3,29 14:49 206', 'lee la captura de adidas Running: ' + vals);
+  ok(errs.length === 0, 'sin errores: ' + errs.join(' | '));
+  await ctx.close(); srv.close(); }
+
 await browser.close();
 console.log(`\n${passes} correctas, ${fails} fallidas`);
 process.exit(fails ? 1 : 0);
