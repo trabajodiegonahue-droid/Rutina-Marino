@@ -1384,8 +1384,8 @@ const reload = async p => { await p.reload(); await p.waitForTimeout(200); };
   ok(await p.locator('.rrow').count() === 0, '✓ lo cierra');
   await p.click('[data-rxall]'); await p.waitForTimeout(100);
   ok(await p.locator('.rrow').count() === rows.length, 'Editar todos abre todos');
-  await p.click('[data-rxall]'); await p.click('[data-wkday="1"]'); await p.waitForTimeout(150);
-  ok((await p.$eval('[data-rday].on', e => e.textContent)).includes('Pierna'), 'tocar el martes abre la pierna');
+  await p.click('[data-rxall]'); await p.click('.wday[data-wkrid="legs"]'); await p.waitForTimeout(150);
+  ok((await p.$eval('[data-rday].on', e => e.textContent)).includes('Pierna'), 'tocar el día de pierna abre la pierna');
   const leg = await p.$$eval('.exr', es => es.map(e => e.textContent.replace(/\s+/g, ' ')));
   ok(leg.filter(r => /⚡/.test(r)).length === 1 && leg.some(r => /4 × 4–6/.test(r)), 'pierna: 1 salto y un principal de fuerza: ' + leg.join(' / '));
   ok(errs.length === 0, 'sin errores: ' + errs.join(' | '));
@@ -1440,6 +1440,20 @@ const reload = async p => { await p.reload(); await p.waitForTimeout(200); };
   const p = await ctx.newPage(); p.on('pageerror', e => errs.push(e.message)); await p.clock.install({ time: new Date('2026-10-29T09:00:00') }); await p.goto(URL); await p.waitForTimeout(300);
   const t = await text(p);
   ok(/espalda/i.test(t) && !/hombros y brazos \+ core/i.test(t.slice(0, 600)), 'plan normal: el partido del miércoles corre la espalda al jueves');
+  ok(errs.length === 0, 'sin errores: ' + errs.join(' | '));
+  await ctx.close(); }
+
+// 60. La tira de días de Rutina muestra lo que toca de verdad (el plan se corre si no cumples)
+{ const ctx = await browser.newContext({ viewport: { width: 390, height: 1400 } }); const errs = [];
+  await ctx.addInitScript(() => { window.__NOLOCK = false; window.__NOSKIP = false; if (!localStorage.getItem('bitacora-buzo-v1')) localStorage.setItem('bitacora-buzo-v1', JSON.stringify({ cfg: { start: '2026-10-26', welcome: true }, days: { '2026-10-26': { status: 'done' } }, pend: {} })); });
+  const p = await ctx.newPage(); p.on('pageerror', e => errs.push(e.message)); await p.clock.install({ time: new Date('2026-10-28T09:00:00') }); await p.goto(URL); await p.waitForTimeout(300);
+  await p.click('[data-tab="rutina"]'); await p.waitForTimeout(150);
+  const hoy = await p.$eval('.wday.hoy', e => e.textContent);
+  const foot = await p.$eval('.wstrip', e => e.parentElement.textContent);
+  ok(hoy.includes('M 28') && hoy.includes('Pierna') && foot.includes('Hoy te toca: Pierna'), 'miércoles con el martes fallado: hoy toca pierna, no espalda: ' + hoy);
+  ok(await p.locator('.wday').count() === 7 && (await p.$$eval('.wday .wl', es => es.map(e => e.textContent))).join(',') === 'M 28,J 29,V 30,S 31,D 1,L 2,M 3', 'próximos 7 días con su fecha');
+  await p.click('[data-propio="1"]').catch(async () => { await p.locator('#rt-int > summary').click(); await p.click('[data-propio="1"]'); }); await p.waitForTimeout(150);
+  ok((await p.$eval('.wday.hoy', e => e.textContent)).includes('Espalda'), 'con «100% mío» el miércoles es espalda');
   ok(errs.length === 0, 'sin errores: ' + errs.join(' | '));
   await ctx.close(); }
 

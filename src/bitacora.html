@@ -2328,7 +2328,17 @@ function pegarPreview(){const P=S.pegar;if(!P.dias.length)return `<p class="aler
 const SEMS=[["fa","💪","Pecho"],["legs","🦵","Pierna"],["fb","🔙","Espalda"],["arms","🏋️","Hombros"],[null,"😴","Libre"],[null,"🏃","Cardio"],[null,"🌊","Lago"]];
 function objChips(O){if(!O)return `<p class="foot" style="margin:0">Elige un objetivo y la app te arma series, repeticiones, descanso y peso.</p>`;const o=O[2],ch=(t,a,c)=>`<div class="och ${c||""}"><b>${a[0]} × ${a[1]}–${a[2]}</b><span>${t}</span><i>⏱ ${fromSecS(a[3])}</i></div>`;
   return `<div class="ochs">${o.first?ch("principal (fuerza)",o.first,"f"):""}${ch(o.first?"grandes (músculo)":"ejercicios grandes",o.c)}${ch(o.first?"aislamiento (resistencia)":"aislamiento",o.a,"r")}</div><p class="foot" style="margin:0">Peso: ~${Math.round(o.pct*100)}% de tu máximo · ${esc(o.rir)}.</p>`}
+// con el plan de 52 semanas el plan se corre cuando no cumples: la tira muestra los próximos 7 días de verdad (fecha y lo que toca)
+const DICO=[[/^descanso/i,"😴","Libre"],[/antes del partido|activaci/i,"🧘","Previa"],[/después del partido|recupera/i,"🧘","Recupera"],[/pecho/i,"💪","Pecho"],[/pierna/i,"🦵","Pierna"],[/espalda/i,"🔙","Espalda"],[/hombros|brazos/i,"🏋️","Brazos"],[/partido/i,"⚽","Partido"],[/prueba|simulacro|chequeo/i,"📋","Prueba"],[/viaje/i,"🚌","Viaje"],[/lago|nado|piscina|apnea/i,"🌊","Lago"],[/trote|cardio|carrera|interval|sprint/i,"🏃","Cardio"],[/descanso|libre|recupera|activaci/i,"😴","Libre"]];
+function planStrip(){const td=today();
+  return `<div class="wstrip">${[0,1,2,3,4,5,6].map(i=>{const d=addDays(td,i),p=planFor(d),wl=DLET[(d.getDay()+6)%7]+" "+d.getDate();
+    if(!p)return `<div class="wday off"><span class="wl">${wl}</span><span class="wi">·</span><span class="wn">—</span></div>`;
+    const ti=p.title||"",m=DICO.find(x=>x[0].test(ti.replace(/\(doble\)/,"")))||[0,"⭐",ti.split(/[ ·+]/)[0]||"Día"],
+      ft=p.tasks.find(t=>{const id=t.id.replace(/^x-/,"");return t.kind==="fuerza"&&(RUTINA[id]||/^c-/.test(id))}),rid=ft?(id=>RUTINA[id]?id:id.slice(2))(ft.id.replace(/^x-/,"")):null,
+      cx=p.tasks.some(t=>t.id==="cx");
+    return `<button class="wday ${i?"":"hoy"}" ${rid?`data-wkrid="${esc(rid)}"`:`data-goto="${iso(d)}"`} aria-label="${esc(dayName(d))} ${d.getDate()}: ${esc(ti)}"><span class="wl">${wl}</span><span class="wi">${m[1]}</span><span class="wn">${esc(m[2])}${p.doble?" +":""}</span>${cx?`<span class="wc">🏃</span>`:""}</button>`}).join("")}</div>`}
 function weekStrip(){const c=Store.cfg,sem=c.semana||[0,1,2,3,4,5,6],cx=c.cardioExtra||{dias:[0,0,0,0,0,0,0]},hoy=(today().getDay()+6)%7;
+  if(!c.modoPropio)return planStrip();
   return `<div class="wstrip">${DLET.map((l,i)=>{const v=sem[i],cust=typeof v==="string",sm=cust?null:SEMS[v],name=cust?rutinaName(v.slice(2)):sm[2],ic=cust?"⭐":sm[1],rid=cust?v.slice(2):sm[0];
     return `<button class="wday ${i===hoy?"hoy":""} ${rid?"":"off"}" data-wkday="${i}" aria-label="${DNOM[i]}: ${esc(name)}"><span class="wl">${l}</span><span class="wi">${ic}</span><span class="wn">${esc(name.replace(" + core",""))}</span>${cx.dias&&cx.dias[i]?`<span class="wc">🏃</span>`:""}</button>`}).join("")}</div>`}
 function viewRutina(){const O=objOf(),c=Store.cfg;
@@ -2336,7 +2346,7 @@ function viewRutina(){const O=objOf(),c=Store.cfg;
   <div class="card rhero"><div class="row" style="justify-content:space-between;align-items:center;flex-wrap:nowrap"><span class="lbl">🎯 Tu objetivo</span><button class="lnk" data-jump="rt-obj">Cambiar</button></div>
    <b class="rh1">${esc(O?O[1]:"Sin objetivo elegido")}</b>${objChips(O)}
    <div class="rmeta"><span>${gymMode()?"🏋️ Gimnasio":"🏠 Casa y plaza"}</span><span>${({suave:"🟢 Suave",dura:"🔴 Dura"}[c.intensidad]||"🟡 Normal")}</span><span>${c.modoPropio?"⭐ 100% mío":"📈 Plan 52 semanas"}</span></div></div>
-  <div class="card"><div class="row" style="justify-content:space-between;align-items:center"><span class="lbl">📅 Tu semana</span><button class="lnk" data-jump="rt-semana">Cambiar</button></div>${weekStrip()}<p class="foot" style="margin:0">Toca un día para ver y cambiar sus ejercicios. 🏃 = cardio extra.</p></div>`+rutinaEditor()}
+  <div class="card"><div class="row" style="justify-content:space-between;align-items:center"><span class="lbl">📅 ${c.modoPropio?"Tu semana":"Tus próximos 7 días"}</span><button class="lnk" data-jump="rt-semana">Cambiar</button></div>${weekStrip()}<p class="foot" style="margin:0">${c.modoPropio?"Toca un día para ver y cambiar sus ejercicios. 🏃 = cardio extra.":`Hoy te toca: <b>${esc((planFor(today())||{}).title||"—")}</b>. Con el plan de 52 semanas, si un día no cumples el plan se corre un día, por eso no siempre calza con el calendario. Toca un día de fuerza para cambiar sus ejercicios; los otros te llevan a ese día. 🏃 = cardio extra.`}</p></div>`+rutinaEditor()}
 const stSet=(id,fn)=>{const a=stOf(id).map(x=>x.slice());fn(a);Store.setCfg({estira:Object.assign({},Store.cfg.estira,{[id]:a})})};
 function rutinaSet(id,fn){const rows=rutinaOf(id).map(x=>Object.assign({},x));fn(rows);Store.setCfg({rutina:Object.assign({},Store.cfg.rutina,{[id]:rows})})}
 function viewGuia(){const g=viewGuia0(),a=g.indexOf("<h3>"),z=g.lastIndexOf("</div>");if(a<0)return g;
@@ -3313,6 +3323,7 @@ document.addEventListener("click",e=>{
   if(D.editrut){const r=D.editrut;if(r==="cardio")S.keep["rt:cardio"]=true;else{S.redit=r;S.keep["rt:ej"]=true}saveKeep();setTab("rutina");setTimeout(()=>jumpTo(r==="cardio"?"rt-cardio":"rt-ej"),40);return}
   if(D.rxe!==undefined){S.rxEdit=D.rxe||null;render();return}
   if(D.rxall!==undefined){S.rxAll=!S.rxAll;render();return}
+  if(D.wkrid){S.redit=D.wkrid;S.keep["rt:ej"]=true;S.rxEdit=null;render();setTimeout(()=>jumpTo("rt-ej"),30);return}
   if(D.wkday!==undefined){const i=+D.wkday,v=(Store.cfg.semana||[0,1,2,3,4,5,6])[i],rid=typeof v==="string"?v.slice(2):(SEMS[v]||[])[0];if(rid){S.redit=rid;S.keep["rt:ej"]=true;S.rxEdit=null;render();setTimeout(()=>jumpTo("rt-ej"),30)}else{S.keep["rt:semana"]=true;render();setTimeout(()=>jumpTo("rt-semana"),30)}return}
   if(D.pgleer!==undefined){const t=(document.getElementById("pg-txt")||{}).value||"";S.pegarTxt=t;const r=parseRutina(t);S.pegar={dias:r.dias,skip:r.skip,descanso:true,propio:true};S.keep["rt:pegar"]=true;render();setTimeout(()=>jumpTo("rt-pegar"),30);return}
   if(D.pgcancel!==undefined){S.pegar=null;render();return}
