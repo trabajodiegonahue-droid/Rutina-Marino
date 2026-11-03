@@ -1566,6 +1566,61 @@ const reload = async p => { await p.reload(); await p.waitForTimeout(200); };
   ok(errs.length === 0, 'sin errores: ' + errs.join(' | '));
   await ctx.close(); }
 
+// 64. Peso de cada ejercicio (sin peso, con peso, peso extra, banda) y Claude con tu clave en el iPhone
+{ const ctx = await browser.newContext({ viewport: { width: 390, height: 1400 } }); const errs = [];
+  await ctx.addInitScript(() => { window.__NOLOCK = false; window.__OPENALL = false; if (!localStorage.getItem('bitacora-buzo-v1')) localStorage.setItem('bitacora-buzo-v1', JSON.stringify({ cfg: { start: '2026-11-02', welcome: true }, days: { '2026-10-26': { reps: { 'Flexiones con déficit': ['15', '15', '15', '15'] } } }, pend: {} })); });
+  const p = await ctx.newPage(); p.on('pageerror', e => errs.push(e.message)); await p.clock.install({ time: new Date('2026-11-02T10:00:00') }); await p.goto(URL); await p.waitForTimeout(300);
+  await p.click('.ses [data-open="fa"]'); await p.waitForTimeout(150);
+  const ex = n => p.locator(`.ex:has([data-cargaopen="${n}"])`);
+  ok((await ex('Flexiones con déficit').locator('.cchip').textContent()).includes('Sin peso') && await ex('Flexiones con déficit').locator('[data-kg]').count() === 0, 'flexiones: sin peso y sin casilla de kg');
+  ok((await ex('Press de pecho en el suelo con mancuernas').locator('.cchip').textContent()).includes('Con peso') && await ex('Press de pecho en el suelo con mancuernas').locator('[data-kg]').count() === 1, 'press con mancuernas: con peso');
+  ok((await ex('Fondos en paralelas').locator('.cchip').textContent()).includes('Con banda') && await ex('Fondos en paralelas').locator('.bandas').count() === 1, 'fondos: con banda');
+  ok((await ex('Flexiones con déficit').locator('.meta').textContent()).includes('Peso extra'), 'al tope sin peso: sugiere hacerlo más difícil o peso extra');
+  await p.click('[data-cargaopen="Flexiones con déficit"]'); await p.click('[data-carga="Flexiones con déficit|extra"]'); await p.waitForTimeout(150);
+  ok((await ex('Flexiones con déficit').locator('.kgf').textContent()).includes('Peso extra') && (await ex('Flexiones con déficit').locator('.meta').textContent()).includes('2 kg extra'), 'peso extra: casilla de kg extra y meta con 2 kg');
+  await p.click('[data-cargaopen="Fondos en paralelas"]'); await p.click('[data-carga="Fondos en paralelas|extra"]'); await p.waitForTimeout(150);
+  ok(await ex('Fondos en paralelas').locator('.bandas').count() === 0 && await ex('Fondos en paralelas').locator('[data-kg]').count() === 1, 'fondos con peso extra: sin bandas, con kg');
+  await p.click('[data-tab="rutina"]'); await p.waitForTimeout(150); await p.locator('.exr [data-rxe]').first().click(); await p.waitForTimeout(150);
+  const sel = p.locator('.rrow select[data-rxc]'); const nm = await sel.getAttribute('data-rxc');
+  await sel.selectOption('kg'); await p.waitForTimeout(150);
+  const cg = await p.evaluate(() => JSON.parse(localStorage.getItem('bitacora-buzo-v1')).cfg.carga);
+  ok(cg && cg[nm] === 'kg' && cg['Fondos en paralelas'] === 'extra', 'se elige también en Rutina y queda guardado: ' + JSON.stringify(cg));
+  ok(errs.length === 0, 'sin errores: ' + errs.join(' | '));
+  await ctx.close(); }
+{ const http = await import('node:http'); const root = path.join(here, '..'); const seen = []; let mode = 'ok';
+  const types = { '.html': 'text/html', '.js': 'text/javascript', '.mjs': 'text/javascript', '.png': 'image/png', '.gz': 'application/gzip', '.json': 'application/json', '.webmanifest': 'application/manifest+json' };
+  const srv = http.createServer((q, r) => {
+    if (q.url.startsWith('/v1/messages')) { let b = ''; q.on('data', c => b += c); q.on('end', () => { seen.push({ url: q.url, h: q.headers, body: JSON.parse(b || '{}') });
+      if (mode === '401') { r.writeHead(401, { 'Content-Type': 'application/json' }); r.end(JSON.stringify({ type: 'error', error: { type: 'authentication_error', message: 'invalid x-api-key' } })); return; }
+      const an = { flex: '', abd: '', barras: '7', salto: '', run: '', swim: '', carrera_km: '', carrera_tiempo: '', peso: '', agua_vasos: '', cintura: '', brazo: '', pecho: '', muslo: '', pichanga_min: '', goles: '', asistencias: '' };
+      r.writeHead(200, { 'Content-Type': 'application/json' }); r.end(JSON.stringify({ id: 'msg_1', type: 'message', role: 'assistant', model: 'claude-opus-5-5', content: [{ type: 'text', text: JSON.stringify({ respuesta: 'Bien ahí: 7 barras ya te acercan a la meta de 6.', anotar: an }) }], stop_reason: 'end_turn', stop_sequence: null, usage: { input_tokens: 10, output_tokens: 10 } })); }); return; }
+    const f = path.join(root, decodeURIComponent(q.url.split('?')[0])); if (!f.startsWith(root) || !fs.existsSync(f) || fs.statSync(f).isDirectory()) { r.writeHead(404); r.end(); return; } r.writeHead(200, { 'Content-Type': types[path.extname(f)] || 'application/octet-stream' }); fs.createReadStream(f).pipe(r); });
+  await new Promise(res => srv.listen(0, '127.0.0.1', res)); const port = srv.address().port;
+  const ctx = await browser.newContext({ viewport: { width: 390, height: 1400 } }); const errs = [];
+  await ctx.addInitScript(pt => { window.__NOLOCK = false; window.__AIBASE = 'http://127.0.0.1:' + pt; if (!localStorage.getItem('bitacora-buzo-v1')) localStorage.setItem('bitacora-buzo-v1', JSON.stringify({ cfg: { start: '2026-11-03', welcome: true }, days: {}, pend: {} })); }, port);
+  const p = await ctx.newPage(); p.on('pageerror', e => errs.push(e.message)); await p.clock.install({ time: new Date('2026-11-09T13:00:00') }); await p.goto(`http://127.0.0.1:${port}/index.html`); await p.waitForTimeout(400);
+  await p.click('.chatfab'); await p.waitForTimeout(100); await p.click('[data-aicfg]'); await p.waitForTimeout(100);
+  await p.fill('#ai-key', 'hola'); await p.click('[data-aisave]'); await p.waitForTimeout(80);
+  ok((await p.$eval('#ai-st', e => e.textContent)).includes('sk-ant-'), 'rechaza una clave mal pegada');
+  await p.fill('#ai-key', 'sk-ant-api03-PRUEBA_prueba-1234567890abcd'); await p.click('[data-aisave]'); await p.waitForTimeout(80);
+  ok((await p.$eval('.chd', e => e.textContent)).includes('Con Claude Opus 5.5 (tu clave)'), 'queda conectado con Opus 5.5');
+  const bk = await p.evaluate(() => localStorage.getItem('bitacora-buzo-v1'));
+  ok(!bk.includes('sk-ant-'), 'la clave no va en los datos (ni respaldo ni nube)');
+  await p.click('[data-aitest]'); await p.waitForTimeout(800);
+  ok((await p.$eval('#ai-st', e => e.textContent)).includes('✅ Funciona con Opus 5.5'), 'Probar funciona: ' + await p.$eval('#ai-st', e => e.textContent));
+  const r0 = seen[0] || { h: {}, body: {} };
+  ok(r0.h['x-api-key'] === 'sk-ant-api03-PRUEBA_prueba-1234567890abcd' && r0.h['anthropic-dangerous-direct-browser-access'] === 'true' && /server-side-fallback-2026-07-01/.test(r0.h['anthropic-beta'] || ''), 'manda la clave y los encabezados del navegador y de fallbacks');
+  ok(r0.body.model === 'claude-opus-5-5' && r0.body.fallbacks === 'default' && r0.body.output_config && r0.body.output_config.format.type === 'json_schema' && r0.body.output_config.effort === 'low', 'pide JSON con esquema, effort low y fallbacks: ' + JSON.stringify(r0.body.output_config && r0.body.output_config.effort));
+  await p.click('[data-aimod="claude-haiku-5-5"]'); await p.click('[data-aicfg]'); await p.waitForTimeout(80);
+  await p.fill('#as-in', 'hoy me salieron siete dominadas seguidas, ¿voy bien?'); await p.keyboard.press('Enter'); await p.waitForTimeout(900);
+  const last = await p.$eval('#chl', e => e.lastElementChild.textContent); const r1 = seen[seen.length - 1];
+  ok(last.includes('Bien ahí') && last.includes('Barras: 7'), 'Claude responde y anota: ' + last.slice(0, 100));
+  ok(r1.body.model === 'claude-haiku-5-5' && r1.body.fallbacks === undefined && !/server-side-fallback/.test(r1.h['anthropic-beta'] || '') && r1.body.system.includes('DATOS DE LA APP'), 'con Haiku va sin fallbacks y con tus datos en system');
+  mode = '401'; await p.fill('#as-in', '¿por qué me duelen las piernas?'); await p.keyboard.press('Enter'); await p.waitForTimeout(900);
+  ok((await p.$eval('#chl', e => e.lastElementChild.textContent)).includes('Tu clave no sirve'), 'clave mala: lo dice claro');
+  ok(errs.length === 0, 'sin errores: ' + errs.join(' | '));
+  await ctx.close(); srv.close(); }
+
 await browser.close();
 console.log(`\n${passes} correctas, ${fails} fallidas`);
 process.exit(fails ? 1 : 0);

@@ -84,8 +84,8 @@ details.hw p{margin:6px 0 0;font-size:14px}
 .chatfab{position:fixed;right:16px;bottom:calc(138px + env(safe-area-inset-bottom));z-index:30;width:46px;height:46px;border-radius:50%;border:1px solid var(--line);background:color-mix(in srgb,var(--paper) 85%,transparent);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);font-size:24px;box-shadow:0 4px 14px rgba(0,0,0,.35)}
 .chat{position:fixed;inset:0;z-index:60;background:var(--bg);display:flex;flex-direction:column;padding:env(safe-area-inset-top) 0 env(safe-area-inset-bottom)}.chat[hidden]{display:none}.chd{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:14px 16px;border-bottom:1px solid var(--line)}.chd .foot{display:block;margin:2px 0 0}.chl{flex:1;overflow-y:auto;padding:14px 16px;display:flex;flex-direction:column;gap:10px}
 .cmsg{max-width:88%;display:flex;flex-direction:column;gap:4px}.cmsg.me{align-self:flex-end;align-items:flex-end}.cmsg .chb{padding:10px 13px;border-radius:16px;font-size:15px;line-height:1.45;background:var(--paper2);border:1px solid var(--line);overflow-wrap:anywhere}.cmsg.me .chb{background:color-mix(in srgb,var(--accent) 22%,var(--paper2));border-color:color-mix(in srgb,var(--accent) 45%,var(--line))}.cmsg small{color:var(--muted)}.chat .chq .seg{font-size:14px}.cmsg .lnk{font-size:13px}
-.chq{display:flex;gap:6px;overflow-x:auto;padding:6px 16px;scrollbar-width:none}.chq .seg{white-space:nowrap;flex:none}.chi{display:flex;gap:8px;padding:8px 16px 12px;border-top:1px solid var(--line);align-items:flex-end}
-.foto .row{margin-top:8px}.foto .fbtns{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px;margin-top:10px}.foto .fbtns .btn{display:flex;align-items:center;justify-content:center;white-space:nowrap;margin:0}.ocrlib{display:flex;justify-content:space-between;align-items:center;gap:10px}.runlog label.btn{white-space:nowrap}.ocrtxt{white-space:pre-wrap;font-size:12px;color:var(--muted);margin:6px 0;font-family:var(--f-mono)}.ocrlib{margin-top:10px}.spin{display:inline-block;width:12px;height:12px;border:2px solid var(--line);border-top-color:var(--accent);border-radius:50%;animation:spin .8s linear infinite;vertical-align:-1px;margin-right:4px}@keyframes spin{to{transform:rotate(360deg)}}.pckm{display:flex;flex-direction:column;gap:2px;background:var(--paper2);border:1px solid var(--line);border-radius:14px;padding:10px 12px;margin:10px 0}.pckm b{font-family:var(--f-mono);font-size:20px;color:var(--accent)}.pckm small{color:var(--muted);font-size:12.5px}
+.aicfg{margin:10px 16px 0;padding:12px 14px;border:1px solid var(--line);border-radius:16px;background:var(--paper2);max-height:72vh;overflow-y:auto}.aicfg .segs.col .seg{text-align:left;font-size:14px}.chq{display:flex;gap:6px;overflow-x:auto;padding:6px 16px;scrollbar-width:none}.chq .seg{white-space:nowrap;flex:none}.chi{display:flex;gap:8px;padding:8px 16px 12px;border-top:1px solid var(--line);align-items:flex-end}
+.cargarow{display:flex;flex-direction:column;gap:6px;margin:6px 0}.cchip{align-self:flex-start;background:var(--paper2);border:1px solid var(--line);color:var(--ink);border-radius:999px;padding:6px 12px;font-size:14px}.cargaopts .seg{font-size:14px}.rnums .rxc{grid-column:1/-1}.rxc select{width:100%}.reps .hmeta{white-space:normal;text-align:left;max-width:100%}.foto .row{margin-top:8px}.foto .fbtns{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px;margin-top:10px}.foto .fbtns .btn{display:flex;align-items:center;justify-content:center;white-space:nowrap;margin:0}.ocrlib{display:flex;justify-content:space-between;align-items:center;gap:10px}.runlog label.btn{white-space:nowrap}.ocrtxt{white-space:pre-wrap;font-size:12px;color:var(--muted);margin:6px 0;font-family:var(--f-mono)}.ocrlib{margin-top:10px}.spin{display:inline-block;width:12px;height:12px;border:2px solid var(--line);border-top-color:var(--accent);border-radius:50%;animation:spin .8s linear infinite;vertical-align:-1px;margin-right:4px}@keyframes spin{to{transform:rotate(360deg)}}.pckm{display:flex;flex-direction:column;gap:2px;background:var(--paper2);border:1px solid var(--line);border-radius:14px;padding:10px 12px;margin:10px 0}.pckm b{font-family:var(--f-mono);font-size:20px;color:var(--accent)}.pckm small{color:var(--muted);font-size:12.5px}
 .rlv{margin:0;font-size:14px;color:var(--muted)}
 .rlv.ok{color:var(--ok);font-weight:600}.rlv.warn{color:var(--warn);font-weight:600}.rlv.bad{color:var(--bad);font-weight:600}
 .savechip{display:block;margin-top:4px;font-family:var(--f-label);font-size:12px;letter-spacing:.04em;text-transform:none;color:var(--muted);white-space:nowrap}
@@ -1252,7 +1252,7 @@ const fixCfg=c=>{const d=defCfg();if(c.pich!=null){if(!isObj(c.pich))delete c.pi
   if(c.moneda!=null&&!MONEDAS.includes(c.moneda))delete c.moneda;
   if(c.semTurno!=null&&!(Array.isArray(c.semTurno)&&c.semTurno.length===7&&c.semTurno.every(x=>typeof x==="string"&&(x==="libre"||/^\d{1,2}:\d{2}$/.test(x)))))delete c.semTurno;
   ["sueno","acuesto","vaso","botella","presu","avAntes","backupDias","medCada"].forEach(f=>{if(c[f]!=null&&c[f]!==""&&!(+c[f]>=0&&+c[f]<1e6))delete c[f]});if(c.despLibre!=null&&c.despLibre!==""&&!/^\d{1,2}:\d{2}$/.test(c.despLibre))delete c.despLibre;
-  ["dur","avQue","metasP","pendSnooze"].forEach(f=>{if(c[f]!=null&&!isObj(c[f]))delete c[f]});if(c.hoyOff!=null&&!Array.isArray(c.hoyOff))delete c.hoyOff;
+  ["dur","avQue","metasP","pendSnooze"].forEach(f=>{if(c[f]!=null&&!isObj(c[f]))delete c[f]});if(c.hoyOff!=null&&!Array.isArray(c.hoyOff))delete c.hoyOff;if(c.carga!=null){if(!isObj(c.carga))delete c.carga;else Object.keys(c.carga).forEach(n=>{if(!["corp","kg","extra","banda"].includes(c.carga[n])||n.length>80)delete c.carga[n]})}
   if(c.lista!=null){if(!isObj(c.lista))delete c.lista;else{const L=c.lista;if(!Array.isArray(L.quitar))L.quitar=[];if(!isObj(L.cant))L.cant={};if(!isObj(L.precio))L.precio={};L.extra=Array.isArray(L.extra)?L.extra.filter(x=>isObj(x)&&typeof x.n==="string"&&x.n.trim()).slice(0,40):[]}}
   if(c.comidas!=null){if(!isObj(c.comidas))delete c.comidas;else Object.keys(c.comidas).forEach(x=>{if(!isObj(c.comidas[x]))delete c.comidas[x]})}
   if(c.misProt!=null)c.misProt=Array.isArray(c.misProt)?c.misProt.filter(x=>isObj(x)&&typeof x.id==="string"&&typeof x.n==="string"&&+x.g>0&&+x.g<200).slice(0,30):[];
@@ -2073,7 +2073,14 @@ const chatSave=()=>{try{localStorage.setItem(ASK_LS,JSON.stringify(CHAT.slice(-4
 const noAc=s=>String(s||"").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,"").replace(/[¿?¡!]/g," ");
 let AI=null,AIOFF=false;
 if(typeof window!=="undefined"&&window.claude&&typeof window.claude.use==="function")window.claude.use("sample").then(s=>{AI=s||null;if(AI&&S.chatOpen)renderChat()}).catch(()=>{});
-const aiOn=()=>!!AI&&!AIOFF;
+// CLAUDE CON TU CLAVE (app instalada desde GitHub): la clave queda solo en este teléfono, no va en el respaldo ni a la nube
+const AIK_LS="bit-ai",AIMOD=[["claude-opus-5-5","Opus 5.5","la más capaz · ~US$0,02 por pregunta"],["claude-sonnet-5-5","Sonnet 5.5","~US$0,01 por pregunta"],["claude-haiku-5-5","Haiku 5.5","la más barata · ~US$0,001 por pregunta"]];
+const aiKey=()=>{try{const v=JSON.parse(localStorage.getItem(AIK_LS)||"{}");return v&&typeof v==="object"?v:{}}catch(e){return {}}};
+const aiKeySet=o=>{try{localStorage.setItem(AIK_LS,JSON.stringify(o))}catch(e){}};
+const keyOn=()=>typeof OWN_HOST!=="undefined"&&OWN_HOST&&/^sk-ant-/.test(aiKey().key||"");
+const aiModel=()=>{const m=aiKey().model;return AIMOD.some(x=>x[0]===m)?m:AIMOD[0][0]};
+let SDKP=null,SDK=null;const sdkLoad=()=>SDKP||(SDKP=import("./vendor/anthropic/anthropic-sdk.mjs").then(m=>SDK=m.default).catch(e=>{SDKP=null;throw {code:"sdk"}}));
+const aiOn=()=>(!!AI&&!AIOFF)||keyOn();
 // tiempo dentro de una frase: 14:49 · 1:05:10 · 14 minutos 49 segundos · 25 min
 function asTime(c,minOk){let m=c.match(/(\d{1,2}):(\d{2}):(\d{2})/);if(m)return +m[1]*3600+ +m[2]*60+ +m[3];
   m=c.match(/(\d{1,2})\s*[:'’]\s*(\d{2})(?!\d)/);if(m)return +m[1]*60+ +m[2];
@@ -2176,7 +2183,27 @@ function aiContext(){const td=today(),tk=iso(td),c=Store.cfg,L=locate(td),p=plan
   lines.push("Últimos días: "+last.join(" | "));lines.push(`Racha ${streak()} días. Proteína meta ${protGoal()} g. Agua meta ${waterGoal(p||{waterL:2.5})} vasos de ${vasoMl()} ml.`);
   return lines.join("\n")}
 const AIRULES=`Eres el asistente de entrenamiento dentro de la app de Diego (18 años, Puerto Varas, Chile). Responde en español de Chile, cercano y directo, en máximo 120 palabras, usando sus datos de abajo. No inventes datos. Seguridad: nunca apnea solo, en el lago donde haga pie y con tiempo límite, no entrenar fuerte con poco sueño, dolor agudo = parar y consultar. Si su mensaje trae números para anotar (flexiones, abdominales, barras, salto en cm, tiempo de 3.200 m, nado 50 m, carrera con km y tiempo, peso, vasos de agua, medidas en cm, pichanga con minutos/goles/asistencias), ponlos en "anotar"; si no, "anotar" va vacío.
-Responde SOLO con JSON: {"respuesta":"texto","anotar":{"flex":null,"abd":null,"barras":null,"salto":null,"run":null,"swim":null,"carrera_km":null,"carrera_tiempo":null,"peso":null,"agua_vasos":null,"cintura":null,"brazo":null,"pecho":null,"muslo":null,"pichanga_min":null,"goles":null,"asistencias":null}} (tiempos como "mm:ss").`;
+Responde SOLO con JSON (si un dato no viene, déjalo null o ""): {"respuesta":"texto","anotar":{"flex":null,"abd":null,"barras":null,"salto":null,"run":null,"swim":null,"carrera_km":null,"carrera_tiempo":null,"peso":null,"agua_vasos":null,"cintura":null,"brazo":null,"pecho":null,"muslo":null,"pichanga_min":null,"goles":null,"asistencias":null}} (tiempos como "mm:ss").`;
+const AIKEYS=["flex","abd","barras","salto","run","swim","carrera_km","carrera_tiempo","peso","agua_vasos","cintura","brazo","pecho","muslo","pichanga_min","goles","asistencias"];
+const AISCHEMA={type:"object",properties:{respuesta:{type:"string"},anotar:{type:"object",properties:Object.fromEntries(AIKEYS.map(x=>[x,{type:"string"}])),required:AIKEYS,additionalProperties:false}},required:["respuesta","anotar"],additionalProperties:false};
+// una pregunta a Claude con tu clave (SDK oficial). Respuesta en JSON con el formato de arriba.
+async function aiCallKey(system,messages){const cfg=aiKey(),Anthropic=await sdkLoad(),model=aiModel();
+  const client=new Anthropic({apiKey:cfg.key,dangerouslyAllowBrowser:true,maxRetries:1,timeout:90000,baseURL:window.__AIBASE||undefined});
+  const req={model,max_tokens:16000,system,messages,output_config:{effort:"low",format:{type:"json_schema",schema:AISCHEMA}}};
+  // si Opus o Sonnet no responden algo, la API lo pasa sola a otro modelo (fallbacks); Haiku no tiene esa opción
+  const res=model==="claude-haiku-5-5"?await client.messages.create(req):await client.beta.messages.create(Object.assign({betas:["server-side-fallback-2026-07-01"],fallbacks:"default"},req));
+  if(res.stop_reason==="refusal")throw {code:"refused"};if(res.stop_reason==="max_tokens")throw {code:"invalid_json"};
+  const txt=(res.content||[]).filter(b=>b.type==="text").map(b=>b.text).join("");try{return JSON.parse(txt)}catch(e){throw {code:"invalid_json"}}}
+function aiErr(e){const A=SDK;if(e&&e.code==="sdk")return "No pude cargar el conector de Claude: la primera vez necesita internet.";
+  if(A&&e instanceof A.AuthenticationError)return "Tu clave no sirve: revísala en ⚙️ (empieza con sk-ant-).";
+  if(A&&e instanceof A.PermissionDeniedError)return "Tu clave no tiene permiso para usar Claude: revísala en console.anthropic.com.";
+  if(A&&e instanceof A.RateLimitError)return "Muchas preguntas seguidas o llegaste al límite de tu cuenta: espera un rato.";
+  if(A&&e instanceof A.BadRequestError)return "La API no aceptó la pregunta"+(e.message?": "+String(e.message).slice(0,160):"")+". Si dice «credit balance», carga saldo en console.anthropic.com → Billing.";
+  if(A&&e instanceof A.APIConnectionError)return "Sin conexión con Claude: respondo con lo que sé de la app.";
+  if(A&&e instanceof A.APIError)return `Claude no respondió (error ${e.status||"?"}). Prueba de nuevo en un rato.`;
+  if(e&&e.code==="refused")return "Claude no quiso responder eso. Pregúntalo de otra forma.";
+  if(e&&e.code==="invalid_json")return "No entendí la respuesta de Claude. Prueba de nuevo.";
+  return "No pude preguntarle a Claude ahora."}
 function aiItems(a,k){const p=planFor(parse(k)),kind=asTestKind(p),it=[];if(!a||typeof a!=="object")return it;const n=x=>x==null||x===""?null:+String(x).replace(",",".");
   ["flex","abd","barras","salto"].forEach(x=>{const v=n(a[x]);if(v>0&&v<500)it.push({f:"test",kind,key:x,v:Math.round(v)})});
   ["run","swim"].forEach(x=>{const v=a[x]&&toSec(String(a[x]));if(v>0)it.push({f:"test",kind,key:x,v:fmtT(v)})});
@@ -2197,22 +2224,34 @@ async function asSend(text,from){text=String(text||"").trim();if(!text)return;co
   if(aiOn()){await asAI(text,k);return}
   chatPush("a",`No te entendí 🤔. ${ASHELP}`);render();if(S.chatOpen)renderChat()}
 async function asAI(text,k){const m=chatPush("a","Pensando…",{busy:1});render();if(S.chatOpen)renderChat();
-  const turns=[{role:"user",content:AIRULES+"\n\nDATOS DE LA APP:\n"+aiContext()}];CHAT.slice(-9,-2).filter(x=>!x.busy).forEach(x=>turns.push({role:x.r==="u"?"user":"assistant",content:String(x.t).replace(/<br>/g,"\n").replace(/<[^>]+>/g,"")}));turns.push({role:"user",content:text});
-  try{const j=await AI.json(turns,{cache:false});const its=aiItems(j&&j.anotar,k);let extra="";
+  const sys=AIRULES+"\n\nDATOS DE LA APP:\n"+aiContext(),hist=[];CHAT.slice(-9,-2).filter(x=>!x.busy).forEach(x=>hist.push({role:x.r==="u"?"user":"assistant",content:String(x.t).replace(/<br>/g,"\n").replace(/<[^>]+>/g,"")}));while(hist.length&&hist[0].role!=="user")hist.shift();hist.push({role:"user",content:text});
+  const useSample=!!AI&&!AIOFF;
+  try{const j=useSample?await AI.json([{role:"user",content:sys},...hist],{cache:false}):await aiCallKey(sys,hist);const its=aiItems(j&&j.anotar,k);let extra="";
     if(its.length){const r=asApply(its,k);if(r){ASUNDO[m.id]={k,prev:r.prev};m.undo=m.id;extra=`<br><br>Anoté:<br>${r.lines.map(x=>"• "+x).join("<br>")}`}}
     m.t=esc(String((j&&j.respuesta)||"Listo.")).replace(/\n/g,"<br>")+extra;delete m.busy}
-  catch(e){delete m.busy;const code=e&&e.code;if(["not_granted","sampling_disabled","not_declared","capability_disabled","capability_removed"].includes(code))AIOFF=true;
-    m.t=code==="rate_limited"?"Claude está ocupado o llegaste al límite de uso. Prueba en un rato.":code==="not_granted"?"Sin permiso para usar Claude: respondo solo con lo que sé de la app.":`No pude preguntarle a Claude ahora. ${ASHELP}`}
+  catch(e){delete m.busy;const code=e&&e.code;
+    if(useSample){if(["not_granted","sampling_disabled","not_declared","capability_disabled","capability_removed"].includes(code))AIOFF=true;
+      m.t=code==="rate_limited"?"Claude está ocupado o llegaste al límite de uso. Prueba en un rato.":code==="not_granted"?"Sin permiso para usar Claude: respondo solo con lo que sé de la app.":`No pude preguntarle a Claude ahora. ${ASHELP}`}
+    else m.t=esc(aiErr(e))}
   chatSave();render();if(S.chatOpen)renderChat()}
 function asUndo(id){const u=ASUNDO[id];if(!u)return;Store.setDay(u.k,u.prev);delete ASUNDO[id];const m=CHAT.find(x=>x.id===+id);if(m){m.undo=0;m.t+="<br><i>(deshecho)</i>"}chatSave();render();if(S.chatOpen)renderChat();toast("Deshecho.")}
 const chatMsgHTML=m=>`<div class="cmsg ${m.r==="u"?"me":"ai"}${m.busy?" busy":""}"><div class="chb">${m.busy?`<span class="spin"></span> `:""}${m.t}</div>${m.undo&&ASUNDO[m.undo]?`<button class="lnk" data-asundo="${m.undo}">Deshacer</button>`:""}${m.deeper?`<button class="lnk" data-asdeep="${m.id}">Preguntarle más a Claude ›</button>`:""}</div>`;
 function renderChat(){let el=document.getElementById("chat");if(!el){el=document.createElement("div");el.id="chat";el.className="chat";document.body.appendChild(el)}
   el.hidden=!S.chatOpen;if(!S.chatOpen)return;const ms=CHAT.slice(-30);
-  el.innerHTML=`<div class="chd"><div><b>🤖 Tu asistente</b><span class="foot">${aiOn()?"Con Claude · tus datos se usan solo para responderte":"Anota y responde con tus datos · funciona sin internet"}</span></div><button class="nb" data-chatclose aria-label="Cerrar">✕</button></div>
-   <div class="chl" id="chl">${ms.length?ms.map(chatMsgHTML).join(""):`<div class="cmsg ai"><div class="chb">${ASHELP}</div></div>`}</div>
+  const sub=AI&&!AIOFF?"Con Claude · tus datos se usan solo para responderte":keyOn()?`Con Claude ${(AIMOD.find(x=>x[0]===aiModel())||[])[1]} (tu clave)`:"Anota y responde con tus datos · funciona sin internet";
+  el.innerHTML=`<div class="chd"><div><b>🤖 Tu asistente</b><span class="foot">${sub}</span></div><div class="row" style="flex-wrap:nowrap;gap:6px;margin:0">${OWN_HOST?`<button class="nb" data-aicfg aria-label="Claude con tu clave">⚙️</button>`:""}<button class="nb" data-chatclose aria-label="Cerrar">✕</button></div></div>
+   ${S.aiCfg&&OWN_HOST?aiCfgHTML():""}<div class="chl" id="chl">${ms.length?ms.map(chatMsgHTML).join(""):`<div class="cmsg ai"><div class="chb">${ASHELP}</div></div>`}</div>
    <div class="chq">${["¿Qué me toca hoy?","¿Qué me toca mañana?","¿Cómo voy?","¿Mis récords?","¿Cuánto me falta para la meta?"].map(x=>`<button class="seg" data-asq="${esc(x)}">${esc(x)}</button>`).join("")}</div>
    <div class="chi"><textarea id="as-in" rows="1" placeholder="Escribe o dicta…" aria-label="Mensaje"></textarea><button class="btn main" data-assend="chat" aria-label="Enviar">➤</button></div>`;
   const l=document.getElementById("chl");if(l)l.scrollTop=l.scrollHeight}
+function aiCfgHTML(){const c=aiKey(),has=/^sk-ant-/.test(c.key||""),m=aiModel();
+  return `<div class="aicfg"><b>🔑 Claude en este teléfono (opcional)</b>
+   <p class="foot" style="margin:4px 0 8px">Pega tu clave de la API de Anthropic y el asistente piensa con Claude: responde cualquier pregunta con tus datos y anota lo que le cuentes. La clave queda <b>solo en este teléfono</b> (no va en el respaldo ni a la nube). Cada pregunta se cobra en tu cuenta de Anthropic.</p>
+   <div class="field"><label class="lbl" for="ai-key">Tu clave${has?` (guardada: sk-ant-…${esc(String(c.key).slice(-4))})`:""}</label><input id="ai-key" type="password" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="${has?"Pega otra para cambiarla":"sk-ant-…"}"></div>
+   <span class="lbl">Modelo</span><div class="segs col">${AIMOD.map(([v,n,d])=>`<button class="seg ${m===v?"on":""}" data-aimod="${v}"><b>${n}</b> · ${d}</button>`).join("")}</div>
+   <div class="row"><button class="btn main sm" data-aisave>Guardar</button>${has?`<button class="btn sm" data-aitest>Probar</button><button class="btn sm" data-aidel>Borrar clave</button>`:""}</div>
+   <p class="foot" id="ai-st" style="margin:6px 0 0">${esc(S.aiSt||"")}</p>
+   <details class="rsub"><summary>Cómo conseguir la clave</summary><ol class="foot" style="padding-left:18px;margin:6px 0"><li>Entra a <b>console.anthropic.com</b> y crea tu cuenta.</li><li>En <b>Billing</b> carga saldo (desde US$5) y pon un <b>límite de gasto</b> mensual.</li><li>En <b>API Keys</b> toca <b>Create Key</b> y copia la clave (empieza con sk-ant-).</li><li>Pégala aquí, toca <b>Guardar</b> y después <b>Probar</b>.</li></ol><p class="foot">No compartas la clave con nadie. Si pierdes el teléfono, bórrala en la consola.</p></details></div>`}
 function asCardHTML(k){const last=[...CHAT].reverse().find(m=>m.r==="a"&&m.k===k&&!m.busy);
   return `<div class="ascard"><div class="asrow"><textarea id="as-in-hoy" rows="1" placeholder="Ej.: hice 40 flexiones…" aria-label="Cuéntale a la app"></textarea><button class="btn main" data-assend="hoy" aria-label="Enviar">➤</button></div>${last?`<div class="aslast">${last.t}${last.undo&&ASUNDO[last.undo]?` <button class="lnk" data-asundo="${last.undo}">Deshacer</button>`:""}</div>`:""}<button class="lnk" data-chatopen>🤖 Abrir el asistente${aiOn()?" (con Claude)":""} ›</button></div>`}
 
@@ -2567,8 +2606,8 @@ function rutinaEditor(){const ids=rutinaIds(),id=ids.includes(S.redit)?S.redit:"
   ${rtBox("ej","💪 Rutinas y ejercicios",rutinaName(id)+" · "+rows.length+" ejercicios",`<div class="segs">${ids.map(k=>`<button class="seg ${k===id?"on":""}" data-rday="${k}">${RUTINA[k]?"":"⭐ "}${esc(rutinaName(k).replace(" + core",""))}</button>`).join("")}<button class="seg" data-rnew>+ Nueva rutina</button></div>
     ${mia?`<div class="row" style="align-items:flex-end"><div class="field" style="flex:1;min-width:150px"><label class="lbl" for="rt-name">Nombre de la rutina</label><input id="rt-name" data-rtname="${id}" value="${esc(rutinaName(id))}" maxlength="30"></div>${S.confirm==="rtdel"?`<button class="btn sm main" data-rtdel="${id}">Sí, borrarla</button><button class="btn sm" data-cancel>No</button>`:`<button class="btn sm" data-ask="rtdel">🗑 Borrar</button>`}</div><p class="foot">Para que salga en tu semana, elígela arriba en «📅 Tu semana».</p>`:""}
     <div class="row" style="justify-content:space-between;align-items:center"><span class="lbl">💪 Ejercicios</span><button class="lnk" data-rxall>${S.rxAll?"Ver en lista":"Editar todos"}</button></div>
-    <div class="rrows">${rows.map((x,i)=>!(S.rxAll||window.__OPENALL||(S.rxEdit===id+"|"+i))?`<div class="exr"><span class="exi">${i+1}</span><span class="exb"><span class="exn">${esc(x.n)}${x.plio?" ⚡":""}</span><span class="exm mono">${esc(x.s)} × ${esc(x.reps)}<small>${x.r?" · descanso "+fromSecS(+x.r):""}</small></span></span><button class="nb" data-rxe="${id}|${i}" aria-label="Editar ${esc(x.n)}">✏️</button></div>`:`<div class="rrow"><input id="rx-${id}-${i}-n" class="rn" data-rx="${id}|${i}|n" value="${esc(x.n)}" aria-label="Ejercicio ${i+1}">
-      <div class="rnums"><label>Series<input id="rx-${id}-${i}-s" inputmode="numeric" data-rx="${id}|${i}|s" value="${esc(x.s)}"></label><label>Reps o tiempo<input id="rx-${id}-${i}-reps" data-rx="${id}|${i}|reps" value="${esc(x.reps)}"></label><label>Descanso (s)<input id="rx-${id}-${i}-r" inputmode="numeric" data-rx="${id}|${i}|r" value="${esc(x.r)}"></label></div>
+    <div class="rrows">${rows.map((x,i)=>!(S.rxAll||window.__OPENALL||(S.rxEdit===id+"|"+i))?`<div class="exr"><span class="exi">${i+1}</span><span class="exb"><span class="exn">${esc(x.n)}${x.plio?" ⚡":""}</span><span class="exm mono">${esc(x.s)} × ${esc(x.reps)}<small>${x.r?" · descanso "+fromSecS(+x.r):""} · ${CLBL[cargaOf(x.n)].split(" ")[0]}</small></span></span><button class="nb" data-rxe="${id}|${i}" aria-label="Editar ${esc(x.n)}">✏️</button></div>`:`<div class="rrow"><input id="rx-${id}-${i}-n" class="rn" data-rx="${id}|${i}|n" value="${esc(x.n)}" aria-label="Ejercicio ${i+1}">
+      <div class="rnums"><label>Series<input id="rx-${id}-${i}-s" inputmode="numeric" data-rx="${id}|${i}|s" value="${esc(x.s)}"></label><label>Reps o tiempo<input id="rx-${id}-${i}-reps" data-rx="${id}|${i}|reps" value="${esc(x.reps)}"></label><label>Descanso (s)<input id="rx-${id}-${i}-r" inputmode="numeric" data-rx="${id}|${i}|r" value="${esc(x.r)}"></label><label class="rxc">Peso<select data-rxc="${esc(x.n)}" aria-label="Peso de ${esc(x.n)}">${cargaOpts(x.n).map(([v,l])=>`<option value="${v}" ${cargaOf(x.n)===v?"selected":""}>${l}</option>`).join("")}</select></label></div>
       <div class="rbtns"><button class="nb" data-rmv="${id}|${i}|-1" aria-label="Subir" ${i?"":"disabled"}>↑</button><button class="nb" data-rmv="${id}|${i}|1" aria-label="Bajar" ${i<rows.length-1?"":"disabled"}>↓</button><button class="nb" data-rdel="${id}|${i}" aria-label="Quitar ${esc(x.n)}">✕</button>${S.rxEdit===id+"|"+i?`<button class="nb" data-rxe="" aria-label="Listo">✓</button>`:""}</div></div>`).join("")}</div>
     <div class="row"><button class="btn sm" data-radd="${id}">+ Agregar ejercicio</button>${custom&&!mia?(S.confirm==="rreset"?`<button class="btn sm main" data-rreset="${id}">Sí, volver a la original</button><button class="btn sm" data-cancel>No</button>`:`<button class="btn sm" data-ask="rreset">Volver a la rutina original</button>`):""}</div>
     <p class="foot">Reps: «8–12», «10 por lado» o un tiempo como «30–45 s». En semanas de descarga la app baja las series sola. Vale para todos los días con esta rutina, todas las semanas.</p>
@@ -2971,7 +3010,7 @@ function viewGuia0(){return `<div class="sec prose"><h2>Guía</h2>
  <li><b>Hoy</b>: lo que toca ahora, tus tareas en orden, comidas, agua y el resumen del día.</li>
  <li><b>Rutina</b>: tu entrenamiento completo: objetivo, tu semana, ejercicios, series, repeticiones, cardio e intensidad.</li>
  <li><b>Plan</b>: tu semana del plan, los avisos para el calendario, <b>✏️ Personaliza tu día</b> (horario, sueño, tareas, comidas, metas, avisos), ajustes y la copia de seguridad.</li>
- <li><b>Registro</b>: comidas, agua, sueño, partido, pichangas (aparte), inglés, fotos, compras y ahorro de cualquier día.</li><li><b>💬 Cuéntale o pregúntale</b> (en Hoy o con el botón 🤖): escribe o dicta «hice 40 flexiones en 2 minutos y 60 abdominales» o «me pesé 68,4» y la app lo anota donde va (prueba, simulacro, trote, peso, agua, pichanga…), con «Deshacer». También responde «¿qué me toca mañana?», «¿cómo voy?» o «¿mi récord de flexiones?». En la app de Claude, lo que no sabe se lo pregunta a Claude con tus datos.</li><li><b>📷 Anotar con foto</b> (en Hoy y en cada trote): sube la captura de adidas Running, Strava o el reloj y la app lee km, tiempo, ritmo y calorías y los anota en el trote del día (o como carrera extra). La foto se lee en el mismo teléfono.</li>
+ <li><b>Registro</b>: comidas, agua, sueño, partido, pichangas (aparte), inglés, fotos, compras y ahorro de cualquier día.</li><li><b>🏋️ Peso de cada ejercicio</b>: en cada ejercicio toca el botón de peso y elige 🧍 sin peso, 🏋️ con peso (mancuernas, barra o máquina), 🎒 peso extra (mochila o chaleco) o 🟣 con banda (barras y fondos). Vale todos los días; también se cambia en Rutina → ✏️. La meta de cada día sube según eso: repeticiones, kilos o banda más liviana.</li><li><b>💬 Cuéntale o pregúntale</b> (en Hoy o con el botón 🤖): escribe o dicta «hice 40 flexiones en 2 minutos y 60 abdominales» o «me pesé 68,4» y la app lo anota donde va (prueba, simulacro, trote, peso, agua, pichanga…), con «Deshacer». También responde «¿qué me toca mañana?», «¿cómo voy?» o «¿mi récord de flexiones?». En la app de Claude, lo que no sabe se lo pregunta a Claude con tus datos. En el iPhone, si pegas tu clave de la API de Anthropic en 🤖 → ⚙️, también piensa con Claude (se cobra en tu cuenta).</li><li><b>📷 Anotar con foto</b> (en Hoy y en cada trote): sube la captura de adidas Running, Strava o el reloj y la app lee km, tiempo, ritmo y calorías y los anota en el trote del día (o como carrera extra). La foto se lee en el mismo teléfono.</li>
  <li><b>Progreso</b>: cómo vas: series por músculo, peso, racha, récords y pruebas.</li>
  <li><b>Para moverte</b>: la fila de botones de arriba te lleva a cada parte; abajo de cada página hay «← anterior · siguiente →»; también puedes deslizar el dedo a los lados. El botón ↑ te sube.</li></ul>
  <h3>☀️ Tu día, paso a paso</h3><ol>
@@ -3318,29 +3357,41 @@ function discosOf(kg,one){if(gymMode())return "";const v=parseFloat(String(kg||"
   if(n08>(one?2:1)||real>(one?18:10))return `Tus mancuernas llegan hasta ${one?18:10} kg${one?"":" cada una"}.`;
   const pz=[n16?`${n16} de 1,6`:"",n08?`${n08} de 0,8`:""].filter(Boolean).join(" + ");
   return `Arma${one?" la mancuerna":" cada mancuerna"}: ${pz||"sin discos"} por lado${Math.abs(real-v)>0.05?` (= ${String(real).replace(".",",")} kg)`:""}.`}
+// PESO DE CADA EJERCICIO (lo eliges tú, vale todos los días): sin peso (tu cuerpo), con peso (mancuernas, barra o máquina),
+// peso extra (mochila o chaleco encima de tu cuerpo) o con banda (barras y fondos). Si no eliges, la app adivina por el nombre.
+const CARGAS=[["corp","🧍 Sin peso"],["kg","🏋️ Con peso"],["extra","🎒 Peso extra"],["banda","🟣 Con banda"]],CLBL=Object.fromEntries(CARGAS);
+const WEIGHTED=/mancuern|goblet|kettle|\bpesas?\b|con barra|barra ol|\bpress\b|curl|remo con|peso muerto|hip thrust|polea|m[aá]quina|prensa|landmine|jal[oó]n|elevaciones? laterales|p[aá]jaros|extensi[oó]n de (codo|tr[ií]ceps)|encogimientos|zancadas con|sentadilla con/i;
+let CARC={};
+function cargaAuto(n){if(CARC[n])return CARC[n];return CARC[n]=isPull(n)?"banda":lastKg(n,"9999-99-99")>0||WEIGHTED.test(n)?"kg":"corp"}
+function cargaOf(n){const v=(Store.cfg.carga||{})[n];return CLBL[v]&&(v!=="banda"||isPull(n))?v:cargaAuto(n)}
+const cargaOpts=n=>CARGAS.filter(([v])=>v!=="banda"||isPull(n));
 function rangeOf(b){const m=String(b.p).match(/×\s*(\d+)\s*[–-]\s*(\d+)/);return m?[+m[1],+m[2]]:null}
 function lastKg(name,k){const ks=Object.keys(Store.days).filter(x=>x<k).sort().reverse();for(const x of ks){const v=parseFloat(String(((Store.days[x].kg||{})[name])||"").replace(",","."));if(v>0)return v}return 0}
-function progOf(b,k){const rg=rangeOf(b);if(!rg)return null;const [lo,hi]=rg,pv=prevReps(b.n,k),n=b.s;
-  const O=objOf(),em=e1rm(b.n),sug=O&&em?snapKg(em*O[2].pct):0;
-  if(!pv)return {first:true,kg:lastKg(b.n,k)||sug,reps:Array(n).fill(lo),lo,hi,sug};
+function progOf(b,k){const rg=rangeOf(b);if(!rg)return null;const [lo,hi]=rg,pv=prevReps(b.n,k),n=b.s,mode=cargaOf(b.n),useKg=mode==="kg"||mode==="extra";
+  const O=objOf(),em=mode==="kg"?e1rm(b.n):0,sug=O&&em?snapKg(em*O[2].pct):0;
+  if(!pv)return {first:true,kg:useKg?(lastKg(b.n,k)||sug):0,reps:Array(n).fill(lo),lo,hi,sug,mode};
   const pk=parseFloat(String(((Store.days[pv.k].kg||{})[b.n])||"").replace(",","."))||0,sets=pv.v.map(x=>parseRep(x)).map(x=>x?x.r:0);
-  const kg=pk||Math.max(0,...pv.v.map(x=>(parseRep(x)||{}).kg||0))||lastKg(b.n,k);
+  const kg=useKg?(pk||Math.max(0,...pv.v.map(x=>(parseRep(x)||{}).kg||0))||lastKg(b.n,k)):0;
   const top=sets.filter(r=>r>0).length>=n&&sets.slice(0,n).every(r=>r>=hi);
+  if(top&&mode==="corp")return {up:"dif",kg:0,reps:Array(n).fill(hi),lo,hi,prev:pv,mode,msg:"Llegaste al tope: hazlo más difícil (baja en 3 s con 1 s de pausa abajo) o ponle «🎒 Peso extra» con la mochila."};
+  if(top&&mode==="banda")return {up:"dif",kg:0,reps:Array(n).fill(lo),lo,hi,prev:pv,mode,msg:"Llegaste al tope: pasa a una banda más liviana (negra → morada → sin banda) o, sin banda, ponle «🎒 Peso extra»."};
+  if(top&&mode==="extra"){const nk=Math.round(((kg||0)+2)*10)/10;return {up:"kg",kg:nk,reps:Array(n).fill(lo),lo,hi,prev:pv,mode,msg:kg?`¡Subes! Hoy ${String(nk).replace(".",",")} kg extra en la mochila (2 kg más), desde ${lo} repeticiones.`:`¡Ponle peso! Hoy 2 kg extra en la mochila, desde ${lo} repeticiones.`}}
   if(top){const max=gymMode()?400:ONE_DB.test(b.n)?18:10,step=gymMode()?2.5:1.6;
     if(!kg)return {up:"peso",kg:0,reps:Array(n).fill(lo),lo,hi,prev:pv,msg:"Llegaste al tope: hoy agrega la mochila con peso o baja en 3 s."};
     if(kg+step>max)return {up:"max",kg,reps:Array(n).fill(hi),lo,hi,prev:pv,msg:`Estás en el máximo de tus mancuernas (${max} kg): baja en 3 s y haz 1 s de pausa abajo.`};
     const nk=Math.round((kg+step)*10)/10;
     return {up:"kg",kg:nk,reps:Array(n).fill(lo),lo,hi,prev:pv,msg:`¡Subes de peso! Hoy ${String(nk).replace(".",",")} kg${gymMode()?"":ONE_DB.test(b.n)?"":" en cada mancuerna"}${gymMode()?"":" (un disco de 0,8 kg por lado)"}, desde ${lo} repeticiones.`}}
-  return {kg,reps:Array.from({length:n},(_,j)=>Math.min(hi,Math.max(lo,(sets[j]||sets.filter(Boolean).slice(-1)[0]||lo-1)+1))),lo,hi,prev:pv}}
+  return {kg,mode,reps:Array.from({length:n},(_,j)=>Math.min(hi,Math.max(lo,(sets[j]||sets.filter(Boolean).slice(-1)[0]||lo-1)+1))),lo,hi,prev:pv}}
 function repsHTML(t,b,i){if(t.kind!=="fuerza"||b.tm||!(b.s>=2&&b.s<=8)||!/×/.test(b.p))return "";const k=iso(S.date),dd=Store.days[k]||{},cur=(dd.reps||{})[b.n]||[],pv=prevReps(b.n,k),pg=progOf(b,k),kgNow=((dd.kg||{})[b.n])||"";
-  const pull=isPull(b.n),bd=pull?bandaOf(b.n,k):"",rc=records()[recKey(b.n,bd)],tkg=pg&&pg.kg?String(pg.kg).replace(".",","):"";
+  const mode=cargaOf(b.n),pull=mode==="banda",xk=mode==="extra",bd=pull?bandaOf(b.n,k):isPull(b.n)?"sin":"",rc=records()[recKey(b.n,bd)],tkg=pg&&pg.kg&&(mode==="kg"||xk)?String(pg.kg).replace(".",","):"",kgu=xk?" kg extra":" kg";
   const O=objOf(),oh=O?`🎯 ${O[1].replace(/^\S+\s/,"")}: ${O[2].tempo}, ${O[2].rir}. `:"";
-  const meta=pg?(pg.first?oh+(pg.sug?`Primera vez con este objetivo: unos ${String(pg.sug).replace(".",",")} kg (${Math.round(O[2].pct*100)}% de tu máximo estimado), ${pg.lo}–${pg.hi} repeticiones.`:`Primera vez: elige un peso con el que llegues a ${pg.lo}–${pg.hi} con buena técnica${O&&O[0]==="velocidad"?" y que puedas mover rápido":""}.`):oh+(pg.msg||`Meta de hoy: ${pg.reps.join(" · ")}${tkg?` con ${tkg} kg`:""} (1 más que la vez pasada).`)):"";
+  const meta=pg?(pg.first?oh+(pg.sug?`Primera vez con este objetivo: unos ${String(pg.sug).replace(".",",")} kg (${Math.round(O[2].pct*100)}% de tu máximo estimado), ${pg.lo}–${pg.hi} repeticiones.`:`Primera vez: elige un peso con el que llegues a ${pg.lo}–${pg.hi} con buena técnica${O&&O[0]==="velocidad"?" y que puedas mover rápido":""}.`):oh+(pg.msg||`Meta de hoy: ${pg.reps.join(" · ")}${tkg?` con ${tkg}${kgu}`:""} (1 más que la vez pasada).`)):"";
   const full=cur.length>=b.s&&cur.slice(0,b.s).every(v=>String(v||"").trim());
-  return `<div class="reps">${meta?`<span class="foot meta ${pg&&pg.up==="kg"?"up":""}">${esc(meta)}</span>`:""}${pg&&!full?`<button class="btn sm hmeta" data-hm="${esc(t.id)}|${i}">✓ Hice la meta${pg.reps?` (${pg.reps.join(" · ")}${tkg&&!pull?` con ${tkg} kg`:""})`:""}</button>`:""}${rc?`<span class="foot rec">Récord: ${esc(fmtBest(rc.best))}</span>`:""}
-    ${pull?`<div class="segs bandas">${BANDAS.map(([v,l])=>`<button class="seg ${bd===v?"on":""}" data-banda="${esc(b.n)}|${v}">${l}</button>`).join("")}</div>`:`<label class="kgf">Peso<input id="kg-${esc(t.id)}-${i}" data-kg="${esc(b.n)}" inputmode="decimal" value="${esc(kgNow)}" placeholder="${esc(tkg||"kg")}">kg</label><span class="foot discos" id="dk-${esc(t.id)}-${i}">${esc(discosOf(kgNow||tkg,ONE_DB.test(b.n)))}</span>`}
+  return `<div class="reps">${meta?`<span class="foot meta ${pg&&pg.up==="kg"?"up":""}">${esc(meta)}</span>`:""}${pg&&!full?`<button class="btn sm hmeta" data-hm="${esc(t.id)}|${i}">✓ Hice la meta${pg.reps?` (${pg.reps.join(" · ")}${tkg?` con ${tkg}${kgu}`:""})`:""}</button>`:""}${rc?`<span class="foot rec">Récord: ${esc(fmtBest(rc.best))}</span>`:""}
+    <div class="cargarow"><button class="cchip" data-cargaopen="${esc(b.n)}" aria-expanded="${S.cargaOpen===b.n}">${CLBL[mode]} ▾</button>${S.cargaOpen===b.n?`<div class="segs cargaopts">${cargaOpts(b.n).map(([v,l])=>`<button class="seg ${mode===v?"on":""}" data-carga="${esc(b.n)}|${v}">${l}</button>`).join("")}</div><span class="foot">Vale para «${esc(b.n)}» todos los días (también se cambia en Rutina).</span>`:""}</div>
+    ${pull?`<div class="segs bandas">${BANDAS.map(([v,l])=>`<button class="seg ${bd===v?"on":""}" data-banda="${esc(b.n)}|${v}">${l}</button>`).join("")}</div>`:mode==="kg"||xk?`<label class="kgf">${xk?"Peso extra":"Peso"}<input id="kg-${esc(t.id)}-${i}" data-kg="${esc(b.n)}" inputmode="decimal" value="${esc(kgNow)}" placeholder="${esc(tkg||(xk?"0":"kg"))}">kg</label><span class="foot discos" id="dk-${esc(t.id)}-${i}">${esc(xk?"Mochila o chaleco con peso (agua, arena o libros).":discosOf(kgNow||tkg,ONE_DB.test(b.n)))}</span>`:""}
     ${Array.from({length:b.s},(_,j)=>{const inp=`<input id="rp-${esc(t.id)}-${i}-${j}" data-rp="${esc(b.n)}|${j}" data-tkg="${esc(tkg)}" inputmode="numeric" aria-label="Serie ${j+1}: repeticiones" value="${esc(cur[j]||"")}" placeholder="${esc(pg?String(pg.reps[j]):pv&&pv.v[j]||"reps")}">`;
-      if(!pull)return inp;const bj=bandaSet(b.n,k,j)||bd;return `<div class="setc">${inp}<button class="bch b-${bj}" data-bset="${esc(b.n)}|${j}|${b.s}" aria-label="Serie ${j+1}: ${BLBL[bj]} (toca para cambiar)">${BSH[bj]}</button></div>`}).join("")}${pv?`<span class="foot">Antes (${fmtS(parse(pv.k))}): ${esc(pull?pv.v.map((x,j)=>(x||"–")+(x?" "+BSH[bandaSet(b.n,pv.k,j)||"sin"]:"")).join(" · "):pv.v.map(x=>x||"–").join(" · "))}${!pull&&((Store.days[pv.k].kg||{})[b.n])?` con ${esc(Store.days[pv.k].kg[b.n])} kg`:""}</span>`:""}${pull?`<span class="foot">Toca la etiqueta de cada serie para cambiar: sin → morada → negra.</span>`:""}</div>`}
+      if(!pull)return inp;const bj=bandaSet(b.n,k,j)||bd;return `<div class="setc">${inp}<button class="bch b-${bj}" data-bset="${esc(b.n)}|${j}|${b.s}" aria-label="Serie ${j+1}: ${BLBL[bj]} (toca para cambiar)">${BSH[bj]}</button></div>`}).join("")}${pv?`<span class="foot">Antes (${fmtS(parse(pv.k))}): ${esc(pull?pv.v.map((x,j)=>(x||"–")+(x?" "+BSH[bandaSet(b.n,pv.k,j)||"sin"]:"")).join(" · "):pv.v.map(x=>x||"–").join(" · "))}${!pull&&mode!=="corp"&&((Store.days[pv.k].kg||{})[b.n])?` con ${esc(Store.days[pv.k].kg[b.n])}${kgu}`:""}</span>`:""}${pull?`<span class="foot">Toca la etiqueta de cada serie para cambiar: sin → morada → negra.</span>`:""}</div>`}
 (async()=>{try{for(let i=0;i<50&&!(window.claude&&window.claude.use);i++)await new Promise(r=>setTimeout(r,100));if(window.claude&&window.claude.use){ASSETS=await window.claude.use("assets");if(ASSETS&&S.tab==="registro")render()}}catch(e){ASSETS=null}})();
 
 
@@ -3548,7 +3599,7 @@ if(document.createElement&&document.body){const up=document.createElement("butto
  document.addEventListener("touchend",e=>{if(!t0)return;const c=e.changedTouches[0],dx=c.clientX-t0.x,dy=c.clientY-t0.y,dt=Date.now()-t0.t;t0=null;if(Math.abs(dx)<90||Math.abs(dy)>45||dt>700)return;
    const i=TABS.findIndex(x=>x[0]===S.tab),j=i+(dx<0?1:-1);if(j<0||j>=TABS.length)return;if(TABS[j][0]==="hoy"){S.date=today();S.follow=true}setTab(TABS[j][0])},{passive:true})}document.addEventListener("visibilitychange",()=>{if(!document.hidden)checkNotify()});
 function render(){
-  CTX=null;PLANC={},SK=null;REPC={};RECC=null;if(S.follow&&!S.run&&diffDays(S.date,today())!==0){S.date=today()}
+  CTX=null;PLANC={},SK=null;REPC={};RECC=null;CARC={};if(S.follow&&!S.run&&diffDays(S.date,today())!==0){S.date=today()}
   // conservar el foco y el cursor si una actualización llega mientras escribes
   const ae=document.activeElement,fid=ae&&app.contains(ae)&&ae.id?ae.id:null,sel=fid&&ae.selectionStart!=null?[ae.selectionStart,ae.selectionEnd]:null;
   const hqTop=()=>{const L=locate(today());return hqHTML(L.after?52:L.w,streak())};
@@ -3586,8 +3637,8 @@ document.addEventListener("click",e=>{
   if(D.sleepok!==undefined){S.sleepEdit=false;const sp=sleepPlan(S.date,planFor(S.date)),dd=Store.day(k),sl=Object.assign({},sp,dd.sleep);Store.setDay(k,{sleep:sl});render();return}
   if(D.hm){const [tid,ix]=D.hm.split("|"),p=planFor(S.date),t=p&&p.tasks.find(x=>x.id===tid),b=t&&t.blocks[+ix];if(!b)return;const pg=progOf(b,k);if(!pg)return;
     const dd=Store.day(k),rp=Object.assign({},dd.reps),a=(rp[b.n]||[]).slice();for(let j=0;j<b.s;j++){if(!String(a[j]||"").trim())a[j]=String(pg.reps[j]||pg.lo)}rp[b.n]=a;
-    const patch={reps:rp,sets:Object.assign({},dd.sets,{[setKey(t,+ix)]:b.s})};if(pg.kg&&!isPull(b.n)&&!((dd.kg||{})[b.n]))patch.kg=Object.assign({},dd.kg,{[b.n]:String(pg.kg).replace(".",",")});
-    const r0=new Set(dayRecords(k));Store.setDay(k,patch);render();const nw=dayRecords(k).filter(x=>!r0.has(x));const kgs=((Store.days[k]||{}).kg||{})[b.n];toast(nw.length?"🏆 ¡Nuevo récord! "+nw[0]:"Anotado: "+a.slice(0,b.s).join(" · ")+(kgs&&!isPull(b.n)?` con ${kgs} kg`:"")+". Si hiciste menos en alguna, corrígela.");if(nw.length)beep(2);return}
+    const patch={reps:rp,sets:Object.assign({},dd.sets,{[setKey(t,+ix)]:b.s})};const cm=cargaOf(b.n);if(pg.kg&&(cm==="kg"||cm==="extra")&&!((dd.kg||{})[b.n]))patch.kg=Object.assign({},dd.kg,{[b.n]:String(pg.kg).replace(".",",")});
+    const r0=new Set(dayRecords(k));Store.setDay(k,patch);render();const nw=dayRecords(k).filter(x=>!r0.has(x));const kgs=((Store.days[k]||{}).kg||{})[b.n];toast(nw.length?"🏆 ¡Nuevo récord! "+nw[0]:"Anotado: "+a.slice(0,b.s).join(" · ")+(kgs&&(cargaOf(b.n)==="kg"||cargaOf(b.n)==="extra")?` con ${kgs} kg${cargaOf(b.n)==="extra"?" extra":""}`:"")+". Si hiciste menos en alguna, corrígela.");if(nw.length)beep(2);return}
   if(D.doshare!==undefined){const x=S.pendShare;S.pendShare=null;if(x){try{navigator.share({files:[new File([x.data],x.filename,{type:x.type})],title:x.filename}).then(()=>{if(x.after)x.after()}).catch(()=>{})}catch(e){}}render();return}
   if(D.noshare!==undefined){S.pendShare=null;render();return}
   if(D.pend){const g=D.pend;
@@ -3760,10 +3811,18 @@ document.addEventListener("click",e=>{
   if(D.mealx){const p=planFor(S.date),dd=Store.day(k),m=p&&mealsOf(p).find(x=>x.k===D.mealx);if(!m)return;const on=mealDone(dd,p,m),patch={meals:Object.assign({},dd.meals,{[m.k]:false})};
     if(m.r){const {t,i}=m.r,sets=Object.assign({},dd.sets),c=Object.assign({},dd.checks);sets[setKey(t,i)]=on?0:t.blocks[i].s;if(on&&c[t.id]&&!t.blocks[i].opt)c[t.id]=false;patch.sets=sets;patch.checks=c}else if(!on)patch.meals[m.k]=true;
     Store.setDay(k,patch);render();return}
+  if(D.cargaopen){S.cargaOpen=S.cargaOpen===D.cargaopen?null:D.cargaopen;render();return}
+  if(D.carga){const i=D.carga.lastIndexOf("|"),n=D.carga.slice(0,i),v=D.carga.slice(i+1);Store.setCfg({carga:Object.assign({},Store.cfg.carga,{[n]:v})});S.cargaOpen=null;render();toast(`${n}: ${CLBL[v]}, todos los días.`);return}
   if(D.assend){const el=document.getElementById(D.assend==="hoy"?"as-in-hoy":"as-in"),v=el?el.value:"";if(!v.trim()){toast("Escribe primero qué hiciste o qué quieres saber.");return}if(el)el.value="";asSend(v,D.assend);return}
   if(D.asq){asSend(D.asq,"chat");return}
   if(D.asundo){asUndo(D.asundo);return}
   if(D.asdeep){const m=CHAT.find(x=>x.id===+D.asdeep);if(m&&m.deeper&&aiOn()){const q=m.deeper;m.deeper="";asAI(q,iso(S.date))}return}
+  if(D.aicfg!==undefined){S.aiCfg=!S.aiCfg;S.aiSt="";renderChat();return}
+  if(D.aimod){const c=aiKey();c.model=D.aimod;aiKeySet(c);renderChat();toast("Modelo: "+(AIMOD.find(x=>x[0]===D.aimod)||[,""])[1]+".");return}
+  if(D.aisave!==undefined){const el=document.getElementById("ai-key"),v=el?el.value.trim():"";if(!v){toast(keyOn()?"Tu clave sigue guardada.":"Pega primero tu clave.");return}if(!/^sk-ant-[A-Za-z0-9_\-]{10,}$/.test(v)){S.aiSt="Esa clave no se ve bien: debe empezar con sk-ant- (cópiala completa).";renderChat();return}
+    const c=aiKey();c.key=v;aiKeySet(c);S.aiSt="Guardada. Toca «Probar» para revisar que funcione.";renderChat();render();return}
+  if(D.aidel!==undefined){const c=aiKey();delete c.key;aiKeySet(c);S.aiSt="Clave borrada de este teléfono.";renderChat();render();return}
+  if(D.aitest!==undefined){S.aiSt="Probando…";renderChat();aiCallKey("Responde en JSON. En respuesta escribe exactamente: Conectado. Deja anotar vacío.",[{role:"user",content:"Hola"}]).then(j=>{S.aiSt="✅ Funciona con "+(AIMOD.find(x=>x[0]===aiModel())||[,""])[1]+(j&&j.respuesta?": «"+String(j.respuesta).slice(0,60)+"»":"")+"."}).catch(e=>{S.aiSt="❌ "+aiErr(e)}).then(()=>{if(S.chatOpen)renderChat()});return}
   if(D.chatopen!==undefined){S.chatOpen=true;renderChat();setTimeout(()=>{const t=document.getElementById("as-in");if(t)t.focus()},60);return}
   if(D.chatclose!==undefined){S.chatOpen=false;renderChat();return}
   if(D.ocrpaste!==undefined){S.ocr={k,dest:"",stage:"pegar"};render();setTimeout(()=>{jumpTo("sec-foto");const t=document.getElementById("ocr-txt");if(t)t.focus()},40);return}
@@ -3865,6 +3924,7 @@ document.addEventListener("input",e=>{const el=e.target;if(el&&el.dataset&&el.da
 document.addEventListener("change",e=>{const el=e.target,D=el&&el.dataset;if(!D)return;
   if(D.pzh){const v=/^\d{1,2}:\d{2}$/.test(el.value)?el.value:"";Store.setCfg({horas:Object.assign({},Store.cfg.horas,{[D.pzh]:v})});render();toast(v?"Hora guardada: "+v+".":"Vuelve a la hora de la app.")}
   else if(D.pzsem!==undefined){const a=(Store.cfg.semana||[0,1,2,3,4,5,6]).slice(),v=/^c:/.test(el.value)?el.value:+el.value;a[+D.pzsem]=v;Store.setCfg({semana:a.every((x,i)=>x===i)?null:a});render();toast(DNOM[+D.pzsem]+": "+((semOpts().find(o=>String(o[0])===String(v))||[,""])[1])+", todas las semanas.")}
+  else if(D.rxc!==undefined&&CLBL[el.value]){Store.setCfg({carga:Object.assign({},Store.cfg.carga,{[D.rxc]:el.value})});render();toast(`${D.rxc}: ${CLBL[el.value]}, todos los días.`)}
   else if(D.pgname!==undefined){if(S.pegar&&S.pegar.dias[+D.pgname])S.pegar.dias[+D.pgname].t=el.value.trim().slice(0,30)}
   else if(D.pgdia!==undefined){if(S.pegar&&S.pegar.dias[+D.pgdia]){S.pegar.dias[+D.pgdia].dow=el.value===""?null:+el.value;render()}}
   else if(D.rtname){const v=el.value.trim().slice(0,30);if(v)Store.setCfg({rutinasMias:misRutinas().map(r=>r.id===D.rtname?Object.assign({},r,{t:v}):r)});render()}
